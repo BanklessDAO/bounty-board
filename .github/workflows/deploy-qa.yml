@@ -15,7 +15,6 @@ jobs:
           node-version: '14.17.0'
       - name: Deploy to Heroku Shared Test Environment
         uses: AkhileshNS/heroku-deploy@v3.12.12
-        run: git push heroku develop:main
         with:
           heroku_api_key: $${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "bounty-board"
