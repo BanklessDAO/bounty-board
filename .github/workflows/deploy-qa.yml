@@ -1,7 +1,5 @@
 name: Deploy to QA Environment
 on:
-  push:
-    branches: [develop]
   pull_request:
     branches: [develop]
 jobs:
@@ -19,5 +17,5 @@ jobs:
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "bounty-board"
-          heroku_email: "patinobrian@gmail.com"
+          heroku_app_name: 'bounty-board'
+          heroku_email: 'patinobrian@gmail.com'
