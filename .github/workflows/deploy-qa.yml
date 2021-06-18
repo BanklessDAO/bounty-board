@@ -1,7 +1,5 @@
 name: Deploy to QA Environment
 on:
-  push:
-    branches: [develop]
   pull_request:
     branches: [develop]
 jobs:
