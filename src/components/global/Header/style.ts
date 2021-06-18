@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { neutralColors } from 'src/theme'
+import { neutralColors } from '../../../theme'
 
 export const HeaderWrapper = styled.header`
   background: ${neutralColors.one};

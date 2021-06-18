@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { _Wrapper, _Container } from '../style'
-import { breakpoints } from 'src/theme'
+import { breakpoints } from '../../../theme'
 
 export const FooterWrapper = styled(_Wrapper)`
   padding-top: 10px;

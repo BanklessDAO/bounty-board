@@ -1,5 +1,5 @@
 import { createWeb3ReactRoot } from '@web3-react/core'
-import { DefaultProviderName } from 'src/constants'
+import { DefaultProviderName } from '../constants'
 
 const Web3ReactProviderDefault = createWeb3ReactRoot(DefaultProviderName)
 

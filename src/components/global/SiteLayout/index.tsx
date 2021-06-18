@@ -2,15 +2,15 @@ import * as React from 'react'
 import { normalize } from 'polished'
 import { createGlobalStyle, css } from 'styled-components'
 
-import { fontStyles } from 'src/theme'
+import { fontStyles } from '../../../theme'
 
 import Head from '../Head'
 import Header from '../Header'
 import Footer from '../Footer'
 import { useWeb3React } from '@web3-react/core'
-import { DefaultProviderName } from 'src/constants'
+import { DefaultProviderName } from '../../../constants'
 import { useEffect } from 'react'
-import { network } from 'src/utils'
+import { network } from '../../../utils'
 
 const styles = css`
   ${normalize()}

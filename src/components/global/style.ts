@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { breakpoints } from 'src/theme'
+import { breakpoints } from '../../theme'
 
 export const _Wrapper = styled.div`
   padding-left: 15px;
