@@ -3,7 +3,6 @@
 Project Page:
 https://www.notion.so/bankless/Bounty-Board-318dc164cc5640cca17e0fb5f484fd90
 
-
 ### Specifications:
 
 - [Specs page](https://docs.google.com/document/d/1VJXin9Uoqt54JjfQEtyM11XESb2l4C1SSAzgc0kvxIs/edit?usp=sharing)
