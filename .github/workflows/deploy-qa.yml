@@ -13,6 +13,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14.17.0'
+      - name: Install dependencies
+        run: yarn install
+      - name: Run test cases
+        run: yarn test --watchAll=false
       - name: Deploy to Heroku Shared Test Environment
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
