@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 import SiteLayout from '../components/global/SiteLayout'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
+import { ReactElement } from 'react'
 
 const defaultPageMeta = {
   title: 'Bankless Bounty Board',
@@ -17,7 +18,7 @@ const Web3ReactProviderDefault = dynamic(
   { ssr: false }
 )
 
-const BanklessApp = ({ Component, pageProps }: AppProps) => {
+const BanklessApp = ({ Component, pageProps }: AppProps): ReactElement => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ReactProviderDefault getLibrary={getLibrary}>

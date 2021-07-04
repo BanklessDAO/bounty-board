@@ -1,4 +1,5 @@
 import NextHead from 'next/head'
+import { ReactElement } from 'react'
 
 export interface PageMetaProps {
   title: string
@@ -6,7 +7,7 @@ export interface PageMetaProps {
   url: string
 }
 
-const Head = ({ title = '', description = '' }: PageMetaProps) => {
+const Head = ({ title = '', description = '' }: PageMetaProps): ReactElement => {
   // TODO social images
   return (
     <NextHead>

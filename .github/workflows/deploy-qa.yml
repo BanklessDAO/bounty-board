@@ -5,7 +5,7 @@ on:
 jobs:
   deploy:
     environment:
-      name: qa-env
+      name: Preview
       url: https://bounty-board.herokuapp.com/
     runs-on: ubuntu-20.04
     steps:
@@ -15,6 +15,8 @@ jobs:
           node-version: '14.17.0'
       - name: Install dependencies
         run: yarn install
+      - name: Check lint
+        run: yarn lint
       - name: Run test cases
         run: yarn test --watchAll=false
       - name: Deploy to Heroku Shared Test Environment
