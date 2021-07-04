@@ -79,6 +79,7 @@ typings/
 
 # Next.js build output
 .next
+out
 
 # Nuxt.js build / generate output
 .nuxt
@@ -111,10 +112,29 @@ dist
 *.iml
 *.ipr
 
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-contracts/build
-contracts/coverage
-contracts/package-lock.json
-contracts/coverage.json
+# dependencies
+/.pnp
+.pnp.js
 
+# testing
+/coverage
+
+# production
+/build
+
+# misc
 .DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+package-lock.json
+contracts/build
+contracts/coverage.json
