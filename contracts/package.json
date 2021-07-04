@@ -1,0 +1,31 @@
+{
+  "name": "escrow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "coverage": "truffle run coverage",
+    "start": "ganache-cli -m -f -i 5777 -p 7545  --hostname 0.0.0.0 --defaultBalanceEther=1000"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bignumber.js": "^9.0.1",
+    "chai": "^4.3.4",
+    "eslint": "^7.29.0",
+    "eslint-config-standard": "^16.0.3",
+    "ganache-cli": "^6.12.2",
+    "prettier": "^2.3.2",
+    "prettier-plugin-solidity": "*",
+    "solhint": "^3.3.6",
+    "solidity-coverage": "^0.7.16",
+    "truffle-contract-size": "^2.0.1"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.4.1"
+  }
+}

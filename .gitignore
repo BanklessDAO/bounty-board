@@ -110,3 +110,11 @@ dist
 *.iws
 *.iml
 *.ipr
+
+
+contracts/build
+contracts/coverage
+contracts/package-lock.json
+contracts/coverage.json
+
+.DS_Store
