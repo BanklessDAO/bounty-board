@@ -26,5 +26,5 @@ jobs:
           heroku_app_name: 'bounty-board'
           heroku_email: 'patinobrian@gmail.com'
         env:
-          HD_QA_MONGODB_URI: ${{secrets.QA_MONGODB_URI}}
-          HD_QA_MONGODB_NAME: ${{secrets.QA_MONGODB_NAME}}
+          HD_MONGODB_URI: ${{secrets.QA_MONGODB_URI}}
+          HD_MONGODB_NAME: ${{secrets.QA_MONGODB_NAME}}
