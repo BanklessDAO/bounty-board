@@ -22,6 +22,6 @@ jobs:
       - name: Deploy to Heroku Shared Test Environment
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: ${{secrets.QA_HEROKU_API_KEY}}
           heroku_app_name: 'bounty-board'
           heroku_email: 'patinobrian@gmail.com'
