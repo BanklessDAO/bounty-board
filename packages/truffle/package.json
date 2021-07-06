@@ -1,5 +1,5 @@
 {
-  "name": "escrow",
+  "name": "@bounty-board/escrow",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -20,7 +20,7 @@
     "eslint-config-standard": "^16.0.3",
     "ganache-cli": "^6.12.2",
     "prettier": "^2.3.2",
-    "prettier-plugin-solidity": "*",
+    "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.16",
     "truffle-contract-size": "^2.0.1"
