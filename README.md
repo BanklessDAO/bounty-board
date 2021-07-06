@@ -2,7 +2,7 @@
 
 This is a scrappy MVP mirroring the status of the BountyBoard project.
 
-**BountyBoard** is an application that allows users to add bounties to a mongodb databse, and view all such bounties. They can also delete it or edit it anytime.
+**BountyBoard** is an application that allows users to create and view bounties. They can also delete it or edit it anytime.
 
 ## Configuration (copied from next.js example README's)
 
