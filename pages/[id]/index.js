@@ -72,4 +72,4 @@ export async function getServerSideProps({ params }) {
   return { props: { bounty } }
 }
 
-export default PetPage
+export default BountyPage
