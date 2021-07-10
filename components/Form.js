@@ -2,6 +2,18 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
+// User entered form fields:
+// bountyTitle
+// bountyDescription
+// bountyCriteria
+// bountyReward
+// bountyGuild
+// bountyCreatedDiscord
+// bountyCreatedAt
+// bountyExpiration
+// bountySkills
+// bountyImage
+
 const Form = ({ formId, bountyForm, forNewBounty = true }) => {
   const router = useRouter()
   const contentType = 'application/json'
@@ -9,7 +21,7 @@ const Form = ({ formId, bountyForm, forNewBounty = true }) => {
   const [message, setMessage] = useState('')
 
   const [form, setForm] = useState({
-    name: bountyForm.name,
+    bountyTitle: bountyForm.bountyTitle,
     owner_name: bountyForm.owner_name,
     guild: bountyForm.guild,
     reward: bountyForm.reward,
@@ -96,7 +108,7 @@ const Form = ({ formId, bountyForm, forNewBounty = true }) => {
   /* Makes sure bounty info is filled for bounty name, owner name, guild, and image url*/
   const formValidate = () => {
     let err = {}
-    if (!form.name) err.name = 'Name is required'
+    if (!form.bountyTitle) err.bountyTitle = 'Title is required'
     if (!form.owner_name) err.owner_name = 'Owner is required'
     if (!form.guild) err.guild = 'Guild is required'
     if (!form.image_url) err.image_url = 'Image URL is required'
@@ -106,12 +118,12 @@ const Form = ({ formId, bountyForm, forNewBounty = true }) => {
   return (
     <>
       <form id={formId} onSubmit={handleSubmit}>
-        <label htmlFor="name">Name</label>
+        <label htmlFor="bountyTitle">Title</label>
         <input
           type="text"
           maxLength="20"
-          name="name"
-          value={form.name}
+          name="bountyTitle"
+          value={form.bountyTitle}
           onChange={handleChange}
           required
         />
