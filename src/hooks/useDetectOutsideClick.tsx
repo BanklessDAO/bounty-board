@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 /**
  * Hook for handling closing when clicking outside of an element
  * from: https://letsbuildui.dev/articles/building-a-dropdown-menu-component-with-react-hooks
- * @param {React.node} el
+ * @param {React.RefObject<HTMLInputElement>} el
  * @param {boolean} initialState
  */
-export const useDetectOutsideClick = (el, initialState) => {
+export const useDetectOutsideClick = (el: React.RefObject<HTMLInputElement>, initialState: boolean): [boolean, (isActive: boolean) => void] => {
   const [isActive, setIsActive] = useState(initialState)
   useEffect(() => {
     const onClick = (e) => {

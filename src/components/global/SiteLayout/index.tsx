@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
   ${styles}
 `
 
-const SiteLayout = ({ pageMeta, children }) => {
+const SiteLayout = ({ pageMeta, children }: {pageMeta: any, children: any}): React.ReactElement => {
   const defaultContext = useWeb3React(DefaultProviderName)
   useEffect(() => {
     defaultContext.activate(network)

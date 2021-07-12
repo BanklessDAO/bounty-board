@@ -7,7 +7,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { NetworkConnector } from '@web3-react/network-connector'
 
-export function isAddress(value: any): string | false {
+export function isAddress(value: string): string | false {
   try {
     return getAddress(value)
   } catch {
@@ -21,6 +21,7 @@ export function shortenAddress(address: string): string {
 
 export function getContract(
   address: string,
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   ABI: any,
   library: Web3Provider,
   account?: string
@@ -63,33 +64,34 @@ export const network = new NetworkConnector({
   defaultChainId: 1,
 })
 
-export const toFixed = function (x) {
-  if (Math.abs(x) < 1.0) {
-    const e = parseInt(x.toString().split('e-')[1])
-    if (e) {
-      x *= Math.pow(10, e - 1)
-      x = '0.' + new Array(e).join('0') + x.toString().substring(2)
-    }
-  } else {
-    let e = parseInt(x.toString().split('+')[1])
-    if (e > 20) {
-      e -= 20
-      x /= Math.pow(10, e)
-      x += new Array(e + 1).join('0')
-    }
-  }
-  return x
-}
+// TODO: x is expected to be a number but x cannot be returned as a string
+// export const toFixed = function (x: number | string): string | number {
+//   if (Math.abs(x) < 1.0) {
+//     const e = parseInt(x.toString().split('e-')[1])
+//     if (e) {
+//       x *= Math.pow(10, e - 1)
+//       x = '0.' + new Array(e).join('0') + x.toString().substring(2)
+//     }
+//   } else {
+//     let e = parseInt(x.toString().split('+')[1])
+//     if (e > 20) {
+//       e -= 20
+//       x /= Math.pow(10, e)
+//       x += new Array(e + 1).join('0')
+//     }
+//   }
+//   return x
+// }
 
-export const trimCurrencyForWhales = (labelValue) => {
-  // Nine Zeroes for Billions
-  return Math.abs(Number(labelValue)) >= 1.0e9
-    ? (Math.abs(Number(labelValue)) / 1.0e9).toFixed(2) + 'B'
-    : // Six Zeroes for Millions
-    Math.abs(Number(labelValue)) >= 1.0e6
-    ? (Math.abs(Number(labelValue)) / 1.0e6).toFixed(2) + 'M'
-    : // Three Zeroes for Thousands
-    Math.abs(Number(labelValue)) >= 1.0e3
-    ? (Math.abs(Number(labelValue)) / 1.0e3).toFixed(2) + 'K'
-    : Math.abs(Number(labelValue))
-}
+// export const trimCurrencyForWhales = (labelValue: string): string | number => {
+//   // Nine Zeroes for Billions
+//   return Math.abs(Number(labelValue)) >= 1.0e9
+//     ? (Math.abs(Number(labelValue)) / 1.0e9).toFixed(2) + 'B'
+//     : // Six Zeroes for Millions
+//     Math.abs(Number(labelValue)) >= 1.0e6
+//     ? (Math.abs(Number(labelValue)) / 1.0e6).toFixed(2) + 'M'
+//     : // Three Zeroes for Thousands
+//     Math.abs(Number(labelValue)) >= 1.0e3
+//     ? (Math.abs(Number(labelValue)) / 1.0e3).toFixed(2) + 'K'
+//     : Math.abs(Number(labelValue))
+// }

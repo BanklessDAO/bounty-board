@@ -1,6 +1,7 @@
+import { ReactElement } from 'react'
 import Container from '../../../parts/Container'
 
-const Section = () => {
+const Section = (): ReactElement => {
   return (
     <>
       <Container full fullVertical>

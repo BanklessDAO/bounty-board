@@ -1,3 +1,4 @@
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 const Input = styled.input`
@@ -6,7 +7,9 @@ const Input = styled.input`
   border-radius: 10px;
 `
 
-const TextInput = ({ name, placeholder, ...restProps }) => {
+const TextInput = ({ name, placeholder, ...restProps }
+  : {name: string, placeholder: string, restProps: any})
+  : ReactElement => {
   return (
     <Input type="text" name={name} placeholder={placeholder} {...restProps} />
   )
