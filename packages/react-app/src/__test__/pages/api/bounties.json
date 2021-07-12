@@ -1,0 +1,16 @@
+{
+	"bounties": [{
+		"title": "Really cool task up for grabs",
+		"description": "Do a bunch of stuff and make Bankless awesome, then get some cheddar for it, we all celebrate",
+		"requirements": "Some speicifc details about how it will be evaluated, but don't worry I'm not a hardass. It would be great though if it was formatted in such a way where I can do X and Y with it without needing and email.",
+		"requestedBy": "Slinkypotato#1092",
+		"guildTags": ["Design", "Marketing", "Dev"],
+		"bountyHash": "sha256-hash-of-bounty",
+		"reward": {
+			"currency": "BANK",
+			"total": "1000"
+		},
+		"status": "Open",
+		"assignedTo": "@discord-handle"
+	}]
+}

@@ -1,5 +1,5 @@
 import * as S from './style'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 interface TimeDisplayValuesType {
   days: number
@@ -38,7 +38,7 @@ const CountDown = ({
   header = '',
   targetDate = new Date().getTime(),
   size = '',
-}) => {
+}: {header: string, targetDate: number, size: string}): ReactElement => {
   const [timeDisplay, setTimeDisplay] = React.useState<TimeDisplayValuesType>(
     generateTimeDisplay(targetDate)
   )

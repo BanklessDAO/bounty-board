@@ -1,7 +1,8 @@
 import * as S from './style'
 import * as Button from '../../parts/Button'
+import { ReactElement } from 'react'
 
-const Header = () => {
+const Header = (): ReactElement => {
   return (
     <S.HeaderWrapper>
       <S.Divider />

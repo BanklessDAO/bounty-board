@@ -1,5 +1,5 @@
 name: Build and Test
-on: [push, pull_request]
+on: [pull_request]
 jobs:
   build-and-test:
     runs-on: ubuntu-20.04
@@ -10,5 +10,7 @@ jobs:
           node-version: '14.17.0'
       - name: Install dependencies
         run: yarn install
+      - name: Check lint
+        run: yarn lint
       - name: Run test cases
         run: yarn test --watchAll=false

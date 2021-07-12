@@ -38,9 +38,11 @@
       "react-player": "^2.9.0",
       "styled-components": "^5.2.3",
       "styled-components-carousel": "^0.2.0",
-      "web3modal": "^1.9.3"
+      "web3modal": "^1.9.3",
+      "mongodb": "^3.6.9"
     },
     "devDependencies": {
+      "@types/mongodb": "^3.6.19",
       "@testing-library/react": "^11.2.7",
       "@types/jest": "^26.0.23",
       "@types/node": "^15.12.2",
