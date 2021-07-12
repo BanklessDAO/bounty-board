@@ -39,7 +39,10 @@
       "styled-components": "^5.2.3",
       "styled-components-carousel": "^0.2.0",
       "web3modal": "^1.9.3",
-      "mongodb": "^3.6.9"
+      "mongodb": "^3.6.9",
+      "nock": "^13.1.0",
+      "mocha": "^9.0.0",
+      "uuid": "^8.3.2"
     },
     "devDependencies": {
       "@types/mongodb": "^3.6.19",
