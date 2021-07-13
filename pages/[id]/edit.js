@@ -16,14 +16,14 @@ const EditBounty = () => {
   if (!bounty) return <p>Loading...</p>
 
   const bountyForm = {
-    bountyTitle: bountyForm.bountyTitle,
-    bountyDescription: bountyForm.bountyDescription,
-    bountyCriteria: bountyForm.bountyCriteria,
-    bountyReward: bountyForm.bountyReward,
-    bountyGuild: bountyForm.bountyGuild,
-    bountyCreatedBy: bountyForm.createdBy,
-    bountyExpiration: bountyForm.bountyExpiration,
-    bountyImage: bountyForm.bountyImage,
+    bountyTitle: bounty.bountyTitle,
+    bountyDescription: bounty.bountyDescription,
+    bountyCriteria: bounty.bountyCriteria,
+    bountyReward: bounty.bountyReward,
+    bountyGuild: bounty.bountyGuild,
+    bountyCreatedBy: bounty.bountyCreatedBy,
+    bountyExpiration: bounty.bountyExpiration,
+    bountyImage: bounty.bountyImage,
   }
 
   return <Form formId="edit-bounty-form" bountyForm={bountyForm} forNewBounty={false} />

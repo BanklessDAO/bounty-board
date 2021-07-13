@@ -14,7 +14,7 @@ const Form = ({ formId, bountyForm, forNewBounty = true }) => {
     bountyCriteria: bountyForm.bountyCriteria,
     bountyReward: bountyForm.bountyReward,
     bountyGuild: bountyForm.bountyGuild,
-    bountyCreatedBy: bountyForm.createdBy,
+    bountyCreatedBy: bountyForm.bountyCreatedBy,
     bountyExpiration: bountyForm.bountyExpiration,
     bountyImage: bountyForm.bountyImage,
   })
