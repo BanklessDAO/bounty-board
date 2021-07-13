@@ -89,17 +89,17 @@
   transition: 0.5s all;
 }
 
-.owner {
+.bountyCreatedBy {
   color: grey;
   font-size: 110%;
 }
 
-.pet-name {
+.bountyTitle {
   font-weight: bold;
   font-size: 130%;
 }
 
-h5.pet-name {
+h5.bountyTitle {
   color: white;
   position: absolute;
   left: 0;
@@ -125,7 +125,7 @@ li {
   overflow: hidden;
 }
 
-.info.likes {
+.info.bountyReward {
   margin-top: 25px;
 }
 
@@ -174,8 +174,8 @@ li {
   margin-left: 10px;
 }
 
-/* Delete Pet */
-.pet-container {
+/* Delete Bounty */
+.bounty-container {
   width: 100%;
 }
 

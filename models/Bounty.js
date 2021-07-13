@@ -2,58 +2,57 @@ import mongoose from 'mongoose'
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 const BountyBoardSchema = new mongoose.Schema({
-  name: {
+  bountyTitle: {
     /* The name of this Bounty */
 
     type: String,
-    required: [true, 'Please provide a name for this Bounty.'],
-    maxlength: [20, 'Name cannot be more than 60 characters'],
+    required: [true, 'Please provide a title for this Bounty.'],
+    maxlength: [40, 'Name cannot be more than 60 characters'],
   },
-  owner_name: {
+  bountyDescription: {
     /* The owner of this Bounty */
 
     type: String,
-    required: [true, "Please provide the Bounty owner's name"],
-    maxlength: [20, "Owner's Name cannot be more than 60 characters"],
+    required: [true, "Please provide the bounty description"],
+    maxlength: [140, "Bounty description cannot be more than 140 characters"],
   },
-  guild: {
-    /* The guild corresponding to the Bounty */
+  bountyCriteria: {
+    /* The criteria of this Bounty */
 
     type: String,
-    required: [true, 'Please specify the species of your pet.'],
-    maxlength: [30, 'Species specified cannot be more than 40 characters'],
+    required: [true, "Please provide the bounty acceptance criteria"],
+    maxlength: [140, "Bounty criteria cannot be more than 140 characters"],
   },
-  reward: {
-    /* Pet's age, if applicable */
+  bountyReward: {
+    /* Bounty reward */
 
     type: Number,
   },
-  claimed: {
-    /* Boolean claimed value, if applicable */
-
-    type: Boolean,
-  },
-  claimedBy: {
+  bountyGuild: {
     /* The guild corresponding to the Bounty */
 
     type: String,
-    maxlength: [20, "Claimer's Name cannot be more than 60 characters"],
+    required: [true, 'Please specify the guild of the bounty.'],
+    maxlength: [30, 'Species specified cannot be more than 40 characters'],
   },
-  image_url: {
-    /* Url to pet image */
+  bountyCreatedBy: {
+    /* The creator of the Bounty, specified by Discord handle */
+
+    type: String,
+    required: [true, 'Please specify your discord handle.'],
+    maxlength: [40, 'Discord handles must be between 2 and 32 characters long'],
+  },
+  bountyExpiration: {
+    /* Bounty Expiration */
+
+    type: Number,
+    required: [true, 'Please specify the bounty expiration in number of days']
+  },
+  bountyImage: {
+    /* Url to bounty image */
 
     required: [true, 'Please provide an image url for this pet.'],
     type: String,
-  },
-  likes: {
-    /* List of things your pet likes to do */
-
-    type: Array,
-  },
-  dislikes: {
-    /* List of things your pet does not like to do */
-
-    type: Array,
   },
 })
 

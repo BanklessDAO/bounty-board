@@ -2,18 +2,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
-// User entered form fields:
-// bountyTitle
-// bountyDescription
-// bountyCriteria
-// bountyReward
-// bountyGuild
-// bountyCreatedDiscord
-// bountyCreatedAt
-// bountyExpiration
-// bountySkills
-// bountyImage
-
 const Form = ({ formId, bountyForm, forNewBounty = true }) => {
   const router = useRouter()
   const contentType = 'application/json'
@@ -22,14 +10,13 @@ const Form = ({ formId, bountyForm, forNewBounty = true }) => {
 
   const [form, setForm] = useState({
     bountyTitle: bountyForm.bountyTitle,
-    owner_name: bountyForm.owner_name,
-    guild: bountyForm.guild,
-    reward: bountyForm.reward,
-    claimed: bountyForm.claimed,
-    claimedBy: bountyForm.claimedBy,
-    image_url: bountyForm.image_url,
-    likes: bountyForm.likes,
-    dislikes: bountyForm.dislikes,
+    bountyDescription: bountyForm.bountyDescription,
+    bountyCriteria: bountyForm.bountyCriteria,
+    bountyReward: bountyForm.bountyReward,
+    bountyGuild: bountyForm.bountyGuild,
+    bountyCreatedBy: bountyForm.createdBy,
+    bountyExpiration: bountyForm.bountyExpiration,
+    bountyImage: bountyForm.bountyImage,
   })
 
   /* The PUT method edits an existing entry in the mongodb database. */
@@ -109,92 +96,90 @@ const Form = ({ formId, bountyForm, forNewBounty = true }) => {
   const formValidate = () => {
     let err = {}
     if (!form.bountyTitle) err.bountyTitle = 'Title is required'
-    if (!form.owner_name) err.owner_name = 'Owner is required'
-    if (!form.guild) err.guild = 'Guild is required'
-    if (!form.image_url) err.image_url = 'Image URL is required'
+    if (!form.bountyDescription) err.bountyDescription = 'Description required'
+    if (!form.bountyCriteria) err.bountyCriteria = 'Acceptance Criteria required'
+    if (!form.bountyReward) err.bountyReward = 'Bounty Reward required'
+    if (!form.bountyGuild) err.bountyGuild = 'Guild is required'
+    if (!form.bountyCreatedBy) err.bountyCreatedBy = 'Creator discord handle for bounty required'
+    if (!form.bountyExpiration) err.bountyExpiration = 'bounty expiration required'
+    if (!form.bountyImage) err.bountyImage = 'Image URL is required'
     return err
   }
 
   return (
     <>
       <form id={formId} onSubmit={handleSubmit}>
-        <label htmlFor="bountyTitle">Title</label>
+        <label htmlFor="bountyTitle">Bounty Title</label>
         <input
           type="text"
-          maxLength="20"
+          maxLength="40"
           name="bountyTitle"
           value={form.bountyTitle}
           onChange={handleChange}
           required
         />
 
-        <label htmlFor="owner_name">Owner</label>
-        <input
-          type="text"
-          maxLength="20"
-          name="owner_name"
-          value={form.owner_name}
+        <label htmlFor="bountyDescription">Bounty Description</label>
+        <textarea
+          name="bountyDescription"
+          maxLength="140"
+          value={form.bountyDescription}
           onChange={handleChange}
           required
         />
 
-        <label htmlFor="guild">Guild</label>
+        <label htmlFor="bountyCriteria">Bounty Criteria</label>
+        <textarea
+          maxLength="140"
+          name="bountyCriteria"
+          value={form.bountyCriteria}
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="bountyReward">Bounty Reward</label>
+        <input
+          type="number"
+          name="bountyReward"
+          value={form.bountyReward}
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="bountyGuild">Bounty Guild</label>
         <input
           type="text"
           maxLength="30"
-          name="guild"
-          value={form.guild}
+          name="bountyGuild"
+          value={form.bountyGuild}
           onChange={handleChange}
-          required
         />
 
-        <label htmlFor="reward">Reward</label>
+        <label htmlFor="bountyCreatedBy">Bounty Created By</label>
+        <input
+          type="text"
+          maxLength="40"
+          name="bountyCreatedBy"
+          value={form.bountyCreatedBy}
+          onChange={handleChange}
+        />
+
+        <label htmlFor="bountyExpiration">Bounty Expiration (days)</label>
         <input
           type="number"
-          name="reward"
-          value={form.reward}
+          name="bountyExpiration"
+          value={form.bountyExpiration}
           onChange={handleChange}
         />
 
-        <label htmlFor="claimed">Claimed</label>
-        <input
-          type="checkbox"
-          name="claimed"
-          checked={form.claimed}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="claimedBy">Claimed By</label>
-        <textarea
-          name="claimedBy"
-          maxLength="40"
-          value={form.claimedBy}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="image_url">Image URL</label>
+        
+        <label htmlFor="bountyImage"> Bounty Image URL </label>
         <input
           type="url"
-          name="image_url"
-          value={form.image_url}
+          name="bountyImage"
+          value={form.bountyImage}
           onChange={handleChange}
           required
-        />
-
-        <label htmlFor="likes">Likes</label>
-        <textarea
-          name="likes"
-          maxLength="60"
-          value={form.likes}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="dislikes">Dislikes</label>
-        <textarea
-          name="dislikes"
-          maxLength="60"
-          value={form.dislikes}
-          onChange={handleChange}
         />
 
         <button type="submit" className="btn">

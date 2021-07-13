@@ -8,27 +8,23 @@ const Index = ({ bounties }) => (
     {bounties.map((bounty) => (
       <div key={bounty._id}>
         <div className="card">
-          <img src={bounty.image_url} />
-          <h5 className="bounty-name">{bounty.name}</h5>
+          <img src={bounty.bountyImage} />
+          <h5 className="bountyTitle">{bounty.bountyTitle}</h5>
           <div className="main-content">
-            <p className="bounty-name">{bounty.name}</p>
-            <p className="owner">Owner: {bounty.owner_name}</p>
+            <p className="bountyTitle">{bounty.bountyTitle}</p>
+            <p className="bountyCreatedBy">Created By: {bounty.bountyCreatedBy}</p>
 
             {/* Extra bounty Info: Likes and Dislikes */}
-            <div className="likes info">
-              <p className="label">Likes</p>
+            <div className="bountyReward">
+              <p className="label">Reward</p>
               <ul>
-                {bounty.likes.map((data, index) => (
-                  <li key={index}>{data} </li>
-                ))}
+                {bounty.bountyReward}
               </ul>
             </div>
-            <div className="dislikes info">
-              <p className="label">Dislikes</p>
+            <div className="bountyGuild">
+              <p className="label">Bounty Guild</p>
               <ul>
-                {bounty.dislikes.map((data, index) => (
-                  <li key={index}>{data} </li>
-                ))}
+                {bounty.bountyGuild}
               </ul>
             </div>
 
