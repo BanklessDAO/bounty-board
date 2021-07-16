@@ -1,0 +1,232 @@
+[
+    {
+        "season": 3,
+        "bounty": "Thus box music year fund level.",
+        "bountyDescription": "Visit address me item.",
+        "bountyCriteria": "Hand draw get listen significant officer.",
+        "bountyReward": {
+            "currency": "BTC",
+            "amount": 47685
+        },
+        "applicableGuilds": [
+            {
+                "guildName": "Analytics Guild"
+            },
+            {
+                "guildName": "Treasury Guild"
+            }
+        ],
+        "bountyCreatedBy": {
+            "isDaoMember": true,
+            "guildName": "Analytics Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyCreatedAt": "2021-07-12",
+        "bountyDueAt": "2021-12-22",
+        "bountyImage": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
+        "bountyActivatedAt": "2021-07-12",
+        "bountyClaimedBy": {
+            "guildName": "Treasury Guild",
+            "discordHandle": "@alice#1234"
+        },
+        "bountyClaimedAt": "2021-07-12",
+        "bountySubmittedBy": "Writer's Guild",
+        "bountySubmittedAt": "2021-07-12",
+        "bountySubmissionLink": "www.example.org",
+        "bountyStatus": [
+            {
+                "status": "Draft",
+                "bountyStatusTime": "2022-05-03"
+            }
+        ],
+        "bountyHash": "eac65c7b6f5a37df3dee998a0afcfde7",
+        "skillsRequired": [
+            "marketing",
+            "strategic planning"
+        ]
+    },
+    {
+        "season": 10,
+        "bounty": "Pull sit their will.",
+        "bountyDescription": "Impact story talk site everybody particular or.",
+        "bountyCriteria": "Some move between plant where marriage.",
+        "bountyReward": {
+            "currency": "BTC",
+            "amount": 11239
+        },
+        "applicableGuilds": [
+            {
+                "guildName": "Marketing Guild"
+            },
+            {
+                "guildName": "Developer's Guild"
+            }
+        ],
+        "bountyCreatedBy": {
+            "isDaoMember": false,
+            "guildName": "Marketing Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyCreatedAt": "2021-07-12",
+        "bountyDueAt": "2022-03-27",
+        "bountyImage": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
+        "bountyActivatedAt": "2021-07-12",
+        "bountyClaimedBy": {
+            "guildName": "Marketing Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyClaimedAt": "2021-07-12",
+        "bountySubmittedBy": "Treasury Guild",
+        "bountySubmittedAt": "2021-07-12",
+        "bountySubmissionLink": "www.example.net",
+        "bountyStatus": [
+            {
+                "status": "Open",
+                "bountyStatusTime": "2022-02-25"
+            }
+        ],
+        "bountyHash": "8c38d010d86de1feda23f5d5727e78f0",
+        "skillsRequired": [
+            "writing",
+            "data analysis"
+        ]
+    },
+    {
+        "season": 2,
+        "bounty": "Condition daughter current system thing go reduce.",
+        "bountyDescription": "Other quite experience high.",
+        "bountyCriteria": "Space instead senior spend history better population.",
+        "bountyReward": {
+            "currency": "BANK",
+            "amount": 40975
+        },
+        "applicableGuilds": [
+            {
+                "guildName": "Writer's Guild"
+            },
+            {
+                "guildName": "Developer's Guild"
+            }
+        ],
+        "bountyCreatedBy": {
+            "isDaoMember": true,
+            "guildName": "Developer's Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyCreatedAt": "2021-07-12",
+        "bountyDueAt": "2021-10-10",
+        "bountyImage": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
+        "bountyActivatedAt": "2021-07-12",
+        "bountyClaimedBy": {
+            "guildName": "Treasury Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyClaimedAt": "2021-07-12",
+        "bountySubmittedBy": "Developer's Guild",
+        "bountySubmittedAt": "2021-07-12",
+        "bountySubmissionLink": "www.example.com",
+        "bountyStatus": [
+            {
+                "status": "In-Progress",
+                "bountyStatusTime": "2021-10-18"
+            }
+        ],
+        "bountyHash": "aaf853be8ca2f1e30b4c83b1d4bfcbde",
+        "skillsRequired": [
+            "design",
+            "data analysis"
+        ]
+    },
+    {
+        "season": 10,
+        "bounty": "Study without set staff.",
+        "bountyDescription": "Series former its five off strategy.",
+        "bountyCriteria": "Term walk arrive nothing name onto.",
+        "bountyReward": {
+            "currency": "ETH",
+            "amount": 35450
+        },
+        "applicableGuilds": [
+            {
+                "guildName": "Treasury Guild"
+            },
+            {
+                "guildName": "Developer's Guild"
+            }
+        ],
+        "bountyCreatedBy": {
+            "isDaoMember": false,
+            "guildName": "Writer's Guild",
+            "discordHandle": "@alice#1234"
+        },
+        "bountyCreatedAt": "2021-07-12",
+        "bountyDueAt": "2022-06-05",
+        "bountyImage": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
+        "bountyActivatedAt": "2021-07-12",
+        "bountyClaimedBy": {
+            "guildName": "Developer's Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyClaimedAt": "2021-07-12",
+        "bountySubmittedBy": "Developer's Guild",
+        "bountySubmittedAt": "2021-07-12",
+        "bountySubmissionLink": "www.example.org",
+        "bountyStatus": [
+            {
+                "status": "Open",
+                "bountyStatusTime": "2021-08-08"
+            }
+        ],
+        "bountyHash": "72e04fe31953195ab0911e96cf59364f",
+        "skillsRequired": [
+            "strategic planning",
+            "writing"
+        ]
+    },
+    {
+        "season": 2,
+        "bounty": "Instead range most outside government without above.",
+        "bountyDescription": "Say tree effect wait avoid.",
+        "bountyCriteria": "Lot year meet analysis media cold local.",
+        "bountyReward": {
+            "currency": "ETH",
+            "amount": 13166
+        },
+        "applicableGuilds": [
+            {
+                "guildName": "Marketing Guild"
+            },
+            {
+                "guildName": "Treasury Guild"
+            }
+        ],
+        "bountyCreatedBy": {
+            "isDaoMember": true,
+            "guildName": "Treasury Guild",
+            "discordHandle": "@delta#2222"
+        },
+        "bountyCreatedAt": "2021-07-12",
+        "bountyDueAt": "2022-04-16",
+        "bountyImage": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
+        "bountyActivatedAt": "2021-07-12",
+        "bountyClaimedBy": {
+            "guildName": "Marketing Guild",
+            "discordHandle": "@alice#1234"
+        },
+        "bountyClaimedAt": "2021-07-12",
+        "bountySubmittedBy": "Developer's Guild",
+        "bountySubmittedAt": "2021-07-12",
+        "bountySubmissionLink": "www.example.net",
+        "bountyStatus": [
+            {
+                "status": "Draft",
+                "bountyStatusTime": "2021-11-09"
+            }
+        ],
+        "bountyHash": "b1df4577e03129eb96de415eace2bd2e",
+        "skillsRequired": [
+            "marketing",
+            "team building"
+        ]
+    }
+]
