@@ -1,0 +1,5 @@
+# TOML configuration https://toml.io/en/
+[build]
+  command = "npm run build"
+  base = "/"
+  publish = "dist"
