@@ -5,4 +5,5 @@
 1. Add github and heroku actions integration, initialize react-create app
 2. Import next.js bankless dao template
 3. Add mongodb integration
-4. Add mock json data for mongodb compass testing
+4. Add netlify integration with configuration
+5. Add mock json data for mongodb compass testing
