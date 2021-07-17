@@ -129,3 +129,6 @@ yarn-error.log*
 package-lock.json
 contracts/coverage.json
 contracts/build
+
+# Local Netlify folder
+.netlify
