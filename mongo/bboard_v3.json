@@ -23,10 +23,10 @@
     {
         "_id" : ObjectId("60f6585b453e70eed340e8e3"),
         "season" : 1,
-        "bountyTitle" : "Make new website landing page",
-        "bountyDescription" : "Description for new website landing page with specs",
-        "bountyCriteria" : "A completed bounty has the following deliverables...",
-        "bountyReward" : {
+        "Title" : "Make new website landing page",
+        "Description" : "Description for new website landing page with specs",
+        "Criteria" : "A completed bounty has the following deliverables...",
+        "Reward" : {
                 "currency" : "BANK",
                 "amount" : 10000
         },
@@ -38,14 +38,14 @@
                         "guildName" : "Marketing Guild"
                 }
         ],
-        "bountyCreatedBy" : {
+        "CreatedBy" : {
                 "user" : ObjectId("60f6558d453e70eed340e8e0")
         },
-        "bountyCreatedAt" : ISODate("2021-07-20T06:40:56.112Z"),
-        "bountyDueAt" : ISODate("2021-07-20T06:42:28.853Z"),
-        "bountyImage" : "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
-        "bountyActivatedAt" : ISODate("2021-07-20T06:44:33.858Z"),
-        "bountyClaimedBy" : [
+        "CreatedAt" : ISODate("2021-07-20T06:40:56.112Z"),
+        "DueAt" : ISODate("2021-07-20T06:42:28.853Z"),
+        "Image" : "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
+        "ActivatedAt" : ISODate("2021-07-20T06:44:33.858Z"),
+        "ClaimedBy" : [
                 {
                         "user" : ObjectId("60f6558d453e70eed340e8e1")
                 },
@@ -53,37 +53,37 @@
                         "user" : ObjectId("60f6558d453e70eed340e8e2")
                 }
         ],
-        "bountyClaimedAt" : ISODate("2021-07-20T07:00:31.166Z"),
-        "bountySubmittedBy" : "Developer's Guild",
-        "bountySubmittedAt" : ISODate("2021-07-20T07:01:34.700Z"),
-        "bountySubmissionLink" : "https://example.org/rels/v1/bounty_submission",
-        "bountyStatus" : [
+        "ClaimedAt" : ISODate("2021-07-20T07:00:31.166Z"),
+        "SubmittedBy" : "Developer's Guild",
+        "SubmittedAt" : ISODate("2021-07-20T07:01:34.700Z"),
+        "SubmissionLink" : "https://example.org/rels/v1/bounty_submission",
+        "Status" : [
                 {
                         "status" : "Open",
-                        "openAt" : Timestamp(0, 0)
+                        "openAt" : ISODate("2021-07-20T07:00:31.166Z")
                 },
                 {
                         "status" : "Draft",
-                        "draftAt" : Timestamp(0, 0)
+                        "draftAt" : ISODate("2021-07-20T07:00:31.166Z")
                 },
                 {
                         "status" : "In-Progress",
-                        "progressAt" : Timestamp(0, 0)
+                        "progressAt" : ISODate("2021-07-20T07:00:31.166Z")
                 },
                 {
                         "status" : "In-Review",
-                        "reviewAt" : Timestamp(0, 0)
+                        "reviewAt" : ISODate("2021-07-20T07:00:31.166Z")
                 },
                 {
                         "status" : "Completed",
-                        "completedAt" : Timestamp(0, 0)
+                        "completedAt" : ISODate("2021-07-20T07:00:31.166Z")
                 },
                 {
                         "status" : "Deleted",
-                        "deletedAt" : Timestamp(0, 0)
+                        "deletedAt" : ISODate("2021-07-20T07:00:31.166Z")
                 }
         ],
-        "bountyHash" : "96efcf14fe28a4f17a07a5441b00285b12cbb208bf3c1bdbb030bb95d3e31a8b",
+        "Hash" : "96efcf14fe28a4f17a07a5441b00285b12cbb208bf3c1bdbb030bb95d3e31a8b",
         "skillsRequired" : [
                 "writing",
                 "design",
