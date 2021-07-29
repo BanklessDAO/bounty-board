@@ -1,5 +1,4 @@
-node_modules
+# Ignore :
+build
 .next
-yarn.lock
-package-lock.json
-public
+node_modules

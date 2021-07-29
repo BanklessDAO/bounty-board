@@ -1,27 +1,35 @@
-import { GetStaticProps } from 'next'
-import { PageMetaProps } from '../components/global/Head'
-import LandingSection from '../components/pages/Home/Landing'
+import Layout from '../components/global/SiteLayout'
+import dbConnect from '../utils/dbConnect'
+import Bounties from '../components/pages/Bounties'
+import Bounty from '../models/Bounty'
 
-import React from 'react'
-
-const pageMeta: PageMetaProps = {
-  title: 'Home | Bounty Board',
-  description: 'Bounty Board',
-  url: 'https://www.bankless.bounty-board/',
+type IndexProps = {
+  bounties: any[]
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: { pageMeta },
-  }
-}
-
-const Page = (): JSX.Element => {
+const Index = ({ bounties }: IndexProps): JSX.Element => {
   return (
-    <React.Fragment>
-      <LandingSection />
-    </React.Fragment>
+    <Layout title="DAO Bounty Board">
+      <Bounties bounties={bounties} />
+    </Layout>
   )
 }
 
-export default Page
+/* Retrieves bounty(s) data from mongodb database */
+export async function getServerSideProps(): Promise<{
+  props: IndexProps
+}> {
+  await dbConnect()
+
+  /* find all the data in our database */
+  const result = await Bounty.find({})
+  const bounties = result.map((doc) => {
+    const bounty = doc.toObject()
+    bounty._id = bounty._id.toString()
+    return bounty
+  })
+
+  return { props: { bounties: bounties } }
+}
+
+export default Index
