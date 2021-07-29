@@ -9,7 +9,9 @@
   "scripts": {
     "test": "truffle test",
     "coverage": "truffle run coverage",
-    "start": "ganache-cli -m -f -i 5777 -p 7545  --hostname 0.0.0.0 --defaultBalanceEther=1000"
+    "start": "ganache-cli -m -f -i 5777 -p 7545  --hostname 0.0.0.0 --defaultBalanceEther=1000",
+    "prettier": "prettier --write 'contracts/**/*.sol'",
+    "lint": "prettier --list-different 'contracts/**/*.sol'"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +28,8 @@
     "truffle-contract-size": "^2.0.1"
   },
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.4.1"
+    "@openzeppelin/contracts": "*4.0.0",
+    "@truffle/hdwallet-provider": "^1.4.1",
+    "openzeppelin-solidity": "^3.0.1"
   }
 }

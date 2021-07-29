@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 contract Escrow {
   enum State {
     AWAITING_PAYMENT,
@@ -12,7 +14,10 @@ contract Escrow {
     State state;
     address payable contributor;
     address payable payer;
+    IERC20 token;
     uint256 value;
+    uint256 expirationDays;
+    uint256 depositTimestamp;
     Levels contributorLevel;
   }
 
@@ -29,7 +34,6 @@ contract Escrow {
   mapping(bytes32 => Bounty) private _bounties; // bouty hash => State
 
   address private _owner;
-  address private _treasury;
 
   modifier onlyPayer(bytes32 bountyHash) {
     require(msg.sender == _bounties[bountyHash].payer, "ONLY_BOUNTY_PAYER");
@@ -41,13 +45,7 @@ contract Escrow {
     _;
   }
 
-  modifier onlyTreasury() {
-    require(msg.sender == _treasury, "ONLY_TREASURY");
-    _;
-  }
-
-  constructor(address treasury_) {
-    _treasury = treasury_;
+  constructor() {
     _owner = msg.sender;
   }
 
@@ -71,19 +69,8 @@ contract Escrow {
     return _owner;
   }
 
-  function treasury() public view returns (address) {
-    return _treasury;
-  }
-
   function changeOwner(address newOwner) public onlyOwner {
     _owner = newOwner;
-  }
-
-  function changeTreasury(address newTreasury)
-    public
-    onlyTreasury
-  {
-    _treasury = newTreasury;
   }
 
   fallback() external payable {}
@@ -100,6 +87,14 @@ contract Escrow {
     _;
   }
 
+  event Approval(
+    address indexed tokenOwner,
+    address indexed spender,
+    uint256 tokens
+  );
+
+  event Transfer(address indexed from, address indexed to, uint256 tokens);
+
   function hashBountyInfo(
     string memory title,
     string memory description,
@@ -111,14 +106,18 @@ contract Escrow {
 
   function defineNewBounty(
     bytes32 bountyHash,
+    IERC20 token_,
     address payable contributor_,
     address payable payer_,
     uint256 value_,
+    uint256 expirationDays_,
     Levels contributorLevel_
   ) public notZeroAddress(contributor_) notZeroAddress(payer_) {
     _bounties[bountyHash].contributor = contributor_;
+    _bounties[bountyHash].token = token_;
     _bounties[bountyHash].payer = payer_;
     _bounties[bountyHash].value = value_;
+    _bounties[bountyHash].expirationDays = expirationDays_;
     _bounties[bountyHash].contributorLevel = contributorLevel_;
   }
 
@@ -130,13 +129,19 @@ contract Escrow {
     return firstPaymentPercentage(contributorLevel);
   }
 
-  function deposit(bytes32 bountyHash) external payable onlyPayer(bountyHash) {
+  function deposit(uint256 amount, bytes32 bountyHash)
+    external
+    payable
+    onlyPayer(bountyHash)
+  {
+    require(amount == _bounties[bountyHash].value, "WRONG_BOUNTY_VALUE");
+
     require(
       _bounties[bountyHash].state == State.AWAITING_PAYMENT,
       "BOUNTY_ALREADY_PAYED_FOR"
     );
 
-    require(msg.value == _bounties[bountyHash].value, "WRONG_BOUNTY_VALUE");
+    _bounties[bountyHash].depositTimestamp = block.timestamp;
 
     _bounties[bountyHash].state = State.AWAITING_DELIVERY;
 
@@ -152,7 +157,39 @@ contract Escrow {
       (_bounties[bountyHash].value * (ONE - contributorPercentage)) /
       ONE;
 
-    _bounties[bountyHash].contributor.transfer(contributorReceivalbe);
+    require(
+      _bounties[bountyHash].token.transferFrom(
+        msg.sender,
+        address(this),
+        _bounties[bountyHash].value
+      ),
+      "TOKEN_NOT_APPROVED"
+    );
+    require(
+      _bounties[bountyHash].token.transferFrom(
+        msg.sender,
+        _bounties[bountyHash].contributor,
+        contributorReceivalbe
+      ),
+      "TOKEN_NOT_APPROVED"
+    );
+  }
+
+  uint256 constant daysInSeconds = 24 * 60 * 60;
+
+  function emergencyWithdrawal(bytes32 bountyHash)
+    public
+    onlyPayer(bountyHash)
+  {
+    require(
+      block.timestamp - _bounties[bountyHash].depositTimestamp >
+        _bounties[bountyHash].expirationDays * daysInSeconds,
+      "FUNDS_STILL_IN_ESCROW"
+    );
+
+    uint256 amount = _bounties[bountyHash].value; // SPDX-License-Identifier: MIT
+    _bounties[bountyHash].value = 0;
+    require(_bounties[bountyHash].token.transfer(msg.sender, amount));
   }
 
   function confirmDelivery(bytes32 bountyHash) external onlyPayer(bountyHash) {
@@ -162,10 +199,9 @@ contract Escrow {
     );
     _bounties[bountyHash].state = State.COMPLETE;
 
-    _bounties[bountyHash].contributor.transfer(_bounties[bountyHash].value);
-  }
-
-  function emergencyWithdrawal(bytes32 bountyHash) public onlyTreasury {
-    _bounties[bountyHash].payer.transfer(_bounties[bountyHash].value);
+    _bounties[bountyHash].token.transfer(
+      _bounties[bountyHash].contributor,
+      _bounties[bountyHash].value
+    );
   }
 }

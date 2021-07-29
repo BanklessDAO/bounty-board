@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const Escrow = artifacts.require('Escrow');
+const ERC20Helper = artifacts.require('ERC20Helper');
 
 const BigNumber = require('bignumber.js');
 
@@ -25,13 +26,14 @@ function ethToWei(eth) {
 
 contract('Escrow Test', async (accounts) => {
   let escrow;
+  let ERC20;
 
   const defaultContributor = accounts[1];
-  const defaultPayer = accounts[2];
-  const treasury = accounts[7];
+  const defaultPayer = accounts[0];
 
   beforeEach(async () => {
-    escrow = await Escrow.new(treasury);
+    escrow = await Escrow.new();
+    ERC20 = await ERC20Helper.new('NAME', 'SYMBOL', ethToWei('10000'));
   });
 
   it('initial check', async () => {
@@ -62,26 +64,6 @@ contract('Escrow Test', async (accounts) => {
     revert();
   });
 
-  it('changes trasury wallet', async () => {
-    const treasury = await escrow.treasury();
-
-    const newTreasury = accounts[4];
-
-    await escrow.changeTreasury(newTreasury, { from: treasury });
-
-    const newTreasuryCheck = await escrow.treasury();
-    expect(newTreasuryCheck).to.eq(newTreasury);
-
-    try {
-      await escrow.changeTreasury(newTreasury, { from: treasury });
-    } catch (e) {
-      expect(e.reason).to.eq('ONLY_TREASURY');
-      return;
-    }
-
-    revert();
-  });
-
   it('gets bounty hash from info', async () => {
     const title = 'Devs Guild - Solidity Bounty V1';
     const description = 'Devs compensation';
@@ -103,21 +85,27 @@ contract('Escrow Test', async (accounts) => {
   });
 
   it('Creates new bounty', async () => {
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
-      ethToWei('5'),
+      ethToWei('10'),
+      '1',
       1,
     );
+
+    // await escrow.deposit(ethToWei('10'), bountyHash);
 
     const bounty = await escrow.bounties(bountyHash);
     expect(bounty.state).to.eq('0');
     expect(bounty.contributor).to.eq(defaultContributor);
     expect(bounty.payer).to.eq(defaultPayer);
-    expect(bounty.value).to.eq(ethToWei('5'));
+    expect(bounty.value).to.eq(ethToWei('10'));
     expect(bounty.contributorLevel).to.eq('1');
   });
 
@@ -127,9 +115,11 @@ contract('Escrow Test', async (accounts) => {
     try {
       await escrow.defineNewBounty(
         bountyHash,
+        ERC20.address,
         zeroAddr,
         defaultPayer,
         ethToWei('5'),
+        '1',
         1,
       );
     } catch (e) {
@@ -146,9 +136,11 @@ contract('Escrow Test', async (accounts) => {
     try {
       await escrow.defineNewBounty(
         bountyHash,
+        ERC20.address,
         defaultContributor,
         zeroAddr,
         ethToWei('5'),
+        '1',
         1,
       );
     } catch (e) {
@@ -165,9 +157,11 @@ contract('Escrow Test', async (accounts) => {
     try {
       await escrow.defineNewBounty(
         bountyHash,
+        ERC20.address,
         zeroAddr,
         zeroAddr,
         ethToWei('5'),
+        '1',
         1,
       );
     } catch (e) {
@@ -183,18 +177,21 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('5'));
 
     const bounty = await escrow.bounties(bountyHash);
@@ -211,14 +208,16 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
     try {
-      await escrow.deposit(bountyHash, {
+      await escrow.deposit(ethToWei('5'), bountyHash, {
         value: ethToWei('5'),
         from: defaultContributor,
       });
@@ -235,15 +234,18 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
     try {
-      await escrow.deposit(bountyHash, {
-        value: ethToWei('6'),
+      await escrow.deposit(ethToWei('6'), bountyHash, {
         from: defaultPayer,
       });
     } catch (e) {
@@ -257,16 +259,16 @@ contract('Escrow Test', async (accounts) => {
   it('Deposit with first payment percentage set to 25%', async () => {
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
 
-    const contributorBalanceBefore = await web3.eth.getBalance(
-      defaultContributor,
-    );
+    const contributorBalanceBefore = await ERC20.balanceOf(defaultContributor);
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
-      1,
+      '1',
+      '1',
     );
 
     await escrow.changeFirstPaymentPercentage('1', ethToWei('0.25'));
@@ -277,15 +279,16 @@ contract('Escrow Test', async (accounts) => {
 
     expect(level1ContributorPercentage.toString()).to.eq(ethToWei('0.25'));
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('3.75'));
 
-    const contributorBalanceAfterFirstDeposit = await web3.eth.getBalance(
+    const contributorBalanceAfterFirstDeposit = await ERC20.balanceOf(
       defaultContributor,
     );
 
@@ -305,24 +308,27 @@ contract('Escrow Test', async (accounts) => {
   it('Payer confirms bounty delivery', async () => {
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
 
-    const contributorBalanceBeforeBounty = await web3.eth.getBalance(
+    const contributorBalanceBeforeBounty = await ERC20.balanceOf(
       defaultContributor,
     );
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('5'));
 
     const bounty = await escrow.bounties(bountyHash);
@@ -335,10 +341,10 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.confirmDelivery(bountyHash, { from: defaultPayer });
 
-    const contractBalanceAfterDelivery = await escrow.balance();
+    const contractBalanceAfterDelivery = await ERC20.balanceOf(escrow.address);
     expect(contractBalanceAfterDelivery.toString()).to.eq(ethToWei('0'));
 
-    const contributorBalanceAfterBounty = await web3.eth.getBalance(
+    const contributorBalanceAfterBounty = await ERC20.balanceOf(
       defaultContributor,
     );
 
@@ -352,18 +358,21 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('5'));
 
     const bounty = await escrow.bounties(bountyHash);
@@ -389,9 +398,11 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
@@ -410,23 +421,25 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('5'));
 
     try {
-      await escrow.deposit(bountyHash, {
-        value: ethToWei('5'),
+      await escrow.deposit(ethToWei('5'), bountyHash, {
         from: defaultPayer,
       });
     } catch (e) {
@@ -442,18 +455,21 @@ contract('Escrow Test', async (accounts) => {
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('5'));
 
     const bounty = await escrow.bounties(bountyHash);
@@ -467,8 +483,7 @@ contract('Escrow Test', async (accounts) => {
     await escrow.confirmDelivery(bountyHash, { from: defaultPayer });
 
     try {
-      await escrow.deposit(bountyHash, {
-        value: ethToWei('5'),
+      await escrow.deposit(ethToWei('5'), bountyHash, {
         from: defaultPayer,
       });
     } catch (e) {
@@ -482,15 +497,15 @@ contract('Escrow Test', async (accounts) => {
   it('Fails to emercency withdrawal from contributor wallet', async () => {
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
 
-    const contributorBalanceBefore = await web3.eth.getBalance(
-      defaultContributor,
-    );
+    const contributorBalanceBefore = await ERC20.balanceOf(defaultContributor);
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
@@ -502,15 +517,16 @@ contract('Escrow Test', async (accounts) => {
 
     expect(level1ContributorPercentage.toString()).to.eq(ethToWei('0.25'));
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('3.75'));
 
-    const contributorBalanceAfterFirstDeposit = await web3.eth.getBalance(
+    const contributorBalanceAfterFirstDeposit = await ERC20.balanceOf(
       defaultContributor,
     );
 
@@ -531,24 +547,24 @@ contract('Escrow Test', async (accounts) => {
         from: defaultContributor,
       });
     } catch (e) {
-      expect(e.reason).to.equal('ONLY_TREASURY');
+      expect(e.reason).to.equal('ONLY_BOUNTY_PAYER');
       return;
     }
     revert();
   });
 
-  it('Fails to emercency withdrawal from payer wallet', async () => {
+  it.only('Fails to emercency withdrawal from payer wallet', async () => {
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
 
-    const contributorBalanceBefore = await web3.eth.getBalance(
-      defaultContributor,
-    );
+    const contributorBalanceBefore = await ERC20.balanceOf(defaultContributor);
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
       ethToWei('5'),
+      '1',
       1,
     );
 
@@ -560,15 +576,16 @@ contract('Escrow Test', async (accounts) => {
 
     expect(level1ContributorPercentage.toString()).to.eq(ethToWei('0.25'));
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
+    await escrow.deposit(ethToWei('5'), bountyHash, {
       from: defaultPayer,
     });
 
-    const contractBalance = await escrow.balance();
+    const contractBalance = await ERC20.balanceOf(escrow.address);
     expect(contractBalance.toString()).to.eq(ethToWei('3.75'));
 
-    const contributorBalanceAfterFirstDeposit = await web3.eth.getBalance(
+    const contributorBalanceAfterFirstDeposit = await ERC20.balanceOf(
       defaultContributor,
     );
 
@@ -593,82 +610,71 @@ contract('Escrow Test', async (accounts) => {
     revert();
   });
 
-  it('Fails to emercency withdrawal from payer wallet', async () => {
+  it('approves BANK to be sent to the contract', async () => {
+    const ownerBalance = await ERC20.balanceOf(accounts[0]);
+
+    expect(ownerBalance.toString()).to.equal(ethToWei('10000'));
+
+    await ERC20.approve(escrow.address, ethToWei('10000'));
+
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
-
-    const payerBalanceBefore = await web3.eth.getBalance(defaultPayer);
-
-    const contributorBalanceBefore = await web3.eth.getBalance(
-      defaultContributor,
-    );
 
     await escrow.defineNewBounty(
       bountyHash,
+      ERC20.address,
       defaultContributor,
       defaultPayer,
-      ethToWei('5'),
+      ethToWei('10000'),
+      '1',
       1,
     );
 
-    await escrow.changeFirstPaymentPercentage('1', ethToWei('0.25'));
+    await escrow.deposit(ethToWei('10000'), bountyHash);
 
-    const level1ContributorPercentage = await escrow.getContributorPercentage(
-      '1',
-    );
+    const ownerBalanceAfterTransfer = await ERC20.balanceOf(accounts[0]);
+    const escrowBalanceAfterTransfer = await ERC20.balanceOf(escrow.address);
 
-    expect(level1ContributorPercentage.toString()).to.eq(ethToWei('0.25'));
+    expect(ownerBalanceAfterTransfer.toString()).to.equal(ethToWei('0'));
+    expect(escrowBalanceAfterTransfer.toString()).to.equal(ethToWei('10000'));
 
-    await escrow.deposit(bountyHash, {
-      value: ethToWei('5'),
-      from: defaultPayer,
-    });
+    try {
+      await escrow.emergencyWithdrawal(bountyHash, { from: accounts[0] });
+      revert();
+    } catch (e) {
+      expect(e.reason).to.equal('FUNDS_STILL_IN_ESCROW');
+    }
 
-    const contractBalance = await escrow.balance();
-    expect(contractBalance.toString()).to.eq(ethToWei('3.75'));
+    await new Promise((resolve) => setTimeout(resolve, 5 * 1000));
 
-    const contributorBalanceAfterFirstDeposit = await web3.eth.getBalance(
+    await escrow.emergencyWithdrawal(bountyHash, { from: accounts[0] });
+
+    const ownerBalanceAfterWithdrawal = await ERC20.balanceOf(accounts[0]);
+    const escrowBalanceAfterWithdrawal = await ERC20.balanceOf(escrow.address);
+
+    expect(ownerBalanceAfterWithdrawal.toString()).to.equal(ethToWei('10000'));
+    expect(escrowBalanceAfterWithdrawal.toString()).to.equal(ethToWei('0'));
+  });
+
+  it('fails to deposit token not approved to be spent by contract', async () => {
+    const bountyHash = hash('Devs Guild - Solidity Bounty V1');
+
+    await escrow.defineNewBounty(
+      bountyHash,
+      ERC20.address,
       defaultContributor,
-    );
-
-    const payerBalanceAfterFirstDeposit = await web3.eth.getBalance(
       defaultPayer,
+      ethToWei('10000'),
+      '1',
+      1,
     );
 
-    expect(
-      subtract(contributorBalanceAfterFirstDeposit, contributorBalanceBefore),
-    ).to.equal(ethToWei('1.25'));
+    try {
+      await escrow.deposit(ethToWei('10000'), bountyHash);
+    } catch (e) {
+      expect(e.reason).to.equal('ERC20: transfer amount exceeds allowance');
+      return;
+    }
 
-    expect(
-      subtract(payerBalanceBefore, payerBalanceAfterFirstDeposit).slice(0, 14),
-    ).to.equal(ethToWei('5').slice(0, 14));
-
-    const bounty = await escrow.bounties(bountyHash);
-
-    expect(bounty.state).to.eq('1');
-    expect(bounty.contributor).to.eq(defaultContributor);
-    expect(bounty.payer).to.eq(defaultPayer);
-    expect(bounty.value).to.eq(ethToWei('3.75'));
-    expect(bounty.contributorLevel).to.eq('1');
-
-    const treasury = await escrow.treasury();
-    expect(treasury).to.equal(accounts[7]);
-
-    await escrow.emergencyWithdrawal(bountyHash, { from: treasury });
-
-    const payerBalanceAfterEmergencyWithdrawal = await web3.eth.getBalance(
-      defaultPayer,
-    );
-
-    expect(
-      subtract(
-        payerBalanceAfterEmergencyWithdrawal,
-        payerBalanceAfterFirstDeposit,
-      ),
-    ).to.equal(ethToWei('3.75'));
-
-    const contractBalanceAfterEmergencyWithdrawal = await escrow.balance();
-    expect(contractBalanceAfterEmergencyWithdrawal.toString()).to.eq(
-      ethToWei('0'),
-    );
+    revert();
   });
 });
