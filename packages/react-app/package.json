@@ -8,6 +8,9 @@
   "bugs": {
     "url": "https://github.com/BanklessDAO/bounty-board/issues"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
