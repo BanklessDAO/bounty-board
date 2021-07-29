@@ -5,11 +5,11 @@ import Document, {
   NextScript,
   DocumentContext,
 } from 'next/document'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { ServerStyleSheet } from 'styled-components'
 
 class BanklessDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
+  static async getInitialProps(ctx: DocumentContext): Promise<any> {
     const stylesheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
 
@@ -33,7 +33,7 @@ class BanklessDocument extends Document {
       stylesheet.seal()
     }
   }
-  render() {
+  render(): ReactElement {
     return (
       <Html lang="en">
         <Head>

@@ -1,4 +1,5 @@
 import NextLink from 'next/link'
+import { ReactElement } from 'react'
 
 import {
   FooterWrapper,
@@ -9,7 +10,7 @@ import {
   CopyrightCol,
 } from './style'
 
-const Footer = () => {
+const Footer = (): ReactElement => {
   return (
     <FooterWrapper as="footer">
       <FooterContainer thin>
