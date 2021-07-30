@@ -42,7 +42,7 @@ const Bounty = ({
   claimed,
 }: {
   title: string
-  reward: { amt: number; token: string }
+  reward?: any
   status: string
   guilds: Array<string>
   description: string
@@ -70,9 +70,11 @@ const Bounty = ({
           ml="auto"
           pr={7}
         >
-          <Heading mt={1} size="md">
-            {reward.amt} {reward.token}
-          </Heading>
+          {reward && (
+            <Heading mt={1} size="md">
+              {reward.amt} {reward.token}
+            </Heading>
+          )}
         </Box>
         <Box pos="absolute" align="flex-end" textAlign="right" pt="2">
           <AccordionIcon />
