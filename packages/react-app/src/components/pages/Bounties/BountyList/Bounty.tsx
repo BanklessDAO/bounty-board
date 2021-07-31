@@ -80,7 +80,7 @@ const Bounty = ({
           <AccordionIcon />
         </Box>
         <Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
-          <Status indication={status} />
+          {status && <Status indication={status} />}
         </Box>
         <Box
           width={{ base: '100%', md: '50%' }}
