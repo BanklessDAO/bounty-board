@@ -20,11 +20,6 @@
     "lint": "next lint",
     "format": "prettier --write src"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.@(ts|tsx)": [
       "yarn run type-check",
@@ -54,7 +49,6 @@
     "@types/react": "^17.0.14",
     "eslint": "^7.30.0",
     "eslint-config-next": "^11.0.1",
-    "husky": "^7.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
