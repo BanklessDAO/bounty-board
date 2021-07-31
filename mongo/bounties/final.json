@@ -7,7 +7,7 @@
     "criteria": "A completed bounty has the following deliverables...",
     "reward": {
       "currency": "BANK",
-      "amount": 10000
+      "amount": 10000.00
     },
     "applicableGuilds": [
       {
@@ -28,7 +28,6 @@
     },
     "createdAt": "2021-07-20T06:40:56.112Z",
     "dueAt": "2021-07-20T06:42:28.853Z",
-    "image": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
     "activatedAt": "2021-07-20T06:44:33.858Z",
     "claimedBy": [
       {
@@ -40,9 +39,6 @@
       }
     ],
     "claimedAt": "2021-07-20T07:00:31.166Z",
-    "submittedBy": "Developer's Guild",
-    "submittedAt": "2021-07-20T07:01:34.700Z",
-    "submissionLink": "https://example.org/rels/v1/bounty_submission",
     "status": "Draft",
     "statusHistory": [
       {

@@ -14,7 +14,7 @@ db.createCollection("bounties", {
       ],
       properties: {
         season: {
-          bsonType: "double",
+          bsonType: "int",
           description: "the current season of the DAO, nonzero integer, /^[0,9]+$/",
         },
         title: {
