@@ -2,31 +2,35 @@ import mongoose from 'mongoose'
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 const BountyBoardSchema = new mongoose.Schema({
-  bountyTitle: {
+  title: {
     /* The name of this Bounty */
 
     type: String,
     required: [true, 'Please provide a title for this Bounty.'],
-    maxlength: [40, 'Name cannot be more than 60 characters'],
+    maxlength: [80, 'Name cannot be more than 60 characters'],
   },
-  bountyDescription: {
-    /* The owner of this Bounty */
+  season: {
+    /* The season of this Bounty */
+
+    type: Number,
+    required: [true, 'Bounty Season required']
+  },
+  description: {
+    /* A short description of the Bounty */
 
     type: String,
     required: [true, 'Please provide the bounty description'],
-    maxlength: [140, 'Bounty description cannot be more than 140 characters'],
   },
-  bountyCriteria: {
-    /* The criteria of this Bounty */
+  criteria: {
+    /* Acceptance criteria of deliverables for the Bounty to be marked complete. */
 
     type: String,
     required: [true, 'Please provide the bounty acceptance criteria'],
-    maxlength: [140, 'Bounty criteria cannot be more than 140 characters'],
   },
-  bountyReward: {
+  reward: {
     /* Bounty reward */
 
-    type: Number,
+    type: Object,
   },
   bountyGuild: {
     /* The guild corresponding to the Bounty */
@@ -47,12 +51,6 @@ const BountyBoardSchema = new mongoose.Schema({
 
     type: Number,
     required: [true, 'Please specify the bounty expiration in number of days'],
-  },
-  bountyImage: {
-    /* Url to bounty image */
-
-    required: [true, 'Please provide an image url for this pet.'],
-    type: String,
   },
 })
 

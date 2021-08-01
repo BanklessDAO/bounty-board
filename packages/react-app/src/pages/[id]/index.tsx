@@ -7,13 +7,58 @@ import Bounty from '../../models/Bounty'
 type BountyPageProps = {
   bounty: {
     _id: any
-    bountyImage: any
-    bountyTitle: any
+    season: any
+    title: any
+    description: any
+    criteria: any
+    reward: any
     createdBy: any
-    bountyReward: any
+    createdAt: any
+    status: any
+    statusHistory: any
     bountyGuild: any
+    bountyImage: any
   }
 }
+
+/*
+_id
+:
+6104db20c229d1af5f149c4f
+season
+:
+1
+title
+:
+"stuff"
+description
+:
+"asdfsda"
+criteria
+:
+"asdfds"
+reward
+:
+createdBy
+:
+discordHandle
+:
+"asdfdsf"
+discordId
+:
+"234234"
+createdAt
+:
+"2021-07-30"
+statusHistory
+:
+status
+:
+"Draft"
+dueAt
+:
+"2025-04-03"
+*/
 
 /* Allows you to view bounty card info and delete bounty card*/
 const BountyPage = ({ bounty }: BountyPageProps): JSX.Element => {
@@ -36,19 +81,28 @@ const BountyPage = ({ bounty }: BountyPageProps): JSX.Element => {
     <div key={bounty._id}>
       <div className="card">
         <img src={bounty.bountyImage} />
-        <h5 className="bountyTitle">{bounty.bountyTitle}</h5>
+        <h5 className="bountyTitle">{bounty.title}</h5>
         <div className="main-content">
-          <p className="bountyTitle">{bounty.bountyTitle}</p>
-          <p className="bountyCreatedBy">Created By: {bounty.createdBy}</p>
+          <p className="bountyTitle">Bounty Name: {bounty.title}</p>
+          <p className="bountySeason">Season: {bounty.season}</p>
+          <p className="bountyCreatedBy">Created By: {bounty.createdBy.discordHandle}</p>
+          <p className="bountyStatus">Status: {bounty.status}</p>
 
           {/* Extra Bounty Info: Reward and Guild */}
           <div className="bountyReward">
             <p className="label">Bounty Reward</p>
-            <ul>{bounty.bountyReward}</ul>
+            <ul>
+              <li>Amount: {bounty.reward.amount}</li>
+              <li>Currency: {bounty.reward.currency}</li> 
+              </ul>
           </div>
-          <div className="bounty guild">
-            <p className="label">Bounty Guild</p>
-            <ul>{bounty.bountyGuild}</ul>
+          <div className="bounty status history">
+            <p className="label">Bounty Status History</p>
+            <ul>
+                {bounty.statusHistory.map((record: any) => (
+                  <li>{record.status} {record.setAt} </li>
+                ))}
+              </ul>
           </div>
 
           <div className="btn-container">

@@ -27,6 +27,7 @@ const EditBounty = (): JSX.Element => {
     bountyCreatedBy: bounty.bountyCreatedBy,
     bountyExpiration: bounty.bountyExpiration,
     bountyImage: bounty.bountyImage,
+    bountySeason: bounty.bountySeason,
   }
 
   return (
