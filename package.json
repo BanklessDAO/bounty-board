@@ -6,8 +6,9 @@
     "start": "yarn workspace @bounty-board/react-app start",
     "dev": "yarn workspace @bounty-board/react-app dev",
     "build": "yarn workspace @bounty-board/react-app build",
-    "lint": "yarn workspace @bounty-board/react-app lint-staged",
+    "lint": "yarn workspace @bounty-board/react-app lint",
     "test": "yarn workspace @bounty-board/react-app test",
+    "react-app:lint-staged": "yarn workspace @bounty-board/react-app lint-staged",
     "react-app:type-check": "yarn workspace @bounty-board/react-app type-check",
     "react-app:format": "yarn workspace @bounty-board/react-app format",
     "react-app:test-all": "yarn workspace @bounty-board/react-app test-all",
@@ -17,7 +18,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint"
+      "pre-commit": "react-app:lint-staged"
     }
   },
   "dependencies": {},
