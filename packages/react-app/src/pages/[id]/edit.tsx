@@ -17,17 +17,18 @@ const EditBounty = (): JSX.Element => {
 
   if (error) return <p>Failed to load</p>
   if (!bounty) return <p>Loading...</p>
+  if (bounty.status != "Draft" || bounty.status != "draft") {
+    return <p>Bounty is no longer in draft state. Unauthorized to edit</p>
+  } 
 
   const bountyForm = {
-    bountyTitle: bounty.bountyTitle,
-    bountyDescription: bounty.bountyDescription,
-    bountyCriteria: bounty.bountyCriteria,
-    bountyReward: bounty.bountyReward,
-    bountyGuild: bounty.bountyGuild,
-    bountyCreatedBy: bounty.bountyCreatedBy,
-    bountyExpiration: bounty.bountyExpiration,
-    bountyImage: bounty.bountyImage,
-    bountySeason: bounty.bountySeason,
+    title: bounty.title,
+    description: bounty.Description,
+    criteria: bounty.Criteria,
+    reward: bounty.Reward,
+    createdBy: bounty.CreatedBy,
+    expiration: bounty.Expiration,
+    season: bounty.Season,
   }
 
   return (

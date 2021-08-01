@@ -21,45 +21,6 @@ type BountyPageProps = {
   }
 }
 
-/*
-_id
-:
-6104db20c229d1af5f149c4f
-season
-:
-1
-title
-:
-"stuff"
-description
-:
-"asdfsda"
-criteria
-:
-"asdfds"
-reward
-:
-createdBy
-:
-discordHandle
-:
-"asdfdsf"
-discordId
-:
-"234234"
-createdAt
-:
-"2021-07-30"
-statusHistory
-:
-status
-:
-"Draft"
-dueAt
-:
-"2025-04-03"
-*/
-
 /* Allows you to view bounty card info and delete bounty card*/
 const BountyPage = ({ bounty }: BountyPageProps): JSX.Element => {
   const router = useRouter()
