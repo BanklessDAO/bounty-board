@@ -17,7 +17,7 @@ const EditBounty = (): JSX.Element => {
 
   if (error) return <p>Failed to load</p>
   if (!bounty) return <p>Loading...</p>
-  if (bounty.status != "Draft" || bounty.status != "draft") {
+  if (bounty.status.toLowerCase() != "draft") {
     return <p>Bounty is no longer in draft state. Unauthorized to edit</p>
   } 
 
