@@ -26,6 +26,11 @@ const BountyPage = ({ bounty }: BountyPageProps): JSX.Element => {
   const router = useRouter()
   const [message, setMessage] = useState('')
   const handleDelete = async () => {
+    if (bounty.status.toLowerCase != "draft") {
+      return (
+        <p>Bounty is no longer a draft. Unauthorized to delete.</p> 
+      )
+    }
     const bountyID = router.query.id
 
     try {
