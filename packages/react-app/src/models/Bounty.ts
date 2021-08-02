@@ -2,58 +2,64 @@ import mongoose from 'mongoose'
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 const BountyBoardSchema = new mongoose.Schema({
-  bountyTitle: {
+  title: {
     /* The name of this Bounty */
 
     type: String,
     required: [true, 'Please provide a title for this Bounty.'],
-    maxlength: [40, 'Name cannot be more than 60 characters'],
+    maxlength: [80, 'Name cannot be more than 60 characters'],
   },
-  bountyDescription: {
-    /* The owner of this Bounty */
+  season: {
+    /* The season of this Bounty */
+
+    type: Number,
+    required: [true, 'Bounty Season required']
+  },
+  description: {
+    /* A short description of the Bounty */
 
     type: String,
     required: [true, 'Please provide the bounty description'],
-    maxlength: [140, 'Bounty description cannot be more than 140 characters'],
   },
-  bountyCriteria: {
-    /* The criteria of this Bounty */
+  criteria: {
+    /* Acceptance criteria of deliverables for the Bounty to be marked complete. */
 
     type: String,
     required: [true, 'Please provide the bounty acceptance criteria'],
-    maxlength: [140, 'Bounty criteria cannot be more than 140 characters'],
   },
-  bountyReward: {
+  reward: {
     /* Bounty reward */
 
-    type: Number,
+    currency: String,
+    amount: Number,
+    type: Object,
+    required: [true, 'Please provide the bounty reward'],
   },
-  bountyGuild: {
-    /* The guild corresponding to the Bounty */
+  createdBy: {
+    /* Discord identity of bounty creator */
 
-    type: String,
-    required: [true, 'Please specify the guild of the bounty.'],
-    maxlength: [30, 'Species specified cannot be more than 40 characters'],
+    discordHandle: String,
+    discordId: Number,
+    type: Object,
+    required: [true, 'Please provide your discord information']
   },
-  bountyCreatedBy: {
-    /* The creator of the Bounty, specified by Discord handle */
+  createdAt: {
+    /* Date of Bounty creation */
 
-    type: String,
-    required: [true, 'Please specify your discord handle.'],
-    maxlength: [40, 'Discord handles must be between 2 and 32 characters long'],
+    type: Date,
+    required: [true, 'Bounty createdAt should be populated. Please recreate Bounty in DEGEN or contact support.'],
   },
-  bountyExpiration: {
+  dueAt: {
     /* Bounty Expiration */
 
-    type: Number,
-    required: [true, 'Please specify the bounty expiration in number of days'],
+    type: Date,
   },
-  bountyImage: {
-    /* Url to bounty image */
-
-    required: [true, 'Please provide an image url for this pet.'],
+  status: {
+    /* Bounty Status */
+    /* "Draft", "Open", "In-Progress", "In-Review", "Completed", "Deleted" */
     type: String,
-  },
+    required: [true, "Bounty status required. Recreate Bounty in DEGEN or contact support."],
+  }
 })
 
 export default mongoose.models.Bounty ||

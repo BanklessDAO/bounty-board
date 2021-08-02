@@ -17,19 +17,22 @@ const Form = ({
   const [message, setMessage] = useState('')
 
   const [form, setForm] = useState({
-    bountyTitle: bountyForm.bountyTitle,
-    bountyDescription: bountyForm.bountyDescription,
-    bountyCriteria: bountyForm.bountyCriteria,
-    bountyReward: bountyForm.bountyReward,
-    bountyGuild: bountyForm.bountyGuild,
-    bountyCreatedBy: bountyForm.bountyCreatedBy,
-    bountyExpiration: bountyForm.bountyExpiration,
-    bountyImage: bountyForm.bountyImage,
+    title: bountyForm.bountyTitle,
+    season: bountyForm.bountySeason,
+    description: bountyForm.bountyDescription,
+    criteria: bountyForm.bountyCriteria,
+    reward: bountyForm.bountyReward,
+    createdBy: bountyForm.bountyCreatedBy,
+    createdAt: bountyForm.bountyCreatedAt, //implict
+    dueAt: bountyForm.dueAt, //implicit
+    status: bountyForm.status, //implicit
   })
 
   /* The PUT method edits an existing entry in the mongodb database. */
   const putData = async (form: any) => {
     const { id } = router.query
+    //When an edited bounty is submitted, its status becomes "open"
+    form.status = "open"
 
     try {
       const res = await fetch(`/api/bounties/${id}`, {
@@ -47,8 +50,11 @@ const Form = ({
       }
 
       const { data } = await res.json()
+      console.log("PUT: " + data.status)
+      data.status = "open"
 
-      mutate(`/api/bounties/${id}`, data, false) // Update the local data without a revalidation
+      // Update the local data immediately without a revalidation
+      mutate(`/api/bounties/${id}`, data, false) 
       router.push('/')
     } catch (error) {
       setMessage('Failed to update bounty')
@@ -99,39 +105,34 @@ const Form = ({
     }
   }
 
-  /* Makes sure bounty info is filled for bounty name, owner name, guild, and image url*/
+  /* Makes sure bounty info is filled for required bounty fields*/
   const formValidate = () => {
     let err = {
       bountyTitle: '',
+      bountySeason: '',
       bountyDescription: '',
       bountyCriteria: '',
       bountyReward: '',
-      bountyGuild: '',
       bountyCreatedBy: '',
-      bountyExpiration: '',
-      bountyImage: '',
+      bountyCreatedAt: '',
+      bountyDueAt: '',
+      bountyStatus: '',
     }
-    err = {
-      bountyTitle: '',
-      bountyDescription: '',
-      bountyCriteria: '',
-      bountyReward: '',
-      bountyGuild: '',
-      bountyCreatedBy: '',
-      bountyExpiration: '',
-      bountyImage: '',
-    }
-    if (!form.bountyTitle) err.bountyTitle = 'Title is required'
-    if (!form.bountyDescription) err.bountyDescription = 'Description required'
-    if (!form.bountyCriteria)
+
+    if (!form.title) err.bountyTitle = 'Title is required'
+    if (!form.season) err.bountySeason = 'Season is required'
+    if (!form.description) err.bountyDescription = 'Description required'
+    if (!form.criteria)
       err.bountyCriteria = 'Acceptance Criteria required'
-    if (!form.bountyReward) err.bountyReward = 'Bounty Reward required'
-    if (!form.bountyGuild) err.bountyGuild = 'Guild is required'
-    if (!form.bountyCreatedBy)
+    if (!form.reward) err.bountyReward = 'Bounty Reward required'
+    if (!form.createdBy)
       err.bountyCreatedBy = 'Creator discord handle for bounty required'
-    if (!form.bountyExpiration)
-      err.bountyExpiration = 'bounty expiration required'
-    if (!form.bountyImage) err.bountyImage = 'Image URL is required'
+    if (!form.createdAt)
+      err.bountyCreatedAt = 'Bounty Created At required. Contact support'
+    if (!form.dueAt)
+      err.bountyDueAt = 'bounty expiration required. Contact support'
+    if (!form.status)
+      err.bountyStatus = 'bounty status required. Contact support'
     return err
   }
 
@@ -143,7 +144,7 @@ const Form = ({
           type="text"
           maxLength={40}
           name="bountyTitle"
-          value={form.bountyTitle}
+          value={form.title}
           onChange={handleChange}
           required
         />
@@ -152,7 +153,7 @@ const Form = ({
         <textarea
           name="bountyDescription"
           maxLength={140}
-          value={form.bountyDescription}
+          value={form.description}
           onChange={handleChange}
           required
         />
@@ -161,7 +162,7 @@ const Form = ({
         <textarea
           maxLength={140}
           name="bountyCriteria"
-          value={form.bountyCriteria}
+          value={form.criteria}
           onChange={handleChange}
           required
         />
@@ -170,18 +171,9 @@ const Form = ({
         <input
           type="number"
           name="bountyReward"
-          value={form.bountyReward}
+          value={form.reward}
           onChange={handleChange}
           required
-        />
-
-        <label htmlFor="bountyGuild">Bounty Guild</label>
-        <input
-          type="text"
-          maxLength={30}
-          name="bountyGuild"
-          value={form.bountyGuild}
-          onChange={handleChange}
         />
 
         <label htmlFor="bountyCreatedBy">Bounty Created By</label>
@@ -189,26 +181,14 @@ const Form = ({
           type="text"
           maxLength={40}
           name="bountyCreatedBy"
-          value={form.bountyCreatedBy}
+          value={form.createdBy}
           onChange={handleChange}
         />
 
-        <label htmlFor="bountyExpiration">Bounty Expiration (days)</label>
-        <input
-          type="number"
-          name="bountyExpiration"
-          value={form.bountyExpiration}
-          onChange={handleChange}
-        />
+        {/*  Note createdAt, dueAt, and status are implicitly set in MVP 0.
+           (i.e. not user specified) 
+        */}
 
-        <label htmlFor="bountyImage"> Bounty Image URL </label>
-        <input
-          type="url"
-          name="bountyImage"
-          value={form.bountyImage}
-          onChange={handleChange}
-          required
-        />
 
         <button type="submit" className="btn">
           Submit
