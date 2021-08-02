@@ -66,4 +66,7 @@ The following commands are available for Serendipity MK-I:
 
 ##### Creating a Bounty
 
-TBD
+Note: This process describes Bot interactions in the Bankless Bot Garage. Development and Production environments will be added soon.
+
+1. Within The Bankless Bot Garage, head to #spam-tastic
+2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
