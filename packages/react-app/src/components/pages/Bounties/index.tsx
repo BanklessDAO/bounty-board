@@ -1,9 +1,10 @@
 import { Stack } from '@chakra-ui/react'
 import Filters from './Filters'
-import BountyList from './BountyList'
+import BountyAccordion from './BountyAccordion'
 import useSWR from 'swr'
+import { BountyCard } from './Bounty'
 
-export type FilterProps = {
+export type PreFilterProps = {
   id?: string | string[]
 }
 
@@ -12,8 +13,8 @@ const fetcher = (url: string) =>
     .then((res) => res.json())
     .then((json) => json.data)
 
-const Bounties = ({ id }: FilterProps): JSX.Element => {
-  /* Bounties will fetch all data to start, unless prefiltering is set */
+const Bounties = ({ id }: PreFilterProps): JSX.Element => {
+  /* Bounties will fetch all data to start, unless a single bounty is requested */
   const { data: bounties, error } = useSWR(
     id ? `/api/bounties/${id}` : `/api/bounties`,
     fetcher
@@ -30,11 +31,13 @@ const Bounties = ({ id }: FilterProps): JSX.Element => {
       fontWeight="600"
       gridGap="4"
     >
-      <Filters />
       {id ? (
-        <BountyList bounties={[bounties]} />
+        <BountyCard {...bounties} />
       ) : (
-        <BountyList bounties={bounties} />
+        <>
+          <Filters />
+          <BountyAccordion bounties={bounties} />
+        </>
       )}
     </Stack>
   )

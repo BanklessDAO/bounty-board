@@ -1,6 +1,6 @@
 import { Accordion } from '@chakra-ui/react'
 import { BountyBoardProps } from '../../../../models/Bounty'
-import Bounty from './Bounty'
+import { AccordionBountyItem } from '../Bounty'
 
 type BountyListProps = {
   bounties: BountyBoardProps[]
@@ -20,7 +20,7 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
           reward,
           status,
         }) => (
-          <Bounty
+          <AccordionBountyItem
             key={_id}
             _id={_id}
             title={title}

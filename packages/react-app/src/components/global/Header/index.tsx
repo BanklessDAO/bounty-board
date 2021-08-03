@@ -70,7 +70,7 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
       justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
       direction={{ base: 'column', md: 'row' }}
     >
-      <MenuItem to="#">Bounty Board</MenuItem>
+      <MenuItem to="/">Bounty Board</MenuItem>
       <MenuItem to="#">
         <ColorModeButton>Connect Wallet</ColorModeButton>{' '}
       </MenuItem>
