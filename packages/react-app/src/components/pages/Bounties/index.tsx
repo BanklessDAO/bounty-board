@@ -3,13 +3,21 @@ import Filters from './Filters'
 import BountyList from './BountyList'
 import useSWR from 'swr'
 
+export type FilterProps = {
+  id?: string | string[]
+}
+
 const fetcher = (url: string) =>
   fetch(url)
     .then((res) => res.json())
     .then((json) => json.data)
 
-const Bounties = (): JSX.Element => {
-  const { data: bounties, error } = useSWR(`/api/bounties`, fetcher)
+const Bounties = ({ id }: FilterProps): JSX.Element => {
+  /* Bounties will fetch all data to start, unless prefiltering is set */
+  const { data: bounties, error } = useSWR(
+    id ? `/api/bounties/${id}` : `/api/bounties`,
+    fetcher
+  )
 
   if (error) return <p>Failed to load</p>
   if (!bounties) return <p>Loading...</p>
@@ -23,7 +31,11 @@ const Bounties = (): JSX.Element => {
       gridGap="4"
     >
       <Filters />
-      <BountyList bounties={bounties} />
+      {id ? (
+        <BountyList bounties={[bounties]} />
+      ) : (
+        <BountyList bounties={bounties} />
+      )}
     </Stack>
   )
 }
