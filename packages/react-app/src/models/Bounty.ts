@@ -21,8 +21,11 @@ export type BountyBoardProps = {
   }
   createdAt?: string
   claimedAt?: number
+  completedAt?: number
+  completedBy?: { discordHandle: string; discordId: string }
   status: string
   statusHistory?: { status: string; setAt: string }[]
+  submissionUrl?: string
 }
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
