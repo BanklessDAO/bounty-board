@@ -32,7 +32,7 @@ const Form = ({
   const putData = async (form: any) => {
     const { id } = router.query
     //When an edited bounty is submitted, its status becomes "open"
-    form.status = "open"
+    form.status = 'open'
 
     try {
       const res = await fetch(`/api/bounties/${id}`, {
@@ -50,11 +50,11 @@ const Form = ({
       }
 
       const { data } = await res.json()
-      console.log("PUT: " + data.status)
-      data.status = "open"
+      console.warn('PUT: ' + data.status)
+      data.status = 'open'
 
       // Update the local data immediately without a revalidation
-      mutate(`/api/bounties/${id}`, data, false) 
+      mutate(`/api/bounties/${id}`, data, false)
       router.push('/')
     } catch (error) {
       setMessage('Failed to update bounty')
@@ -97,7 +97,7 @@ const Form = ({
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    const errs = formValidate()
+    const errs = formValidate({})
     if (Object.keys(errs).length === 0) {
       forNewBounty ? postData(form) : putData(form)
     } else {
@@ -106,24 +106,11 @@ const Form = ({
   }
 
   /* Makes sure bounty info is filled for required bounty fields*/
-  const formValidate = () => {
-    let err = {
-      bountyTitle: '',
-      bountySeason: '',
-      bountyDescription: '',
-      bountyCriteria: '',
-      bountyReward: '',
-      bountyCreatedBy: '',
-      bountyCreatedAt: '',
-      bountyDueAt: '',
-      bountyStatus: '',
-    }
-
+  const formValidate = ({ err }: { err?: any }) => {
     if (!form.title) err.bountyTitle = 'Title is required'
     if (!form.season) err.bountySeason = 'Season is required'
     if (!form.description) err.bountyDescription = 'Description required'
-    if (!form.criteria)
-      err.bountyCriteria = 'Acceptance Criteria required'
+    if (!form.criteria) err.bountyCriteria = 'Acceptance Criteria required'
     if (!form.reward) err.bountyReward = 'Bounty Reward required'
     if (!form.createdBy)
       err.bountyCreatedBy = 'Creator discord handle for bounty required'
@@ -188,7 +175,6 @@ const Form = ({
         {/*  Note createdAt, dueAt, and status are implicitly set in MVP 0.
            (i.e. not user specified) 
         */}
-
 
         <button type="submit" className="btn">
           Submit

@@ -1,8 +1,9 @@
 import { Accordion } from '@chakra-ui/react'
+import { BountyBoardProps } from '../../../../models/Bounty'
 import Bounty from './Bounty'
 
 type BountyListProps = {
-  bounties: any[]
+  bounties: BountyBoardProps[]
 }
 
 const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
@@ -10,25 +11,24 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
     <Accordion allowToggle width={{ base: '95vw', lg: '700px' }}>
       {bounties.map(
         ({
-          hash,
+          _id,
           title,
           description,
           criteria,
-          author,
-          claimed,
+          createdBy,
+          claimedBy,
           reward,
-          guilds,
           status,
         }) => (
           <Bounty
-            key={hash}
+            key={_id}
+            _id={_id}
             title={title}
             description={description}
             criteria={criteria}
-            author={author}
-            claimed={claimed}
+            createdBy={createdBy}
+            claimedBy={claimedBy}
             reward={reward}
-            guilds={guilds}
             status={status}
           />
         )

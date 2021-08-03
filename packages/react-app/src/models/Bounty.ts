@@ -1,5 +1,30 @@
 import mongoose from 'mongoose'
 
+/* Global typing for Bounties */
+export type BountyBoardProps = {
+  _id: any
+  season?: number
+  title: string
+  description: string
+  criteria: string
+  reward: {
+    currency: string
+    amount: number
+  }
+  createdBy: {
+    discordHandle: string
+    discordId: string
+  }
+  claimedBy?: {
+    discordHandle: string
+    discordId: string
+  }
+  createdAt?: string
+  claimedAt?: number
+  status: string
+  statusHistory?: { status: string; setAt: string }[]
+}
+
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 const BountyBoardSchema = new mongoose.Schema({
   title: {
@@ -13,7 +38,7 @@ const BountyBoardSchema = new mongoose.Schema({
     /* The season of this Bounty */
 
     type: Number,
-    required: [true, 'Bounty Season required']
+    required: [true, 'Bounty Season required'],
   },
   description: {
     /* A short description of the Bounty */
@@ -41,13 +66,16 @@ const BountyBoardSchema = new mongoose.Schema({
     discordHandle: String,
     discordId: Number,
     type: Object,
-    required: [true, 'Please provide your discord information']
+    required: [true, 'Please provide your discord information'],
   },
   createdAt: {
     /* Date of Bounty creation */
 
     type: Date,
-    required: [true, 'Bounty createdAt should be populated. Please recreate Bounty in DEGEN or contact support.'],
+    required: [
+      true,
+      'Bounty createdAt should be populated. Please recreate Bounty in DEGEN or contact support.',
+    ],
   },
   dueAt: {
     /* Bounty Expiration */
@@ -58,8 +86,11 @@ const BountyBoardSchema = new mongoose.Schema({
     /* Bounty Status */
     /* "Draft", "Open", "In-Progress", "In-Review", "Completed", "Deleted" */
     type: String,
-    required: [true, "Bounty status required. Recreate Bounty in DEGEN or contact support."],
-  }
+    required: [
+      true,
+      'Bounty status required. Recreate Bounty in DEGEN or contact support.',
+    ],
+  },
 })
 
 export default mongoose.models.Bounty ||

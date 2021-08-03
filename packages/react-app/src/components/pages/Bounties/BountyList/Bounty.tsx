@@ -4,7 +4,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Avatar,
-  Badge,
   Box,
   Button,
   Flex,
@@ -15,6 +14,8 @@ import {
   TagLabel,
   Text,
 } from '@chakra-ui/react'
+
+import { BountyBoardProps } from '../../../../models/Bounty'
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
   <Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -35,21 +36,11 @@ const Bounty = ({
   title,
   reward,
   status,
-  guilds,
   description,
   criteria,
-  author,
-  claimed,
-}: {
-  title: string
-  reward?: any
-  status: string
-  guilds: Array<string>
-  description: string
-  criteria: string
-  author: string
-  claimed?: string
-}): JSX.Element => (
+  createdBy,
+  claimedBy,
+}: BountyBoardProps): JSX.Element => (
   <AccordionItem borderWidth={3} borderRadius={10} mb={3}>
     <AccordionButton pb={5}>
       <Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
@@ -72,7 +63,7 @@ const Bounty = ({
         >
           {reward && (
             <Heading mt={1} size="md">
-              {reward.amt} {reward.token}
+              {reward.amount} {reward.currency}
             </Heading>
           )}
         </Box>
@@ -87,7 +78,7 @@ const Bounty = ({
           textAlign={{ base: 'left', md: 'right' }}
           pr={7}
         >
-          {guilds &&
+          {/* {guilds &&
             guilds.map((guild: string) => (
               <Badge
                 key={guild}
@@ -99,7 +90,7 @@ const Bounty = ({
               >
                 {guild}
               </Badge>
-            ))}
+            ))} */}
         </Box>
       </Flex>
     </AccordionButton>
@@ -115,12 +106,12 @@ const Bounty = ({
         </GridItem>
         <GridItem>
           <Heading size="sm">Requested By</Heading>
-          <DiscordStub name={author} />
+          <DiscordStub name={createdBy.discordHandle} />
         </GridItem>
         <GridItem>
           <Heading size="sm">Claimed By</Heading>
-          {claimed ? (
-            <DiscordStub name={claimed} />
+          {claimedBy ? (
+            <DiscordStub name={claimedBy.discordHandle} />
           ) : (
             <Button my={2} size="sm" colorScheme="green">
               <TagLabel>Claim It</TagLabel>
