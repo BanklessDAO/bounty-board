@@ -15,22 +15,23 @@ export default async function handler(
       try {
         const bounties = await Bounty.find({
           status: ['Open', 'In-Progress', 'In-Review', 'Completed'],
-        }) /* find all the data in our database */
+        }) /* find all bounties that aren't in draft or deleted */
         res.status(200).json({ success: true, data: bounties })
       } catch (error) {
         res.status(400).json({ success: false })
       }
       break
-    case 'POST':
-      try {
-        const bounty = await Bounty.create(
-          req.body
-        ) /* create a new model in the database */
-        res.status(201).json({ success: true, data: bounty })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
+    /* Disabling POST because it is out of scope for MVP */
+    // case 'POST':
+    //   try {
+    //     const bounty = await Bounty.create(
+    //       req.body
+    //     ) /* create a new model in the database */
+    //     res.status(201).json({ success: true, data: bounty })
+    //   } catch (error) {
+    //     res.status(400).json({ success: false })
+    //   }
+    //   break
     default:
       res.status(400).json({ success: false })
       break
