@@ -20,7 +20,6 @@
       }
     ],
     "createdBy": {
-      "_id": "60f6558d453e70eed340e8e0",
       "isDaoMember": true,
       "guildName": "Analytics Guild",
       "discordHandle": "paul#8888",
@@ -31,7 +30,6 @@
     "activatedAt": "2021-07-20T06:44:33.858Z",
     "claimedBy": [
       {
-        "_id": "60f6558d453e70eed340e8e1",
         "isDaoMember": false,
         "guildName": null,
         "discordHandle": "rick#5555",
@@ -39,6 +37,9 @@
       }
     ],
     "claimedAt": "2021-07-20T07:00:31.166Z",
+    "completedAt": "2021-07-20T07:00:31.166Z",
+    "submissionUrl": "https://example.org/rels/v1/bounty_submission",
+    "submissionNotes": "it took me a long time to work on this bounty",
     "status": "Draft",
     "statusHistory": [
       {

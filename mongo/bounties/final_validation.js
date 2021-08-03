@@ -11,6 +11,8 @@ db.createCollection("bounties", {
         "createdBy",
         "createdAt",
         "dueAt",
+        'status',
+        'statusHistory'
       ],
       properties: {
         season: {
@@ -28,6 +30,14 @@ db.createCollection("bounties", {
         criteria: {
           bsonType: "string",
           description: "absolutely required work for bounty to be Completed, /^[\\w\\s.!@#$%&,?']{1,250}$/",
+        },
+        status: {
+          bsonType: "string",
+          description: "the current status of the bounty",
+        },
+        statusHistory: {
+          bsonType: "array",
+          description: "the history of the status of the bounty",
         },
         reward: {
           bsonType: "object",
