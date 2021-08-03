@@ -13,9 +13,9 @@ export default async function handler(
   switch (method) {
     case 'GET':
       try {
-        const bounties = await Bounty.find(
-          {}
-        ) /* find all the data in our database */
+        const bounties = await Bounty.find({
+          status: ['Open', 'In-Progress', 'In-Review', 'Completed'],
+        }) /* find all the data in our database */
         res.status(200).json({ success: true, data: bounties })
       } catch (error) {
         res.status(400).json({ success: false })

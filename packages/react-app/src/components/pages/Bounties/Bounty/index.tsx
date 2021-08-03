@@ -14,6 +14,7 @@ import {
   TagLabel,
   Text,
 } from '@chakra-ui/react'
+import AccessibleLink from '../../../parts/AccessibleLink'
 
 import { BountyBoardProps } from '../../../../models/Bounty'
 
@@ -87,10 +88,13 @@ const BountySummary = ({
 )
 
 const BountyDetails = ({
+  _id,
   description,
   criteria,
   createdBy,
   claimedBy,
+  status,
+  submissionUrl,
 }: BountyBoardProps): JSX.Element => (
   <Grid gap={6}>
     <GridItem>
@@ -106,15 +110,27 @@ const BountyDetails = ({
       <DiscordStub name={createdBy.discordHandle} />
     </GridItem>
     <GridItem>
-      <Heading size="sm">Claimed By</Heading>
-      {claimedBy ? (
-        <DiscordStub name={claimedBy.discordHandle} />
+      {status && status.toLowerCase() === 'draft' ? (
+        <AccessibleLink href={`${_id}/edit`}>
+          <Button my={2} size="sm">
+            Edit Draft
+          </Button>
+        </AccessibleLink>
+      ) : claimedBy ? (
+        <>
+          <Heading size="sm">Claimed By</Heading>
+          <DiscordStub name={claimedBy.discordHandle} />
+        </>
       ) : (
-        <Button my={2} size="sm" colorScheme="green">
-          <TagLabel>Claim It</TagLabel>
-        </Button>
+        <>
+          <Heading size="sm">Claimed By</Heading>
+          <AccessibleLink href={submissionUrl || '/'}>
+            <Button my={2} size="sm" colorScheme="green">
+              Claim It
+            </Button>
+          </AccessibleLink>
+        </>
       )}
-      {/* <Link href="/[id]/edit" as={`/${bounty._id}/edit`}></Link> */}
     </GridItem>
   </Grid>
 )
@@ -136,14 +152,7 @@ export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
   <AccordionItem borderWidth={3} borderRadius={10} mb={3}>
     <AccordionButton pb={5}>
       <BountySummary {...props} />
-      <Box
-        pos="relative"
-        verticalAlign="top"
-        textAlign="right"
-        w={0}
-        left={-4}
-        top={-7}
-      >
+      <Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
         <AccordionIcon />
       </Box>
     </AccordionButton>
