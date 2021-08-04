@@ -8,12 +8,18 @@
     "build": "yarn workspace @bounty-board/react-app build",
     "lint": "yarn workspace @bounty-board/react-app lint",
     "test": "yarn workspace @bounty-board/react-app test",
+    "react-app:lint-staged": "yarn workspace @bounty-board/react-app lint-staged",
     "react-app:type-check": "yarn workspace @bounty-board/react-app type-check",
     "react-app:format": "yarn workspace @bounty-board/react-app format",
     "react-app:test-all": "yarn workspace @bounty-board/react-app test-all",
     "truffle:test": "yarn workspace @bounty-board/escrow test",
     "truffle:start": "yarn workspace @bounty-board/escrow start",
     "truffle:coverage": "yarn workspace @bounty-board/escrow coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "react-app:lint-staged"
+    }
   },
   "dependencies": {},
   "workspaces": {
@@ -24,5 +30,8 @@
       "**/truffle",
       "**/truffle/**"
     ]
+  },
+  "devDependencies": {
+    "husky": "^7.0.1"
   }
 }
