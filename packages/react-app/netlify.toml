@@ -1,5 +1,5 @@
 # TOML configuration https://toml.io/en/
 [build]
   command = "npm run build"
-  base = "/"
+  base = "packages/react-app"
   publish = "dist"
