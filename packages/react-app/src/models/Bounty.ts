@@ -74,7 +74,7 @@ const BountyBoardSchema = new mongoose.Schema({
   createdAt: {
     /* Date of Bounty creation */
 
-    type: Date,
+    type: String,
     required: [
       true,
       'Bounty createdAt should be populated. Please recreate Bounty in DEGEN or contact support.',
@@ -83,7 +83,7 @@ const BountyBoardSchema = new mongoose.Schema({
   dueAt: {
     /* Bounty Expiration */
 
-    type: Date,
+    type: String,
   },
   status: {
     /* Bounty Status */
