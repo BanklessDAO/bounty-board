@@ -11,11 +11,11 @@
     },
     "applicableGuilds": [
       {
-        "guildName": "Developers Guild",
+        "name": "Developers",
         "id": "60f6585b453e70eed340e8e3"
       },
       {
-        "guildName": "Marketing Guild",
+        "name": "Marketing Guild",
         "id": "60f6585b453e70eed340e8e3"
       }
     ],
