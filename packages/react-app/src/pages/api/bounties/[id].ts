@@ -29,7 +29,6 @@ export default async function handler(
     case 'PUT' /* Edit a model by its ID */:
       try {
         const bounty = await Bounty.findByIdAndUpdate(id, req.body, {
-          new: true,
           runValidators: true,
         })
         if (!bounty) {
