@@ -32,6 +32,7 @@
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
     "@fontsource/lexend": "^4.5.0",
+    "@netlify/plugin-nextjs": "^3.8.0",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "framer-motion": "^4.1.17",
     "mongoose": "^5.13.4",
