@@ -76,9 +76,11 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
         },
         body: JSON.stringify(output),
       })
-
+      
       if (!res.ok) {
-        throw new Error(`Error: ${res.status}`)
+        throw new Error(
+          `${res.status} ${res.statusText}`
+          )
       }
 
       const { data } = await res.json()
@@ -96,7 +98,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form id='edit-bounty-form' onSubmit={handleSubmit(onSubmit)}>
       <FormControl isInvalid={errors.title}>
         <FormLabel htmlFor="title">Title</FormLabel>
         <Input id="title" placeholder="title" {...register('title')} />
