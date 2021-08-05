@@ -1,10 +1,10 @@
 # TOML configuration https://toml.io/en/
 [build]
-  command = "next build packages/react-app"
+  command = "yarn build"
   publish = "packages/react-app/dist"
 
 [dev]
-  command = "next dev packages/react-app"
+  command = "yarn dev"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
