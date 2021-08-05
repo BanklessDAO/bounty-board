@@ -28,13 +28,24 @@ export default async function handler(
 
     case 'PUT' /* Edit a model by its ID */:
       try {
-        const bounty = await Bounty.findByIdAndUpdate(id, req.body, {
-          runValidators: true,
+        Bounty.findById(id).then((data) => {
+          /* only save if the bounty is still in draft */
+          if (data.status.toLowerCase() === 'draft') {
+            Bounty.findByIdAndUpdate(id, req.body, {
+              new: true,
+              omitUndefined: true,
+              runValidators: true,
+            })
+              .then((bounty) => {
+                res.status(200).json({ success: true, data: bounty })
+              })
+              .catch(() => {
+                return res.status(400).json({ success: false })
+              })
+          } else {
+            return res.status(400).json({ success: false })
+          }
         })
-        if (!bounty) {
-          return res.status(400).json({ success: false })
-        }
-        res.status(200).json({ success: true, data: bounty })
       } catch (error) {
         res.status(400).json({ success: false })
       }

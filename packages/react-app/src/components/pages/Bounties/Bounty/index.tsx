@@ -112,8 +112,8 @@ const BountyDetails = ({
     <GridItem>
       {status && status.toLowerCase() === 'draft' ? (
         <AccessibleLink href={`${_id}/edit`}>
-          <Button my={2} size="sm">
-            Edit Draft
+          <Button my={2} size="sm" colorScheme="red">
+            Edit This Draft
           </Button>
         </AccessibleLink>
       ) : claimedBy ? (

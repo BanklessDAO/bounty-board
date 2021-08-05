@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import Form from '../../components/pages/Bounties/Form'
+import Layout from '../../components/global/SiteLayout'
+import { Box } from '@chakra-ui/react'
 
 const fetcher = (url: string) =>
   fetch(url)
@@ -21,7 +23,13 @@ const EditBounty = (): JSX.Element => {
   //   return <p>Bounty is no longer in draft state. Unauthorized to edit</p>
   // }
 
-  return <Form bountyForm={bounty} />
+  return (
+    <Layout title="Bounty Draft">
+      <Box w={{ base: '90vw', md: 700 }}>
+        <Form bountyForm={bounty} />
+      </Box>
+    </Layout>
+  )
 }
 
 export default EditBounty

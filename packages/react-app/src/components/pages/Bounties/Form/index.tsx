@@ -10,6 +10,7 @@ import {
   FormControl,
   Input,
   Button,
+  Textarea,
 } from '@chakra-ui/react'
 
 const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
@@ -33,7 +34,6 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
       .number()
       .typeError('Invalid number')
       .positive()
-      .integer()
       .required('Please provide the bounty reward amount'),
     rewardCurrency: yup
       .string()
@@ -61,35 +61,13 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
   }, [reset])
 
   const putData = async (values: any) => {
-    // const output = {
-    //   ...values,
-    //   reward: { amount: values.rewardAmount, currency: values.rewardCurrency },
-    // }
-
-    /// FOR TESTING PURPOSES ONLY, OVERRIDE VALUES SET
-    //////////////////////////////////////////////////
-    console.error(values)
-
-    console.error('IGNORE THE INPUT VALUES. Now inserting our own')
-    /// Change this to troubleshoot, removing the reward field entirely makes it successful
+    /* Sanitize output data and change status to open */
     const output = {
-      title: 'testing',
-      description: 'big bounty',
-      criteria: 'none',
-      season: 1,
-      reward: { amount: 100000, currency: 'BANK' },
-      createdBy: {
-        discordHandle: 'Tiki#0503',
-        discordId: '749152252966469668',
-      },
-      createdAt: '2021-08-04T13:07:50.097Z',
-      statusHistory: [
-        { status: 'Draft', setAt: '2021-08-04T13:07:50.097Z' },
-        { status: 'Open', setAt: '2021-08-04T13:08:23.220Z' },
-      ],
-      status: 'Draft',
-      dueAt: '2021-10-01T00:00:00.000Z',
-      discordMessageId: '872465988522745906',
+      ...values,
+      rewardAmount: undefined,
+      rewardCurrency: undefined,
+      reward: { amount: values.rewardAmount, currency: values.rewardCurrency },
+      status: 'Open',
     }
 
     const { id } = router.query
@@ -104,7 +82,10 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
       })
 
       if (!res.ok) {
-        throw new Error(`Error: ${res.status}`)
+        if (res.status === 400) {
+          router.push('/400')
+        }
+        throw new Error(`${res.status}`)
       }
 
       const { data } = await res.json()
@@ -123,26 +104,30 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={errors.title}>
+      <FormControl isInvalid={errors.title} mb={5}>
         <FormLabel htmlFor="title">Title</FormLabel>
         <Input id="title" placeholder="title" {...register('title')} />
         <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={errors.description}>
+      <FormControl isInvalid={errors.description} mb={5}>
         <FormLabel htmlFor="description">Description</FormLabel>
-        <Input
+        <Textarea
           id="description"
           placeholder="description"
           {...register('description')}
         />
         <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={errors.criteria}>
+      <FormControl isInvalid={errors.criteria} mb={5}>
         <FormLabel htmlFor="criteria">Criteria</FormLabel>
-        <Input id="criteria" placeholder="criteria" {...register('criteria')} />
+        <Textarea
+          id="criteria"
+          placeholder="criteria"
+          {...register('criteria')}
+        />
         <FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={errors.rewardAmount}>
+      <FormControl isInvalid={errors.rewardAmount} mb={5}>
         <FormLabel htmlFor="rewardAmount">Reward Amount</FormLabel>
         <Input
           id="rewardAmount"
@@ -151,7 +136,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
         />
         <FormErrorMessage>{errors.rewardAmount?.message}</FormErrorMessage>
       </FormControl>
-      <FormControl isInvalid={errors.rewardCurrency}>
+      <FormControl isInvalid={errors.rewardCurrency} mb={5}>
         <FormLabel htmlFor="rewardCurrency">Reward Currency</FormLabel>
         <Input
           id="rewardCurrency"
