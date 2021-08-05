@@ -70,6 +70,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
     //////////////////////////////////////////////////
     console.error(values)
 
+    console.error('IGNORE THE INPUT VALUES. Now inserting our own')
     /// Change this to troubleshoot, removing the reward field entirely makes it successful
     const output = {
       title: 'testing',
