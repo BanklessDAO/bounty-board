@@ -61,9 +61,34 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
   }, [reset])
 
   const putData = async (values: any) => {
+    // const output = {
+    //   ...values,
+    //   reward: { amount: values.rewardAmount, currency: values.rewardCurrency },
+    // }
+
+    /// FOR TESTING PURPOSES ONLY, OVERRIDE VALUES SET
+    //////////////////////////////////////////////////
+    console.error(values)
+
+    /// Change this to troubleshoot, removing the reward field entirely makes it successful
     const output = {
-      ...values,
-      reward: { amount: values.rewardAmount, currency: values.rewardCurrency },
+      title: 'testing',
+      description: 'big bounty',
+      criteria: 'none',
+      season: 1,
+      reward: { amount: 100000, currency: 'BANK' },
+      createdBy: {
+        discordHandle: 'Tiki#0503',
+        discordId: '749152252966469668',
+      },
+      createdAt: '2021-08-04T13:07:50.097Z',
+      statusHistory: [
+        { status: 'Draft', setAt: '2021-08-04T13:07:50.097Z' },
+        { status: 'Open', setAt: '2021-08-04T13:08:23.220Z' },
+      ],
+      status: 'Draft',
+      dueAt: '2021-10-01T00:00:00.000Z',
+      discordMessageId: '872465988522745906',
     }
 
     const { id } = router.query
@@ -85,7 +110,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
       mutate(`/api/bounties/${id}`, data, false)
       router.push('/')
     } catch (error) {
-      alert(error)
+      console.error(error)
     }
   }
   function onSubmit(values: JSON) {
