@@ -51,18 +51,6 @@ export default async function handler(
       }
       break
 
-    case 'DELETE' /* Delete a model by its ID */:
-      try {
-        const deletedBounty = await Bounty.deleteOne({ _id: id })
-        if (!deletedBounty) {
-          return res.status(400).json({ success: false })
-        }
-        res.status(200).json({ success: true, data: {} })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
-      break
-
     default:
       res.status(400).json({ success: false })
       break
