@@ -45,7 +45,7 @@ db.createCollection("bounties", {
           required: [
             "currency",
             "amount",
-            "precision",
+            "scale",
           ],
           properties: {
             currency: {
@@ -56,7 +56,7 @@ db.createCollection("bounties", {
               bsonType: "double",
               description: "the amount to be rewarded i.e 1000",
             },
-            precision: {
+            scale: {
               bsonType: 'int',
               description: 'the decimal value for the given amount'
             },
