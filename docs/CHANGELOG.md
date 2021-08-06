@@ -7,3 +7,4 @@
 3. Add mongodb integration
 4. Add netlify integration with configuration
 5. Add mock json data for mongodb compass testing
+6. Fix netlify deployment and add .github docs
