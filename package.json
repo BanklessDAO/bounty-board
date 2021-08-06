@@ -14,7 +14,8 @@
     "react-app:test-all": "yarn workspace @bounty-board/react-app test-all",
     "truffle:test": "yarn workspace @bounty-board/escrow test",
     "truffle:start": "yarn workspace @bounty-board/escrow start",
-    "truffle:coverage": "yarn workspace @bounty-board/escrow coverage"
+    "truffle:coverage": "yarn workspace @bounty-board/escrow coverage",
+    "postinstall": "npx husky install"
   },
   "husky": {
     "hooks": {
