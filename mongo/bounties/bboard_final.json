@@ -7,7 +7,8 @@
     "criteria": "A completed bounty has the following deliverables...",
     "reward": {
       "currency": "BANK",
-      "amount": 10000.00
+      "amount": 10000,
+      "precision": 2
     },
     "applicableGuilds": [
       {
