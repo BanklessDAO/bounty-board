@@ -35,16 +35,12 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
       .typeError('Invalid number')
       .positive()
       .required('Please provide the bounty reward amount'),
-    rewardCurrency: yup
-      .string()
-      .required('Please provide the bounty reward currency')
-      .max(60, 'Currency cannot be more than 60 characters'),
   })
 
+  /* This fixes the displayed value for rewardAmount to use the correct scale */
   const defaults = {
     ...bountyForm,
-    rewardAmount: bountyForm.reward.amount,
-    rewardCurrency: bountyForm.reward.currency,
+    rewardAmount: bountyForm.reward.amount / 10 ** bountyForm.reward.scale,
   }
   const {
     handleSubmit,
@@ -62,12 +58,22 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 
   const putData = async (values: any) => {
     /* Sanitize output data and change status to open */
+    /* Convert input amount's decimal place into scale */
+    const amount = values.rewardAmount.toString().replace(/\./g, '')
+    const scale = values.rewardAmount.toString().split('.')[1]?.length || 0
+    /* Add an entry to statusHistory */
+    const setAt = new Date(Date.now()).toISOString()
+    const statusHistory = values.statusHistory.concat({
+      status: 'Open',
+      setAt: setAt,
+    })
     const output = {
       ...values,
       rewardAmount: undefined,
       rewardCurrency: undefined,
-      reward: { amount: values.rewardAmount, currency: values.rewardCurrency },
+      reward: { amount: Number(amount), currency: 'BANK', scale: scale },
       status: 'Open',
+      statusHistory: statusHistory,
     }
 
     const { id } = router.query
@@ -128,22 +134,13 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
         <FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={errors.rewardAmount} mb={5}>
-        <FormLabel htmlFor="rewardAmount">Reward Amount</FormLabel>
+        <FormLabel htmlFor="rewardAmount">Reward ($BANK)</FormLabel>
         <Input
           id="rewardAmount"
           placeholder="amount"
           {...register('rewardAmount')}
         />
         <FormErrorMessage>{errors.rewardAmount?.message}</FormErrorMessage>
-      </FormControl>
-      <FormControl isInvalid={errors.rewardCurrency} mb={5}>
-        <FormLabel htmlFor="rewardCurrency">Reward Currency</FormLabel>
-        <Input
-          id="rewardCurrency"
-          placeholder="currency"
-          {...register('rewardCurrency')}
-        />
-        <FormErrorMessage>{errors.rewardCurrency?.message}</FormErrorMessage>
       </FormControl>
 
       <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">

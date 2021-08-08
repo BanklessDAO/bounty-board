@@ -10,6 +10,7 @@ export type BountyBoardProps = {
   reward: {
     currency: string
     amount: number
+    scale: number
   }
   createdBy: {
     discordHandle: string
@@ -66,6 +67,7 @@ const BountyBoardSchema = new mongoose.Schema({
 
     currency: String,
     amount: Number,
+    scale: Number,
     type: Object,
   },
   createdBy: {
