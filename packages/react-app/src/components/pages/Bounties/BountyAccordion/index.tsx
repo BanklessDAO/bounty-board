@@ -19,6 +19,7 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
           claimedBy,
           reward,
           status,
+          discordMessageId,
         }) => (
           <AccordionBountyItem
             key={_id}
@@ -30,6 +31,7 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
             claimedBy={claimedBy}
             reward={reward}
             status={status}
+            discordMessageId={discordMessageId}
           />
         )
       )}

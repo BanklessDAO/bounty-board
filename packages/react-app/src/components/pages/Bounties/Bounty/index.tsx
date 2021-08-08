@@ -17,6 +17,7 @@ import {
 import AccessibleLink from '../../../parts/AccessibleLink'
 
 import { BountyBoardProps } from '../../../../models/Bounty'
+import { discordChannelUrl } from '../../../../constants/discordInfo'
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
   <Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -58,7 +59,7 @@ const BountySummary = ({
     >
       {reward && (
         <Heading mt={1} size="md">
-          {reward.amount} {reward.currency}
+          {reward.amount / 10 ** reward.scale} {reward.currency}
         </Heading>
       )}
     </Box>
@@ -94,7 +95,7 @@ const BountyDetails = ({
   createdBy,
   claimedBy,
   status,
-  submissionUrl,
+  discordMessageId,
 }: BountyBoardProps): JSX.Element => (
   <Grid gap={6}>
     <GridItem>
@@ -124,7 +125,13 @@ const BountyDetails = ({
       ) : (
         <>
           <Heading size="sm">Claimed By</Heading>
-          <AccessibleLink href={submissionUrl || '/'}>
+          <AccessibleLink
+            href={
+              discordMessageId
+                ? `${discordChannelUrl}/${discordMessageId}`
+                : '/'
+            }
+          >
             <Button my={2} size="sm" colorScheme="green">
               Claim It
             </Button>
