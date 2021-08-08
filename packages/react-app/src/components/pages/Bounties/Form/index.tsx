@@ -1,39 +1,82 @@
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
+import {
+  FormErrorMessage,
+  FormLabel,
+  FormControl,
+  Input,
+  Button,
+  Textarea,
+} from '@chakra-ui/react'
 
-const Form = ({
-  formId,
-  bountyForm,
-  forNewBounty = true,
-}: {
-  formId: any
-  bountyForm: any
-  forNewBounty?: boolean
-}): JSX.Element => {
+const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
   const router = useRouter()
   const contentType = 'application/json'
-  const [errors, setErrors] = useState({})
-  const [message, setMessage] = useState('')
 
-  const [form, setForm] = useState({
-    title: bountyForm.bountyTitle,
-    season: bountyForm.bountySeason,
-    description: bountyForm.bountyDescription,
-    criteria: bountyForm.bountyCriteria,
-    reward: bountyForm.bountyReward,
-    createdBy: bountyForm.bountyCreatedBy,
-    createdAt: bountyForm.bountyCreatedAt, //implict
-    dueAt: bountyForm.dueAt, //implicit
-    status: bountyForm.status, //implicit
+  const schema = yup.object().shape({
+    title: yup
+      .string()
+      .required('Please provide a title for this Bounty.')
+      .max(80, 'Title cannot be more than 80 characters'),
+    description: yup
+      .string()
+      .required('Please provide the bounty description')
+      .max(140, 'Description cannot be more than 140 characters'),
+    criteria: yup
+      .string()
+      .required('Please provide the bounty criteria')
+      .max(140, 'Criteria cannot be more than 140 characters'),
+    rewardAmount: yup
+      .number()
+      .typeError('Invalid number')
+      .positive()
+      .required('Please provide the bounty reward amount'),
   })
 
-  /* The PUT method edits an existing entry in the mongodb database. */
-  const putData = async (form: any) => {
-    const { id } = router.query
-    //When an edited bounty is submitted, its status becomes "open"
-    form.status = 'open'
+  /* This fixes the displayed value for rewardAmount to use the correct scale */
+  const defaults = {
+    ...bountyForm,
+    rewardAmount: bountyForm.reward.amount / 10 ** bountyForm.reward.scale,
+  }
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: defaults,
+    resolver: yupResolver(schema),
+  })
 
+  useEffect(() => {
+    reset(defaults)
+  }, [reset])
+
+  const putData = async (values: any) => {
+    /* Sanitize output data and change status to open */
+    /* Convert input amount's decimal place into scale */
+    const amount = values.rewardAmount.toString().replace(/\./g, '')
+    const scale = values.rewardAmount.toString().split('.')[1]?.length || 0
+    /* Add an entry to statusHistory */
+    const setAt = new Date(Date.now()).toISOString()
+    const statusHistory = values.statusHistory.concat({
+      status: 'Open',
+      setAt: setAt,
+    })
+    const output = {
+      ...values,
+      rewardAmount: undefined,
+      rewardCurrency: undefined,
+      reward: { amount: Number(amount), currency: 'BANK', scale: scale },
+      status: 'Open',
+      statusHistory: statusHistory,
+    }
+
+    const { id } = router.query
     try {
       const res = await fetch(`/api/bounties/${id}`, {
         method: 'PUT',
@@ -41,152 +84,69 @@ const Form = ({
           Accept: contentType,
           'Content-Type': contentType,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(output),
       })
 
-      // Throw error with status code in case Fetch API req failed
       if (!res.ok) {
-        throw new Error(`Error: ${res.status}`)
+        if (res.status === 400) {
+          router.push('/400')
+        }
+        throw new Error(`${res.status}`)
       }
 
       const { data } = await res.json()
-      console.warn('PUT: ' + data.status)
-      data.status = 'open'
-
-      // Update the local data immediately without a revalidation
       mutate(`/api/bounties/${id}`, data, false)
       router.push('/')
     } catch (error) {
-      setMessage('Failed to update bounty')
+      console.error(error)
     }
   }
-
-  /* The POST method adds a new entry in the mongodb database. */
-  const postData = async (form: any) => {
-    try {
-      const res = await fetch('/api/bounties', {
-        method: 'POST',
-        headers: {
-          Accept: contentType,
-          'Content-Type': contentType,
-        },
-        body: JSON.stringify(form),
-      })
-
-      // Throw error with status code in case Fetch API req failed
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status}`)
-      }
-
-      router.push('/')
-    } catch (error) {
-      setMessage('Failed to add bounty')
-    }
-  }
-
-  const handleChange = (e: any) => {
-    const target = e.target
-    const value = target.name === 'claimed' ? target.checked : target.value
-    const name = target.name
-
-    setForm({
-      ...form,
-      [name]: value,
+  function onSubmit(values: JSON) {
+    return new Promise<void>((resolve) => {
+      putData(values)
+      resolve()
     })
   }
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
-    const errs = formValidate({})
-    if (Object.keys(errs).length === 0) {
-      forNewBounty ? postData(form) : putData(form)
-    } else {
-      setErrors({ errs })
-    }
-  }
-
-  /* Makes sure bounty info is filled for required bounty fields*/
-  const formValidate = ({ err }: { err?: any }) => {
-    if (!form.title) err.bountyTitle = 'Title is required'
-    if (!form.season) err.bountySeason = 'Season is required'
-    if (!form.description) err.bountyDescription = 'Description required'
-    if (!form.criteria) err.bountyCriteria = 'Acceptance Criteria required'
-    if (!form.reward) err.bountyReward = 'Bounty Reward required'
-    if (!form.createdBy)
-      err.bountyCreatedBy = 'Creator discord handle for bounty required'
-    if (!form.createdAt)
-      err.bountyCreatedAt = 'Bounty Created At required. Contact support'
-    if (!form.dueAt)
-      err.bountyDueAt = 'bounty expiration required. Contact support'
-    if (!form.status)
-      err.bountyStatus = 'bounty status required. Contact support'
-    return err
-  }
-
   return (
-    <>
-      <form id={formId} onSubmit={handleSubmit}>
-        <label htmlFor="bountyTitle">Bounty Title</label>
-        <input
-          type="text"
-          maxLength={40}
-          name="bountyTitle"
-          value={form.title}
-          onChange={handleChange}
-          required
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FormControl isInvalid={errors.title} mb={5}>
+        <FormLabel htmlFor="title">Title</FormLabel>
+        <Input id="title" placeholder="title" {...register('title')} />
+        <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+      </FormControl>
+      <FormControl isInvalid={errors.description} mb={5}>
+        <FormLabel htmlFor="description">Description</FormLabel>
+        <Textarea
+          id="description"
+          placeholder="description"
+          {...register('description')}
         />
-
-        <label htmlFor="bountyDescription">Bounty Description</label>
-        <textarea
-          name="bountyDescription"
-          maxLength={140}
-          value={form.description}
-          onChange={handleChange}
-          required
+        <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+      </FormControl>
+      <FormControl isInvalid={errors.criteria} mb={5}>
+        <FormLabel htmlFor="criteria">Criteria</FormLabel>
+        <Textarea
+          id="criteria"
+          placeholder="criteria"
+          {...register('criteria')}
         />
-
-        <label htmlFor="bountyCriteria">Bounty Criteria</label>
-        <textarea
-          maxLength={140}
-          name="bountyCriteria"
-          value={form.criteria}
-          onChange={handleChange}
-          required
+        <FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
+      </FormControl>
+      <FormControl isInvalid={errors.rewardAmount} mb={5}>
+        <FormLabel htmlFor="rewardAmount">Reward ($BANK)</FormLabel>
+        <Input
+          id="rewardAmount"
+          placeholder="amount"
+          {...register('rewardAmount')}
         />
+        <FormErrorMessage>{errors.rewardAmount?.message}</FormErrorMessage>
+      </FormControl>
 
-        <label htmlFor="bountyReward">Bounty Reward</label>
-        <input
-          type="number"
-          name="bountyReward"
-          value={form.reward}
-          onChange={handleChange}
-          required
-        />
-
-        <label htmlFor="bountyCreatedBy">Bounty Created By</label>
-        <input
-          type="text"
-          maxLength={40}
-          name="bountyCreatedBy"
-          value={form.createdBy}
-          onChange={handleChange}
-        />
-
-        {/*  Note createdAt, dueAt, and status are implicitly set in MVP 0.
-           (i.e. not user specified) 
-        */}
-
-        <button type="submit" className="btn">
-          Submit
-        </button>
-      </form>
-      <p>{message}</p>
-      <div>
-        {Object.keys(errors).map((err, index) => (
-          <li key={index}>{err}</li>
-        ))}
-      </div>
-    </>
+      <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
+        Submit
+      </Button>
+    </form>
   )
 }
 

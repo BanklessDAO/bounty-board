@@ -10,22 +10,34 @@ export type BountyBoardProps = {
   reward: {
     currency: string
     amount: number
+    scale: number
   }
   createdBy: {
     discordHandle: string
     discordId: string
   }
+  createdAt?: string
+  dueAt?: string
+  discordMessageId?: string
+  status: string
+  statusHistory?: { status: string; setAt: string }[]
   claimedBy?: {
     discordHandle: string
     discordId: string
   }
-  createdAt?: string
-  claimedAt?: number
-  completedAt?: number
-  completedBy?: { discordHandle: string; discordId: string }
-  status: string
-  statusHistory?: { status: string; setAt: string }[]
+  claimedAt?: string
+  submissionNotes?: string
   submissionUrl?: string
+  submittedAt?: string
+  submittedBy?: {
+    discordHandle: string
+    discordId: string
+  }
+  reviewedAt?: string
+  reviewedBy?: {
+    discordHandle: string
+    discordId: string
+  }
 }
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
@@ -34,34 +46,29 @@ const BountyBoardSchema = new mongoose.Schema({
     /* The name of this Bounty */
 
     type: String,
-    required: [true, 'Please provide a title for this Bounty.'],
-    maxlength: [80, 'Name cannot be more than 60 characters'],
   },
   season: {
     /* The season of this Bounty */
 
     type: Number,
-    required: [true, 'Bounty Season required'],
   },
   description: {
     /* A short description of the Bounty */
 
     type: String,
-    required: [true, 'Please provide the bounty description'],
   },
   criteria: {
     /* Acceptance criteria of deliverables for the Bounty to be marked complete. */
 
     type: String,
-    required: [true, 'Please provide the bounty acceptance criteria'],
   },
   reward: {
     /* Bounty reward */
 
     currency: String,
     amount: Number,
+    scale: Number,
     type: Object,
-    required: [true, 'Please provide the bounty reward'],
   },
   createdBy: {
     /* Discord identity of bounty creator */
@@ -69,30 +76,57 @@ const BountyBoardSchema = new mongoose.Schema({
     discordHandle: String,
     discordId: Number,
     type: Object,
-    required: [true, 'Please provide your discord information'],
   },
   createdAt: {
     /* Date of Bounty creation */
 
     type: String,
-    required: [
-      true,
-      'Bounty createdAt should be populated. Please recreate Bounty in DEGEN or contact support.',
-    ],
   },
   dueAt: {
     /* Bounty Expiration */
 
     type: String,
   },
+  discordMessageId: {
+    type: String,
+  },
   status: {
     /* Bounty Status */
     /* "Draft", "Open", "In-Progress", "In-Review", "Completed", "Deleted" */
     type: String,
-    required: [
-      true,
-      'Bounty status required. Recreate Bounty in DEGEN or contact support.',
-    ],
+  },
+  statusHistory: {
+    type: Array,
+  },
+  claimedBy: {
+    discordHandle: String,
+    discordId: Number,
+    type: Object,
+  },
+  claimedAt: {
+    type: String,
+  },
+  submissionNotes: {
+    type: String,
+  },
+  submissionUrl: {
+    type: String,
+  },
+  submittedAt: {
+    type: String,
+  },
+  submittedBy: {
+    discordHandle: String,
+    discordId: Number,
+    type: Object,
+  },
+  reviewedAt: {
+    type: String,
+  },
+  reviewedBy: {
+    discordHandle: String,
+    discordId: Number,
+    type: Object,
   },
 })
 
