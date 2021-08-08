@@ -53,7 +53,7 @@ db.createCollection("bounties", {
               description: "the currency denomination i.e ETH",
             },
             amount: {
-              bsonType: "double",
+              bsonType: "int",
               description: "the amount to be rewarded i.e 1000",
             },
             scale: {
