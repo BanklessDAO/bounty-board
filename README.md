@@ -38,35 +38,65 @@ The bounty board will be a key mechanism for coordinating talent, tasks and capi
 
 For the MVP, we are focusing on the bare requirements for a Bounty Card to be created by a user via DEGEN and/or Frontend UI, with the following key fields:
 
-- **season**: In what season is this bounty being created for?
 - **Title**: Bounty Titles should be like headlines
 - **Description**: Provides space to flesh out the scope, deliverables and timeline for the bounty.
 - **Criteria**: When is a task considered "done" or "complete"?
-- **Reward**: Bounty creator indicates `currency` (i.e., $BANK) and `amount` (i.e., 10000) to be paid for completing the work.
-- **CreatedBy**: Bounty creator provides their `discordHandle` and `discordId` is automatically generated.
-- **CreatedAt**: The date in which the bounty is created.
-- **DueAt**: The deadline for completing the work.
+- **Reward**: Bounty creator indicates `amount` (i.e., 10000) and `currency` (i.e., $BANK) to be paid for completing the work.
+- **HashId**: Auto-generated ID for each bounty.
+- **CreatedBy / RequestedBy**: Bot automatically enters bounty creator's `discordHandle`.
+- **ClaimedBy**: Bot automatially notes `discordHandle` claiming the bounty.
+- **SubmittedBy**: Bot automatically notes `discordHandle` submitting the bounty.
 
-#### Bounty Card Status
+#### User Experience Flow
 
-TBD
+The User Experience flow with accompanying bounty status is as follows:
 
-#### Users
+1. **Open**: Bounty creator creates new bounty; status is now "Open" in Discord.
+2. **Publish/Open**: Bounty creator clicks thumbs up emoji in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is still "Open" on website.
+3. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag emoji to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
+4. **Complete/In Review**: Bounty claimer hits green check mark in Discord, receives auto-generated message from Bot indicating "bounty in review"; card status is now "In Review". Bounty claimer informed to look for follow-up message from Bounty creator.
+5. **Submit/In Review**: Alternative to previous step, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
+6. **Complete/Completed**: Bounty claimer can signal completion directly through a new bot command `/bounty complete true`; card status is now "Completed".
 
-##### Bot Commands
+#### Bot Commands
 
-Testing BOT integration with the Bounty Board happens at The BANKLESS Bot Garage discord server, with the Serendipity MK-I Bot.
+1. Within The Bankless Bot Garage, head to #spam-tastic
+2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
 
 The following commands are available for Serendipity MK-I:
 
 /bounty create new
-/bounty create validate
+/bounty create open
 /bounty claim
+/bounty complete
 /bounty list
+/bounty delete
+/bounty submit
 
-##### Creating a Bounty
+##### Create New
 
-Note: This process describes Bot interactions in the Bankless Bot Garage. Development and Production environments will be added soon.
+TBD
 
-1. Within The Bankless Bot Garage, head to #spam-tastic
-2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
+##### Create Open
+
+TBD
+
+##### Claim
+
+TBD
+
+##### Complete
+
+TBD
+
+##### List
+
+TBD
+
+##### Delete
+
+TBD
+
+##### Submit
+
+TBD
