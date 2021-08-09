@@ -1,7 +1,7 @@
 const discordInfo = {
   baseUrl: 'https://discord.com/channels',
-  server: '851552281249972254',
-  channel: '869964294865977425',
+  server: process.env.DISCORD_SERVER_ID,
+  channel: process.env.DISCORD_CHANNEL_BOUNTY_BOARD_ID,
 }
 
 export const discordChannelUrl = `${discordInfo.baseUrl}/${discordInfo.server}/${discordInfo.channel}`
