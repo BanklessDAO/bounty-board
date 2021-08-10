@@ -12,7 +12,6 @@ import {
   Button,
   Textarea,
 } from '@chakra-ui/react'
-import DiscordUtils from '../../../../utils/DiscordUtils'
 
 const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
   const router = useRouter()
@@ -102,25 +101,9 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
       console.error(error)
     }
   }
-
-  const publishBountyToDiscordChannel = (values: any): void => {
-    const embedMessage = DiscordUtils.generateBountyEmbedsMessage(values)
-    fetch(process.env.NEXT_PUBLIC_DISCORD_BOUNTY_BOARD_WEBHOOK as string, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(embedMessage),
-    }).catch(console.error)
-  }
-
   function onSubmit(values: JSON) {
     return new Promise<void>((resolve) => {
-      putData(values)
-        .then(() => {
-          publishBountyToDiscordChannel(values)
-        })
-        .catch(console.error)
+      putData(values).catch(console.error)
       resolve()
     })
   }
