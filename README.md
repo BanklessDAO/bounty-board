@@ -51,12 +51,11 @@ For the MVP, we are focusing on the bare requirements for a Bounty Card to be cr
 
 The User Experience flow with accompanying bounty status is as follows:
 
-1. **Open**: Bounty creator creates new bounty; status is now "Open" in Discord.
-2. **Publish/Open**: Bounty creator clicks thumbs up emoji in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is still "Open" on website.
+1. **Draft**: Bounty creator creates new bounty; status is now "Draft" and **not** shown in Discord. Bounty creator must publish the bounty before it is available to the public.
+2. **Publish/Open**: Bounty creator clicks thumbs up emoji in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now **Open** on website.
 3. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag emoji to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
-4. **Complete/In Review**: Bounty claimer hits green check mark in Discord, receives auto-generated message from Bot indicating "bounty in review"; card status is now "In Review". Bounty claimer informed to look for follow-up message from Bounty creator.
-5. **Submit/In Review**: Alternative to previous step, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
-6. **Complete/Completed**: Bounty claimer can signal completion directly through a new bot command `/bounty complete true`; card status is now "Completed".
+4. **Submit/In Review**: Bounty claimer hits **red mailbox** in Discord, receives auto-generated message from Bot indicating "bounty in review". The creator of the bounty is notified that the bounty is ready for review. They should reach out to the claimee. Alternatively, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
+5. **Complete/Completed**: Bounty claimer can signal completion directly through a new bot command `/bounty complete true`; card status is now "Completed".
 
 #### Bot Commands
 
@@ -66,7 +65,7 @@ The User Experience flow with accompanying bounty status is as follows:
 The following commands are available for Serendipity MK-I:
 
 /bounty create new
-/bounty create open
+/bounty create publish
 /bounty claim
 /bounty complete
 /bounty list
