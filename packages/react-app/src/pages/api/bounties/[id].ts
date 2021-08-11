@@ -3,6 +3,8 @@ import dbConnect from '../../../utils/dbConnect'
 import Bounty from '../../../models/Bounty'
 import DiscordUtils from '../../../utils/DiscordUtils'
 
+const BOUNTY_BOARD_WEBHOOK_URI = process.env.DISCORD_BOUNTY_BOARD_WEBHOOK || ''
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -36,8 +38,8 @@ export default async function handler(
             omitUndefined: true,
             runValidators: true,
           })
-            .then((updateBounty) => {
-              publishBountyToDiscordChannel(updateBounty)
+            .then(async (updateBounty) => {
+              await publishBountyToDiscordChannel(updateBounty)
               res.status(200).json({ success: true, data: updateBounty })
             })
             .catch(() => {
@@ -57,9 +59,9 @@ export default async function handler(
   }
 }
 
-export const publishBountyToDiscordChannel = (bounty: any): void => {
+export const publishBountyToDiscordChannel = (bounty: any): Promise<any> => {
   const embedMessage = DiscordUtils.generateBountyEmbedsMessage(bounty)
-  fetch(process.env.DISCORD_BOUNTY_BOARD_WEBHOOK as string, {
+  return fetch(BOUNTY_BOARD_WEBHOOK_URI, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
