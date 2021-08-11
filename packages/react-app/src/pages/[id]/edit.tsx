@@ -11,9 +11,10 @@ const fetcher = (url: string) =>
 
 const EditBounty = (): JSX.Element => {
   const router = useRouter()
+  console.log(router)
   const { id } = router.query
   const { data: bounty, error } = useSWR(
-    id ? `/api/bounties/${id}` : null,
+    id ? `/api/bounties/${id}?key=` : null,
     fetcher
   )
 
