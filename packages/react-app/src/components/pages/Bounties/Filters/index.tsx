@@ -60,7 +60,7 @@ const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
 const HelpLinks = (): JSX.Element => (
   <HStack>
     <ColorModeButton>Give us Feedback</ColorModeButton>
-    <ColorModeButton>? Get Help</ColorModeButton>
+    <ColorModeButton>Need Help?</ColorModeButton>
   </HStack>
 )
 
