@@ -58,7 +58,6 @@ export default async function handler(
 }
 
 export const publishBountyToDiscordChannel = (bounty: any): void => {
-  console.log(`publishing bounty ${bounty._id} to discord`)
   const embedMessage = DiscordUtils.generateBountyEmbedsMessage(bounty)
   fetch(process.env.DISCORD_BOUNTY_BOARD_WEBHOOK as string, {
     method: 'POST',
