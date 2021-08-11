@@ -1,6 +1,6 @@
 # TOML configuration https://toml.io/en/
 [build]
-  command = "next build packages/react-app"
+  command = "yarn build:qa"
   publish = "packages/react-app/dist"
 
 [dev]

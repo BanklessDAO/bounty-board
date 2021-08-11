@@ -103,7 +103,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
   }
   function onSubmit(values: JSON) {
     return new Promise<void>((resolve) => {
-      putData(values)
+      putData(values).catch(console.error)
       resolve()
     })
   }
