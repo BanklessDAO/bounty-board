@@ -14,6 +14,8 @@ import ColorModeButton from '../../../parts/ColorModeButton'
 import { discordSupportChannelUrl } from 'constants/discordInfo'
 import { feedbackUrl } from 'constants/discordInfo'
 
+import AccessibleLink from '../../../parts/AccessibleLink'
+
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
   <FaSearch color={color} />
 )
@@ -61,9 +63,14 @@ const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
 )
 
 const HelpLinks = (): JSX.Element => (
-  <HStack>  
-    <ColorModeButton url={discordSupportChannelUrl}>Give us Feedback</ColorModeButton>
-    <ColorModeButton url={feedbackUrl}>Need Help?</ColorModeButton>
+  <HStack>
+    <AccessibleLink href={discordSupportChannelUrl}>
+      <ColorModeButton>Give us Feedback</ColorModeButton>
+    </AccessibleLink>
+
+    <AccessibleLink href={feedbackUrl}>
+      <ColorModeButton>Need Help?</ColorModeButton>
+    </AccessibleLink>
   </HStack>
   )
 
