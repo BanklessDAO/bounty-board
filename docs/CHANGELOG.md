@@ -9,3 +9,4 @@
 5. Add mock json data for mongodb compass testing
 6. Fix netlify deployment and add .github docs
 7. Add webhook integration for posting bounties
+8. Allow editing of OPEN bounties
