@@ -11,6 +11,9 @@ import { FaSearch } from 'react-icons/fa'
 
 import ColorModeButton from '../../../parts/ColorModeButton'
 
+import { discordSupportChannelUrl } from 'constants/discordInfo'
+import { feedbackUrl } from 'constants/discordInfo'
+
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
   <FaSearch color={color} />
 )
@@ -58,11 +61,11 @@ const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
 )
 
 const HelpLinks = (): JSX.Element => (
-  <HStack>
-    <ColorModeButton>Give us Feedback</ColorModeButton>
-    <ColorModeButton>Need Help?</ColorModeButton>
+  <HStack>  
+    <ColorModeButton url={discordSupportChannelUrl}>Give us Feedback</ColorModeButton>
+    <ColorModeButton url={feedbackUrl}>Need Help?</ColorModeButton>
   </HStack>
-)
+  )
 
 const Home = (): JSX.Element => {
   const placeholderOptions = [

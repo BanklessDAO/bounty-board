@@ -6,4 +6,7 @@ const discordInfo = {
 
 export const discordChannelUrl = `${discordInfo.baseUrl}/${discordInfo.server}/${discordInfo.channel}`
 
+export const discordSupportChannelUrl = "https://discord.com/channels/834499078434979890/834499078434979893"
+export const feedbackUrl = "https://forms.gle/NhTrynZ8pkkepHzN8"
+
 export default discordInfo
