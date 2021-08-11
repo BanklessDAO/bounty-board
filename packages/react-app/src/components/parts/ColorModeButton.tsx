@@ -1,5 +1,4 @@
 import { Button, useColorModeValue } from '@chakra-ui/react'
-import NextLink from 'next/link'
 
 const ColorModeButton = ({
   children
