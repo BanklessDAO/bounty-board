@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react'
+import { Stack, useStyleConfig, chakra } from '@chakra-ui/react'
 import Filters from './Filters'
 import BountyAccordion from './BountyAccordion'
 import useSWR from 'swr'
@@ -38,6 +38,8 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
     setPage(Math.max(page - 1,0))
   }
 
+  const styles = useStyleConfig("Button", { key: {id}, colorScheme: "teal", spacing: 3 })
+
   return (
     <>
       <PaginatedBounties id={id} page={page}/>
@@ -45,8 +47,8 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
       <Button size="sm" colorScheme="teal" onClick={() => decrementPage}>Previous Page</Button>
         <Button size="sm" colorScheme="teal" onClick={() => incrementPage}>Next Page</Button>
       </Stack> */}
-      <button onClick={decrementPage}>Previous Page</button>
-      <button onClick={incrementPage}>Next Page</button>
+      <chakra.button  __css={styles} onClick={decrementPage}>Previous Page</chakra.button>
+      <chakra.button  __css={styles} onClick={incrementPage}>Next Page</chakra.button>
     </>
   )
 }
