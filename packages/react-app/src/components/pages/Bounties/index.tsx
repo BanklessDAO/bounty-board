@@ -4,7 +4,8 @@ import BountyAccordion from './BountyAccordion'
 import useSWR from 'swr'
 import { BountyCard } from './Bounty'
 import React, { useState } from 'react'
-import Bounty from '../../../models/Bounty'
+// import { Button } from '@chakra-ui/react'
+// import { useClickable } from "@chakra-ui/clickable"
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -29,12 +30,23 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
   if (error) return <p>Failed to load</p>
   console.log(`num total bounties: ${count}`)
 
+  const incrementPage = () => {
+    setPage(Math.min(page + 1, Math.floor(count/PAGE_SIZE)))
+  }
+
+  const decrementPage = () => {
+    setPage(Math.max(page - 1,0))
+  }
+
   return (
     <>
       <PaginatedBounties id={id} page={page}/>
-      <button onClick={() => setPage(Math.min(page + 1, Math.floor(count/PAGE_SIZE)))}>Next Page </button>
-      <br />
-      <button onClick={() => setPage(Math.max(page - 1,0))}>Previous Page </button>
+      {/* <Stack spacing={2} direction="row" align="center">
+      <Button size="sm" colorScheme="teal" onClick={() => decrementPage}>Previous Page</Button>
+        <Button size="sm" colorScheme="teal" onClick={() => incrementPage}>Next Page</Button>
+      </Stack> */}
+      <button onClick={decrementPage}>Previous Page</button>
+      <button onClick={incrementPage}>Next Page</button>
     </>
   )
 }
