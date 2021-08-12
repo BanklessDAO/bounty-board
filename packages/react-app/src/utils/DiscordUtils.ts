@@ -21,12 +21,15 @@ export default {
           fields: [
             {
               name: 'Reward',
-              value: bounty.reward.amount / 10 ** bounty.reward.scale,
+              value:
+                bounty.reward.amount / 10 ** bounty.reward.scale +
+                ' ' +
+                bounty.reward.currency,
               inline: true,
             },
             {
               name: 'Status',
-              value: 'Open',
+              value: bounty.status,
               inline: true,
             },
             {
@@ -48,7 +51,7 @@ export default {
               inline: true,
             },
           ],
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           footer: {
             text: '🔄 - refresh | 🏴 - start | 📝 - edit | ❌ - delete',
           },
