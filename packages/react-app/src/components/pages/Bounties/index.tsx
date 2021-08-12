@@ -20,11 +20,21 @@ const fetcher = (url: string) =>
 
 const Bounties = ({ id }: PreFilterProps): JSX.Element => {
   const [page, setPage] = useState(0)
+
+  const { data: count, error } = useSWR(
+    `/api/bounties/numBounties`,
+    fetcher
+  )
+
+  if (error) return <p>Failed to load</p>
+  console.log(`num total bounties: ${count}`)
+
   return (
     <>
       <PaginatedBounties id={id} page={page}/>
-      <button onClick={() => setPage(page + 1)}>Next Page </button><br />
-      <button onClick={() => setPage(Math.min(page - 1,0))}>Previous Page </button>
+      <button onClick={() => setPage(Math.min(page + 1, Math.floor(count/PAGE_SIZE)))}>Next Page </button>
+      <br />
+      <button onClick={() => setPage(Math.max(page - 1,0))}>Previous Page </button>
     </>
   )
 }
