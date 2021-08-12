@@ -46,13 +46,15 @@ const MenuToggle = ({
 const MenuItem = ({
   children,
   to = '/',
+  newTab,
   ...rest
 }: {
   children?: React.ReactNode
   isLast?: boolean
   to: string
+  newTab?: boolean
 }): JSX.Element => (
-  <AccessibleLink href={to}>
+  <AccessibleLink href={to} isExternal={newTab}>
     <Text display="block" {...rest}>
       {children}
     </Text>
@@ -70,11 +72,12 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
       justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
       direction={{ base: 'column', md: 'row' }}
     >
-      <MenuItem to="/">Bounty Board</MenuItem>
-      <MenuItem to="#">
-        <ColorModeButton>Connect Wallet</ColorModeButton>{' '}
-      </MenuItem>
-      <MenuItem to="https://bankless.community">
+      {/*<MenuItem to="/">Bounty Board</MenuItem>*/}
+      {/*TODO: enabled this with web3 integration */}
+      {/*<MenuItem to="#">*/}
+      {/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
+      {/*</MenuItem>*/}
+      <MenuItem to="https://bankless.community" newTab={true}>
         <ColorModeButton>Join DAO</ColorModeButton>{' '}
       </MenuItem>
       <ThemeToggle />
