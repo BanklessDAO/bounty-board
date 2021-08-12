@@ -99,6 +99,10 @@ const BountyDetails = ({
 }: BountyBoardProps): JSX.Element => (
   <Grid gap={6}>
     <GridItem>
+      <Heading size="sm">HashID</Heading>
+      <Text>{_id}</Text>
+    </GridItem>
+    <GridItem>
       <Heading size="sm">Description</Heading>
       <Text>{description}</Text>
     </GridItem>

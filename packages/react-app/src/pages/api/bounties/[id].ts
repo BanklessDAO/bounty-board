@@ -19,7 +19,7 @@ export default async function handler(
   switch (method) {
     case 'GET' /* Get a model by its ID */:
       try {
-        const bounty = await Bounty.findById(id)
+        const bounty = await Bounty.findById(id).exec()
         if (!bounty) {
           return res.status(400).json({ success: false })
         }
@@ -39,7 +39,7 @@ export default async function handler(
           bounty.status.toLowerCase() === 'draft' ||
           bounty.status.toLowerCase() === 'open'
         ) {
-          Bounty.findByIdAndUpdate(id, req.body, {
+          await Bounty.findByIdAndUpdate(id, req.body, {
             new: true,
             omitUndefined: true,
             runValidators: true,
@@ -72,11 +72,15 @@ export const publishBountyToDiscordChannel = (
     return
   }
   const embedMessage = DiscordUtils.generateBountyEmbedsMessage(bounty)
-  return fetch(BOUNTY_BOARD_WEBHOOK_URI, {
+  return fetch(BOUNTY_BOARD_WEBHOOK_URI + '?wait=true', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(embedMessage),
-  }).catch(console.error)
+  })
+    .then((response) => {
+      if (response.status !== 200) console.log(response)
+    })
+    .catch(console.error)
 }

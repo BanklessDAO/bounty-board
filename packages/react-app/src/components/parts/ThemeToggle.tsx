@@ -6,6 +6,7 @@ const ThemeToggle = (): JSX.Element => {
 
   const actions = (
     <>
+      {/* Default to dark mode*/}
       <Button
         onClick={toggleColorMode}
         bg={colorMode === 'light' ? 'gray.300' : 'gray.700'}
