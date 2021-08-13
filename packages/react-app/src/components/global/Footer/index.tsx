@@ -19,11 +19,11 @@ const Footer = (): JSX.Element => {
           Mirror Substack Discord Twitter Github
         </Text> */}
         <HStack>
-          <AccessibleLink href={feedbackUrl}>
+          <AccessibleLink href={feedbackUrl} isExternal={true}>
             <ColorModeButton>Give us Feedback</ColorModeButton>
           </AccessibleLink>
 
-          <AccessibleLink href={discordSupportChannelUrl}>
+          <AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
             <ColorModeButton>Need Help?</ColorModeButton>
           </AccessibleLink>
         </HStack>

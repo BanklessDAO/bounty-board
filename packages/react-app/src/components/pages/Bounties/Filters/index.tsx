@@ -11,8 +11,8 @@ import { FaSearch } from 'react-icons/fa'
 
 import ColorModeButton from '../../../parts/ColorModeButton'
 
-import { discordSupportChannelUrl } from 'constants/discordInfo'
-import { feedbackUrl } from 'constants/discordInfo'
+import { discordSupportChannelUrl } from '../../../../constants/discordInfo'
+import { feedbackUrl } from '../../../../constants/discordInfo'
 
 import AccessibleLink from '../../../parts/AccessibleLink'
 
@@ -72,7 +72,7 @@ const HelpLinks = (): JSX.Element => (
       <ColorModeButton>Need Help?</ColorModeButton>
     </AccessibleLink>
   </HStack>
-  )
+)
 
 const Home = (): JSX.Element => {
   const placeholderOptions = [
