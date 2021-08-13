@@ -1,11 +1,9 @@
-import { Stack, useStyleConfig, chakra } from '@chakra-ui/react'
+import { Button, Stack } from '@chakra-ui/react'
 import Filters from './Filters'
 import BountyAccordion from './BountyAccordion'
 import useSWR from 'swr'
 import { BountyCard } from './Bounty'
 import React, { useState } from 'react'
-// import { Button } from '@chakra-ui/react'
-// import { useClickable } from "@chakra-ui/clickable"
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -18,63 +16,37 @@ const fetcher = (url: string) =>
     .then((res) => res.json())
     .then((json) => json.data)
 
-
 const Bounties = ({ id }: PreFilterProps): JSX.Element => {
+  /* Bounties will fetch all data to start, unless a single bounty is requested */
   const [page, setPage] = useState(0)
 
-  const { data: count, error } = useSWR(
-    `/api/bounties/numBounties`,
-    fetcher
-  )
-
-  if (error) return <p>Failed to load</p>
-  console.log(`num total bounties: ${count}`)
-
   const incrementPage = () => {
-    setPage(Math.min(page + 1, Math.floor(count/PAGE_SIZE)))
+    const numFullPages = Math.floor(bounties.length / PAGE_SIZE)
+    const hasExtraPage = bounties.length % PAGE_SIZE != 0
+    const maxPages = hasExtraPage ? numFullPages + 1 : numFullPages
+
+    setPage(Math.min(page + 1, maxPages - 1)) //pages are 0 indexed
   }
 
   const decrementPage = () => {
-    setPage(Math.max(page - 1,0))
+    setPage(Math.max(page - 1, 0))
   }
 
-  const styles = useStyleConfig("Button", { key: {id}, colorScheme: "teal", spacing: 3 })
-
-  return (
-    <>
-      <PaginatedBounties id={id} page={page}/>
-      {/* <Stack spacing={2} direction="row" align="center">
-      <Button size="sm" colorScheme="teal" onClick={() => decrementPage}>Previous Page</Button>
-        <Button size="sm" colorScheme="teal" onClick={() => incrementPage}>Next Page</Button>
-      </Stack> */}
-      <chakra.button  __css={styles} onClick={decrementPage}>Previous Page</chakra.button>
-      <chakra.button  __css={styles} onClick={incrementPage}>Next Page</chakra.button>
-    </>
-  )
-}
-
-
-const PaginatedBounties = (props: any): JSX.Element => {
-  /* Bounties will fetch all data to start, unless a single bounty is requested */
-  
   const { data: bounties, error } = useSWR(
-    props.id ? `/api/bounties/${props.id}` : `/api/bounties`,
+    id ? `/api/bounties/${id}` : `/api/bounties`,
     fetcher
   )
 
-  console.log(props.page)
-
   if (error) return <p>Failed to load</p>
-  if (!bounties) return <p>Loading...</p> 
-  
-  let correctedPage = props.page
-  if (PAGE_SIZE*props.page > bounties.length) correctedPage=Math.floor(bounties.length/PAGE_SIZE)
-  else if (props.page < 0) correctedPage = 0
+  if (!bounties) return <p>Loading...</p>
 
   const paginatedBounties = bounties.slice(
-    PAGE_SIZE*correctedPage, Math.min(bounties.length, PAGE_SIZE*(correctedPage+1)))
-      
+    PAGE_SIZE * page,
+    Math.min(bounties.length, PAGE_SIZE * (page + 1))
+  )
+
   return (
+    <>
     <Stack
       direction={{ base: 'column', lg: 'row' }}
       align="top"
@@ -82,16 +54,24 @@ const PaginatedBounties = (props: any): JSX.Element => {
       fontWeight="600"
       gridGap="4"
     >
-      {props.id ? (
+      {id ? (
         <BountyCard {...bounties} />
       ) : (
         <>
           <Filters />
           <BountyAccordion bounties={paginatedBounties} />
         </>
-        
       )}
     </Stack>
+    <Stack spacing={2} direction="row">
+      <Button size="sm" colorScheme="teal" onClick={decrementPage}>
+        Previous Page
+      </Button>
+      <Button size="sm" colorScheme="teal" onClick={incrementPage}>
+        Next Page
+      </Button>
+    </Stack>
+  </>
   )
 }
 
