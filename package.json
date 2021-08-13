@@ -6,6 +6,8 @@
     "start": "yarn workspace @bounty-board/react-app start",
     "dev": "yarn workspace @bounty-board/react-app dev",
     "build": "yarn workspace @bounty-board/react-app build",
+    "build:qa": "yarn workspace @bounty-board/react-app build:qa",
+    "build:prod": "yarn workspace @bounty-board/react-app build:prod",
     "lint": "yarn workspace @bounty-board/react-app lint",
     "test": "yarn workspace @bounty-board/react-app test",
     "react-app:lint-staged": "yarn workspace @bounty-board/react-app lint-staged",
