@@ -1,4 +1,9 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, HStack, Text } from '@chakra-ui/react'
+import AccessibleLink from '../../../components/parts/AccessibleLink'
+import ColorModeButton from '../../../components/parts/ColorModeButton'
+
+import { discordSupportChannelUrl } from '../../../constants/discordInfo'
+import { feedbackUrl } from '../../../constants/discordInfo'
 
 const Footer = (): JSX.Element => {
   return (
@@ -10,10 +15,18 @@ const Footer = (): JSX.Element => {
       justifyContent="space-between"
     >
       <Box>
-        <Text>Bankless DAO</Text>
-        <Text fontSize="xs" color="grey">
+        {/* <Text fontSize="xs" color="grey">
           Mirror Substack Discord Twitter Github
-        </Text>
+        </Text> */}
+        <HStack>
+          <AccessibleLink href={feedbackUrl} isExternal={true}>
+            <ColorModeButton>Give us Feedback</ColorModeButton>
+          </AccessibleLink>
+
+          <AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
+            <ColorModeButton>Need Help?</ColorModeButton>
+          </AccessibleLink>
+        </HStack>
       </Box>
 
       <Text>&copy; {new Date().getFullYear()} Bankless DAO</Text>

@@ -1,5 +1,4 @@
 import { Button, Stack } from '@chakra-ui/react'
-import Filters from './Filters'
 import BountyAccordion from './BountyAccordion'
 import useSWR from 'swr'
 import { BountyCard } from './Bounty'
@@ -20,16 +19,21 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
   /* Bounties will fetch all data to start, unless a single bounty is requested */
   const [page, setPage] = useState(0)
 
-  const incrementPage = () => {
+  const maxPages = () => {
     const numFullPages = Math.floor(bounties.length / PAGE_SIZE)
     const hasExtraPage = bounties.length % PAGE_SIZE != 0
-    const maxPages = hasExtraPage ? numFullPages + 1 : numFullPages
+    return hasExtraPage ? numFullPages + 1 : numFullPages
+  }
 
-    setPage(Math.min(page + 1, maxPages - 1)) //pages are 0 indexed
+  const incrementPage = () => {
+    setPage(Math.min(page + 1, maxPages() - 1)) //pages are 0 indexed
+
+    window.scrollTo(0, 0)
   }
 
   const decrementPage = () => {
     setPage(Math.max(page - 1, 0))
+    window.scrollTo(0, 0)
   }
 
   const { data: bounties, error } = useSWR(
@@ -40,38 +44,53 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
   if (error) return <p>Failed to load</p>
   if (!bounties) return <p>Loading...</p>
 
-  const paginatedBounties = bounties.slice(
-    PAGE_SIZE * page,
-    Math.min(bounties.length, PAGE_SIZE * (page + 1))
-  )
+  const paginatedBounties =
+    !id &&
+    bounties.slice(
+      PAGE_SIZE * page,
+      Math.min(bounties.length, PAGE_SIZE * (page + 1))
+    )
 
   return (
     <>
-    <Stack
-      direction={{ base: 'column', lg: 'row' }}
-      align="top"
-      fontSize="sm"
-      fontWeight="600"
-      gridGap="4"
-    >
-      {id ? (
-        <BountyCard {...bounties} />
-      ) : (
-        <>
-          <Filters />
-          <BountyAccordion bounties={paginatedBounties} />
-        </>
+      <Stack
+        direction={{ base: 'column', lg: 'row' }}
+        align="top"
+        fontSize="sm"
+        fontWeight="600"
+        gridGap="4"
+      >
+        {id ? (
+          <BountyCard {...bounties} />
+        ) : (
+          <>
+            <BountyAccordion bounties={paginatedBounties} />
+          </>
+        )}
+      </Stack>
+      {!id && (
+        <Stack justify="space-between" direction="row" mt={3}>
+          <Button
+            p={5}
+            disabled={page === 0}
+            size="sm"
+            colorScheme="teal"
+            onClick={decrementPage}
+          >
+            &larr; Previous Page
+          </Button>
+          <Button
+            p={5}
+            disabled={page === maxPages() - 1}
+            size="sm"
+            colorScheme="teal"
+            onClick={incrementPage}
+          >
+            Next Page &rarr;
+          </Button>
+        </Stack>
       )}
-    </Stack>
-    <Stack spacing={2} direction="row">
-      <Button size="sm" colorScheme="teal" onClick={decrementPage}>
-        Previous Page
-      </Button>
-      <Button size="sm" colorScheme="teal" onClick={incrementPage}>
-        Next Page
-      </Button>
-    </Stack>
-  </>
+    </>
   )
 }
 
