@@ -21,15 +21,15 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
     title: yup
       .string()
       .required('Please provide a title for this Bounty.')
-      .max(80, 'Title cannot be more than 80 characters'),
+      .max(250, 'Title cannot be more than 250 characters'),
     description: yup
       .string()
       .required('Please provide the bounty description')
-      .max(140, 'Description cannot be more than 140 characters'),
+      .max(4000, 'Description cannot be more than 4000 characters'),
     criteria: yup
       .string()
       .required('Please provide the bounty criteria')
-      .max(140, 'Criteria cannot be more than 140 characters'),
+      .max(4000, 'Criteria cannot be more than 4000 characters'),
     rewardAmount: yup
       .number()
       .typeError('Invalid number')
