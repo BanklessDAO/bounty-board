@@ -1,30 +1,40 @@
 {
-  "name": "bounty-board",
-  "version": "0.1.0",
-  "description": "This web app displays the bounties that are available for DAO members to claim.",
-  "main": "app.js",
-  "repository": "https://github.com/BanklessDAO/bounty-board",
-  "author": "Bankless DAO",
-  "license": "MIT",
+  "name": "@bounty-board/monorepo",
+  "version": "1.0.0",
   "private": true,
-  "bugs": {
-    "url": "https://github.com/BanklessDAO/bounty-board/issues"
-  },
-  "homepage": "https://github.com/BanklessDAO/bounty-board",
   "scripts": {
-    "test": "mocha -r dotenv/config src/test/**/*.test.js",
-    "qa": "node -r dotenv/config src/app/app.js dotenv_config_path=.env.qa",
-    "start": "node -r dotenv/config src/app/app.js"
+    "start": "yarn workspace @bounty-board/react-app start",
+    "dev": "yarn workspace @bounty-board/react-app dev",
+    "build": "yarn workspace @bounty-board/react-app build",
+    "build:qa": "yarn workspace @bounty-board/react-app build:qa",
+    "build:prod": "yarn workspace @bounty-board/react-app build:prod",
+    "lint": "yarn workspace @bounty-board/react-app lint",
+    "test": "yarn workspace @bounty-board/react-app test",
+    "react-app:lint-staged": "yarn workspace @bounty-board/react-app lint-staged",
+    "react-app:type-check": "yarn workspace @bounty-board/react-app type-check",
+    "react-app:format": "yarn workspace @bounty-board/react-app format",
+    "react-app:test-all": "yarn workspace @bounty-board/react-app test-all",
+    "truffle:test": "yarn workspace @bounty-board/escrow test",
+    "truffle:start": "yarn workspace @bounty-board/escrow start",
+    "truffle:coverage": "yarn workspace @bounty-board/escrow coverage",
+    "postinstall": "npx husky install"
   },
-  "dependencies": {
-    "dotenv": "^10.0.0",
-    "mocha": "^9.0.0",
-    "mongodb": "^3.6.9",
-    "nock": "^13.1.0"
+  "husky": {
+    "hooks": {
+      "pre-commit": "react-app:lint-staged"
+    }
   },
-  "devDependencies": {},
-  "engines": {
-    "node": "14.17.0"
+  "dependencies": {},
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/truffle",
+      "**/truffle/**"
+    ]
   },
-  "engineStrict": true
+  "devDependencies": {
+    "husky": "^7.0.1"
+  }
 }
