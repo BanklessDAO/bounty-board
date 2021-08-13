@@ -64,11 +64,11 @@ const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
 
 const HelpLinks = (): JSX.Element => (
   <HStack>
-    <AccessibleLink href={discordSupportChannelUrl}>
+    <AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
       <ColorModeButton>Give us Feedback</ColorModeButton>
     </AccessibleLink>
 
-    <AccessibleLink href={feedbackUrl}>
+    <AccessibleLink href={feedbackUrl} isExternal={true}>
       <ColorModeButton>Need Help?</ColorModeButton>
     </AccessibleLink>
   </HStack>
