@@ -38,35 +38,51 @@ The bounty board will be a key mechanism for coordinating talent, tasks and capi
 
 For the MVP, we are focusing on the bare requirements for a Bounty Card to be created by a user via DEGEN and/or Frontend UI, with the following key fields:
 
-- **season**: In what season is this bounty being created for?
 - **Title**: Bounty Titles should be like headlines
 - **Description**: Provides space to flesh out the scope, deliverables and timeline for the bounty.
 - **Criteria**: When is a task considered "done" or "complete"?
-- **Reward**: Bounty creator indicates `currency` (i.e., $BANK) and `amount` (i.e., 10000) to be paid for completing the work.
-- **CreatedBy**: Bounty creator provides their `discordHandle` and `discordId` is automatically generated.
-- **CreatedAt**: The date in which the bounty is created.
-- **DueAt**: The deadline for completing the work.
+- **Reward**: Bounty creator indicates `amount` (i.e., 10000) and `currency` (i.e., $BANK) to be paid for completing the work.
+- **HashId**: Auto-generated ID for each bounty.
+- **CreatedBy / RequestedBy**: Bot automatically enters bounty creator's `discordHandle`.
+- **ClaimedBy**: Bot automatially notes `discordHandle` claiming the bounty.
+- **SubmittedBy**: Bot automatically notes `discordHandle` submitting the bounty.
 
-#### Bounty Card Status
+#### User Experience Flow: Bot in Discord
 
-TBD
+The User Experience flow with accompanying bounty status is as follows:
 
-#### Users
+1. **Draft**: Bounty creator creates new bounty with `/bounty create new`; status is now "Draft" and _not_ shown in Discord. Bounty creator must publish the bounty before it is available to the public.
+2. **Publish/Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty create publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on website.
+3. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag 🏴 or `/bounty claim` to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
+4. **Submit/In Review**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from Bot indicating "bounty in review". The creator of the bounty is notified that the bounty is ready for review. They should reach out to the claimee. Alternatively, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
+5. **Complete/Completed**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel or directly through a new bot command `/bounty complete true`; card status is now "Completed".
 
-##### Bot Commands
+#### Bot Commands
 
-Testing BOT integration with the Bounty Board happens at The BANKLESS Bot Garage discord server, with the Serendipity MK-I Bot.
+1. Within The Bankless Bot Garage, head to #spam-tastic
+2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
 
 The following commands are available for Serendipity MK-I:
 
 /bounty create new
-/bounty create validate
+/bounty create publish
 /bounty claim
+/bounty complete
 /bounty list
+/bounty delete
+/bounty submit
 
-##### Creating a Bounty
+Refer to the [Bounty Board Commands and Workflow](https://bankless.notion.site/The-Bounty-Board-Commands-and-Workflow-7f15bbc3f2c744afab1cb5f90daac4a2) Notion Page for in-depth details.
 
-Note: This process describes Bot interactions in the Bankless Bot Garage. Development and Production environments will be added soon.
+#### User Experience Flow: Frontend
 
-1. Within The Bankless Bot Garage, head to #spam-tastic
-2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
+**Note**: Currently, the frontend mirrors the interaction with the Bot in discord and displays changes in card status. Both Discord/Bot actions and Frontend Statuses are displayed below:
+
+1. **Discord/Bot: Draft**: Bounty creator creates new bounty with `/bounty create new`; status is now "Draft" and _not_ shown in Discord. Bounty creator must publish the bounty before it is available on the frontend.
+2. **Frontend Status: Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty create publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on the frontend.
+3. **Discord/Bot: Claim**: Now that a bounty card is _Open_, we can click "Claim It".
+4. **Frontend Status: In Progress**: Within #🧀-bounty-board Bounty click black flag 🏴 or `/bounty claim` to 'claim'. A link back to the frontend shows card status as "In Progress" and "Claimed By" claimer's discord handle.
+5. **Discord/Bot: Submit**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from Bot indicating "bounty in review".
+6. **Frontend Status: In Review**: Card status on the frontend is "In Review".
+7. **Discord/Bot: Complete**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel. Bounty creator receives message to tip bounty completer.
+8. **Frontend Status: Completed**: Work is done.
