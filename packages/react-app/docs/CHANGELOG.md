@@ -2,6 +2,9 @@
 
 ## 1.0.0-SNAPSHOT
 
+
+## 1.0.0-beta (2021-08-12)
+
 1. Add github and heroku actions integration, initialize react-create app
 2. Import next.js bankless dao template
 3. Add mongodb integration
