@@ -7,7 +7,6 @@ import NextDocument, {
   DocumentInitialProps,
 } from 'next/document'
 import { ColorModeScript } from '@chakra-ui/react'
-import { title } from '../../next-seo.config'
 
 export default class MyDocument extends NextDocument {
   static async getInitialProps(
