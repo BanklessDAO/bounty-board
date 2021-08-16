@@ -31,7 +31,10 @@ export default class MyDocument extends NextDocument {
             property="og:description"
             content="Find, claim, and post bounties"
           />
-          <meta property="og:image" content="preview.png" />
+          <meta
+            property="og:image"
+            content="https://assets.stickpng.com/images/580b57fcd9996e24bc43c22f.png"
+          />
 
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
