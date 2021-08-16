@@ -25,7 +25,8 @@
   "lint-staged": {
     "*.@(ts|tsx)": [
       "yarn run type-check",
-      "yarn lint src"
+      "yarn lint src --fix -d",
+      "yarn format"
     ]
   },
   "dependencies": {
