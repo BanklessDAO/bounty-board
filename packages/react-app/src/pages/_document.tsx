@@ -7,6 +7,7 @@ import NextDocument, {
   DocumentInitialProps,
 } from 'next/document'
 import { ColorModeScript } from '@chakra-ui/react'
+import { title } from '../../next-seo.config'
 
 export default class MyDocument extends NextDocument {
   static async getInitialProps(
@@ -21,7 +22,17 @@ export default class MyDocument extends NextDocument {
       <Html lang="en">
         <Head>
           <meta charSet="UTF-8" />
-          <meta content="ie=edge" httpEquiv="X-UA-Compatible" />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:url"
+            content="https://bountyboard.bankless.community"
+          />
+          <meta property="og:title" content="Bankless Bounty Board" />
+          <meta
+            property="og:description"
+            content="Find, claim, and post bounties"
+          />
+          <meta property="og:image" content="preview.png" />
 
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link

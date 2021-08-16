@@ -2,6 +2,8 @@
 
 ## 1.0.0-SNAPSHOT
 
+1. Add metada to display preview in discord link
+
 
 ## 1.0.0-beta (2021-08-12)
 
