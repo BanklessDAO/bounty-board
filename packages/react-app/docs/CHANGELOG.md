@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.0.0-SNAPSHOT
+
+
 ## 1.0.0-beta (2021-08-12)
 
 1. Add github and heroku actions integration, initialize react-create app
