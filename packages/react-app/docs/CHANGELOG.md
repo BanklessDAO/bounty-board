@@ -2,6 +2,7 @@
 
 ## 1.0.0-SNAPSHOT
 
+1. Use QA specific environment variables
 
 ## 1.0.0-beta (2021-08-12)
 
