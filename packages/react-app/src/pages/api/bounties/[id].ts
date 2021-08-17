@@ -4,7 +4,7 @@ import Bounty from '../../../models/Bounty'
 import DiscordUtils from '../../../utils/DiscordUtils'
 
 const BOUNTY_BOARD_WEBHOOK_URI =
-  (process.env.NODE_ENV === 'production'
+  (process.env.BUILD_ENV === 'production'
     ? process.env.PROD_DISCORD_BOUNTY_BOARD_WEBHOOK
     : process.env.DEV_DISCORD_BOUNTY_BOARD_WEBHOOK) || ''
 

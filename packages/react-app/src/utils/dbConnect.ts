@@ -1,9 +1,7 @@
 import mongoose from 'mongoose'
+import ServiceUtils from './ServiceUtils'
 
-const MONGODB_URI =
-  (process.env.NODE_ENV === 'production'
-    ? process.env.PROD_MONGODB_URI
-    : process.env.DEV_MONGODB_URI) || ''
+const MONGODB_URI = ServiceUtils.getMongoURI()
 const globalAny: any = global
 
 if (!MONGODB_URI) {
