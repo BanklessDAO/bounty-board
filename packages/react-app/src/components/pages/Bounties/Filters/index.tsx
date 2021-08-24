@@ -15,6 +15,7 @@ import { discordSupportChannelUrl } from '../../../../constants/discordInfo';
 import { feedbackUrl } from '../../../../constants/discordInfo';
 
 import AccessibleLink from '../../../parts/AccessibleLink';
+import bountyStatus from '../../../../constants/bountyStatus';
 
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
 	<FaSearch color={color} />
@@ -41,23 +42,23 @@ const SelectFilters = ({ name, options }: {
 		{name && <Heading size="xs">{name}</Heading>}
 		<Select placeholder="All" mb="4">
 			{options.map((option) => (
-				<option key={option.value} value={option.value}>
-					{name}
+				<option key={option.name} value={option.value}>
+					{option.value}
 				</option>
 			))}
 		</Select>
 	</>
 );
 
-const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
-	<>
-		{name && <Heading size="xs">{name}</Heading>}
-		<HStack my="2">
-			<Input placeholder="Min" />
-			<Input placeholder="Max" />
-		</HStack>
-	</>
-);
+// const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
+// 	<>
+// 		{name && <Heading size="xs">{name}</Heading>}
+// 		<HStack my="2">
+// 			<Input placeholder="Min" />
+// 			<Input placeholder="Max" />
+// 		</HStack>
+// 	</>
+// );
 
 const HelpLinks = (): JSX.Element => (
 	<HStack>
@@ -72,18 +73,40 @@ const HelpLinks = (): JSX.Element => (
 );
 
 const Home = (): JSX.Element => {
-	const placeholderOptions = [
+	// const placeholderOptions = [
+	// 	{
+	// 		name: 'Option 1',
+	// 		value: 'option1',
+	// 	},
+	// 	{
+	// 		name: 'Option 2',
+	// 		value: 'option2',
+	// 	},
+	// 	{
+	// 		name: 'Option 3',
+	// 		value: 'option3',
+	// 	},
+	// ];
+	const filterStatusList = [
 		{
-			name: 'Option 1',
-			value: 'option1',
+			name: bountyStatus.DRAFT,
+			value: bountyStatus.DRAFT,
 		},
 		{
-			name: 'Option 2',
-			value: 'option2',
+			name: bountyStatus.OPEN,
+			value: bountyStatus.OPEN,
 		},
 		{
-			name: 'Option 3',
-			value: 'option3',
+			name: bountyStatus.IN_PROGRESS,
+			value: bountyStatus.IN_PROGRESS,
+		},
+		{
+			name: bountyStatus.IN_REVIEW,
+			value: bountyStatus.IN_REVIEW,
+		},
+		{
+			name: bountyStatus.COMPLETED,
+			value: bountyStatus.COMPLETED,
 		},
 	];
 
@@ -91,10 +114,10 @@ const Home = (): JSX.Element => {
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
 				<SearchFilter />
-				<SelectFilters name="Filter Guilds" options={placeholderOptions} />
-				<SelectFilters name="Filter Status" options={placeholderOptions} />
-				<MinMaxFilter name="Filter Bounty Value" />
-				<SelectFilters name="Sort By" options={placeholderOptions} />
+				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
+				<SelectFilters name="Filter Status" options={filterStatusList} />
+				{/* <MinMaxFilter name="Filter Bounty Value" /> */}
+				{/* <SelectFilters name="Sort By" options={placeholderOptions} /> */}
 				{/* <SelectFilters name="Group By" options={placeholderOptions} /> */}
 			</Stack>
 			<HelpLinks />

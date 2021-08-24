@@ -3,6 +3,7 @@ import BountyAccordion from './BountyAccordion';
 import useSWR from 'swr';
 import { BountyCard } from './Bounty';
 import React, { useState } from 'react';
+import Filters from './Filters';
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -62,6 +63,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 					<BountyCard {...bounties} />
 				) : (
 					<>
+						<Filters />
 						<BountyAccordion bounties={paginatedBounties} />
 					</>
 				)}
