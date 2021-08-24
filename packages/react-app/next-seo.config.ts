@@ -1,7 +1,6 @@
-const title = 'Bankless Bounty Board';
-const description =
-  'Bankless Bounty Board';
-const url = 'https://bountyboard.bankless.community';
+export const title = 'Bankless Bounty Board'
+const description = 'Bankless Bounty Board'
+const url = 'https://bountyboard.bankless.community'
 
 const SEO = {
   title,
@@ -27,6 +26,6 @@ const SEO = {
     site: '@banklessdao',
   },
   additionalLinkTags: [{ rel: 'icon', href: '/favicon.png' }],
-};
+}
 
-export default SEO;
+export default SEO

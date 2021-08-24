@@ -7,7 +7,7 @@ export default function Logo(props: BoxProps): JSX.Element {
     <Box {...props}>
       <Link href={'/'}>
         <ChakraLink isExternal={false}>
-          <Image alt="Bankless DAO" src="/logo.svg" />
+          <Image alt="Bankless DAO" src="/logo.png" />
         </ChakraLink>
       </Link>
     </Box>
