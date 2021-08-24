@@ -20,6 +20,14 @@ export default {
           color: IN_PROGRESS_COLOR_YELLOW,
           fields: [
             {
+              name: 'HashId',
+              value: bounty._id,
+            },
+            {
+              name: 'Criteria',
+              value: bounty.criteria,
+            },
+            {
               name: 'Reward',
               value:
                 bounty.reward.amount / 10 ** bounty.reward.scale +
@@ -36,14 +44,6 @@ export default {
               name: 'Deadline',
               value: ServiceUtils.formatDisplayDate(END_OF_SEASON),
               inline: true,
-            },
-            {
-              name: 'Criteria',
-              value: bounty.criteria,
-            },
-            {
-              name: 'HashId',
-              value: bounty._id,
             },
             {
               name: 'Created By',

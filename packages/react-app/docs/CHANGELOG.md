@@ -4,6 +4,7 @@
 
 1. Use QA specific environment variables
 2. Add metadata to display preview in discord link
+3. Adjust hashID for discordjs webhook message
 
 ## 1.0.0-beta (2021-08-12)
 
