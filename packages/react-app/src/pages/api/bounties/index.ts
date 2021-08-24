@@ -7,16 +7,23 @@ export default async function handler(
 	res: NextApiResponse
 ): Promise<void> {
 	const { method } = req;
+	const { status } = req.query;
 
 	await dbConnect();
 
 	switch (method) {
 	case 'GET':
 		try {
-			const bounties = await Bounty.find({
-				status: ['Open', 'In-Progress', 'In-Review'],
-			});
-			/* find all bounties that aren't in draft or deleted */
+			let bounties = [];
+			if (status == null || status === '') {
+				bounties = await Bounty.find({
+					status: ['Open', 'In-Progress', 'In-Review', 'Completed'],
+				});
+			} else {
+				bounties = await Bounty.find({
+					status: status,
+				});
+			}
 			res.status(200).json({ success: true, data: bounties });
 		} catch (error) {
 			res.status(400).json({ success: false });
