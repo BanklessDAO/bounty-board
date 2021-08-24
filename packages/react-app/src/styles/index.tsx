@@ -1,9 +1,9 @@
-import { Global, css } from '@emotion/react'
+import { Global, css } from '@emotion/react';
 
 const GlobalStyle: React.FC = (props) => (
-  <>
-    <Global
-      styles={css`
+	<>
+		<Global
+			styles={css`
         html {
           scoll-behavior: smooth;
           cursor: default;
@@ -21,9 +21,9 @@ const GlobalStyle: React.FC = (props) => (
           background: initial;
         }
       `}
-    />
-    {props.children}
-  </>
-)
+		/>
+		{props.children}
+	</>
+);
 
-export default GlobalStyle
+export default GlobalStyle;
