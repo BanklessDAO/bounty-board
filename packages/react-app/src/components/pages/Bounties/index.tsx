@@ -20,6 +20,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
 	const [page, setPage] = useState(0);
 	const [status, setStatus] = useState('');
+	const [search, setSearch] = useState('');
 
 	const maxPages = () => {
 		const numFullPages = Math.floor(bounties.length / PAGE_SIZE);
@@ -40,12 +41,13 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	};
 
 	const { data: bounties, error } = useSWR(
-		id ? `/api/bounties/${id}` : `/api/bounties?status=${status}`,
+		id ? `/api/bounties/${id}` :
+			`/api/bounties?status=${status}&search=${search}`,
 		fetcher
 	);
 
 	if (error) return <p>Failed to load</p>;
-	if (!bounties) return <p>Loading...</p>;
+	if (!bounties) return <></>;
 
 	const paginatedBounties =
     !id &&
@@ -64,7 +66,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 					<BountyCard {...bounties} />
 				) : (
 					<>
-						<Filters status={status} setStatus={setStatus}/>
+						<Filters status={status} setStatus={setStatus} search={search} setSearch={setSearch}/>
 						<BountyAccordion bounties={paginatedBounties} />
 					</>
 				)}

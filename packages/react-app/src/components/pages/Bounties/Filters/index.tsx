@@ -23,16 +23,27 @@ const SearchIcon = ({ color }: { color: string }): JSX.Element => (
 
 const SearchFilter = ({
 	placeholder = 'Search',
+	searchValue,
+	setSearch,
 }: {
-  placeholder?: string
-}): JSX.Element => (
-	<InputGroup>
-		<InputLeftElement pointerEvents="none">
-			<SearchIcon color="gray.300" />
-		</InputLeftElement>
-		<Input placeholder={placeholder} mb={4} />
-	</InputGroup>
-);
+	placeholder?: string
+	searchValue: string,
+	setSearch: any
+}): JSX.Element => {
+
+	const updateSearchValue = (event: any): void => {
+		setSearch(event.target.value);
+	};
+
+	return (
+		<InputGroup>
+			<InputLeftElement pointerEvents="none">
+				<SearchIcon color="gray.300" />
+			</InputLeftElement>
+			<Input placeholder={placeholder} mb={4} value={searchValue} onChange={updateSearchValue} autoFocus/>
+		</InputGroup>
+	);
+};
 
 const SelectFilters = ({ name, options, status, setStatus }: {
 	name?: string
@@ -81,12 +92,8 @@ const HelpLinks = (): JSX.Element => (
 	</HStack>
 );
 
-const Filters = (props: { status: string, setStatus: any }): JSX.Element => {
+const Filters = (props: { status: string, setStatus: any, search: string, setSearch: any }): JSX.Element => {
 	const filterStatusList = [
-		{
-			name: bountyStatus.DRAFT,
-			value: bountyStatus.DRAFT,
-		},
 		{
 			name: bountyStatus.OPEN,
 			value: bountyStatus.OPEN,
@@ -108,7 +115,7 @@ const Filters = (props: { status: string, setStatus: any }): JSX.Element => {
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
-				<SearchFilter/>
+				<SearchFilter searchValue={props.search} setSearch={props.setSearch}/>
 				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
 				<SelectFilters name="Filter Status" options={filterStatusList} status={props.status} setStatus={props.setStatus} />
 				{/* <MinMaxFilter name="Filter Bounty Value" /> */}
