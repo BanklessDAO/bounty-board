@@ -15,7 +15,7 @@ export default async function handler(
 	case 'GET':
 		try {
 			let bounties = [];
-			if (status == null || status === '') {
+			if (status == null || status === '' || status === 'All') {
 				bounties = await Bounty.find({
 					status: ['Open', 'In-Progress', 'In-Review', 'Completed'],
 				});

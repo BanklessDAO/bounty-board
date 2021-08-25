@@ -34,21 +34,30 @@ const SearchFilter = ({
 	</InputGroup>
 );
 
-const SelectFilters = ({ name, options }: {
-  name?: string
-  options: { name: string; value: string }[]
-}): JSX.Element => (
-	<>
-		{name && <Heading size="xs">{name}</Heading>}
-		<Select placeholder="All" mb="4">
-			{options.map((option) => (
-				<option key={option.name} value={option.value}>
-					{option.value}
-				</option>
-			))}
-		</Select>
-	</>
-);
+const SelectFilters = ({ name, options, status, setStatus }: {
+	name?: string
+	options: { name: string; value: string }[],
+	status: string,
+	setStatus: ((str: string) => any),
+}): JSX.Element => {
+
+	const updateStatus = (event: any): void => {
+		setStatus(event.target.value);
+	};
+
+	return (
+		<>
+			{name && <Heading size="xs">{name}</Heading>}
+			<Select placeholder="All" mb="4" onChange={updateStatus} value={status}>
+				{options.map((option: { name: string; value: string }) => (
+					<option key={option.name} value={option.value}>
+						{option.value}
+					</option>
+				))}
+			</Select>
+		</>
+	);
+};
 
 // const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
 // 	<>
@@ -72,21 +81,7 @@ const HelpLinks = (): JSX.Element => (
 	</HStack>
 );
 
-const Home = (): JSX.Element => {
-	// const placeholderOptions = [
-	// 	{
-	// 		name: 'Option 1',
-	// 		value: 'option1',
-	// 	},
-	// 	{
-	// 		name: 'Option 2',
-	// 		value: 'option2',
-	// 	},
-	// 	{
-	// 		name: 'Option 3',
-	// 		value: 'option3',
-	// 	},
-	// ];
+const Filters = (props: { status: string, setStatus: any }): JSX.Element => {
 	const filterStatusList = [
 		{
 			name: bountyStatus.DRAFT,
@@ -113,9 +108,9 @@ const Home = (): JSX.Element => {
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
-				<SearchFilter />
+				<SearchFilter/>
 				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
-				<SelectFilters name="Filter Status" options={filterStatusList} />
+				<SelectFilters name="Filter Status" options={filterStatusList} status={props.status} setStatus={props.setStatus} />
 				{/* <MinMaxFilter name="Filter Bounty Value" /> */}
 				{/* <SelectFilters name="Sort By" options={placeholderOptions} /> */}
 				{/* <SelectFilters name="Group By" options={placeholderOptions} /> */}
@@ -125,4 +120,4 @@ const Home = (): JSX.Element => {
 	);
 };
 
-export default Home;
+export default Filters;
