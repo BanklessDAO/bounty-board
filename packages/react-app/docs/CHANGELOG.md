@@ -5,6 +5,7 @@
 1. Use QA specific environment variables
 2. Add metadata to display preview in discord link
 3. Adjust hashID for discordjs webhook message
+4. Update ESLint config with cleaner controls and update build system
 
 ## 1.0.0-beta (2021-08-12)
 
