@@ -16,7 +16,7 @@
     "build": "next build",
     "start": "next start",
     "build:qa": "env-cmd -f .env.development yarn build",
-    "build:prod": "env-cmd -f .env.prod yarn build",
+    "build:prod": "env-cmd -f .env.production yarn build",
     "prebuild": "yarn lint",
     "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve",
     "export": "next export",
