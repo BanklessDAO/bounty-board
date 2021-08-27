@@ -12,7 +12,7 @@
 
 [build.environment]
   NODE_VERSION = "14.17.5"
-  BUILD_ENV="development"
+  BUILD_ENV="production"
 
 [dev]
   command = "yarn dev"
