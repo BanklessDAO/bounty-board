@@ -12,6 +12,7 @@
 
 [build.environment]
   NODE_VERSION = "14.17.5"
+  BUILD_ENV="development"
 
 [dev]
   command = "yarn dev"
@@ -25,3 +26,6 @@
 [context.production]
   command = "yarn build:prod"
   publish = "packages/react-app/dist"
+
+[context.production.environment]
+  BUILD_ENV="productionm"
