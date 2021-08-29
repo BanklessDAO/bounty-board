@@ -1,3 +1,4 @@
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 const communityRopstenPk =
   '513fb779a26000395c5a35b63248c6d6617408f3b7ff693bf5bf81b57010c25c';
 
@@ -14,6 +15,22 @@ module.exports = {
           runs: 1, // Optimize for how many times you intend to run the code
         },
       },
+    },
+    ropsten: {
+      provider: () =>
+        new HDWalletProvider(
+          communityRopstenPk,
+          'https://ropsten.infura.io/v3/4cd90332ea92487aa9d1a815a8e930de',
+        ),
+      network_id: '3',
+    },
+    matic: {
+      provider: () =>
+        new HDWalletProvider(
+          communityRopstenPk,
+          'https://rpc-mainnet.maticvigil.com/',
+        ),
+      network_id: '137',
     },
   },
 

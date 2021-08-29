@@ -30,9 +30,10 @@ contract('Escrow Test', async (accounts) => {
 
   const defaultContributor = accounts[1];
   const defaultPayer = accounts[0];
+  const defaultMultisig = accounts[2];
 
   beforeEach(async () => {
-    escrow = await Escrow.new();
+    escrow = await Escrow.new(defaultMultisig);
     ERC20 = await ERC20Helper.new('NAME', 'SYMBOL', ethToWei('10000'));
   });
 
@@ -58,6 +59,24 @@ contract('Escrow Test', async (accounts) => {
       await escrow.changeOwner(newOwner, { from: owner });
     } catch (e) {
       expect(e.reason).to.eq('ONLY_OWNER');
+      return;
+    }
+
+    revert();
+  });
+  
+  it('changes multisig', async () => {
+    const newMultisig = accounts[4];
+
+    await escrow.changeMultisig(newMultisig, { from: defaultMultisig });
+
+    const newMultisigCheck = await escrow.multisig();
+    expect(newMultisigCheck).to.eq(newMultisig);
+
+    try {
+      await escrow.changeMultisig(newMultisig, { from: accounts[0] });
+    } catch (e) {
+      expect(e.reason).to.eq('ONLY_MULTISIG');
       return;
     }
 
@@ -547,13 +566,13 @@ contract('Escrow Test', async (accounts) => {
         from: defaultContributor,
       });
     } catch (e) {
-      expect(e.reason).to.equal('ONLY_BOUNTY_PAYER');
+      expect(e.reason).to.equal('ONLY_MULTISIG');
       return;
     }
     revert();
   });
 
-  it.only('Fails to emercency withdrawal from payer wallet', async () => {
+  it('Fails to emercency withdrawal from payer wallet', async () => {
     const bountyHash = hash('Devs Guild - Solidity Bounty V1');
 
     const contributorBalanceBefore = await ERC20.balanceOf(defaultContributor);
@@ -604,7 +623,7 @@ contract('Escrow Test', async (accounts) => {
     try {
       await escrow.emergencyWithdrawal(bountyHash, { from: defaultPayer });
     } catch (e) {
-      expect(e.reason).to.equal('ONLY_TREASURY');
+      expect(e.reason).to.equal('ONLY_MULTISIG');
       return;
     }
     revert();

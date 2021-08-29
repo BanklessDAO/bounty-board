@@ -1,6 +1,6 @@
 {
   "name": "@bounty-board/monorepo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "start": "yarn workspace @bounty-board/react-app start",
@@ -15,7 +15,9 @@
     "truffle:start": "yarn workspace @bounty-board/escrow start",
     "truffle:coverage": "yarn workspace @bounty-board/escrow coverage",
     "truffle:lint": "yarn workspace @bounty-board/escrow lint",
-    "truffle:prettier": "yarn workspace @bounty-board/escrow prettier"
+    "truffle:prettier": "yarn workspace @bounty-board/escrow prettier",
+    "truffle:migrate-ropsten": "yarn workspace @bounty-board/escrow migrate-ropsten",
+    "truffle:migrate-matic": "yarn workspace @bounty-board/escrow migrate-matic"
   },
   "dependencies": {},
   "workspaces": {

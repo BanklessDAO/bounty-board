@@ -11,7 +11,9 @@
     "coverage": "truffle run coverage",
     "start": "ganache-cli -m -f -i 5777 -p 7545  --hostname 0.0.0.0 --defaultBalanceEther=1000",
     "prettier": "prettier --write 'contracts/**/*.sol'",
-    "lint": "prettier --list-different 'contracts/**/*.sol'"
+    "lint": "prettier --list-different 'contracts/**/*.sol'",
+    "migrate-ropsten": "truffle migrate --network ropsten",
+    "migrate-matic": "truffle migrate --network matic"
   },
   "author": "",
   "license": "ISC",

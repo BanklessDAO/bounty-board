@@ -94,7 +94,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -137,7 +138,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -150,7 +152,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -211,7 +214,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -224,7 +228,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -237,7 +242,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -10013,16 +10019,16 @@
     "absolutePath": "/Users/joaohenriquecosta/gitf/bounty-board/packages/truffle/contracts/ERC20Helper.sol",
     "exportedSymbols": {
       "Context": [
-        1088
+        1158
       ],
       "ERC20": [
-        987
+        1057
       ],
       "ERC20Helper": [
         25
       ],
       "IERC20": [
-        1065
+        1135
       ]
     },
     "id": 26,
@@ -10047,7 +10053,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 26,
-        "sourceUnit": 988,
+        "sourceUnit": 1058,
         "src": "57:55:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -10060,7 +10066,7 @@
               "id": 3,
               "name": "ERC20",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 987,
+              "referencedDeclaration": 1057,
               "src": "138:5:0"
             },
             "id": 4,
@@ -10069,18 +10075,18 @@
           }
         ],
         "contractDependencies": [
-          987,
-          1065,
-          1088
+          1057,
+          1135,
+          1158
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 25,
         "linearizedBaseContracts": [
           25,
-          987,
-          1065,
-          1088
+          1057,
+          1135,
+          1158
         ],
         "name": "ERC20Helper",
         "nameLocation": "123:11:0",
@@ -10149,7 +10155,7 @@
                       "name": "_mint",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 868,
+                      "referencedDeclaration": 938,
                       "src": "260:5:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -10213,7 +10219,7 @@
                   "id": 12,
                   "name": "ERC20",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 987,
+                  "referencedDeclaration": 1057,
                   "src": "234:5:0"
                 },
                 "nodeType": "ModifierInvocation",
@@ -10334,16 +10340,16 @@
     "absolutePath": "/Users/joaohenriquecosta/gitf/bounty-board/packages/truffle/contracts/ERC20Helper.sol",
     "exportedSymbols": {
       "Context": [
-        1088
+        1158
       ],
       "ERC20": [
-        987
+        1057
       ],
       "ERC20Helper": [
         25
       ],
       "IERC20": [
-        1065
+        1135
       ]
     },
     "id": 26,
@@ -10368,7 +10374,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 26,
-        "sourceUnit": 988,
+        "sourceUnit": 1058,
         "src": "57:55:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -10381,7 +10387,7 @@
               "id": 3,
               "name": "ERC20",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 987,
+              "referencedDeclaration": 1057,
               "src": "138:5:0"
             },
             "id": 4,
@@ -10390,18 +10396,18 @@
           }
         ],
         "contractDependencies": [
-          987,
-          1065,
-          1088
+          1057,
+          1135,
+          1158
         ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 25,
         "linearizedBaseContracts": [
           25,
-          987,
-          1065,
-          1088
+          1057,
+          1135,
+          1158
         ],
         "name": "ERC20Helper",
         "nameLocation": "123:11:0",
@@ -10470,7 +10476,7 @@
                       "name": "_mint",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 868,
+                      "referencedDeclaration": 938,
                       "src": "260:5:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -10534,7 +10540,7 @@
                   "id": 12,
                   "name": "ERC20",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 987,
+                  "referencedDeclaration": 1057,
                   "src": "234:5:0"
                 },
                 "nodeType": "ModifierInvocation",
@@ -10655,9 +10661,80 @@
     "name": "solc",
     "version": "0.8.3+commit.8d00100c.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "3": {
+      "events": {
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        },
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x61F4F51DF0e9563aBc58FB646a3636E3B3C2ce2C",
+      "transactionHash": "0x6530f8defed19f813526a3653ba68a6d25de6c2e7f231fbc4ff783dc3f55b3f5"
+    },
+    "137": {
+      "events": {},
+      "links": {},
+      "address": "0x2edc57A7ADC132f6FFbd662f677e54350C0423e9",
+      "transactionHash": "0x8135c10ae5dee69c1612ad2ef3015b51bef01cbd7ef871b13b526d9d59f335d0"
+    },
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0xd079f15a1dB9175e14dC7e458cDF65DA839a754b",
+      "transactionHash": "0x02295c55ffcb128781e19336aba3a945e8758041f6b0d7bd974947ff56c15a0e"
+    }
+  },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-07-16T02:42:45.930Z",
+  "updatedAt": "2021-08-06T03:22:55.760Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {

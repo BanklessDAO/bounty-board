@@ -25,7 +25,9 @@ contract Escrow {
     GUEST_PASS,
     LEVEL_0,
     LEVEL_1,
-    LEVEL_2
+    LEVEL_2,
+    LEVEL_3,
+    LEVEL_4
   }
 
   uint256 public constant ONE = 10**18;
@@ -33,7 +35,9 @@ contract Escrow {
   mapping(Levels => uint256) private _firstPaymentPercentage;
   mapping(bytes32 => Bounty) private _bounties; // bouty hash => State
 
+
   address private _owner;
+  address private _multisig;
 
   modifier onlyPayer(bytes32 bountyHash) {
     require(msg.sender == _bounties[bountyHash].payer, "ONLY_BOUNTY_PAYER");
@@ -44,9 +48,15 @@ contract Escrow {
     require(msg.sender == _owner, "ONLY_OWNER");
     _;
   }
+  
+  modifier onlyMultisig() {
+    require(msg.sender == _multisig, "ONLY_MULTISIG");
+    _;
+  }
 
-  constructor() {
+  constructor(address multisig_) {
     _owner = msg.sender;
+    _multisig = multisig_;
   }
 
   function firstPaymentPercentage(Levels level) public view returns (uint256) {
@@ -68,12 +78,18 @@ contract Escrow {
   function owner() public view returns (address) {
     return _owner;
   }
+  
+  function multisig() public view returns (address) {
+    return _multisig;
+  }
 
   function changeOwner(address newOwner) public onlyOwner {
     _owner = newOwner;
   }
 
-  fallback() external payable {}
+  function changeMultisig(address newMultisig) public onlyMultisig {
+    _multisig = newMultisig;
+  }
 
   function changeFirstPaymentPercentage(Levels level, uint256 newPercentage)
     public
@@ -179,7 +195,7 @@ contract Escrow {
 
   function emergencyWithdrawal(bytes32 bountyHash)
     public
-    onlyPayer(bountyHash)
+    onlyMultisig
   {
     require(
       block.timestamp - _bounties[bountyHash].depositTimestamp >
