@@ -1,88 +1,37 @@
-import NextLink from 'next/link'
-import { ReactElement } from 'react'
+import { Box, Flex, HStack, Text } from '@chakra-ui/react';
+import AccessibleLink from '../../../components/parts/AccessibleLink';
+import ColorModeButton from '../../../components/parts/ColorModeButton';
 
-import {
-  FooterWrapper,
-  FooterContainer,
-  BrandRow,
-  CopyrightRow,
-  IconsCol,
-  CopyrightCol,
-} from './style'
+import { discordSupportChannelUrl } from '../../../constants/discordInfo';
+import { feedbackUrl } from '../../../constants/discordInfo';
 
-const Footer = (): ReactElement => {
-  return (
-    <FooterWrapper as="footer">
-      <FooterContainer thin>
-        <BrandRow>
-          <img
-            src="/images/logo-1.png"
-            alt="Bankless Logo"
-            width={60}
-            height={60}
-          />
-          <strong>Bankless</strong>
-        </BrandRow>
-        <CopyrightRow>
-          <IconsCol>
-            <NextLink href="https://medium.com/bankless-dao">
-              <a>
-                <img
-                  src="/images/icon-social-medium.svg"
-                  alt="Medium Icon"
-                  width={48}
-                  height={27}
-                />
-              </a>
-            </NextLink>
-            <NextLink href="https://banklessdao.substack.com/">
-              <a>
-                <img
-                  src="/images/icon-social-substack.svg"
-                  alt="Substack Icon"
-                  width={25}
-                  height={28}
-                />
-              </a>
-            </NextLink>
-            <NextLink href="https://discord.gg/bjPz2w9Zts ">
-              <a>
-                <img
-                  src="/images/icon-social-discord.svg"
-                  alt="Discord Icon"
-                  width={32}
-                  height={35}
-                />
-              </a>
-            </NextLink>
-            <NextLink href="https://twitter.com/banklessDAO">
-              <a>
-                <img
-                  src="/images/icon-social-twitter.svg"
-                  alt="Twitter Icon"
-                  width={35}
-                  height={28}
-                />
-              </a>
-            </NextLink>
-            <NextLink href="https://github.com/BanklessDAO">
-              <a>
-                <img
-                  src="/images/icon-social-github.svg"
-                  alt="Github Icon"
-                  width={32}
-                  height={31}
-                />
-              </a>
-            </NextLink>
-          </IconsCol>
-          <CopyrightCol>
-            &copy; {new Date().getFullYear()} Bankless
-          </CopyrightCol>
-        </CopyrightRow>
-      </FooterContainer>
-    </FooterWrapper>
-  )
-}
+const Footer = (): JSX.Element => {
+	return (
+		<Flex
+			as="footer"
+			px={8}
+			py={10}
+			width="full"
+			justifyContent="space-between"
+		>
+			<Box>
+				{/* <Text fontSize="xs" color="grey">
+          Mirror Substack Discord Twitter Github
+        </Text> */}
+				<HStack>
+					<AccessibleLink href={feedbackUrl} isExternal={true}>
+						<ColorModeButton>Give us Feedback</ColorModeButton>
+					</AccessibleLink>
 
-export default Footer
+					<AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
+						<ColorModeButton>Need Help?</ColorModeButton>
+					</AccessibleLink>
+				</HStack>
+			</Box>
+
+			<Text>&copy; {new Date().getFullYear()} Bankless DAO</Text>
+		</Flex>
+	);
+};
+
+export default Footer;

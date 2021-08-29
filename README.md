@@ -15,3 +15,74 @@ https://www.notion.so/bankless/Bounty-Board-318dc164cc5640cca17e0fb5f484fd90
 - [Data Fields](https://docs.google.com/document/d/10jgHxEpkPlArGlsQH1g22utFrAFh2lK-fbXjbq8KkuU/edit)
 - [Personas](https://www.notion.so/Bounty-Board-Personas-8e8f2789775a445c82d13c2a9c545185)
 - [Bot flowchart](https://media.discordapp.net/attachments/852736763205910538/857786834682511370/image0.jpg?width=978&height=683)
+
+# Project Overview
+
+## Problem
+
+Currently, Bankless DAO bounties are not in a centralized location causing confusion and makes it challenging for members, new and old, to contribute. Also Level 0's do not have intuitive ways to get involved and earn $BANK other than buying in the secondary markets.
+
+## Solution
+
+For the DAO to grow, we need a way to attract, retain and coordinate talent. The bounty board, accessible to members and non-members will connect the DAO to a continually expanding talent pool.
+
+In addition, we need a way to codify meaningful units of work. Given the diversity of jobs to be done in a DAO, the bounty board allows bounty _creators_ to define and specify the scope of tasks along with expected deliverables.
+
+Finally, we need a way to formalize the flow of capital, beyond an informal, organic tipping culture that exists to formally recognize contributors for their knowledge, skills and abilities.
+
+The bounty board will be a key mechanism for coordinating talent, tasks and capital.
+
+## Minimal Viable Product 1.0
+
+### Bounty Card Definition
+
+For the MVP, we are focusing on the bare requirements for a Bounty Card to be created by a user via DEGEN and/or Frontend UI, with the following key fields:
+
+- **Title**: Bounty Titles should be like headlines
+- **Description**: Provides space to flesh out the scope, deliverables and timeline for the bounty.
+- **Criteria**: When is a task considered "done" or "complete"?
+- **Reward**: Bounty creator indicates `amount` (i.e., 10000) and `currency` (i.e., $BANK) to be paid for completing the work.
+- **HashId**: Auto-generated ID for each bounty.
+- **CreatedBy / RequestedBy**: Bot automatically enters bounty creator's `discordHandle`.
+- **ClaimedBy**: Bot automatially notes `discordHandle` claiming the bounty.
+- **SubmittedBy**: Bot automatically notes `discordHandle` submitting the bounty.
+
+#### User Experience Flow: Bot in Discord
+
+The User Experience flow with accompanying bounty status is as follows:
+
+1. **Draft**: Bounty creator creates new bounty with `/bounty create new`; status is now "Draft" and _not_ shown in Discord. Bounty creator must publish the bounty before it is available to the public.
+2. **Publish/Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty create publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on website.
+3. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag 🏴 or `/bounty claim` to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
+4. **Submit/In Review**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from Bot indicating "bounty in review". The creator of the bounty is notified that the bounty is ready for review. They should reach out to the claimee. Alternatively, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
+5. **Complete/Completed**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel or directly through a new bot command `/bounty complete true`; card status is now "Completed".
+
+#### Bot Commands
+
+1. Within The Bankless Bot Garage, head to #spam-tastic
+2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
+
+The following commands are available for Serendipity MK-I:
+
+/bounty create new
+/bounty create publish
+/bounty claim
+/bounty complete
+/bounty list
+/bounty delete
+/bounty submit
+
+Refer to the [Bounty Board Commands and Workflow](https://bankless.notion.site/The-Bounty-Board-Commands-and-Workflow-7f15bbc3f2c744afab1cb5f90daac4a2) Notion Page for in-depth details.
+
+#### User Experience Flow: Frontend
+
+**Note**: Currently, the frontend mirrors the interaction with the Bot in discord and displays changes in card status. Both Discord/Bot actions and Frontend Statuses are displayed below:
+
+1. **Discord/Bot: Draft**: Bounty creator creates new bounty with `/bounty create new`; status is now "Draft" and _not_ shown in Discord. Bounty creator must publish the bounty before it is available on the frontend.
+2. **Frontend Status: Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty create publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on the frontend.
+3. **Discord/Bot: Claim**: Now that a bounty card is _Open_, we can click "Claim It".
+4. **Frontend Status: In Progress**: Within #🧀-bounty-board Bounty click black flag 🏴 or `/bounty claim` to 'claim'. A link back to the frontend shows card status as "In Progress" and "Claimed By" claimer's discord handle.
+5. **Discord/Bot: Submit**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from Bot indicating "bounty in review".
+6. **Frontend Status: In Review**: Card status on the frontend is "In Review".
+7. **Discord/Bot: Complete**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel. Bounty creator receives message to tip bounty completer.
+8. **Frontend Status: Completed**: Work is done.

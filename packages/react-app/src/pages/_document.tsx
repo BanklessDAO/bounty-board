@@ -1,52 +1,42 @@
-import Document, {
-  Head,
-  Html,
-  Main,
-  NextScript,
-  DocumentContext,
-} from 'next/document'
-import React, { ReactElement } from 'react'
-import { ServerStyleSheet } from 'styled-components'
+import NextDocument, {
+	Html,
+	Head,
+	Main,
+	NextScript,
+	DocumentContext,
+	DocumentInitialProps,
+} from 'next/document';
+import { ColorModeScript } from '@chakra-ui/react';
 
-class BanklessDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext): Promise<any> {
-    const stylesheet = new ServerStyleSheet()
-    const originalRenderPage = ctx.renderPage
+export default class MyDocument extends NextDocument {
+	static async getInitialProps(
+		ctx: DocumentContext
+	): Promise<DocumentInitialProps> {
+		const initialProps = await NextDocument.getInitialProps(ctx);
+		return { ...initialProps };
+	}
 
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: (App) => (props) =>
-            stylesheet.collectStyles(<App {...props} />),
-        })
-      const initialProps = await Document.getInitialProps(ctx)
-      return {
-        ...initialProps,
-        styles: (
-          <React.Fragment>
-            {initialProps.styles}
-            {stylesheet.getStyleElement()}
-          </React.Fragment>
-        ),
-      }
-    } finally {
-      stylesheet.seal()
-    }
-  }
-  render(): ReactElement {
-    return (
-      <Html lang="en">
-        <Head>
-          <link rel="stylesheet" type="text/css" href="/fonts/fonts.css" />
-        </Head>
-        <body>
-          <noscript>Oops, you need Javascript to run this site.</noscript>
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    )
-  }
+	render(): JSX.Element {
+		return (
+			<Html lang="en">
+				<Head>
+					<meta charSet="UTF-8" />
+					<meta property="og:type" content="website" />
+					<meta property="og:url" content="https://bountyboard.bankless.community" />
+					<meta property="og:title" content="Bankless Bounty Board" />
+					<meta property="og:description" content="Find, claim, and post bounties." />
+					<meta property="og:image" content="https://bountyboard.bankless.community/preview.png" />
+
+					<link rel="preconnect" href="https://fonts.gstatic.com" />
+					<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+				</Head>
+
+				<body>
+					<ColorModeScript initialColorMode={'dark'} />
+					<Main />
+					<NextScript />
+				</body>
+			</Html>
+		);
+	}
 }
-
-export default BanklessDocument
