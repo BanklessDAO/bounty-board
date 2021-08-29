@@ -16,6 +16,12 @@ db.bounties.find({ season: 1 }).sort({ "reward.amount": -1 });
 
 db.bounties.find({ season: 1 }).sort({ createdAt: -1 });
 
+// Who created the most bounties? (TBD)
+
+// (display createdBy.discordHandle to eyeball)
+
+db.bounties.find({}, { "createdBy.discordHandle": 1 }).pretty();
+
 // Who claimed the most bounties? (TBD)
 
 // (display claimedBy.discordHandle to eyeball)
@@ -32,9 +38,13 @@ db.bounties.find({}, { "submittedBy.discordHandle": 1 }).pretty();
 
 // BOUNTY STATUS QUERIES
 
-// How many Bounties were completed on time? (need to add new data fields to consider timeliness)
+// How many Bounties were completed on time?
+// compare these two queries:
 
-// How many Bounties expired? (need to add new data fields to consider expiration)
+db.bounties.find({ $expr: { $gt: ["submittedAt", "dueAt"] } }).count();
+db.bounties.find({ $expr: { $gt: ["dueAt", "submittedAt"] } }).count();
+
+// How many Bounties expired? (TBD; need to add new data fields to consider expiration)
 
 // How many Bounties were expired? (past tense)
 
@@ -71,3 +81,12 @@ db.bounties.find({ "statusHistory.status": "In-Review" }).count();
 // How many Bounties are (currently) 'In-Review'?
 
 db.bounties.find({ status: "In-Review" }).count();
+
+// GUILD SPECIFIC QUERIES (need to add data fields)
+
+// How many bounties were created by each Guild? (need to add new data field)
+// Which Guild created the most bounties?
+// How many bounties were submitted to each Guild?
+// Which Guild received the most submitted bounties?
+// How much bounty reward (in BANK) were given by each Guild?
+// Which Guild gave the most reward?
