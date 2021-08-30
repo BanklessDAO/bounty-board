@@ -12,7 +12,7 @@ export default async function handler(
 	switch (method) {
 	case 'GET':
 		try {
-			const data = { hello: 'world', envDeployed: process.env.BUILD_ENV };
+			const data = { hello: 'world', envDeployed: process.env.NEXT_PUBLIC_BUILD_ENV };
 			return res.status(400).json({ success: true, data: data });
 			// console.log(process.env.BUILD_ENV);
 			// const bounties = await Bounty.find({
