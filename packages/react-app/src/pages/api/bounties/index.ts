@@ -12,7 +12,8 @@ export default async function handler(
 	switch (method) {
 	case 'GET':
 		try {
-			return res.status(400).json({ success: true, data: process.env.BUILD_ENV });
+			const data = { hello: 'world', envDeployed: process.env.BUILD_ENV };
+			return res.status(400).json({ success: true, data: data });
 			// console.log(process.env.BUILD_ENV);
 			// const bounties = await Bounty.find({
 			// 	status: ['Open', 'In-Progress', 'In-Review'],
