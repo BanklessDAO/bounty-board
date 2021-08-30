@@ -1,0 +1,41 @@
+name: Deploy Preview Environment
+on:
+  push:
+    branches:
+      - 'develop'
+  pull_request:
+    branches:
+      - 'develop'
+      - 'release/**'
+      - 'main'
+jobs:
+  deploy:
+    environment:
+      name: preview
+      url: https://develop--bounty-board-29081e.netlify.app/
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.6.2'
+      - name: Install dependencies
+        run: yarn install
+      - name: Lint Code
+        run: yarn lint
+      - name: Build and Compile Typescript
+        run: yarn build:qa
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+          netlify-config-path: './netlify.toml'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
