@@ -13,6 +13,7 @@ export default async function handler(
 	switch (method) {
 	case 'GET':
 		try {
+			console.log(process.env.BUILD_ENV);
 			const bounties = await Bounty.find({
 				status: ['Open', 'In-Progress', 'In-Review'],
 			});
