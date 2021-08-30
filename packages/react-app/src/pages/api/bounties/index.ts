@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
-import Bounty from '../../../models/Bounty';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -13,12 +12,13 @@ export default async function handler(
 	switch (method) {
 	case 'GET':
 		try {
-			console.log(process.env.BUILD_ENV);
-			const bounties = await Bounty.find({
-				status: ['Open', 'In-Progress', 'In-Review'],
-			});
-			/* find all bounties that aren't in draft or deleted */
-			res.status(200).json({ success: true, data: bounties });
+			return res.status(400).json({ success: true, data: process.env.BUILD_ENV });
+			// console.log(process.env.BUILD_ENV);
+			// const bounties = await Bounty.find({
+			// 	status: ['Open', 'In-Progress', 'In-Review'],
+			// });
+			// /* find all bounties that aren't in draft or deleted */
+			// res.status(200).json({ success: true, data: bounties });
 		} catch (error) {
 			res.status(400).json({ success: false });
 		}
