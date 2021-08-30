@@ -35,7 +35,7 @@ jobs:
           enable-commit-comment: true
           overwrites-pull-request-comment: true
           netlify-config-path: './netlify.toml'
-          publish-dir: './packages/react-app/dist'
+          publish-dir: './dist'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
