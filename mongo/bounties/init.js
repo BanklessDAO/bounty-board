@@ -1,2 +1,2 @@
 db.createCollection('bounties');
-db.bounties.createIndex({ title: "text" });
+db.bounties.createIndex({ title: 'text' });

@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## 1.0.0-beta2-SNAPSHOT
+## 1.0.0-SNAPSHOT
 
 1. Fix CI/CD for preview and production
+2. Add bounty filters
 
 ## 1.0.0-beta2 (2021-08-26)
 
@@ -10,7 +11,6 @@
 2. Add metadata to display preview in discord link
 3. Adjust hashID for discordjs webhook message
 4. Update ESLint config with cleaner controls and update build system
-5. Add bounty filters
 
 ## 1.0.0-beta (2021-08-12)
 
