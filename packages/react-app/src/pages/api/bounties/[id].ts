@@ -67,15 +67,15 @@ export default async function handler(
 	}
 }
 
-export const publishBountyToDiscordChannel = (
+export const publishBountyToDiscordChannel = async (
 	bounty: BountyCollection,
 	previousStatus: string
-): Promise<any> | void => {
+): Promise<any> => {
 	if (previousStatus.toLowerCase() !== 'draft') {
 		return;
 	}
 	const embedMessage = DiscordUtils.generateBountyEmbedsMessage(bounty);
-	return fetch(BOUNTY_BOARD_WEBHOOK_URI + '?wait=true', {
+	return await fetch(BOUNTY_BOARD_WEBHOOK_URI + '?wait=true', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
