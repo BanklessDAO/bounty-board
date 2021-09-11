@@ -6,6 +6,18 @@ db.bounties.find({ season: 1 }).count();
 
 // How much BANK was allocated for Bounties in Season 1? (TBD: aggregation framework)
 
+db.bounties
+  .aggregate([
+    { $match: { season: 1 } },
+    {
+      $group: {
+        _id: { reward: "$reward.currency" },
+        total: { $sum: "$reward.amount" },
+      },
+    },
+  ])
+  .pretty();
+
 // (sort amount of BANK allocated in Season 1 in Descending order)
 
 db.bounties.find({ season: 1 }).sort({ "reward.amount": -1 });
@@ -16,13 +28,54 @@ db.bounties.find({ season: 1 }).sort({ "reward.amount": -1 });
 
 db.bounties.find({ season: 1 }).sort({ createdAt: -1 });
 
-// Who claimed the most bounties? (TBD)
+// Who created the most bounties?
+
+db.bounties
+  .aggregate([
+    { $match: { season: 1 } },
+    {
+      $group: {
+        _id: { createdBy: "$createdBy.discordHandle" },
+        totalAmount: { $sum: 1 },
+      },
+    },
+    { $sort: { totalAmount: -1 } },
+  ])
+  .pretty();
+
+// Who claimed the most bounties?
+
+db.bounties
+  .aggregate([
+    { $match: { season: 1 } },
+    {
+      $group: {
+        _id: { claimedBy: "$claimedBy.discordHandle" },
+        totalAmount: { $sum: 1 },
+      },
+    },
+    { $sort: { totalAmount: -1 } },
+  ])
+  .pretty();
 
 // (display claimedBy.discordHandle to eyeball)
 
 db.bounties.find({}, { "claimedBy.discordHandle": 1 }).pretty();
 
-// Who completed/submitted the most bounties? (TBD)
+// Who completed/submitted the most bounties?
+
+db.bounties
+  .aggregate([
+    { $match: { season: 1 } },
+    {
+      $group: {
+        _id: { submittedBy: "$submittedBy.discordHandle" },
+        totalAmount: { $sum: 1 },
+      },
+    },
+    { $sort: { totalAmount: -1 } },
+  ])
+  .pretty();
 
 // (display submittedBy.discordHandle to eyeball)
 
