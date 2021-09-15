@@ -1,9 +1,10 @@
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, Stack, Text } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
 import useSWR from 'swr';
 import { BountyCard } from './Bounty';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Filters from './Filters';
+import useDebounce from '../../../hooks/useDebounce';
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -21,8 +22,10 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const [page, setPage] = useState(0);
 	const [status, setStatus] = useState('');
 	const [search, setSearch] = useState('');
+	const debounceSearch = useDebounce(search, 500, true);
 
 	const maxPages = () => {
+		if (!bounties) return 0;
 		const numFullPages = Math.floor(bounties.length / PAGE_SIZE);
 		const hasExtraPage = bounties.length % PAGE_SIZE != 0;
 		return hasExtraPage ? numFullPages + 1 : numFullPages;
@@ -42,15 +45,18 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 
 	const { data: bounties, error } = useSWR(
 		id ? `/api/bounties/${id}` :
-			`/api/bounties?status=${status}&search=${search}`,
+			`/api/bounties?status=${status}&search=${debounceSearch}`,
 		fetcher
 	);
 
+	useEffect(() => {
+		setPage(0);
+	}, [search]);
+
 	if (error) return <p>Failed to load</p>;
-	if (!bounties) return <></>;
 
 	const paginatedBounties =
-    !id &&
+    !id && bounties &&
     bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)));
 
 	return (
@@ -67,7 +73,12 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 				) : (
 					<>
 						<Filters status={status} setStatus={setStatus} search={search} setSearch={setSearch}/>
-						<BountyAccordion bounties={paginatedBounties} />
+						{(search || status) && bounties && paginatedBounties.length === 0 ?
+							<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
+								<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>
+							</Stack> :
+							<BountyAccordion bounties={paginatedBounties} />
+						}
 					</>
 				)}
 			</Stack>
@@ -84,7 +95,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 					</Button>
 					<Button
 						p={5}
-						disabled={page === maxPages() - 1}
+						disabled={page === maxPages() - 1 || bounties && paginatedBounties.length === 0}
 						size="sm"
 						colorScheme="teal"
 						onClick={incrementPage}

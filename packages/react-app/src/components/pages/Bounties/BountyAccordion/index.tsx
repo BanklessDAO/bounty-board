@@ -9,7 +9,7 @@ type BountyListProps = {
 const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
 	return (
 		<Accordion allowToggle allowMultiple width={{ base: '95vw', lg: '700px' }}>
-			{bounties.map(
+			{bounties && bounties.map(
 				({
 					_id,
 					title,
