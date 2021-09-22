@@ -15,6 +15,7 @@ import { discordSupportChannelUrl } from '../../../../constants/discordInfo';
 import { feedbackUrl } from '../../../../constants/discordInfo';
 
 import AccessibleLink from '../../../parts/AccessibleLink';
+import bountyStatus from '../../../../constants/bountyStatus';
 
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
 	<FaSearch color={color} />
@@ -22,42 +23,62 @@ const SearchIcon = ({ color }: { color: string }): JSX.Element => (
 
 const SearchFilter = ({
 	placeholder = 'Search',
+	searchValue,
+	setSearch,
 }: {
-  placeholder?: string
-}): JSX.Element => (
-	<InputGroup>
-		<InputLeftElement pointerEvents="none">
-			<SearchIcon color="gray.300" />
-		</InputLeftElement>
-		<Input placeholder={placeholder} mb={4} />
-	</InputGroup>
-);
+	placeholder?: string
+	searchValue: string,
+	setSearch: any
+}): JSX.Element => {
 
-const SelectFilters = ({ name, options }: {
-  name?: string
-  options: { name: string; value: string }[]
-}): JSX.Element => (
-	<>
-		{name && <Heading size="xs">{name}</Heading>}
-		<Select placeholder="All" mb="4">
-			{options.map((option) => (
-				<option key={option.value} value={option.value}>
-					{name}
-				</option>
-			))}
-		</Select>
-	</>
-);
+	const updateSearchValue = (event: any): void => {
+		setSearch(event.target.value);
+	};
 
-const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
-	<>
-		{name && <Heading size="xs">{name}</Heading>}
-		<HStack my="2">
-			<Input placeholder="Min" />
-			<Input placeholder="Max" />
-		</HStack>
-	</>
-);
+	return (
+		<InputGroup>
+			<InputLeftElement pointerEvents="none">
+				<SearchIcon color="gray.300" />
+			</InputLeftElement>
+			<Input placeholder={placeholder} mb={4} value={searchValue} onChange={updateSearchValue} autoFocus/>
+		</InputGroup>
+	);
+};
+
+const SelectFilters = ({ name, options, status, setStatus }: {
+	name?: string
+	options: { name: string; value: string }[],
+	status: string,
+	setStatus: ((str: string) => any),
+}): JSX.Element => {
+
+	const updateStatus = (event: any): void => {
+		setStatus(event.target.value);
+	};
+
+	return (
+		<>
+			{name && <Heading size="xs">{name}</Heading>}
+			<Select placeholder="All" mb="4" onChange={updateStatus} value={status}>
+				{options.map((option: { name: string; value: string }) => (
+					<option key={option.name} value={option.value}>
+						{option.value}
+					</option>
+				))}
+			</Select>
+		</>
+	);
+};
+
+// const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
+// 	<>
+// 		{name && <Heading size="xs">{name}</Heading>}
+// 		<HStack my="2">
+// 			<Input placeholder="Min" />
+// 			<Input placeholder="Max" />
+// 		</HStack>
+// 	</>
+// );
 
 const HelpLinks = (): JSX.Element => (
 	<HStack>
@@ -71,30 +92,34 @@ const HelpLinks = (): JSX.Element => (
 	</HStack>
 );
 
-const Home = (): JSX.Element => {
-	const placeholderOptions = [
+const Filters = (props: { status: string, setStatus: any, search: string, setSearch: any }): JSX.Element => {
+	const filterStatusList = [
 		{
-			name: 'Option 1',
-			value: 'option1',
+			name: bountyStatus.OPEN,
+			value: bountyStatus.OPEN,
 		},
 		{
-			name: 'Option 2',
-			value: 'option2',
+			name: bountyStatus.IN_PROGRESS,
+			value: bountyStatus.IN_PROGRESS,
 		},
 		{
-			name: 'Option 3',
-			value: 'option3',
+			name: bountyStatus.IN_REVIEW,
+			value: bountyStatus.IN_REVIEW,
+		},
+		{
+			name: bountyStatus.COMPLETED,
+			value: bountyStatus.COMPLETED,
 		},
 	];
 
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
-				<SearchFilter />
-				<SelectFilters name="Filter Guilds" options={placeholderOptions} />
-				<SelectFilters name="Filter Status" options={placeholderOptions} />
-				<MinMaxFilter name="Filter Bounty Value" />
-				<SelectFilters name="Sort By" options={placeholderOptions} />
+				<SearchFilter searchValue={props.search} setSearch={props.setSearch}/>
+				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
+				<SelectFilters name="Filter Status" options={filterStatusList} status={props.status} setStatus={props.setStatus} />
+				{/* <MinMaxFilter name="Filter Bounty Value" /> */}
+				{/* <SelectFilters name="Sort By" options={placeholderOptions} /> */}
 				{/* <SelectFilters name="Group By" options={placeholderOptions} /> */}
 			</Stack>
 			<HelpLinks />
@@ -102,4 +127,4 @@ const Home = (): JSX.Element => {
 	);
 };
 
-export default Home;
+export default Filters;
