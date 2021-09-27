@@ -14,6 +14,7 @@ const customTheme = extendTheme({
 		...theme.fonts,
 		heading: `'Inter', ${theme.fonts.heading}`,
 		body: `'Inter', ${theme.fonts.body}`,
+		mono: 'Menlo, monospace',
 	},
 	fontSizes: {
 		xs: '0.75rem',

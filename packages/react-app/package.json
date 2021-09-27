@@ -12,7 +12,8 @@
     "extends": "react-app"
   },
   "scripts": {
-    "dev": "yarn lint && next dev",
+    "dev": "next dev",
+    "dev:lint": "yarn lint && next dev",
     "build": "next build",
     "start": "next start",
     "build:qa": "env-cmd -f .env.qa yarn build",
