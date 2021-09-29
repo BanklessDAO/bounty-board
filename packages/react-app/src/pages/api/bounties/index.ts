@@ -7,16 +7,16 @@ export default async function handler(
 	res: NextApiResponse
 ): Promise<void> {
 	const { method } = req;
+	const status: string = req.query.status as string;
+	const search: string = req.query.search as string;
 
 	await dbConnect();
 
 	switch (method) {
 	case 'GET':
 		try {
-			const bounties = await Bounty.find({
-				status: ['Open', 'In-Progress', 'In-Review'],
-			});
-			/* find all bounties that aren't in draft or deleted */
+			let bounties = [];
+			bounties = await handleFilters(status, search);
 			res.status(200).json({ success: true, data: bounties });
 		} catch (error) {
 			res.status(400).json({ success: false });
@@ -27,3 +27,20 @@ export default async function handler(
 		break;
 	}
 }
+
+const handleFilters = async (status: string, search: string): Promise<any> => {
+	let filterQuery: {status?: any, $text?: any};
+	if (status == null || status == '' || status == 'All') {
+		filterQuery = { status: ['Open', 'In-Progress', 'In-Review', 'Completed'] };
+	} else {
+		filterQuery = { status: status };
+	}
+
+	if (!(search == null || search == '')) {
+		filterQuery['$text'] = { $search: search };
+	}
+
+	const isEmpty: boolean = Object.values(filterQuery).every(x => x === null || x === '');
+	filterQuery = isEmpty ? {} : filterQuery;
+	return Bounty.find(filterQuery);
+};
