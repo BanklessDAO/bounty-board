@@ -108,11 +108,11 @@ Connection to MongoDB is handled through the Mongoose DRM. You can either connec
 
 If running locally, your `.env.local` will contain something like:
 ```
-DEV_MONGODB_URI=mongodb://localhost:27017/bountyboard
+MONGODB_URI=mongodb://localhost:27017/bountyboard
 ```
 If connecting to a remote mongo server, your connection string will be in the format:
 ```
-DEV_MONGODB_URI=mongodb://username:password@host:port/bountyboard
+MONGODB_URI=mongodb://username:password@host:port/bountyboard
 ```
 Please refer to [the Mongoose docs](https://mongoosejs.com/docs/connections.html) for more information.
 
@@ -132,4 +132,4 @@ $ mongoimport\
 ```
 If you've made it this far, the application should run and should be showing a bounty on the main screen. You can directly query the API backend through the app at `localhost:3000/api/bounties`
 ### Setting Up the Discord Webhook
-The `DEV_DEV_DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be fetched from a member of the bounty board development team. Add it to your `.env.local` file once you have it. 
+The `DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be fetched from a member of the bounty board development team. Add it to your `.env.local` file once you have it. 
