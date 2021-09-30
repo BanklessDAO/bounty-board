@@ -48,36 +48,51 @@ For the MVP, we are focusing on the bare requirements for a Bounty Card to be cr
 - **ClaimedBy**: Bot automatially notes `discordHandle` claiming the bounty.
 - **SubmittedBy**: Bot automatically notes `discordHandle` submitting the bounty.
 
-#### User Experience Flow: Bot in Discord
+#### User Experience Discord: Creating a Bounty with DEGEN
 
-The User Experience flow with accompanying bounty status is as follows:
+The follow description is of Serendipity in the Bankless Bot Garage, but is intended to mirror how DEGEN works in production.
 
-1. **Draft**: Bounty creator creates new bounty with `/bounty create new`; status is now "Draft" and _not_ shown in Discord. Bounty creator must publish the bounty before it is available to the public.
-2. **Publish/Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty create publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on website.
-3. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag 🏴 or `/bounty claim` to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
-4. **Submit/In Review**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from Bot indicating "bounty in review". The creator of the bounty is notified that the bounty is ready for review. They should reach out to the claimee. Alternatively, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
-5. **Complete/Completed**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel or directly through a new bot command `/bounty complete true`; card status is now "Completed".
+1. **Create**: Bounty creator creates new bounty with `/bounty create`, inputing `title` and `reward`. DEGEN will dm you to input a description, requirements for completion and a due date (`yyyy-mm-dd`). DEGEN takes your input and returns a card with three options: 👍 publish, 📝 edit or ❌ delete
 
-#### Bot Commands
+1. **Create Multiple Bounties**: Bounty creator creates new bounty with `/bounty create`, inputing `title` and `reward`. Then, hit tab to see an optional `copies` feature to create multiple bounties at once.
 
-1. Within The Bankless Bot Garage, head to #spam-tastic
-2. Enter `/` and see a list of Bots pop up, choose `SERENDIPITY MK-I`
+1. **Edit**: Select 📝 to edit. DEGEN provides a link to the frontend to edit any field. DEGEN then re-shows a newly edited card (and automatically publishes to #🧀-bounty-board channel)
+1. **Publish/Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on website.
+1. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag 🏴 or `/bounty claim`, entering the `HashID` to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
+1. **Submit/In Review**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from DEGEN notifying the bounty is ready for review. They should reach out to the person who submitted the bounty. Alternatively, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
+1. **Complete/Completed**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel or directly through a new bot command `/bounty complete true`; card status is now "Completed".
 
-The following commands are available for Serendipity MK-I:
+#### Degen Commands
 
-/bounty create new
-/bounty create publish
-/bounty claim
-/bounty complete
-/bounty list
-/bounty delete
-/bounty submit
+1. **NOTE**: DEGEN is available for use on _any_ channel within the Bankless DAO discord (08/31/2021)
+2. Enter `/` and see a list of commands pop up.
+
+The following commands (and input fields) are available for DEGEN:
+
+/bounty claim (bounty-id)
+/bounty complete (bounty-id)
+/bounty create (title)(reward)
+/bounty publish (bounty-id)
+/bounty list (list-type)
+/bounty delete (bounty-id)
+/bounty submit (bounty-id)
+/help bounty
 
 Refer to the [Bounty Board Commands and Workflow](https://bankless.notion.site/The-Bounty-Board-Commands-and-Workflow-7f15bbc3f2c744afab1cb5f90daac4a2) Notion Page for in-depth details.
 
-#### User Experience Flow: Frontend
+#### User Experience Frontend: Claiming a Bounty
 
-**Note**: Currently, the frontend mirrors the interaction with the Bot in discord and displays changes in card status. Both Discord/Bot actions and Frontend Statuses are displayed below:
+**Note**: Currently, the frontend mirrors the interaction with DEGEN in discord and displays changes in card status. Frontend interactions are suited for those wishing to _claim_ bounties.
+
+1. **Claim**: Click on any card that says `Open`. To claim, click the `Claim it` button. You will be re-directed to #🧀-bounty-board channel. Within #🧀-bounty-board Bounty click black flag 🏴 emoji. DEGEN present a link _back_ to the frontend and a prompt to reach out to the Bounty Creator.
+
+2. **Frontend Status: In Progress**: A link back to the frontend shows card status as "In Progress" and "Claimed By" claimer's discord handle.
+
+3. **Discord/Bot: Submit**: Bounty claimer hits red mail box emoji 📮 in Discord to submit, receives auto-generated message from DEGEN indicating "bounty in review" and a link back to the frontend where status is now "In Review".
+
+4. **Discord/Bot: Complete**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel. Bounty creator receives message to tip bounty completer.
+
+5. **Frontend Status: Completed**: Back at the frontend, the bounty card status is now "Completed".
 
 1. **Discord/Bot: Draft**: Bounty creator creates new bounty with `/bounty create new`; status is now "Draft" and _not_ shown in Discord. Bounty creator must publish the bounty before it is available on the frontend.
 2. **Frontend Status: Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty create publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on the frontend.
@@ -101,7 +116,7 @@ $ yarn dev
 Which will install packages and run the application on port 3000. The `package.json` file in the respective repo gives a full list of commands.
 ### Configure local `.env` file
 
-The react application looks for an environment variables file named `.env.local` on starting. You can copy the `.env.qa` file for most of the variables. You will need to add the `DEV_MONGODB_URI` and `DEV_DEV_DISCORD_BOUNTY_BOARD_WEBHOOK` as covered below.
+The react application looks for an environment variables file named `.env.local` on starting. You can copy the `.env.qa` file for most of the variables. You will need to add the `MONGODB_URI` and `DISCORD_BOUNTY_BOARD_WEBHOOK` as covered below.
 ### Setup MongoDB
 
 Connection to MongoDB is handled through the Mongoose DRM. You can either connect to a hosted instance of MongoDB, or run a local development copy.
@@ -133,3 +148,4 @@ $ mongoimport\
 If you've made it this far, the application should run and should be showing a bounty on the main screen. You can directly query the API backend through the app at `localhost:3000/api/bounties`
 ### Setting Up the Discord Webhook
 The `DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be fetched from a member of the bounty board development team. Add it to your `.env.local` file once you have it. 
+

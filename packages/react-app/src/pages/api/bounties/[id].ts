@@ -4,9 +4,7 @@ import Bounty from '../../../models/Bounty';
 import DiscordUtils from '../../../utils/DiscordUtils';
 import { BountyCollection } from '../../../types/BountyCollection';
 
-const BOUNTY_BOARD_WEBHOOK_URI =
-	(process.env.NEXT_PUBLIC_BUILD_ENV == 'production' ? process.env.PROD_DISCORD_BOUNTY_BOARD_WEBHOOK :
-		process.env.DEV_DISCORD_BOUNTY_BOARD_WEBHOOK) || '';
+const BOUNTY_BOARD_WEBHOOK_URI = process.env.DISCORD_BOUNTY_BOARD_WEBHOOK || '';
 
 export default async function handler(
 	req: NextApiRequest,
