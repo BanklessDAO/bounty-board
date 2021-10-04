@@ -1,4 +1,5 @@
-export type AcceptedSorts = 'reward.amount';
+export type AcceptedSortInputs = 'reward';
+export type AcceptedSortOuputs = 'reward.amount';
 
 export interface FilterParams {
 	status: string;
@@ -10,7 +11,7 @@ export interface FilterParams {
 }
 
 export interface SortParams {
-	sortBy?: string;
-	ascending: 'asc' | 'desc';
+	sortBy?: AcceptedSortOuputs;
+	order: 'asc' | 'desc';
 }
 

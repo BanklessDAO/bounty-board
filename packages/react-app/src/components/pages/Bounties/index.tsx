@@ -22,8 +22,11 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const [page, setPage] = useState(0);
 	const [status, setStatus] = useState('');
 	const [search, setSearch] = useState('');
-	const [lte, setLte] = useState(0);
 	const [gte, setGte] = useState(0);
+	// how to handle the lte === 0 case?
+	const [lte, setLte] = useState(Infinity);
+	const [sortBy, setSortBy] = useState('');
+	const [sortAscending, setSortAscending] = useState(true);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const maxPages = () => {
@@ -46,8 +49,9 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	};
 
 	const { data: bounties, error } = useSWR(
-		id ? `/api/bounties/${id}` :
-			`/api/bounties?status=${status}&search=${debounceSearch}&lte=${lte}&gte=${gte}`,
+		id
+			? `/api/bounties/${id}`
+			: `/api/bounties?status=${status}&search=${debounceSearch}&lte=${lte}&gte=${gte}&sortBy=${sortBy}&asc=${sortAscending}`,
 		fetcher
 	);
 
@@ -79,6 +83,8 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 							search={search} setSearch={setSearch}
 							lte={lte} setLte={setLte}
 							gte={gte} setGte={setGte}
+							sortBy={sortBy} setSortBy={setSortBy}
+							sortAscending={sortAscending} setSortAscending={setSortAscending}
 						/>
 						{(search || status) && bounties && paginatedBounties.length === 0 ?
 							<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">

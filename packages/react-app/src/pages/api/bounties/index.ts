@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
 import Bounty from '../../../models/Bounty';
 import { Query } from 'mongoose';
-import { AcceptedSorts, FilterParams, SortParams } from '../../../types/Filter';
+import { AcceptedSortOuputs, FilterParams, SortParams } from '../../../types/Filter';
 import { FilterQuery } from '../../../types/Queries';
 
 export default async function handler(
@@ -51,14 +51,34 @@ const getSort = (query: any): SortParams => {
 	 * Retrieve implemented sort filters from query string params
 	 * Sort defaults to ascending order
 	 */
+	const sort = {} as SortParams;
 	const FALSY_STRINGS = ['false', '0', 'desc', 'no'];
 	
-	const sort = {} as SortParams;
-
 	const isDescending = FALSY_STRINGS.includes(query.asc);
-	isDescending ? sort.ascending = 'desc' : sort.ascending = 'asc';
-	query.sortBy ? sort.sortBy = query.sortBy : null;
+
+	isDescending ? sort.order = 'desc' : sort.order = 'asc';
+	
+	sort.sortBy = getSortByValue(query.sortBy);
+	
 	return sort;
+};
+
+const getSortByValue = (originalInput: string): AcceptedSortOuputs => {
+	/**
+	 * Allows passing of various values as sort params. These need to coalesce
+	 * to a mongoDB schema item, so I've put in a Type for accepted sort outputs
+	 * to indicate the required @return value.
+	 */
+	let output: AcceptedSortOuputs;
+	switch (originalInput) {
+	// redundant switch written for later extensibility
+	case 'reward':
+		output = 'reward.amount';
+		break;
+	default:
+		output = 'reward.amount';
+	}
+	return output;
 };
 
 const filterStatus = (query: FilterQuery, status: string): FilterQuery => {
@@ -84,7 +104,7 @@ const filterSearch = (query: FilterQuery, search: string): FilterQuery => {
 };
 
 const filterLessGreater = ({ by, query, $lte, $gte }: {
-	by: AcceptedSorts;
+	by: AcceptedSortOuputs;
 	query: FilterQuery;
 	$lte?: number;
 	$gte?: number;
@@ -133,17 +153,15 @@ const handleSort = (query: Query<any, any>, sort: SortParams): Query<any, any> =
 	/**
 	 * Take the existing query object and add any sorting information before returning
 	 */
-	if (sort.sortBy === 'reward') {
-		return query.sort({ 'reward.amount': sort.ascending });
-	}
-	return query;
+	const sortStatement = { [sort.sortBy as string]: sort.order };
+	return query.sort(sortStatement);
 };
 
-const handleFiltersAndSorts = async (filters: FilterParams, sort: SortParams): Promise<any> => {
+const handleFiltersAndSorts = async (filters: FilterParams, sort: SortParams): Promise<Query<any, any>> => {
 	/**
 	 * Construct the query object (awaiting execution) from filters and sorts
 	 */
-	let query: any;
+	let query: Query<any, any>;
 	query = handleFilters(filters);
 	query = handleSort(query, sort);
 	return query;
