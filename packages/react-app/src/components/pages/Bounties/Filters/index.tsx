@@ -70,15 +70,30 @@ const SelectFilters = ({ name, options, status, setStatus }: {
 	);
 };
 
-// const MinMaxFilter = ({ name }: { name?: string }): JSX.Element => (
-// 	<>
-// 		{name && <Heading size="xs">{name}</Heading>}
-// 		<HStack my="2">
-// 			<Input placeholder="Min" />
-// 			<Input placeholder="Max" />
-// 		</HStack>
-// 	</>
-// );
+const MinMaxFilter = ({ name, setLte, setGte }: {
+	name?: string,
+	lte: number,
+	setLte: any,
+	gte: number,
+	setGte: any
+}): JSX.Element => {
+	const updateMin = (event: any): void => {
+		setGte(event.target.value);
+	};
+	const updateMax = (event: any): void => {
+		setLte(event.target.value);
+	};
+	
+	return (
+		<>
+			{name && <Heading size="xs">{name}</Heading>}
+			<HStack my="2">
+				<Input placeholder="Min" onChange={updateMin}/>
+				<Input placeholder="Max" onChange={updateMax}/>
+			</HStack>
+		</>
+	);
+};
 
 const HelpLinks = (): JSX.Element => (
 	<HStack>
@@ -92,7 +107,16 @@ const HelpLinks = (): JSX.Element => (
 	</HStack>
 );
 
-const Filters = (props: { status: string, setStatus: any, search: string, setSearch: any }): JSX.Element => {
+const Filters = (props: {
+	status: string,
+	setStatus: any,
+	search: string,
+	setSearch: any
+	lte: number,
+	setLte: any,
+	gte: number,
+	setGte: any
+}): JSX.Element => {
 	const filterStatusList = [
 		{
 			name: bountyStatus.OPEN,
@@ -118,7 +142,11 @@ const Filters = (props: { status: string, setStatus: any, search: string, setSea
 				<SearchFilter searchValue={props.search} setSearch={props.setSearch}/>
 				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
 				<SelectFilters name="Filter Status" options={filterStatusList} status={props.status} setStatus={props.setStatus} />
-				{/* <MinMaxFilter name="Filter Bounty Value" /> */}
+				<MinMaxFilter
+					name="Filter Bounty Value"
+					lte={props.lte} setLte={props.setLte}
+					gte={props.gte} setGte={props.setGte}
+				/>
 				{/* <SelectFilters name="Sort By" options={placeholderOptions} /> */}
 				{/* <SelectFilters name="Group By" options={placeholderOptions} /> */}
 			</Stack>

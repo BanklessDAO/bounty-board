@@ -22,6 +22,8 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const [page, setPage] = useState(0);
 	const [status, setStatus] = useState('');
 	const [search, setSearch] = useState('');
+	const [lte, setLte] = useState(0);
+	const [gte, setGte] = useState(0);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const maxPages = () => {
@@ -45,7 +47,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 
 	const { data: bounties, error } = useSWR(
 		id ? `/api/bounties/${id}` :
-			`/api/bounties?status=${status}&search=${debounceSearch}`,
+			`/api/bounties?status=${status}&search=${debounceSearch}&lte=${lte}&gte=${gte}`,
 		fetcher
 	);
 
@@ -72,7 +74,12 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 					<BountyCard {...bounties} />
 				) : (
 					<>
-						<Filters status={status} setStatus={setStatus} search={search} setSearch={setSearch}/>
+						<Filters
+							status={status} setStatus={setStatus}
+							search={search} setSearch={setSearch}
+							lte={lte} setLte={setLte}
+							gte={gte} setGte={setGte}
+						/>
 						{(search || status) && bounties && paginatedBounties.length === 0 ?
 							<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
 								<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>
