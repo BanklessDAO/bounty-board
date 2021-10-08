@@ -59,6 +59,18 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 		setPage(0);
 	}, [search]);
 
+	useEffect(() => {
+		setPage(0);
+	}, [gte]);
+
+	useEffect(() => {
+		setPage(0);
+	}, [lte]);
+
+	useEffect(() => {
+		setPage(0);
+	}, [sortBy]);
+
 	if (error) return <p>Failed to load</p>;
 
 	const paginatedBounties =
