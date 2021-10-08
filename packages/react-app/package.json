@@ -1,6 +1,6 @@
 {
   "name": "@bounty-board/react-app",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "homepage": ".",
   "description": "This web app displays the bounties that are available for DAO members to claim.",
   "repository": "https://github.com/BanklessDAO/bounty-board",

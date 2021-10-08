@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.0.0-SNAPSHOT
+## 1.0.0-beta3 (2021-10-08)
 
 1. Fix CI/CD for preview and production
 2. Add bounty filters
