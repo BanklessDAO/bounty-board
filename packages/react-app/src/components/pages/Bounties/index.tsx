@@ -57,19 +57,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 
 	useEffect(() => {
 		setPage(0);
-	}, [search]);
-
-	useEffect(() => {
-		setPage(0);
-	}, [gte]);
-
-	useEffect(() => {
-		setPage(0);
-	}, [lte]);
-
-	useEffect(() => {
-		setPage(0);
-	}, [sortBy]);
+	}, [search, gte, lte, sortBy]);
 
 	if (error) return <p>Failed to load</p>;
 
