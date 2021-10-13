@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Flex, Text, Stack, useColorModeValue } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Button, Box, Flex, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
 
 import Logo from './Logo';
 import ThemeToggle from '../../parts/ThemeToggle';
 import AccessibleLink from '../../parts/AccessibleLink';
-import ColorModeButton from '../../parts/ColorModeButton';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -61,7 +60,67 @@ const MenuItem = ({
 	</AccessibleLink>
 );
 
-const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
+const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
+	const [discordUser, setDiscordUser] = useState<Object | any | null>(null)
+	const [authorizationCode, setAuthorizationCode] = useState<string | null>(null)
+	const [accessToken, setAccessToken] = useState<string | null>(null)
+	const [tokenType, setTokenType] = useState<string | null>(null)
+
+	const oauthResult = async (authorizationCode: string): Promise<any> => {
+		let response = await fetch('https://discord.com/api/oauth2/token', {
+		method: 'POST',
+		body: new URLSearchParams({
+			client_id: `892232488812965898`,
+			client_secret: `IB33yqHzgiG4VhFxr6cB0Tr5oEAnihmq`,
+			code: authorizationCode,
+			grant_type: 'authorization_code',
+			redirect_uri: `http://localhost:3000/`,
+			scope: 'identify',
+		}),
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		},
+	});
+
+	return await response.json();
+	
+} 
+	const getDiscordUser = async (tokenType: string | null, accessToken: string | null): Promise<any> => {
+		let response = await fetch('https://discord.com/api/users/@me', {
+				headers:  {
+					authorization: `${tokenType} ${accessToken}`,
+				},
+			})
+
+		let user = await response.json()
+		setDiscordUser(user)
+	}
+
+	
+	useEffect(() => {
+		const fragment = new URLSearchParams(window.location.search.slice(1));
+		const retrievedCode = fragment.get('code');
+		setAuthorizationCode(retrievedCode)
+
+		if (retrievedCode) {
+			try {
+				const result = oauthResult(retrievedCode)
+				.then(res => {
+					setAccessToken(res.access_token)
+					setTokenType(res.token_type)
+					getDiscordUser(res.token_type, res.access_token)
+				})
+				
+		} catch (error) {
+				// NOTE: An unauthorized token will not throw an error;
+				// it will return a 401 Unauthorized response in the try block above
+				console.log(error)
+			}
+		}
+	}, []);
+
+	
+	return (
 	<Box
 		display={{ base: isOpen ? 'block' : 'none', md: 'block' }}
 		flexBasis={{ base: '100%', md: 'auto' }}
@@ -77,13 +136,14 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
 			{/* <MenuItem to="#">*/}
 			{/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
 			{/* </MenuItem>*/}
-			<MenuItem to="https://bankless.community" newTab={true}>
-				<ColorModeButton>Join DAO</ColorModeButton>{' '}
+			<MenuItem to="https://discord.com/api/oauth2/authorize?client_id=892232488812965898&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify%20guilds%20guilds.join" newTab={true}>
+				{/*<Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
+				<Button id='DiscordButton'>{(discordUser) ? discordUser.username : 'Join DAO'}</Button>{' '}
 			</MenuItem>
 			<ThemeToggle />
 		</Stack>
-	</Box>
-);
+	</Box>);
+};
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
 	<Flex
