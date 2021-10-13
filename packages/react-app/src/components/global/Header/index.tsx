@@ -136,7 +136,7 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
 			{/* <MenuItem to="#">*/}
 			{/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
 			{/* </MenuItem>*/}
-			<MenuItem to="https://discord.com/api/oauth2/authorize?client_id=892232488812965898&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify%20guilds%20guilds.join" newTab={true}>
+			<MenuItem to="https://discord.com/api/oauth2/authorize?client_id=892232488812965898&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify%20guilds%20guilds.join" newTab={false}>
 				{/*<Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
 				<Button id='DiscordButton'>{(discordUser) ? discordUser.username : 'Join DAO'}</Button>{' '}
 			</MenuItem>
