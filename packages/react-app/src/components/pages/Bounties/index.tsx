@@ -22,6 +22,11 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const [page, setPage] = useState(0);
 	const [status, setStatus] = useState('');
 	const [search, setSearch] = useState('');
+	const [gte, setGte] = useState(0);
+	// how to handle the lte === 0 case?
+	const [lte, setLte] = useState(Infinity);
+	const [sortBy, setSortBy] = useState('');
+	const [sortAscending, setSortAscending] = useState(true);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const maxPages = () => {
@@ -44,14 +49,15 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	};
 
 	const { data: bounties, error } = useSWR(
-		id ? `/api/bounties/${id}` :
-			`/api/bounties?status=${status}&search=${debounceSearch}`,
+		id
+			? `/api/bounties/${id}`
+			: `/api/bounties?status=${status}&search=${debounceSearch}&lte=${lte}&gte=${gte}&sortBy=${sortBy}&asc=${sortAscending}`,
 		fetcher
 	);
 
 	useEffect(() => {
 		setPage(0);
-	}, [search]);
+	}, [search, gte, lte, sortBy]);
 
 	if (error) return <p>Failed to load</p>;
 
@@ -72,7 +78,14 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 					<BountyCard {...bounties} />
 				) : (
 					<>
-						<Filters status={status} setStatus={setStatus} search={search} setSearch={setSearch}/>
+						<Filters
+							status={status} setStatus={setStatus}
+							search={search} setSearch={setSearch}
+							lte={lte} setLte={setLte}
+							gte={gte} setGte={setGte}
+							sortBy={sortBy} setSortBy={setSortBy}
+							sortAscending={sortAscending} setSortAscending={setSortAscending}
+						/>
 						{(search || status) && bounties && paginatedBounties.length === 0 ?
 							<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
 								<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>

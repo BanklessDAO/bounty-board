@@ -130,6 +130,21 @@ db.bounties.find({ "statusHistory.status": "In-Review" }).count();
 
 db.bounties.find({ status: "In-Review" }).count();
 
+// Bounties sorted by reward value Max
+db.bounties.find().sort({ "reward.amount": -1 });
+
+// Bounties sorted by reward value Min
+db.bounties.find().sort({ "reward.amount": 1 });
+
+// Bounties filtered by reward value at least X
+db.bounties.find({ "reward.amount": {  $gte: 3000 } });
+
+// Bounties filtered by reward value up to X
+db.bounties.find({ "reward.amount": {  $lte: 2000 } });
+
+// Bounties filtered by reward value between X & Y
+db.bounties.find({ "reward.amount": { $gte:  2000, $lte: 3000 } });
+
 // GUILD SPECIFIC QUERIES (need to add data fields)
 
 // How many bounties were created by each Guild? (need to add new data field)
