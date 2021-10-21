@@ -1,13 +1,16 @@
 import React from 'react';
-import { Box, BoxProps, Image, Link as ChakraLink } from '@chakra-ui/react';
+import { Box, Image, Link as ChakraLink } from '@chakra-ui/react';
 import Link from 'next/link';
 
-export default function Logo(props: BoxProps): JSX.Element {
+export default function Logo(props: { img: string, alt: string }): JSX.Element {
 	return (
-		<Box {...props}>
-			<Link href={'/'}>
+		<Box w="100px" h="50px">
+			<Link href={'/'} >
 				<ChakraLink isExternal={false}>
-					<Image alt="Bankless DAO" src="/logo.png" />
+					<Image
+						alt={props.alt}
+						src={props.img}
+					/>
 				</ChakraLink>
 			</Link>
 		</Box>

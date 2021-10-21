@@ -9,6 +9,7 @@ import {
 	Switch,
 	Flex,
 	Spacer,
+	useColorMode,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 
@@ -88,7 +89,6 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 	const toggleSortAscending = (_: any): void => {
 		setSortAscending(sortAscending = !sortAscending);
 	};
-
 	return (
 		<>
 			<Flex className="composite-heading" alignItems="center">
@@ -99,6 +99,7 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 						{sortAscending ? 'Ascending' : 'Descending'}
 					</Heading>
 					<Switch
+						colorScheme="primary"
 						onChange={toggleSortAscending}
 						defaultChecked
 						isChecked={sortAscending}

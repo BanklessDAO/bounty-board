@@ -1,4 +1,4 @@
-import { Button, Stack, Text } from '@chakra-ui/react';
+import { Button, Stack, Text, useColorMode } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
 import useSWR from 'swr';
 import { BountyCard } from './Bounty';
@@ -28,6 +28,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const [sortBy, setSortBy] = useState('');
 	const [sortAscending, setSortAscending] = useState(true);
 	const debounceSearch = useDebounce(search, 500, true);
+	const { colorMode } = useColorMode();
 
 	const maxPages = () => {
 		if (!bounties) return 0;
@@ -101,7 +102,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 						p={5}
 						disabled={page === 0}
 						size="sm"
-						colorScheme="teal"
+						bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 						onClick={decrementPage}
 					>
             &larr; Previous Page
@@ -110,7 +111,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 						p={5}
 						disabled={page === maxPages() - 1 || bounties && paginatedBounties.length === 0}
 						size="sm"
-						colorScheme="teal"
+						bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 						onClick={incrementPage}
 					>
             Next Page &rarr;

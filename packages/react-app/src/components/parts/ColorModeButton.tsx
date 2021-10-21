@@ -1,13 +1,15 @@
-import { Button, useColorModeValue } from '@chakra-ui/react';
+import { Button, useColorMode } from '@chakra-ui/react';
 
 const ColorModeButton = ({
 	children,
 }: {
   children?: React.ReactNode
 }): JSX.Element => {
-	const bgColor = useColorModeValue('gray.300', 'gray.700');
+	const { colorMode } = useColorMode();
 	return (
-		<Button bg={bgColor} transition="background 100ms linear">
+		<Button transition="background 100ms linear"
+		bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+		>
 			{children}
 		</Button>
 	);

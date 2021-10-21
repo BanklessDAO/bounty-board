@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Box, Flex, Text, Stack, useColorModeValue } from '@chakra-ui/react';
+import { Button, Box, Flex, Text, Stack, useColorModeValue, useColorMode } from '@chakra-ui/react';
 
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
 
 import Logo from './Logo';
 import ThemeToggle from '../../parts/ThemeToggle';
 import AccessibleLink from '../../parts/AccessibleLink';
+import { DAOSelector } from './DAOSelector';
+import { Customer } from '../../../types/Customer';
+import { customers } from '../../../models/stubs/Customer';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -14,15 +17,27 @@ const MenuIcon = ({ color }: { color: string }) => (
 	<RiMenuFill size="2.5em" color={color} />
 );
 
-const NavBar: React.FC = (props): JSX.Element => {
+const NavBar = ({ customer, setCustomer, props }: {
+	customer: Customer,
+	setCustomer(): any,
+	props: any
+}): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
 
 	return (
 		<NavBarContainer {...props}>
-			<Logo w="100px" />
+			{ !isOpen ?
+				<Logo alt={`${customer.name} Logo`} img={customer.customization?.logo ?? './logo.png'}/>
+				: null
+			}
 			<MenuToggle toggle={toggle} isOpen={isOpen} />
-			<MenuLinks isOpen={isOpen} />
+			<MenuLinks
+				isOpen={isOpen}
+				customers={customers}
+				customer={customer}
+				setCustomer={setCustomer}				
+			/>
 		</NavBarContainer>
 	);
 };
@@ -60,11 +75,18 @@ const MenuItem = ({
 	</AccessibleLink>
 );
 
-const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
+const MenuLinks = ({
+	isOpen,
+	customer,
+	setCustomer,
+	customers
+}: { isOpen: boolean; customer: Customer; setCustomer(): any; customers: Customer[]; }): JSX.Element => {
+
 	const [discordUser, setDiscordUser] = useState<Object | any | null>(null)
 	const [authorizationCode, setAuthorizationCode] = useState<string | null>(null)
 	const [accessToken, setAccessToken] = useState<string | null>(null)
 	const [tokenType, setTokenType] = useState<string | null>(null)
+	const { colorMode } = useColorMode();
 
 	const oauthResult = async (authorizationCode: string): Promise<any> => {
 		let response = await fetch('https://discord.com/api/oauth2/token', {
@@ -131,14 +153,19 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
 			justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
 			direction={{ base: 'column', md: 'row' }}
 		>
-			{/* <MenuItem to="/">Bounty Board</MenuItem>*/}
-			{/* TODO: enabled this with web3 integration */}
-			{/* <MenuItem to="#">*/}
-			{/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
-			{/* </MenuItem>*/}
+			<DAOSelector
+				customers={customers}
+				customer={customer}
+				setCustomer={setCustomer}
+			/>
 			<MenuItem to="https://discord.com/api/oauth2/authorize?client_id=892232488812965898&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify%20guilds%20guilds.join" newTab={false}>
 				{/*<Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
-				<Button id='DiscordButton'>{(discordUser) ? discordUser.username : 'Join DAO'}</Button>{' '}
+				<Button
+					id='DiscordButton'
+					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				>
+					{(discordUser) ? discordUser.username : 'Join DAO'}
+				</Button>{' '}
 			</MenuItem>
 			<ThemeToggle />
 		</Stack>

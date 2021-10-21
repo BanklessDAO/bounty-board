@@ -22,7 +22,8 @@
     "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve",
     "export": "next export",
     "lint": "eslint src --ext js,jsx,ts,tsx",
-    "format": "eslint src --ext js,jsx,ts,tsx --fix"
+    "format": "eslint src --ext js,jsx,ts,tsx --fix",
+    "test:unit": "jest"    
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
@@ -61,5 +62,11 @@
   "engines": {
     "yarn": "1.x",
     "node": ">=14.x.0"
-  }
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "discord-api-types": "^0.24.0",
+    "jest": "^27.3.1",
+    "ts-jest": "^27.0.7"
+  }  
 }
