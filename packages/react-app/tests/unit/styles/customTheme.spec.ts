@@ -25,6 +25,20 @@ describe('Testing custom styles', () => {
         expect(newThemeColors.Open).toEqual(theme.colors[color]);
     })
 
+    it('Generates a Chakra theme object if a hex code is passed', () => {
+        const color = "#0AA3D8";
+        const generatedThemeColor = custom.getColorFrom(color);
+        const keys = Object.keys(generatedThemeColor);
+        expect(keys).toEqual(["50", "100", "200", "300", "400", "500", "600", "700", "800"]);
+    })
+
+    it('Returns a Chakra theme object if a string color is passed', () => {
+        const color = "red";
+        const generatedThemeColor = custom.getColorFrom(color);
+        expect(generatedThemeColor).toEqual(theme.colors[color])
+    })
+
+
     it('Returns an object containing only the passed values', () => {
         const customization = { Draft: "blue", 'In-Review': "green" };
         const customColors = getCustomColors(customization);

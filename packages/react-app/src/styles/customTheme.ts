@@ -1,4 +1,4 @@
-import { theme, extendTheme, ChakraTheme } from '@chakra-ui/react';
+import { theme, extendTheme, ChakraTheme, Colors } from '@chakra-ui/react';
 import { createBreakpoints, mode } from '@chakra-ui/theme-tools';
 import { Customization, LightDark, SupportedColorCustomizations } from '../types/Customer';
 
@@ -42,7 +42,7 @@ export const baseTheme = extendTheme({
 		Done: theme.colors.green,
 		Deleted: theme.colors.red,
 		Draft: theme.colors.gray,
-		primary: theme.colors.gray,
+		primary: theme.colors.teal,
 	},
 	components: {
 		Heading: {
@@ -82,9 +82,56 @@ export const getCustomBackground = (colors: LightDark): Partial<ChakraTheme> => 
 			}
 		})
 	}
-})
+});
 
-export const getCustomColors = (colors: SupportedColorCustomizations): Record<string, string> => {
+const shadeHexColor = (color: string, percent: number): string => {
+	/**
+	 * Shamlessly taken from:
+	 * https://github.com/PimpTrizkit/PJs/wiki/12.-Shade,-Blend-and-Convert-a-Web-Color-(pSBC.js)
+	 */
+	const f = parseInt(color.slice(1), 16);
+	const t = percent<0?0:255;
+	const p = percent<0?percent*-1:percent;
+	const R = f>>16,G=f>>8&0x00FF;
+	const B = f&0x0000FF;
+    const output = "#"+(
+		0x1000000+(Math.round((t-R)*p)+R)
+		*0x10000+(Math.round((t-G)*p)+G)
+		*0x100+(Math.round((t-B)*p)+B)
+	)
+		.toString(16)
+		.slice(1)
+		.toUpperCase();
+	return output
+}
+
+
+export const getColorFrom = (colorVariant: string): Colors => {
+	/**
+	 * @param colorVariant is a string either `"red"` or a Hex `"#FFF"
+	 * Takes in the variant and checks to see if we have a match in chakra,
+	 * if not, generates a new color object on the fly
+	 * @returns a Chakra UI color object
+	 */
+	// @ts-ignore
+	const themeColor = theme.colors[colorVariant];
+	if (!themeColor) {
+		return {
+				50: shadeHexColor(colorVariant, 0.45),
+				100: shadeHexColor(colorVariant, 0.4),
+				200: shadeHexColor(colorVariant, 0.3),
+				300: shadeHexColor(colorVariant, 0.2),
+				400: shadeHexColor(colorVariant, 0),
+				500: shadeHexColor(colorVariant, -0.2),
+				600: shadeHexColor(colorVariant, -0.3),
+				700: shadeHexColor(colorVariant, -0.4),
+				800: shadeHexColor(colorVariant, -0.5),
+		}
+	}
+	return themeColor
+};
+
+export const getCustomColors = (colors: SupportedColorCustomizations): Record<string, Colors> => {
 	/**
 	 * @param colors is the colors we want to customize
 	 * Looks up the list of colors we currently support, from the base theme
@@ -95,8 +142,9 @@ export const getCustomColors = (colors: SupportedColorCustomizations): Record<st
 		// @ts-ignore
 		.filter(variant => colors[variant] !== undefined)
 		// @ts-ignore
-		.map(variant => ({ [variant]: theme.colors[colors[variant]] }));
-
+		// .map(variant => ({ [variant]: theme.colors[colors[variant]] }));
+		.map(variant => ({ [variant]: getColorFrom(colors[variant]) }));
+	console.debug({ colorCustomizations})
 	return Object.assign({}, ...colorCustomizations);
 }
 
@@ -106,7 +154,7 @@ export const customizeTheme = (customization: Customization) => {
 	 * Goes through and creates an overwrite of the base theme, with our additional customizations.
 	 * @returns the new theme object
 	 */
-	let customColors = {} as Record<string, string>;
+	let customColors = {} as Record<string, Colors>;
 	let customBackground = {} as Partial<ChakraTheme>;
 
 	const { colors } = customization;
