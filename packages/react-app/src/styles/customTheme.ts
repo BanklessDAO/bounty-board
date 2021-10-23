@@ -144,7 +144,6 @@ export const getCustomColors = (colors: SupportedColorCustomizations): Record<st
 		// @ts-ignore
 		// .map(variant => ({ [variant]: theme.colors[colors[variant]] }));
 		.map(variant => ({ [variant]: getColorFrom(colors[variant]) }));
-	console.debug({ colorCustomizations})
 	return Object.assign({}, ...colorCustomizations);
 }
 
