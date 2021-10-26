@@ -10,9 +10,11 @@ const Footer = (): JSX.Element => {
 		<Flex
 			as="footer"
 			px={8}
-			py={10}
+			py={{ base: 5, sm: 10 }}
 			width="full"
 			justifyContent="space-between"
+			alignItems="center"
+			direction={{ base: 'column', sm: 'row' }}
 		>
 			<Box>
 				{/* <Text fontSize="xs" color="grey">
@@ -29,7 +31,9 @@ const Footer = (): JSX.Element => {
 				</HStack>
 			</Box>
 
-			<Text>&copy; {new Date().getFullYear()} Bankless DAO</Text>
+			<Text paddingTop={{ base: '5' }}>
+        &copy; {new Date().getFullYear()} Bankless DAO
+			</Text>
 		</Flex>
 	);
 };
