@@ -62,5 +62,8 @@
   "engines": {
     "yarn": "1.x",
     "node": ">=14.x.0"
+  },
+  "devDependencies": {
+    "@types/next-auth": "^3.15.0"
   }
 }
