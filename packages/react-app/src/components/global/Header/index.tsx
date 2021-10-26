@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useSession, signIn, signOut, RedirectableProvider } from 'next-auth/react';
 import { Button, Box, Flex, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
@@ -44,16 +45,14 @@ const MenuToggle = ({
 
 const MenuItem = ({
 	children,
-	to = '/',
 	newTab,
 	...rest
 }: {
   children?: React.ReactNode
   isLast?: boolean
-  to: string
   newTab?: boolean
 }): JSX.Element => (
-	<AccessibleLink href={to} isExternal={newTab}>
+	<AccessibleLink href='' isExternal={newTab}>
 		<Text display="block" {...rest}>
 			{children}
 		</Text>
@@ -61,88 +60,33 @@ const MenuItem = ({
 );
 
 const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
-	const [discordUser, setDiscordUser] = useState<Object | any | null>(null)
-	const [authorizationCode, setAuthorizationCode] = useState<string | null>(null)
-	const [accessToken, setAccessToken] = useState<string | null>(null)
-	const [tokenType, setTokenType] = useState<string | null>(null)
-
-	const oauthResult = async (authorizationCode: string): Promise<any> => {
-		let response = await fetch('https://discord.com/api/oauth2/token', {
-		method: 'POST',
-		body: new URLSearchParams({
-			client_id: `892232488812965898`,
-			client_secret: `IB33yqHzgiG4VhFxr6cB0Tr5oEAnihmq`,
-			code: authorizationCode,
-			grant_type: 'authorization_code',
-			redirect_uri: `http://localhost:3000/`,
-			scope: 'identify',
-		}),
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
-	});
-
-	return await response.json();
-	
-} 
-	const getDiscordUser = async (tokenType: string | null, accessToken: string | null): Promise<any> => {
-		let response = await fetch('https://discord.com/api/users/@me', {
-				headers:  {
-					authorization: `${tokenType} ${accessToken}`,
-				},
-			})
-
-		let user = await response.json()
-		setDiscordUser(user)
-	}
-
-	
-	useEffect(() => {
-		const fragment = new URLSearchParams(window.location.search.slice(1));
-		const retrievedCode = fragment.get('code');
-		setAuthorizationCode(retrievedCode)
-
-		if (retrievedCode) {
-			try {
-				const result = oauthResult(retrievedCode)
-				.then(res => {
-					setAccessToken(res.access_token)
-					setTokenType(res.token_type)
-					getDiscordUser(res.token_type, res.access_token)
-				})
-				
-		} catch (error) {
-				// NOTE: An unauthorized token will not throw an error;
-				// it will return a 401 Unauthorized response in the try block above
-				console.log(error)
-			}
-		}
-	}, []);
+	const { data: session, status } = useSession({ required: true });
 
 	
 	return (
-	<Box
-		display={{ base: isOpen ? 'block' : 'none', md: 'block' }}
-		flexBasis={{ base: '100%', md: 'auto' }}
-	>
-		<Stack
-			spacing={4}
-			align="center"
-			justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
-			direction={{ base: 'column', md: 'row' }}
+		<Box
+			display={{ base: isOpen ? 'block' : 'none', md: 'block' }}
+			flexBasis={{ base: '100%', md: 'auto' }}
 		>
-			{/* <MenuItem to="/">Bounty Board</MenuItem>*/}
-			{/* TODO: enabled this with web3 integration */}
-			{/* <MenuItem to="#">*/}
-			{/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
-			{/* </MenuItem>*/}
-			<MenuItem to="https://discord.com/api/oauth2/authorize?client_id=892232488812965898&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=identify%20guilds%20guilds.join" newTab={false}>
-				{/*<Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
-				<Button id='DiscordButton'>{(discordUser) ? discordUser.username : 'Join DAO'}</Button>{' '}
-			</MenuItem>
-			<ThemeToggle />
-		</Stack>
-	</Box>);
+			<Stack
+				spacing={4}
+				align="center"
+				justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
+				direction={{ base: 'column', md: 'row' }}
+			>
+				{/* <MenuItem to="/">Bounty Board</MenuItem>*/}
+				{/* TODO: enabled this with web3 integration */}
+				{/* <MenuItem to="#">*/}
+				{/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
+				{/* </MenuItem>*/}
+				<MenuItem newTab={false}>
+					{/* <Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
+					
+					{ status === 'loading' ? <span>Loading...</span> : <Button onClick={() => status === 'authenticated' ? signOut() : signIn('discord' as RedirectableProvider)} id='DiscordButton'>{session ? session.user?.name : 'Join DAO'}</Button>}
+				</MenuItem>
+				<ThemeToggle />
+			</Stack>
+		</Box>);
 };
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
