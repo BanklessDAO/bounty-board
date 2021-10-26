@@ -117,15 +117,15 @@ export const getColorFrom = (colorVariant: string): Colors => {
 	const themeColor = theme.colors[colorVariant];
 	if (!themeColor) {
 		return {
-				50: shadeHexColor(colorVariant, 0.45),
-				100: shadeHexColor(colorVariant, 0.4),
-				200: shadeHexColor(colorVariant, 0.3),
-				300: shadeHexColor(colorVariant, 0.2),
+				50: shadeHexColor(colorVariant, 0.35),
+				100: shadeHexColor(colorVariant, 0.3),
+				200: shadeHexColor(colorVariant, 0.2),
+				300: shadeHexColor(colorVariant, 0.1),
 				400: shadeHexColor(colorVariant, 0),
-				500: shadeHexColor(colorVariant, -0.2),
-				600: shadeHexColor(colorVariant, -0.3),
-				700: shadeHexColor(colorVariant, -0.4),
-				800: shadeHexColor(colorVariant, -0.5),
+				500: shadeHexColor(colorVariant, -0.1),
+				600: shadeHexColor(colorVariant, -0.2),
+				700: shadeHexColor(colorVariant, -0.3),
+				800: shadeHexColor(colorVariant, -0.4),
 		}
 	}
 	return themeColor
