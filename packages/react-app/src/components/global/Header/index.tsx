@@ -60,7 +60,7 @@ const MenuItem = ({
 );
 
 const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
-	const { data: session, status } = useSession({ required: true });
+	const { data: session, status } = useSession({ required: false });
 
 	
 	return (
