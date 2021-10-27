@@ -3,6 +3,7 @@ import NProgress from 'nprogress';
 
 import { AppProps } from 'next/app';
 
+import { SessionProvider } from 'next-auth/react';
 import { DefaultSeo } from 'next-seo';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,30 +19,32 @@ Router.events.on('routeChangeError', () => NProgress.done());
 
 const MotionBox = motion(Box);
 
-function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
+function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps): JSX.Element {
 	return (
-		<ChakraProvider resetCSS theme={customTheme}>
-			<DefaultSeo {...SEO} />
-			<GlobalStyle>
-				<AnimatePresence exitBeforeEnter>
-					<MotionBox
-						key={router.route}
-						animate="enter"
-						as="main"
-						exit="exit"
-						flexGrow={1}
-						initial="initial"
-						variants={{
-							initial: { opacity: 0, y: -10 },
-							enter: { opacity: 1, y: 0 },
-							exit: { opacity: 0, y: 10 },
-						}}
-					>
-						<Component {...pageProps} />
-					</MotionBox>
-				</AnimatePresence>
-			</GlobalStyle>
-		</ChakraProvider>
+		<SessionProvider session={session}>
+			<ChakraProvider resetCSS theme={customTheme}>
+				<DefaultSeo {...SEO} />
+				<GlobalStyle>
+					<AnimatePresence exitBeforeEnter>
+						<MotionBox
+							key={router.route}
+							animate="enter"
+							as="main"
+							exit="exit"
+							flexGrow={1}
+							initial="initial"
+							variants={{
+								initial: { opacity: 0, y: -10 },
+								enter: { opacity: 1, y: 0 },
+								exit: { opacity: 0, y: 10 },
+							}}
+						>
+							<Component {...pageProps} />
+						</MotionBox>
+					</AnimatePresence>
+				</GlobalStyle>
+			</ChakraProvider>
+		</SessionProvider>
 	);
 }
 

@@ -123,6 +123,7 @@ const filterLessGreater = ({ by, query, $lte, $gte }: {
 		query[by] = { $gte: 0 };
 	}
 	if ($lte) {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		query[by]!.$lte = $lte;
 	}
 	return query;
