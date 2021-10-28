@@ -2,12 +2,12 @@ export interface Customer {
     customerId: string;
     name: string;
     customization?: Customization;
-};
+}
 
 export interface Customization {
     logo?: string;
     colors?: SupportedColorCustomizations;
-};
+}
 
 export interface SupportedColorCustomizations {
     bg?: LightDark;
@@ -18,10 +18,10 @@ export interface SupportedColorCustomizations {
     Done?: string;
     Deleted?: string;
     Draft?: string;
-    primary?: string; 
-};
+    primary?: string;
+}
 
 export interface LightDark {
     light: string;
     dark: string;
-};
+}
