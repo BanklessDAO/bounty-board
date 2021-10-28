@@ -7,7 +7,7 @@
         "Customization": {
             "Logo": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
             "Colors": {
-                "bg": {
+                "background": {
                     "light": "blue.200",
                     "dark": "blue.800"
                 },
