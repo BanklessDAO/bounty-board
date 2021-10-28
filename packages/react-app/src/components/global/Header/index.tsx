@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Flex } from '@chakra-ui/react';
 import Logo from './Logo';
-import { Customer } from '../../../types/Customer';
+import { CustomerProps } from '../../../types/Customer';
 import { MenuLinks, MenuToggle } from './Menu';
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
@@ -19,7 +19,7 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 );
 
 const NavBar = ({ customer, setCustomer, props }: {
-	customer: Customer,
+	customer: CustomerProps,
 	setCustomer(): any,
 	props: any
 }): JSX.Element => {
@@ -29,7 +29,9 @@ const NavBar = ({ customer, setCustomer, props }: {
 	return (
 		<NavBarContainer {...props}>
 			{ !isOpen ?
-				<Logo alt={`${customer.name} Logo`} img={customer.customization?.logo ?? './logo.png'}/>
+				<Logo
+					alt={`${customer.CustomerName} Logo`}
+					img={customer.Customization?.Logo ?? './logo.png'}/>
 				: null
 			}
 			<MenuToggle toggle={toggle} isOpen={isOpen} />

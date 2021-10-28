@@ -162,11 +162,11 @@ export const customizeTheme = (customization: Customization) => {
 	let customColors = {} as Record<string, Colors>;
 	let customBackground = {} as Partial<ChakraTheme>;
 
-	const { colors } = customization;
+	const { Colors: colors } = customization;
 	if (colors) {
 		customColors = getCustomColors(colors);
-		if (colors.bg) {
-			customBackground = getCustomBackground(colors.bg);
+		if (colors.background) {
+			customBackground = getCustomBackground(colors.background);
 		}
 	}
 	const customTheme = {

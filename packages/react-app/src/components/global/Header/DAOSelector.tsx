@@ -1,15 +1,15 @@
 import React from 'react';
 import { Select } from '@chakra-ui/react';
-import { Customer } from '../../../types/Customer';
+import { CustomerProps } from '../../../types/Customer';
 
 export const DAOSelector = ({ customers, customer, setCustomer }: {
-	customers: Customer[] | [],
-	customer: Customer;
-	setCustomer(selected: Customer): void
+	customers: CustomerProps[] | [],
+	customer: CustomerProps;
+	setCustomer(selected: CustomerProps): void
 }): JSX.Element => {
 
 	const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const _customer = customers.find(c => c.name === event.target.value);
+		const _customer = customers.find(({ CustomerName }) => CustomerName === event.target.value);
 		_customer ? setCustomer(_customer) : null;
 	};
 
@@ -17,11 +17,11 @@ export const DAOSelector = ({ customers, customer, setCustomer }: {
 		<Select
 			mr="5"
 			onChange={onChange}
-			value={customer?.name ?? 'BanklessDAO'}
+			value={customer?.CustomerName ?? 'BanklessDAO'}
 		>
 			{customers.map((option) => (
-				<option key={option.customerId} value={option.name}>
-					{option.name}
+				<option key={option.CustomerId} value={option.CustomerName}>
+					{option.CustomerName}
 				</option>
 			))}
 		</Select>

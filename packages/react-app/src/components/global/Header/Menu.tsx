@@ -6,8 +6,8 @@ import { useSession } from 'next-auth/client';
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
-import { Customer } from '../../../types/Customer';
-import { toggleDiscordSignIn } from '../../../pages/api/auth/discord';
+import { CustomerProps } from '../../../types/Customer';
+import { toggleDiscordSignIn } from '../../../pages/api/auth/discord.service';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -49,8 +49,8 @@ export const MenuToggle = ({ toggle, isOpen }: MenuToggleProps): JSX.Element => 
 
 interface MenuLinksProps {
 	isOpen: boolean;
-	customer: Customer;
-	setCustomer(customer: Customer): void;
+	customer: CustomerProps;
+	setCustomer(customer: CustomerProps): void;
 }
 
 export const MenuLinks = ({
@@ -60,12 +60,12 @@ export const MenuLinks = ({
 }: MenuLinksProps): JSX.Element => {
 
 	const [session, loading] = useSession();
-	const [customers, setCustomers] = useState<Customer[]>();
+	const [customers, setCustomers] = useState<CustomerProps[]>();
 
 	useEffect(() => {
 		// get list of customers and set the currently active customer
 		if (session) {
-			getCustomersInUsersGuilds().then((res: Customer[]) => {
+			getCustomersInUsersGuilds().then((res: CustomerProps[]) => {
 				setCustomers(res);
 				setCustomer(res[0]);
 			});
@@ -83,7 +83,7 @@ export const MenuLinks = ({
 				justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
 				direction={{ base: 'column', md: 'row' }}
 			>
-				{ customers
+				{ customers && session
 					? <DAOSelector
 						customers={customers}
 						customer={customer}

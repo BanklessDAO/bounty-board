@@ -1,5 +1,5 @@
 import { Box, Stack, Heading } from '@chakra-ui/react';
-import { Customer } from '../../../types/Customer';
+import { CustomerProps } from '../../../types/Customer';
 import { ReactNode } from 'react';
 
 import Header from '../Header';
@@ -8,7 +8,7 @@ import Footer from '../Footer';
 type LayoutProps = {
   children: ReactNode
   title: string
-  customer: Customer
+  customer: CustomerProps
   setCustomer(): any
   props: any
 }

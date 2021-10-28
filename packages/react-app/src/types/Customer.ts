@@ -1,16 +1,19 @@
-export interface Customer {
-    customerId: string;
-    name: string;
-    customization?: Customization;
+import { ObjectId } from 'mongoose';
+export interface CustomerProps {
+    _id?: ObjectId;
+    CustomerId: string;
+    CustomerName: string;
+    Customization?: Customization;
+    ApplicableRoles?: [] | string[];
 }
 
 export interface Customization {
-    logo?: string;
-    colors?: SupportedColorCustomizations;
+    Logo?: string;
+    Colors?: SupportedColorCustomizations;
 }
 
 export interface SupportedColorCustomizations {
-    bg?: LightDark;
+    background?: LightDark;
     'In-Review'?: string;
     'In-Progress'?: string;
     Open?: string;

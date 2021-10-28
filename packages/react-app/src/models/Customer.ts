@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
+import { CustomerProps } from '../types/Customer';
 
 export const CustomerSchema = new mongoose.Schema({
-	name: {
+	CustomerName: {
 		type: String,
 	},
-	customizations: {
+	Customization: {
 		type: Object,
-		logo: String,
-		colors: Object,
+		Logo: String,
+		Colors: Object,
 	},
 });
 
 export default mongoose.models.Customer ||
-  mongoose.model('Customer', CustomerSchema);
+  mongoose.model<CustomerProps>('Customer', CustomerSchema);

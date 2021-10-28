@@ -1,14 +1,14 @@
-import { Customer } from '../types/Customer';
+import { CustomerProps } from '../types/Customer';
 import Layout from '../components/global/SiteLayout';
 import Bounties from '../components/pages/Bounties';
 
 const Index = (props: {
-	customer: Customer,
+	customer: CustomerProps,
 	setCustomer(): void
 }): JSX.Element => {
 	return (
 		<Layout
-			title={`${props.customer.name ?? 'DAO'} Bounty Board`}
+			title={`${props.customer.CustomerName ?? 'DAO'} Bounty Board`}
 			customer={props.customer}
 			setCustomer={props.setCustomer}
 			props={{}}

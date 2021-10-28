@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { customizeTheme, baseTheme } from '../styles/customTheme';
 import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
-import { Customer } from '../types/Customer';
+import { CustomerProps } from '../types/Customer';
 import 'styles/css/nprogress.css';
 import { BANKLESS } from './api/customer/customer.service';
 
@@ -21,14 +21,14 @@ const MotionBox = motion(Box);
 
 function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
 	const [theme, setTheme] = useState(baseTheme);
-	const [customer, setCustomer] = useState<Customer>(BANKLESS);
+	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
 
 	useEffect(() => {
 		// update the global theme when the customer changes 
-		const { customization } = customer;
+		const { Customization } = customer;
 		let newTheme = baseTheme;
-		if (customization) {
-			newTheme = customizeTheme(customization);
+		if (Customization) {
+			newTheme = customizeTheme(Customization);
 		}
 		setTheme(newTheme);
 	}, [customer]);

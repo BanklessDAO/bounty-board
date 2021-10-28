@@ -15,26 +15,23 @@ describe('Testing multitenacy for the end user', () => {
 
 	it('Returns a list of customers where the user is in the guild', async () => {
 		jest.spyOn(service, 'getCustomers')
-			.mockReturnValue(new Promise(res => res(customers)));
+			.mockReturnValue(Promise.resolve(customers));
 
 		jest.spyOn(service, 'getGuilds')
-			.mockReturnValue(new Promise(res => res(guilds)));
+			.mockReturnValue(Promise.resolve(guilds));
 
 		const filteredCustomers = await service.getCustomersInUsersGuilds();
-		expect(filteredCustomers).toEqual([customers[0]]);
+		expect(filteredCustomers.length).toEqual(customers.length - 1);
 	});
 
 	it('Returns bankless if no guilds are found', async () => {
 		jest.spyOn(service, 'getCustomers')
-			.mockReturnValue(new Promise(res => res(customers)));
+			.mockReturnValue(Promise.resolve(customers));
 
 		jest.spyOn(service, 'getGuilds')
-			.mockReturnValue(new Promise(res => res([])));
+			.mockReturnValue(Promise.resolve([]));
 
 		const filteredCustomers = await service.getCustomersInUsersGuilds();
-		expect(filteredCustomers).toEqual([{
-			name: 'BanklessDAO',
-			customerId: '1',
-		}]);
+		expect(filteredCustomers[0].CustomerName).toEqual('BanklessDAO');
 	});
 });

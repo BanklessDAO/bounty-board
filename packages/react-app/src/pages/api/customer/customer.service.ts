@@ -1,12 +1,12 @@
-import { Customer } from '../../../types/Customer';
+import { CustomerProps } from '../../../types/Customer';
 import { DiscordGuild } from '../../../types/Discord';
 import { customers } from '../../../../tests/stubs/customers.stub';
 import { guilds } from '../../../../tests/stubs/guilds.stub';
 
-export const BANKLESS = {
-	name: 'BanklessDAO',
-	customerId: '834499078434979890',
-	customization: { logo: './logo.png' },
+export const BANKLESS: CustomerProps = {
+	CustomerName: 'BanklessDAO',
+	CustomerId: '834499078434979890',
+	Customization: { Logo: './logo.png' },
 };
 
 export const getGuilds = async (): Promise<DiscordGuild[] | []> => {
@@ -17,40 +17,42 @@ export const getGuilds = async (): Promise<DiscordGuild[] | []> => {
 	return guilds;
 };
 
-export const getCustomer = async (id: string): Promise<Customer | undefined> => {
+export const getCustomer = async (id: string): Promise<CustomerProps | undefined> => {
 	/**
 	 * @returns a single customer
 	 * @param id - the customer id number in the collections db
 	 * @STUBBED
 	 */
-	return customers.find(customer => customer.customerId === id);
+	return customers.find(({ CustomerId }) => CustomerId === id);
 };
 
-export const getCustomers = async (): Promise<Customer[] | []> => {
+export const getCustomers = async (): Promise<CustomerProps[] | []> => {
 	/**
    * @STUBBED
    * @returns a list of bountyboard customers from the DB 
    */
-	const _customers: Promise<Customer[] | []> = new Promise(res => res(customers));
+	const _customers: Promise<CustomerProps[] | []> = Promise.resolve(customers);
+	// const _customers = await Customer.find({});
 	return _customers;
 };
 
-export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersList: Customer[]): Customer[] | [] => {
+export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersList: CustomerProps[]): CustomerProps[] | [] => {
 	/**
    * @param guilds is the discord guilds
    * @param customers is the customers from the DB
    * @returns only the customers of BB where the user has joined the discord
    */
 	const guildIds = guildsList.map(({ id }) => id);
-	const filterGuilds = customersList.filter(({ customerId }) => guildIds.includes(customerId));
+	const filterGuilds = customersList.filter(({ CustomerId }) => guildIds.includes(CustomerId));
 	return filterGuilds;
 };
 
-export const getCustomersInUsersGuilds = async (): Promise<Customer[]> => {
+export const getCustomersInUsersGuilds = async (): Promise<CustomerProps[]> => {
 	/**
    * @returns the list of bankless bounty board customers
    * where the current user is also a discord member.
    */
+	console.debug('Called');
 	const guildsList = await getGuilds();
 	const customersList = await getCustomers();
 	const filteredGuilds = filterGuildsToCustomers(guildsList, customersList);
