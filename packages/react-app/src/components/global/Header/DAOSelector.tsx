@@ -3,7 +3,7 @@ import { Select } from '@chakra-ui/react';
 import { Customer } from '../../../types/Customer';
 
 export const DAOSelector = ({ customers, customer, setCustomer }: {
-	customers: Customer[],
+	customers: Customer[] | [],
 	customer: Customer;
 	setCustomer(selected: Customer): void
 }): JSX.Element => {
@@ -18,12 +18,12 @@ export const DAOSelector = ({ customers, customer, setCustomer }: {
 			mr="5"
 			onChange={onChange}
 			value={customer?.name ?? 'BanklessDAO'}
-			>
+		>
 			{customers.map((option) => (
 				<option key={option.customerId} value={option.name}>
 					{option.name}
 				</option>
 			))}
 		</Select>
-	)
+	);
 };

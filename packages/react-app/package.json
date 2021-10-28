@@ -23,7 +23,8 @@
     "export": "next export",
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "test:cov": "jest --coverage"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [

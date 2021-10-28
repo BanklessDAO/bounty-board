@@ -3,7 +3,6 @@ import {
 	AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
-	Avatar,
 	Box,
 	Button,
 	Flex,
@@ -27,7 +26,6 @@ const Status = ({ indication }: { indication: string }): JSX.Element => (
 
 const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
-		<Avatar size="sm" src="https://bit.ly/broken-link" />
 		<Text fontSize="md" color="steelblue">
       @{name}
 		</Text>

@@ -9,7 +9,6 @@ import {
 	Switch,
 	Flex,
 	Spacer,
-	useColorMode,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 

@@ -78,10 +78,10 @@ export const getCustomBackground = (colors: LightDark): Partial<ChakraTheme> => 
 	styles: {
 		global: (props) => ({
 			body:{
-				bg: mode(colors.light, colors.dark)(props)
-			}
-		})
-	}
+				bg: mode(colors.light, colors.dark)(props),
+			},
+		}),
+	},
 });
 
 const shadeHexColor = (color: string, percent: number): string => {
@@ -90,45 +90,49 @@ const shadeHexColor = (color: string, percent: number): string => {
 	 * https://github.com/PimpTrizkit/PJs/wiki/12.-Shade,-Blend-and-Convert-a-Web-Color-(pSBC.js)
 	 */
 	const f = parseInt(color.slice(1), 16);
-	const t = percent<0?0:255;
-	const p = percent<0?percent*-1:percent;
-	const R = f>>16,G=f>>8&0x00FF;
-	const B = f&0x0000FF;
-    const output = "#"+(
-		0x1000000+(Math.round((t-R)*p)+R)
-		*0x10000+(Math.round((t-G)*p)+G)
-		*0x100+(Math.round((t-B)*p)+B)
+	const t = percent < 0 ? 0 : 255;
+	const p = percent < 0 ? percent * -1 : percent;
+	const R = f >> 16, G = f >> 8 & 0x00FF;
+	const B = f & 0x0000FF;
+	const output = '#' + (
+		0x1000000 + (Math.round((t - R) * p) + R)
+		* 0x10000 + (Math.round((t - G) * p) + G)
+		* 0x100 + (Math.round((t - B) * p) + B)
 	)
 		.toString(16)
 		.slice(1)
 		.toUpperCase();
-	return output
-}
+	return output;
+};
 
 
-export const getColorFrom = (colorVariant: string): Colors => {
+export const getColorFrom = (colorVariant: string | undefined | LightDark): Colors => {
 	/**
 	 * @param colorVariant is a string either `"red"` or a Hex `"#FFF"
 	 * Takes in the variant and checks to see if we have a match in chakra,
 	 * if not, generates a new color object on the fly
 	 * @returns a Chakra UI color object
 	 */
-	// @ts-ignore
-	const themeColor = theme.colors[colorVariant];
+	// we know variant wont be undefined, so have to recast it
+	const variant = colorVariant as string;
+	// keep typescript happy by casting theme.colors object as any
+	const { colors } = theme as any;
+	const themeColor = colors[variant];
+	
 	if (!themeColor) {
 		return {
-				50: shadeHexColor(colorVariant, 0.35),
-				100: shadeHexColor(colorVariant, 0.3),
-				200: shadeHexColor(colorVariant, 0.2),
-				300: shadeHexColor(colorVariant, 0.1),
-				400: shadeHexColor(colorVariant, 0),
-				500: shadeHexColor(colorVariant, -0.1),
-				600: shadeHexColor(colorVariant, -0.2),
-				700: shadeHexColor(colorVariant, -0.3),
-				800: shadeHexColor(colorVariant, -0.4),
-		}
+			50: shadeHexColor(variant, 0.35),
+			100: shadeHexColor(variant, 0.3),
+			200: shadeHexColor(variant, 0.2),
+			300: shadeHexColor(variant, 0.1),
+			400: shadeHexColor(variant, 0),
+			500: shadeHexColor(variant, -0.1),
+			600: shadeHexColor(variant, -0.2),
+			700: shadeHexColor(variant, -0.3),
+			800: shadeHexColor(variant, -0.4),
+		};
 	}
-	return themeColor
+	return themeColor;
 };
 
 export const getCustomColors = (colors: SupportedColorCustomizations): Record<string, Colors> => {
@@ -137,15 +141,17 @@ export const getCustomColors = (colors: SupportedColorCustomizations): Record<st
 	 * Looks up the list of colors we currently support, from the base theme
 	 * @returns an object mapping our passed customizations, to chakra theme colors
 	 */
+	type colorKey = keyof SupportedColorCustomizations;
 	const supportedVariants = Object.keys(baseTheme.colors);
+
 	const colorCustomizations = supportedVariants
-		// @ts-ignore
-		.filter(variant => colors[variant] !== undefined)
-		// @ts-ignore
-		// .map(variant => ({ [variant]: theme.colors[colors[variant]] }));
-		.map(variant => ({ [variant]: getColorFrom(colors[variant]) }));
+		.filter(variant => colors[variant as colorKey] !== undefined)
+		.map(variant => ({
+			[variant]: getColorFrom(colors[variant as colorKey]),
+		}));
+	
 	return Object.assign({}, ...colorCustomizations);
-}
+};
 
 export const customizeTheme = (customization: Customization) => {
 	/**
@@ -169,8 +175,8 @@ export const customizeTheme = (customization: Customization) => {
 		colors: {
 			...baseTheme.colors,
 			...customColors,
-		}
-	}
+		},
+	};
 	const newTheme = extendTheme(customTheme);
-	return newTheme
-}
+	return newTheme;
+};

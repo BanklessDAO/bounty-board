@@ -28,7 +28,7 @@ const SiteLayout = ({ children, title, customer, setCustomer, props }: LayoutPro
 				justify="center"
 				transition="background 100ms linear"
 				bg="primary"
-				>
+			>
 				<Box>
 					<Heading size="xl" as="h1">
 						{title}

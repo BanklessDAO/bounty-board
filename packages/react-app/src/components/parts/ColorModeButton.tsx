@@ -8,7 +8,7 @@ const ColorModeButton = ({
 	const { colorMode } = useColorMode();
 	return (
 		<Button transition="background 100ms linear"
-		bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+			bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 		>
 			{children}
 		</Button>
