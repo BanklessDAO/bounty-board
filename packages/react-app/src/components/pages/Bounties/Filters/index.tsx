@@ -82,11 +82,11 @@ const SelectFilters = ({ name, options, status, setStatus }: {
 
 const HelpLinks = (): JSX.Element => (
 	<HStack>
-		<AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
+		<AccessibleLink href={feedbackUrl} isExternal={true}>
 			<ColorModeButton>Give us Feedback</ColorModeButton>
 		</AccessibleLink>
 
-		<AccessibleLink href={feedbackUrl} isExternal={true}>
+		<AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
 			<ColorModeButton>Need Help?</ColorModeButton>
 		</AccessibleLink>
 	</HStack>
