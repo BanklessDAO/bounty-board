@@ -1,6 +1,5 @@
 import Router from 'next/router';
 import NProgress from 'nprogress';
-
 import { AppProps } from 'next/app';
 
 import { DefaultSeo } from 'next-seo';
