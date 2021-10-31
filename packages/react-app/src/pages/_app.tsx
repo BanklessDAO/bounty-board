@@ -11,7 +11,7 @@ import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
 import { CustomerProps } from '../types/Customer';
 import 'styles/css/nprogress.css';
-import { BANKLESS } from './api/customer/customer.service';
+import { BANKLESS } from '../utils/BanklessData';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());

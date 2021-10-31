@@ -153,7 +153,7 @@ export const getCustomColors = (colors: SupportedColorCustomizations): Record<st
 	return Object.assign({}, ...colorCustomizations);
 };
 
-export const customizeTheme = (customization: Customization) => {
+export const customizeTheme = (customization: Customization): Record<string, any> => {
 	/**
 	 * @param customization is an object containing all the theme customizations we want to support
 	 * Goes through and creates an overwrite of the base theme, with our additional customizations.

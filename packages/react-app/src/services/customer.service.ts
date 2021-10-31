@@ -1,13 +1,8 @@
-import { CustomerProps } from '../../../types/Customer';
-import { DiscordGuild } from '../../../types/Discord';
-import { customers } from '../../../../tests/stubs/customers.stub';
-import { guilds } from '../../../../tests/stubs/guilds.stub';
-
-export const BANKLESS: CustomerProps = {
-	CustomerName: 'BanklessDAO',
-	CustomerId: '834499078434979890',
-	Customization: { Logo: './logo.png' },
-};
+import { CustomerProps } from '../types/Customer';
+import { DiscordGuild } from '../types/Discord';
+import { guilds } from '../../tests/stubs/guilds.stub';
+import Customer from '../models/Customer';
+import { BANKLESS } from '../utils/BanklessData';
 
 export const getGuilds = async (): Promise<DiscordGuild[] | []> => {
 	/**
@@ -17,23 +12,19 @@ export const getGuilds = async (): Promise<DiscordGuild[] | []> => {
 	return guilds;
 };
 
-export const getCustomer = async (id: string): Promise<CustomerProps | undefined> => {
+export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
 	 * @returns a single customer
 	 * @param id - the customer id number in the collections db
-	 * @STUBBED
 	 */
-	return customers.find(({ CustomerId }) => CustomerId === id);
+	return Customer.findById(id);
 };
 
 export const getCustomers = async (): Promise<CustomerProps[] | []> => {
 	/**
-   * @STUBBED
    * @returns a list of bountyboard customers from the DB 
    */
-	const _customers: Promise<CustomerProps[] | []> = Promise.resolve(customers);
-	// const _customers = await Customer.find({});
-	return _customers;
+	return Customer.find({});
 };
 
 export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersList: CustomerProps[]): CustomerProps[] | [] => {
@@ -52,7 +43,6 @@ export const getCustomersInUsersGuilds = async (): Promise<CustomerProps[]> => {
    * @returns the list of bankless bounty board customers
    * where the current user is also a discord member.
    */
-	console.debug('Called');
 	const guildsList = await getGuilds();
 	const customersList = await getCustomers();
 	const filteredGuilds = filterGuildsToCustomers(guildsList, customersList);

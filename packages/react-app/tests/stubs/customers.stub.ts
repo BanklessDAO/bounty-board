@@ -9,7 +9,7 @@ export const customers: CustomerProps[] = [
 		CustomerId: '402910780124561410',
 		CustomerName: 'Compound',
 		Customization: {
-			Logo: 'https://cryptoLogos.cc/Logos/compound-comp-Logo.png',
+			Logo: 'https://cryptologos.cc/logos/compound-comp-logo.png?v=014',
 			Colors: {
 				background: {
 					light: '#0AA3D8',
@@ -24,7 +24,7 @@ export const customers: CustomerProps[] = [
 		CustomerId: '845400066532704256',
 		CustomerName: 'Coordinape',
 		Customization: {
-			Logo: 'https://coordinape.com/imgs/Logo/Logo232.png',
+			Logo: 'https://coordinape.com/imgs/logo/logo232.png',
 			Colors: {
 				background: {
 					light: 'blue.200',
@@ -39,7 +39,7 @@ export const customers: CustomerProps[] = [
 		CustomerId: '718590743446290492',
 		CustomerName: 'UMA',
 		Customization: {
-			Logo: 'https://umaproject.org/assets/images/UMA_square_red_Logo.png',
+			Logo: 'https://umaproject.org/assets/images/UMA_square_red_logo.png',
 			Colors: {
 				background: {
 					light: 'red.200',

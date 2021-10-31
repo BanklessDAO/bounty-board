@@ -1,9 +1,11 @@
-import Bounty from '../../../models/Bounty';
+import Bounty, { BountyBoardProps } from '../models/Bounty';
 import { Query } from 'mongoose';
-import { AcceptedSortOuputs, FilterParams, SortParams } from '../../../types/Filter';
-import { FilterQuery } from '../../../types/Queries';
+import { AcceptedSortOuputs, FilterParams, SortParams } from '../types/Filter';
+import { FilterQuery, NextApiQuery } from '../types/Queries';
 
-export const getFilters = (query: any): FilterParams => {
+type BountyQuery = Query<BountyBoardProps[], BountyBoardProps>;
+
+export const getFilters = (query: NextApiQuery): FilterParams => {
 	/**
 	 * Retrieve implemented filters from the query string params
 	 */
@@ -18,7 +20,7 @@ export const getFilters = (query: any): FilterParams => {
 	return filters;
 };
 
-export const getSort = (query: any): SortParams => {
+export const getSort = (query: NextApiQuery): SortParams => {
 	/**
 	 * Retrieve implemented sort filters from query string params
 	 * Sort defaults to ascending order
@@ -26,11 +28,11 @@ export const getSort = (query: any): SortParams => {
 	const sort = {} as SortParams;
 	const FALSY_STRINGS = ['false', '0', 'desc', 'no'];
 	
-	const isDescending = FALSY_STRINGS.includes(query.asc);
+	const isDescending = FALSY_STRINGS.includes(query.asc as string);
 
 	isDescending ? sort.order = 'desc' : sort.order = 'asc';
 	
-	sort.sortBy = getSortByValue(query.sortBy);
+	sort.sortBy = getSortByValue(query.sortBy as string);
 	
 	return sort;
 };
@@ -89,14 +91,14 @@ export const filterLessGreater = ({ by, query, $lte, $gte }: {
 	 * Base case is to always filter for (`$gte` >= 0)
 	 * @returns a mongoose formatted query
 	 */
+	const queryBy = { $gte: 0 } as Record<string, number>;
 	if ($gte) {
-		query[by] = { $gte };
-	} else {
-		query[by] = { $gte: 0 };
+		queryBy.$gte = $gte;
 	}
 	if ($lte) {
-		query[by]!.$lte = $lte;
+		queryBy.$lte = $lte;
 	}
+	query[by] = queryBy;
 	return query;
 };
 
@@ -105,7 +107,7 @@ export const handleEmpty = (query: FilterQuery): FilterQuery | Record<string, un
 	return query === isEmpty ? {} : query;
 };
 
-export const handleFilters = (filters: FilterParams): any => {
+export const handleFilters = (filters: FilterParams): BountyQuery => {
 	/**
 	 * Construct the filter query and return query object from mongoose
 	 */
@@ -121,7 +123,7 @@ export const handleFilters = (filters: FilterParams): any => {
 	return Bounty.find(filterQuery);
 };
 
-export const handleSort = (query: Query<any, any>, sort: SortParams): Query<any, any> => {
+export const handleSort = (query: BountyQuery, sort: SortParams): BountyQuery => {
 	/**
 	 * Take the existing query object and add any sorting information before returning
 	 */
@@ -129,11 +131,12 @@ export const handleSort = (query: Query<any, any>, sort: SortParams): Query<any,
 	return query.sort(sortStatement);
 };
 
-export const handleFiltersAndSorts = async (filters: FilterParams, sort: SortParams): Promise<Query<any, any>> => {
+export const getBounties = async (filters: FilterParams, sort: SortParams): Promise<BountyQuery> => {
 	/**
-	 * Construct the query object (awaiting execution) from filters and sorts
+	 * @returns the query object (awaiting execution) for getting bounties
+	 * having applied the relevant server-side filtering and sorting
 	 */
-	let query: Query<any, any>;
+	let query: BountyQuery;
 	query = handleFilters(filters);
 	query = handleSort(query, sort);
 	return query;

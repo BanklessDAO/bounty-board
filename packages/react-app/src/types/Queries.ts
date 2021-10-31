@@ -1,3 +1,5 @@
+export type NextApiQuery = Record<string, string | string[]>
+
 export interface FilterQuery {
 	status?: any;
 	$text?: {

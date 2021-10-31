@@ -25,13 +25,12 @@ const NavBar = ({ customer, setCustomer, props }: {
 }): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
-
 	return (
 		<NavBarContainer {...props}>
 			{ !isOpen ?
 				<Logo
-					alt={`${customer.CustomerName} Logo`}
-					img={customer.Customization?.Logo ?? './logo.png'}/>
+					alt={`${customer?.CustomerName ?? 'DAO'} Logo`}
+					img={customer?.Customization?.Logo ?? './logo.png'}/>
 				: null
 			}
 			<MenuToggle toggle={toggle} isOpen={isOpen} />

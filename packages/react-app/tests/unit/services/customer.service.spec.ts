@@ -1,5 +1,5 @@
 import Customer from '../../../src/models/Customer';
-import * as service from '../../../src/pages/api/customer/customer.service';
+import * as service from '../../../src/services/customer.service';
 import { customers } from '../../stubs/customers.stub';
 import { guilds } from '../../stubs/guilds.stub';
 

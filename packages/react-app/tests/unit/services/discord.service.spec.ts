@@ -1,6 +1,6 @@
 import { Session } from 'next-auth';
-import { toggleDiscordSignIn } from '../../../src/pages/api/auth/discord.service';
-import * as customerService from '../../../src/pages/api/customer/customer.service';
+import { toggleDiscordSignIn } from '../../../src/services/discord.service';
+import * as customerService from '../../../src/services/customer.service';
 import * as client from 'next-auth/client';
 import { customers } from '../../stubs/customers.stub';
 
@@ -11,8 +11,6 @@ jest.mock('next-auth/client', () => ({
 
 const spySignOut = jest.spyOn(client, 'signOut');
 const spySignIn = jest.spyOn(client, 'signIn');
-
-const setCustomers = jest.fn();
 
 describe('Testing the discord service', () => {
 
@@ -25,7 +23,7 @@ describe('Testing the discord service', () => {
 			.spyOn(customerService, 'getCustomersInUsersGuilds')
 			.mockImplementation(() => Promise.resolve(customers));
     
-		toggleDiscordSignIn(undefined, setCustomers);
+		toggleDiscordSignIn(undefined);
 
 		expect(spySignIn).toHaveBeenCalled();
 		expect(spyGetCustomers).toHaveBeenCalled();
@@ -33,7 +31,7 @@ describe('Testing the discord service', () => {
   
 	it('Signs the user out if called when the user is already logged in', () => {
 		const sessionTrue: Session = { expires: 'Sometime' };
-		toggleDiscordSignIn(sessionTrue, setCustomers);
+		toggleDiscordSignIn(sessionTrue);
 		expect(spySignOut).toHaveBeenCalled();
 	});
 });
