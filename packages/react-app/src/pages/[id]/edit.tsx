@@ -21,7 +21,7 @@ const EditBounty = (): JSX.Element => {
 	if (!bounty) return <p>Loading...</p>;
 
 	return (
-		<Layout title="Bounty Draft">
+		<Layout>
 			<Box w={{ base: '90vw', md: 700 }}>
 				<Form bountyForm={bounty} />
 			</Box>

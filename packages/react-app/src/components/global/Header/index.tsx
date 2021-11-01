@@ -12,7 +12,7 @@ const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
 );
 const MenuIcon = ({ color }: { color: string }) => (
-	<RiMenuFill size="2.5em" color={color} />
+	<RiMenuFill size="2em" color={color} />
 );
 
 const NavBar: React.FC = (props): JSX.Element => {
@@ -21,7 +21,7 @@ const NavBar: React.FC = (props): JSX.Element => {
 
 	return (
 		<NavBarContainer {...props}>
-			<Logo w="100px" />
+			<Logo />
 			<MenuToggle toggle={toggle} isOpen={isOpen} />
 			<MenuLinks isOpen={isOpen} />
 		</NavBarContainer>
@@ -32,8 +32,8 @@ const MenuToggle = ({
 	toggle,
 	isOpen,
 }: {
-  toggle: VoidFunction
-  isOpen: boolean
+  toggle: VoidFunction;
+  isOpen: boolean;
 }): JSX.Element => {
 	const fgColor = useColorModeValue('black', 'white');
 	return (
@@ -49,10 +49,10 @@ const MenuItem = ({
 	newTab,
 	...rest
 }: {
-  children?: React.ReactNode
-  isLast?: boolean
-  to: string
-  newTab?: boolean
+  children?: React.ReactNode;
+  isLast?: boolean;
+  to: string;
+  newTab?: boolean;
 }): JSX.Element => (
 	<AccessibleLink href={to} isExternal={newTab}>
 		<Text display="block" {...rest}>
@@ -92,7 +92,9 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 		justify="space-between"
 		wrap="wrap"
 		w="100%"
-		p={8}
+		h="16"
+		px={5}
+		borderBottomWidth={1}
 		{...props}
 	>
 		{props.children}

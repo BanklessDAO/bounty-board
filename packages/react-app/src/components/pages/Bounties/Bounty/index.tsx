@@ -1,6 +1,6 @@
 import {
 	AccordionButton,
-	AccordionIcon,
+	// AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
 	Avatar,
@@ -10,20 +10,22 @@ import {
 	Grid,
 	GridItem,
 	Heading,
-	Tag,
-	TagLabel,
+	// Tag,
+	// TagLabel,
 	Text,
+	useColorModeValue,
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
 
 import { BountyBoardProps } from '../../../../models/Bounty';
 import { discordChannelUrl } from '../../../../constants/discordInfo';
+// import { stat } from "fs";
 
-const Status = ({ indication }: { indication: string }): JSX.Element => (
-	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
-		<TagLabel>{indication.replace('-', ' ')}</TagLabel>
-	</Tag>
-);
+// const Status = ({ indication }: { indication: string }): JSX.Element => (
+// 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
+// 		<TagLabel>{indication.replace('-', ' ')}</TagLabel>
+// 	</Tag>
+// );
 
 const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
@@ -36,54 +38,49 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 
 const BountySummary = ({
 	title,
-	reward,
+	description,
+	// reward,
 	status,
 }: BountyBoardProps): JSX.Element => (
-	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
+	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end">
 		<Box
-			width={{ base: '100%', md: '60%' }}
+			width={{ base: '100%', lg: '700px' }}
 			pr={{ base: 7, md: 0 }}
 			align="left"
-			mt="4"
 		>
-			<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
+			<Heading fontSize={{ base: 24, lg: 28 }} mb={0} flex={{ base: 1, md: 0 }}>
 				{title}
 			</Heading>
-		</Box>
-		<Box
-			width={{ base: '50%', md: '30%' }}
-			textAlign={{ base: 'left', md: 'right' }}
-			mt={{ base: 0, md: 4 }}
-			ml="auto"
-			pr={7}
-		>
-			{reward && (
-				<Heading mt={1} size="md">
-					{reward.amount / 10 ** reward.scale} {reward.currency}
-				</Heading>
-			)}
-		</Box>
-		<Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
-			{status && <Status indication={status} />}
-		</Box>
-		<Box
-			width={{ base: '100%', md: '50%' }}
-			textAlign={{ base: 'left', md: 'right' }}
-			pr={7}
-		>
-			{/* {guilds &&
-            guilds.map((guild: string) => (
-              <Badge
-                key={guild}
-                borderRadius="10"
-                _notFirst={{ marginLeft: '10px' }}
-                mb={2}
-                py={1}
-                px={3}
-              >
-                {guild}
-              </Badge>
-            ))} */}
+
+			<Box
+				className="bounty-description"
+				mt={1}
+				fontSize={{ base: 19, lg: 22 }}
+				lineHeight={{ lg: 1.3 }}
+				color={useColorModeValue('#5f606a', '#8b949e')}
+			>
+				{description}
+			</Box>
+			<Box h="6" mt={1}>
+				<Flex
+					w="max"
+					h="100%"
+					px="3"
+					pt="0.15em"
+					borderRadius={100}
+					bgColor={
+						status === 'Open'
+							? 'Open'
+							: status === 'In-Review'
+								? 'In-Review'
+								: status === 'In-Progress'
+									? 'In-Progress'
+									: 'Completed'
+					}
+				>
+					{status}
+				</Flex>
+			</Box>
 		</Box>
 	</Flex>
 );
@@ -148,11 +145,11 @@ const BountyDetails = ({
 
 export const BountyCard = (props: BountyBoardProps): JSX.Element => (
 	<Box width={{ base: '95vw', lg: '700px' }}>
-		<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
-			<Box pb={5}>
+		<Box borderWidth={1} borderRadius={10}>
+			<Box>
 				<BountySummary {...props} />
 			</Box>
-			<Box mx={2}>
+			<Box>
 				<BountyDetails {...props} />
 			</Box>
 		</Box>
@@ -160,14 +157,20 @@ export const BountyCard = (props: BountyBoardProps): JSX.Element => (
 );
 
 export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
-	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
-		<AccordionButton pb={5}>
+	<AccordionItem
+		borderTopWidth={{ base: 0, lg: 1 }}
+		borderBottomWidth={1}
+		borderLeftWidth={{ base: 0, lg: 1 }}
+		borderRightWidth={{ base: 0, lg: 1 }}
+		borderRadius={{ lg: 10 }}
+		py={4}
+		pl={{ base: 1.5, lg: 2 }}
+		mb={{ lg: 5 }}
+	>
+		<AccordionButton>
 			<BountySummary {...props} />
-			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
-				<AccordionIcon />
-			</Box>
 		</AccordionButton>
-		<AccordionPanel mx={2}>
+		<AccordionPanel>
 			<BountyDetails {...props} />
 		</AccordionPanel>
 	</AccordionItem>

@@ -3,7 +3,7 @@ import Layout from '../components/global/SiteLayout';
 import { Stack } from '@chakra-ui/react';
 
 const Page400 = (): JSX.Element => (
-	<Layout title="">
+	<Layout>
 		<Stack align="center" justify="center" h="400px">
 			<Heading size="4xl" align="center">
 				<strong>400</strong>

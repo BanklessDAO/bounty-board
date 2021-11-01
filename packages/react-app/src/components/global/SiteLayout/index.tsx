@@ -1,35 +1,31 @@
-import { Box, Stack, Heading } from '@chakra-ui/react';
+import { Box, Stack,
+	// Heading 
+} from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
 import Header from '../Header';
 import Footer from '../Footer';
 
-type LayoutProps = {
-  children: ReactNode
-  title: string
-}
+// import { useColorModeValue } from "@chakra-ui/react";
 
-const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
+type LayoutProps = {
+  children: ReactNode;
+};
+
+const SiteLayout = ({ children }: LayoutProps): JSX.Element => {
 	return (
-		<>
+		<Box>
 			<Header />
 			<Stack
 				mx="10"
-				mt="30"
-				mb="10"
 				align="center"
 				justify="center"
 				transition="background 100ms linear"
 			>
-				<Box>
-					<Heading size="xl" as="h1">
-						{title}
-					</Heading>
-					{children}
-				</Box>
+				<Box>{children}</Box>
 			</Stack>
 			<Footer />
-		</>
+		</Box>
 	);
 };
 
