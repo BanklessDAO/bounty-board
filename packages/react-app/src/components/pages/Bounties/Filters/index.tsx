@@ -34,7 +34,7 @@ const SearchFilter = ({
 	searchValue,
 	setSearch,
 	options,
-	// status,
+	status,
 	setStatus,
 }: {
 	placeholder?: string;
@@ -92,7 +92,7 @@ const SearchFilter = ({
 					transition="all 0.3s"
 					onClick={(): void => setStatusFilterIsOpen(!statusFilterIsOpen)}
 				>
-					All
+					{status}
 					<Flex
 						alignItems="center"
 						justifyContent="center"
@@ -129,7 +129,7 @@ const SearchFilter = ({
 							transform="rotate(45deg)"
 							fontFamily="Calibre Bold"
 						></Box>
-						{options.map((status: any, key: any) => (
+						{options.map((option: any, key: any) => (
 							<Flex
 								key={key}
 								h="10"
@@ -142,10 +142,10 @@ const SearchFilter = ({
 								_hover={{
 									bgColor: useColorModeValue('#FFF', '#424242'),
 								}}
-								onClick={(): void => setStatus(status.value)}
+								onClick={(): void => setStatus(option.value)}
 								onBlur={(): void => setStatusFilterIsOpen(false)}
 							>
-								{status.name}
+								{option.name}
 							</Flex>
 						))}
 					</Flex>
