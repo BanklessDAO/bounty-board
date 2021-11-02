@@ -31,7 +31,7 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
 		<Avatar size="sm" src="https://bit.ly/broken-link" />
 		<Text fontSize="md" color="steelblue">
-      @{name}
+			@{name}
 		</Text>
 	</Flex>
 );
@@ -55,8 +55,9 @@ const BountySummary = ({
 			<Box
 				className="bounty-description"
 				mt={1}
-				fontSize={{ base: 19, lg: 22 }}
+				fontSize={{ base: 19, lg: 20 }}
 				lineHeight={{ lg: 1.3 }}
+				pr={10}
 				color={useColorModeValue('#5f606a', '#8b949e')}
 			>
 				{description}
@@ -115,7 +116,7 @@ const BountyDetails = ({
 			{status && status.toLowerCase() === 'draft' ? (
 				<AccessibleLink href={`${_id}/edit`}>
 					<Button my={2} size="sm" colorScheme="red">
-            Edit This Draft
+						Edit This Draft
 					</Button>
 				</AccessibleLink>
 			) : claimedBy ? (
@@ -134,7 +135,7 @@ const BountyDetails = ({
 						}
 					>
 						<Button my={2} size="sm" colorScheme="green">
-              Claim It
+							Claim It
 						</Button>
 					</AccessibleLink>
 				</>
