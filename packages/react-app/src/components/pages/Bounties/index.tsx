@@ -76,7 +76,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 				align="top"
 				fontSize="sm"
 				fontWeight="600"
-				gridGap={{ lg: '4' }}
+				gridGap={{ lg: '10' }}
 			>
 				{id ? (
 					<BountyCard {...bounties} />

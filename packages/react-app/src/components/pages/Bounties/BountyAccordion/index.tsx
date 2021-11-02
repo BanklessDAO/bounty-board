@@ -12,6 +12,7 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
 			allowToggle
 			allowMultiple
 			width={{ base: '100vw', lg: '700px' }}
+			minWidth={{ lg: '700px' }}
 			pt={{ lg: 10 }}
 		>
 			{bounties &&

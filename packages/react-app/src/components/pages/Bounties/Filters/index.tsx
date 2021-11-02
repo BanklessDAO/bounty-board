@@ -315,10 +315,15 @@ const Filters = (props: {
 		<Stack
 			w="100%"
 			py={5}
-			pt={{ lg: 10 }}
+			pt={{ base: 5, lg: 10 }}
 			borderBottomWidth={{ base: 1, lg: 0 }}
 		>
-			<Stack width={{ base: '90%', lg: 350 }} mx="auto" position="sticky">
+			<Stack
+				position={{ lg: 'sticky' }}
+				top={{ lg: '6.5rem' }}
+				width={{ base: '90%', lg: 350 }}
+				mx="auto"
+			>
 				<SearchFilter
 					searchValue={props.search}
 					setSearch={props.setSearch}

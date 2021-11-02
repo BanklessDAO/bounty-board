@@ -32,8 +32,8 @@ const MenuToggle = ({
 	toggle,
 	isOpen,
 }: {
-  toggle: VoidFunction;
-  isOpen: boolean;
+	toggle: VoidFunction;
+	isOpen: boolean;
 }): JSX.Element => {
 	const fgColor = useColorModeValue('black', 'white');
 	return (
@@ -49,10 +49,10 @@ const MenuItem = ({
 	newTab,
 	...rest
 }: {
-  children?: React.ReactNode;
-  isLast?: boolean;
-  to: string;
-  newTab?: boolean;
+	children?: React.ReactNode;
+	isLast?: boolean;
+	to: string;
+	newTab?: boolean;
 }): JSX.Element => (
 	<AccessibleLink href={to} isExternal={newTab}>
 		<Text display="block" {...rest}>
@@ -88,6 +88,8 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
 const NavBarContainer: React.FC = (props): JSX.Element => (
 	<Flex
 		as="nav"
+		position="sticky"
+		top={0}
 		align="center"
 		justify="space-between"
 		wrap="wrap"
