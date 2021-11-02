@@ -54,8 +54,8 @@ const BountySummary = ({
 
 			<Box
 				className="bounty-description"
-				mt={1}
-				fontSize={{ base: 19, lg: 20 }}
+				mt={2}
+				fontSize={{ base: 19, lg: 21 }}
 				lineHeight={{ lg: 1.3 }}
 				pr={10}
 				color={useColorModeValue('#5f606a', '#8b949e')}

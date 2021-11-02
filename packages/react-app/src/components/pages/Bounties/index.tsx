@@ -1,4 +1,11 @@
-import { Stack, Text } from '@chakra-ui/react';
+import {
+	Stack,
+	Text,
+	Flex,
+	Box,
+	Skeleton,
+	SkeletonText,
+} from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
 import useSWR from 'swr';
 import { BountyCard } from './Bounty';
@@ -115,40 +122,39 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 									<Text fontSize="lg"> matching results</Text>
 								</Stack>
 							) : (
-								<BountyAccordion bounties={paginatedBounties} />
+								<Flex direction="column">
+									<BountyAccordion bounties={paginatedBounties} />
+									<Box
+										w={['100%', '700px']}
+										borderRadius={{ base: 0, lg: 10 }}
+										borderTopWidth={{ base: 0, lg: 1 }}
+										borderBottomWidth={1}
+										borderLeftWidth={{ base: 0, lg: 1 }}
+										borderRightWidth={{ base: 0, lg: 1 }}
+										px={5}
+										py={5}
+										pr={[0, '10']}
+										mb="24"
+									>
+										<Skeleton
+											h="8"
+											w={{ base: 40, lg: 60 }}
+											startColor="#323232"
+											endColor="#4b4b4b"
+										/>
+										<SkeletonText
+											h="10"
+											mt={5}
+											startColor="#323232"
+											endColor="#4b4b4b"
+										/>
+										{/* <Skeleton h="5" w={10} mt={3} /> */}
+									</Box>
+								</Flex>
 							)}
 					</>
 				)}
 			</Stack>
-			{!id && (
-				<Stack h="40" justify="space-between" direction="row" mt={3}>
-					{/* <Box ml={5} bg="#FFF">
-            <Box borderRadius={5} w="60" h={5}></Box>
-            <Box pt={1} borderRadius={5} w="60" h={5}></Box>
-          </Box> */}
-					{/* <Button
-            p={5}
-            disabled={page === 0}
-            size="sm"
-            colorScheme="teal"
-            onClick={decrementPage}
-          >
-            &larr; Previous Page
-          </Button>
-          <Button
-            p={5}
-            disabled={
-              page === maxPages() - 1 ||
-              (bounties && paginatedBounties.length === 0)
-            }
-            size="sm"
-            colorScheme="teal"
-            onClick={incrementPage}
-          >
-            Next Page &rarr;
-          </Button> */}
-				</Stack>
-			)}
 		</>
 	);
 };

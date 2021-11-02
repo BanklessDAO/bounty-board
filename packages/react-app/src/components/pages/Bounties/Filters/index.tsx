@@ -76,6 +76,7 @@ const SearchFilter = ({
 			<Box>
 				<Flex
 					h="100%"
+					w="max"
 					px="5"
 					pt="1"
 					borderRightRadius={100}
