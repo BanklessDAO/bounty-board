@@ -37,12 +37,12 @@ const SearchFilter = ({
 	// status,
 	setStatus,
 }: {
-  placeholder?: string;
-  searchValue: string;
-  setSearch: any;
-  options: any;
-  status: string;
-  setStatus: any;
+	placeholder?: string;
+	searchValue: string;
+	setSearch: any;
+	options: any;
+	status: string;
+	setStatus: any;
 }): JSX.Element => {
 	const [statusFilterIsOpen, setStatusFilterIsOpen] = useState(false);
 
@@ -71,7 +71,6 @@ const SearchFilter = ({
 					value={searchValue}
 					onChange={updateSearchValue}
 					autoFocus
-					color="#FFF"
 				/>
 			</InputGroup>
 			<Box>
@@ -84,12 +83,12 @@ const SearchFilter = ({
 					alignItems="center"
 					justify="center"
 					fontSize="18"
-					color="#fff"
 					fontFamily="Calibre Bold"
+					cursor="pointer"
 					borderColor={statusFilterIsOpen ? 'gray.300' : 'inherit'}
 					onClick={(): void => setStatusFilterIsOpen(!statusFilterIsOpen)}
 				>
-          All
+					All
 					<Flex
 						alignItems="center"
 						justifyContent="center"
@@ -276,18 +275,18 @@ const SearchFilter = ({
 // );
 
 const Filters = (props: {
-  status: string;
-  setStatus: any;
-  search: string;
-  setSearch: any;
-  lte: number;
-  setLte: any;
-  gte: number;
-  setGte: any;
-  sortBy: string;
-  setSortBy: any;
-  sortAscending: boolean;
-  setSortAscending: any;
+	status: string;
+	setStatus: any;
+	search: string;
+	setSearch: any;
+	lte: number;
+	setLte: any;
+	gte: number;
+	setGte: any;
+	sortBy: string;
+	setSortBy: any;
+	sortAscending: boolean;
+	setSortAscending: any;
 }): JSX.Element => {
 	const filterStatusList = [
 		{
