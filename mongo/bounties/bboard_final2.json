@@ -1,6 +1,7 @@
 [
   {
     "_id": "60f6585b453e70eed340e8e3",
+    "CustomerId": 1,
     "season": 1,
     "title": "Make new website landing page",
     "description": "Description for new website landing page with specs",
