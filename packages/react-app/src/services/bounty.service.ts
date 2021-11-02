@@ -1,7 +1,8 @@
 import Bounty, { BountyBoardProps } from '../models/Bounty';
 import { Query } from 'mongoose';
-import { AcceptedSortOuputs, FilterParams, SortParams } from '../types/Filter';
+import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { FilterQuery, NextApiQuery } from '../types/Queries';
+import { BANKLESS } from '../constants/Bankless';
 
 type BountyQuery = Query<BountyBoardProps[], BountyBoardProps>;
 
@@ -11,8 +12,9 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	 */
 	const filters = {} as FilterParams;
 	
-	filters.status = query.status as string;
-	filters.search = query.search as string;
+	typeof query.status === 'string' ? filters.status = query.status : null;
+	typeof query.search === 'string' ? filters.search = query.search : null;
+	typeof query.customerId === 'string' ? filters.customerId = String(query.customerId) : null;
 	
 	query.lte ? filters.$lte = Number(query.lte) : null;
 	query.gte ? filters.$gte = Number(query.gte) : null;
@@ -37,29 +39,29 @@ export const getSort = (query: NextApiQuery): SortParams => {
 	return sort;
 };
 
-export const getSortByValue = (originalInput: string): AcceptedSortOuputs => {
+export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	/**
 	 * Allows passing of various values as sort params. These need to coalesce
 	 * to a mongoDB schema item, so I've put in a Type for accepted sort outputs
 	 * to indicate the required @return value.
 	 */
-	let output: AcceptedSortOuputs;
+	let output: AcceptedSortOutputs;
 	switch (originalInput) {
 	// redundant switch written for later extensibility
 	case 'reward':
-		output = 'reward.amount';
+		output = 'reward.amountWithoutScale';
 		break;
 	default:
-		output = 'reward.amount';
+		output = 'reward.amountWithoutScale';
 	}
 	return output;
 };
 
-export const filterStatus = (query: FilterQuery, status: string): FilterQuery => {
+export const filterStatus = (query: FilterQuery, status?: string): FilterQuery => {
 	/**
 	 * Pass status and append the corresponding status query to the query object
 	 */
-	if (status == null || status == '' || status == 'All') {
+	if (status == null || status == '' || status == 'All' || status == undefined) {
 		query.status = ['Open', 'In-Progress', 'In-Review', 'Completed'];
 	} else {
 		query.status = status;
@@ -78,7 +80,7 @@ export const filterSearch = (query: FilterQuery, search: string): FilterQuery =>
 };
 
 export const filterLessGreater = ({ by, query, $lte, $gte }: {
-	by: AcceptedSortOuputs;
+	by: AcceptedSortOutputs;
 	query: FilterQuery;
 	$lte?: number;
 	$gte?: number;
@@ -104,7 +106,15 @@ export const filterLessGreater = ({ by, query, $lte, $gte }: {
 
 export const handleEmpty = (query: FilterQuery): FilterQuery | Record<string, unknown> => {
 	const isEmpty: boolean = Object.values(query).every(x => x === null || x === '');
-	return query === isEmpty ? {} : query;
+	return isEmpty ? {} : query;
+};
+
+export const filterCustomerId = (query: FilterQuery, customerId?: string): FilterQuery => {
+	/**
+	 * Remove bounties not relating to the currently selected DAO
+	 */
+	query.customerId = customerId ?? BANKLESS.CustomerId;
+	return query;
 };
 
 export const handleFilters = (filters: FilterParams): BountyQuery => {
@@ -113,10 +123,11 @@ export const handleFilters = (filters: FilterParams): BountyQuery => {
 	 */
 	let filterQuery = {} as FilterQuery;
 	
-	const { status, search, $lte, $gte } = filters;
+	const { status, search, $lte, $gte, customerId } = filters;
 	
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
+	filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
 	filterQuery = handleEmpty(filterQuery);
 

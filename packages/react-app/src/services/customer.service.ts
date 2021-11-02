@@ -1,8 +1,8 @@
-import { CustomerProps } from '../types/Customer';
+import { CustomerProps } from '../models/Customer';
 import { DiscordGuild } from '../types/Discord';
 import { guilds } from '../../tests/stubs/guilds.stub';
 import Customer from '../models/Customer';
-import { BANKLESS } from '../utils/BanklessData';
+import { BANKLESS } from '../constants/Bankless';
 
 export const getGuilds = async (): Promise<DiscordGuild[] | []> => {
 	/**
@@ -24,7 +24,7 @@ export const getCustomers = async (): Promise<CustomerProps[] | []> => {
 	/**
    * @returns a list of bountyboard customers from the DB 
    */
-	return Customer.find({});
+	return Customer.find({}).sort({ 'CustomerName': 1 });
 };
 
 export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersList: CustomerProps[]): CustomerProps[] | [] => {

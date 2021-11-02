@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Flex } from '@chakra-ui/react';
 import Logo from './Logo';
-import { CustomerProps } from '../../../types/Customer';
 import { MenuLinks, MenuToggle } from './Menu';
+import { CustomerContext } from '../../../context/CustomerContext';
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
 	<Flex
@@ -18,13 +18,12 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 	</Flex>
 );
 
-const NavBar = ({ customer, setCustomer, props }: {
-	customer: CustomerProps,
-	setCustomer(): any,
+const NavBar = ({ props }: {
 	props: any
 }): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
+	const { customer } = useContext(CustomerContext);
 	return (
 		<NavBarContainer {...props}>
 			{ !isOpen ?
@@ -34,11 +33,7 @@ const NavBar = ({ customer, setCustomer, props }: {
 				: null
 			}
 			<MenuToggle toggle={toggle} isOpen={isOpen} />
-			<MenuLinks
-				isOpen={isOpen}
-				customer={customer}
-				setCustomer={setCustomer}
-			/>
+			<MenuLinks isOpen={isOpen} />
 		</NavBarContainer>
 	);
 };

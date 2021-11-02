@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/client';
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
-import { CustomerProps } from '../../../types/Customer';
+import { CustomerProps } from '../../../models/Customer';
 import { toggleDiscordSignIn } from '../../../services/discord.service';
 import { fetcher } from '../../../utils/ApiUtils';
 import useSWR from 'swr';
@@ -50,15 +50,9 @@ export const MenuToggle = ({ toggle, isOpen }: MenuToggleProps): JSX.Element => 
 
 interface MenuLinksProps {
 	isOpen: boolean;
-	customer: CustomerProps;
-	setCustomer(customer: CustomerProps): void;
 }
 
-export const MenuLinks = ({
-	isOpen,
-	customer,
-	setCustomer,
-}: MenuLinksProps): JSX.Element => {
+export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 
 	const [session, loading] = useSession();
 	const [customers, setCustomers] = useState<CustomerProps[]>();
@@ -87,8 +81,6 @@ export const MenuLinks = ({
 				{ customers && session
 					? <DAOSelector
 						customers={customers}
-						customer={customer}
-						setCustomer={setCustomer}
 					/>
 					: null
 				}

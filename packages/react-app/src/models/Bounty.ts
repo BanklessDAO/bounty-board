@@ -7,10 +7,12 @@ export interface BountyBoardProps {
   title: string
   description: string
   criteria: string
+	customerId: string
   reward: {
     currency: string
     amount: number
     scale: number
+		amountWithoutScale: number
   }
   createdBy: {
     discordHandle: string
@@ -47,6 +49,11 @@ const BountyBoardSchema = new mongoose.Schema({
 
 		type: String,
 	},
+	customerId: {
+		/* the DAO under which this bounty belongs */
+
+		type: String,
+	},
 	season: {
 		/* The season of this Bounty */
 
@@ -68,6 +75,7 @@ const BountyBoardSchema = new mongoose.Schema({
 		currency: String,
 		amount: Number,
 		scale: Number,
+		amountWithoutScale: Number,
 		type: Object,
 	},
 	createdBy: {

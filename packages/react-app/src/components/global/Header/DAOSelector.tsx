@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Select } from '@chakra-ui/react';
-import { CustomerProps } from '../../../types/Customer';
+import { CustomerProps } from '../../../models/Customer';
+import { CustomerContext } from '../../../context/CustomerContext';
 
-export const DAOSelector = ({ customers, customer, setCustomer }: {
+export const DAOSelector = ({ customers }: {
 	customers: CustomerProps[] | [],
-	customer: CustomerProps;
-	setCustomer(selected: CustomerProps): void
 }): JSX.Element => {
+	const { customer, setCustomer } = useContext(CustomerContext);
 
 	const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const _customer = customers.find(({ CustomerName }) => CustomerName === event.target.value);
-		_customer ? setCustomer(_customer) : null;
+		if (_customer && setCustomer) {
+			setCustomer(_customer);
+		} else {
+			console.error('Attempted to change without initialising customer or setCustomer');
+		}
 	};
 
 	return (

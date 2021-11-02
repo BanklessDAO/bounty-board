@@ -1,8 +1,13 @@
+import { BountyBoardProps } from '../models/Bounty';
+
+type StringKeysBountyBoardReward = Extract<keyof BountyBoardProps['reward'], string>;
+
 export type AcceptedSortInputs = 'reward';
-export type AcceptedSortOuputs = 'reward.amount';
+export type AcceptedSortOutputs = `reward.${StringKeysBountyBoardReward}`;
 
 export interface FilterParams {
-	status: string;
+	customerId?: string;
+	status?: string;
 	search: string;
 	$lte?: number;
 	$gte?: number;
@@ -11,7 +16,7 @@ export interface FilterParams {
 }
 
 export interface SortParams {
-	sortBy?: AcceptedSortOuputs;
+	sortBy?: AcceptedSortOutputs;
 	order: 'asc' | 'desc';
 }
 

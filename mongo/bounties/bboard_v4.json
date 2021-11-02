@@ -4,6 +4,7 @@
         "$oid": "10f6585b453e70eed340e8e3"
       }
       ,
+      "customerId": "834499078434979890",
       "season": 1,
       "title": "Implement React Components for Filters",
       "description": "Description for new website landing page with specs",
@@ -11,7 +12,8 @@
       "reward": {
         "currency": "BANK",
         "amount": 1000,
-        "scale": 0
+        "scale": 2,
+        "amountWithoutScale": 10
       },
       "createdBy": {
         "discordHandle": "paul#8888",
@@ -59,16 +61,17 @@
     {
       "_id": {
         "$oid": "20f6585b453e70eed340e8e3"
-      }
-      ,
+      },
+      "customerId": "834499078434979890",      
       "season": 1,
       "title": "Implement Changes to the Bounty Board",
       "description": "Description for new website landing page with specs",
       "criteria": "A completed bounty has the following deliverables...",
       "reward": {
         "currency": "BANK",
-        "amount": 2000,
-        "scale": 0
+        "amount": 1034567,
+        "scale": 3,
+        "amountWithoutScale": 1034.567
       },
       "createdBy": {
         "discordHandle": "paul#8888",
@@ -116,8 +119,8 @@
     {
       "_id": {
         "$oid": "30f6585b453e70eed340e8e3"
-      }
-      ,
+      },
+      "customerId": "718590743446290492",      
       "season": 1,
       "title": "Create Stunning NFT Artwork",
       "description": "Description for new website landing page with specs",
@@ -125,7 +128,8 @@
       "reward": {
         "currency": "BANK",
         "amount": 4000,
-        "scale": 0
+        "scale": 0,
+        "amountWithoutScale": 4000
       },
       "createdBy": {
         "discordHandle": "paul#8888",
@@ -173,8 +177,8 @@
     {
       "_id": {
         "$oid": "40f6585b453e70eed340e8e3"
-      }
-      ,
+      },
+      "customerId": "845400066532704256",      
       "season": 1,
       "title": "Create new website landing page",
       "description": "Description for new website landing page with specs",
@@ -182,7 +186,8 @@
       "reward": {
         "currency": "BANK",
         "amount": 3000,
-        "scale": 0
+        "scale": 0,
+        "amountWithoutScale": 3000
       },
       "createdBy": {
         "discordHandle": "paul#8888",
@@ -230,8 +235,8 @@
     {
       "_id": {
         "$oid": "50f6585b453e70eed340e8e3"
-      }
-      ,
+      },
+      "customerId": "834499078434979890",      
       "season": 1,
       "title": "Create logic to add Pagination to search filters",
       "description": "Description for new website landing page with specs",
@@ -239,7 +244,8 @@
       "reward": {
         "currency": "BANK",
         "amount": 10000,
-        "scale": 0
+        "scale": 0,
+        "amountWithoutScale": 10000
       },
       "createdBy": {
         "discordHandle": "paul#8888",
@@ -287,8 +293,8 @@
     {
       "_id": {
         "$oid": "60f6585b453e70eed340e8e3"
-      }
-      ,
+      },
+      "customerId": "834499078434979890",      
       "season": 1,
       "title": "Create notes for one meeting",
       "description": "Description for new website landing page with specs",
@@ -296,7 +302,8 @@
       "reward": {
         "currency": "BANK",
         "amount": 1500,
-        "scale": 0
+        "scale": 0,
+        "amountWithoutScale": 1500
       },
       "createdBy": {
         "discordHandle": "paul#8888",

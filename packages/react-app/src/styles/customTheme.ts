@@ -1,6 +1,6 @@
 import { theme, extendTheme, ChakraTheme, Colors } from '@chakra-ui/react';
 import { createBreakpoints, mode } from '@chakra-ui/theme-tools';
-import { Customization, LightDark, SupportedColorCustomizations } from '../types/Customer';
+import { Customization, LightDark, SupportedColorCustomizations } from '../models/Customer';
 
 const breakpoints = createBreakpoints({
 	sm: '425px',

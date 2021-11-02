@@ -25,6 +25,19 @@ export interface LightDark {
     dark: string;
 }
 
+export const CustomizationSchema = new mongoose.Schema<Customization>({
+	Logo: String,
+	Colors: {
+		type: Object,
+		background: {
+			type: Object,
+			light: String,
+			dark: String,
+			required: false,
+		},
+	},
+}, { strict: false });
+
 export const CustomerSchema = new mongoose.Schema<CustomerProps>({
 	CustomerName: {
 		type: String,
@@ -32,11 +45,10 @@ export const CustomerSchema = new mongoose.Schema<CustomerProps>({
 	CustomerId: {
 		type: String,
 	},
-	Customization: {
-		type: Object,
-		Logo: String,
-		Colors: Object,
+	ApplicableRoles: {
+		type: [String],
 	},
+	Customization: CustomizationSchema,
 });
 
 export default mongoose.models.Customer as mongoose.Model<CustomerProps>

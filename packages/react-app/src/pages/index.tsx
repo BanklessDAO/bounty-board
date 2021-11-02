@@ -1,16 +1,13 @@
-import { CustomerProps } from '../types/Customer';
 import Layout from '../components/global/SiteLayout';
 import Bounties from '../components/pages/Bounties';
+import { useContext } from 'react';
+import { CustomerContext } from '../context/CustomerContext';
 
-const Index = (props: {
-	customer: CustomerProps,
-	setCustomer(): void
-}): JSX.Element => {
+const Index = (): JSX.Element => {
+	const { customer } = useContext(CustomerContext);
 	return (
 		<Layout
-			title={`${props.customer.CustomerName ?? 'DAO'} Bounty Board`}
-			customer={props.customer}
-			setCustomer={props.setCustomer}
+			title={`${customer.CustomerName ?? 'DAO'} Bounty Board`}
 			props={{}}
 		>
 			<Bounties />
