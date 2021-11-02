@@ -45,7 +45,7 @@ const BountySummary = ({
 	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end">
 		<Box
 			width={{ base: '100%', lg: '700px' }}
-			pr={{ base: 7, md: 0 }}
+			pr={{ base: 5, md: 0 }}
 			align="left"
 		>
 			<Heading fontSize={{ base: 24, lg: 28 }} mb={0} flex={{ base: 1, md: 0 }}>
@@ -54,10 +54,10 @@ const BountySummary = ({
 
 			<Box
 				className="bounty-description"
-				mt={2}
+				mt={{ base: 1, lg: 2 }}
 				fontSize={{ base: 19, lg: 21 }}
 				lineHeight={{ lg: 1.3 }}
-				pr={10}
+				pr={{ lg: 10 }}
 				color={useColorModeValue('#5f606a', '#8b949e')}
 			>
 				{description}

@@ -59,7 +59,7 @@ const SearchFilter = ({
 				<Input
 					h="100%"
 					pl="14"
-					fontSize="20"
+					fontSize="18"
 					pt="1.5"
 					borderLeftRadius="100"
 					outline="none"
@@ -136,6 +136,7 @@ const SearchFilter = ({
 								h="10"
 								fontSize="18"
 								fontFamily="Calibre Bold"
+								fontWeight="900"
 								alignItems="center"
 								pl="5"
 								pr="10"

@@ -4,7 +4,7 @@ import {
 	Flex,
 	Box,
 	Skeleton,
-	SkeletonText,
+	// SkeletonText,
 } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
 import useSWR from 'swr';
@@ -142,12 +142,34 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 											startColor="#323232"
 											endColor="#4b4b4b"
 										/>
-										<SkeletonText
+										<Skeleton
+											h="4"
+											mt={4}
+											w="90%"
+											startColor="#323232"
+											endColor="#4b4b4b"
+										/>
+										<Skeleton
+											h="4"
+											mt={2}
+											w="80%"
+											startColor="#323232"
+											endColor="#4b4b4b"
+										/>
+										<Skeleton
+											h="4"
+											mt={2}
+											w="85%"
+											startColor="#323232"
+											endColor="#4b4b4b"
+										/>
+
+										{/* <SkeletonText
 											h="10"
 											mt={5}
 											startColor="#323232"
 											endColor="#4b4b4b"
-										/>
+										/> */}
 										{/* <Skeleton h="5" w={10} mt={3} /> */}
 									</Box>
 								</Flex>
