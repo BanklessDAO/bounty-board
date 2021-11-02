@@ -10,7 +10,7 @@ const ColorModeButton = ({
 			bg="transparent"
 			borderRadius={100}
 			borderWidth={2}
-			fontFamily="Calibre Bold"
+			fontFamily="Calibre"
 			transition="background 100ms linear"
 		>
 			{children}
