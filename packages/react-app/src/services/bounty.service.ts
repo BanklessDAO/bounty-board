@@ -105,7 +105,7 @@ export const filterLessGreater = ({ by, query, $lte, $gte }: {
 };
 
 export const handleEmpty = (query: FilterQuery): FilterQuery | Record<string, unknown> => {
-	const isEmpty: boolean = Object.values(query).every(x => x === null || x === '');
+	const isEmpty: boolean = Object.values(query).every(x => x === null || x === '' || x === undefined);
 	return isEmpty ? {} : query;
 };
 

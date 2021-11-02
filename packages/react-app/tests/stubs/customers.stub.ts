@@ -1,4 +1,4 @@
-import { CustomerProps } from '../../src/types/Customer';
+import { CustomerProps } from '../../src/models/Customer';
 
 export const customers: CustomerProps[] = [
 	{
