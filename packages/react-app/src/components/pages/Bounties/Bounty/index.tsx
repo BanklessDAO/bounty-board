@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-comments */
 import {
 	AccordionButton,
 	// AccordionIcon,
@@ -41,46 +42,63 @@ const BountySummary = ({
 	description,
 	// reward,
 	status,
-}: BountyBoardProps): JSX.Element => (
+}: // createdBy,
+BountyBoardProps): JSX.Element => (
 	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end">
-		<Box
-			width={{ base: '100%', lg: '700px' }}
-			pr={{ base: 5, md: 0 }}
-			align="left"
-		>
-			<Heading fontSize={{ base: 24, lg: 28 }} mb={0} flex={{ base: 1, md: 0 }}>
-				{title}
-			</Heading>
+		<Box width={{ base: '100%', lg: '700px' }} align="left">
+			<Flex justifyContent="space-between" pr={{ base: '2', lg: '2' }}>
+				<Heading
+					w="100%"
+					flex="1"
+					fontSize={{ base: 26, lg: 28 }}
+					mb={0}
+					// flex={{ base: 1, md: 0 }}
+				>
+					{title}
+				</Heading>
 
+				<Box w="max" h="6">
+					<Flex
+						w="max"
+						h="100%"
+						px="3"
+						pt="0.15em"
+						borderRadius={100}
+						bgColor={
+							status === 'Open'
+								? 'Open'
+								: status === 'In-Review'
+									? 'In-Review'
+									: status === 'In-Progress'
+										? 'In-Progress'
+										: 'Completed'
+						}
+					>
+						{status}
+					</Flex>
+				</Box>
+			</Flex>
+
+			{/* <Box
+				fontSize={20}
+				fontFamily="Calibre"
+				color={useColorModeValue('#5f606a', '#8b949e')}
+			>
+				{createdBy.discordHandle}
+				{' | '}
+				{reward.amount * reward.scale +
+					1 * Math.floor(Math.random() * 15000)}{' '}
+				{reward.currency}
+			</Box> */}
 			<Box
 				className="bounty-description"
-				mt={{ base: 1, lg: 2 }}
-				fontSize={{ base: 19, lg: 21 }}
-				lineHeight={{ lg: 1.3 }}
-				pr={{ lg: 10 }}
+				mt={{ base: 2, lg: 2 }}
+				fontSize={{ base: 22, lg: 21 }}
+				lineHeight={{ base: 1.3, lg: 1.3 }}
+				pr={{ base: 5, lg: 10 }}
 				color={useColorModeValue('#5f606a', '#8b949e')}
 			>
 				{description}
-			</Box>
-			<Box h="6" mt={1}>
-				<Flex
-					w="max"
-					h="100%"
-					px="3"
-					pt="0.15em"
-					borderRadius={100}
-					bgColor={
-						status === 'Open'
-							? 'Open'
-							: status === 'In-Review'
-								? 'In-Review'
-								: status === 'In-Progress'
-									? 'In-Progress'
-									: 'Completed'
-					}
-				>
-					{status}
-				</Flex>
 			</Box>
 		</Box>
 	</Flex>
@@ -165,6 +183,7 @@ export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
 		borderRightWidth={{ base: 0, lg: 1 }}
 		borderRadius={{ lg: 10 }}
 		py={4}
+		pb={2}
 		pl={{ base: 1.5, lg: 2 }}
 		mb={{ lg: 5 }}
 	>

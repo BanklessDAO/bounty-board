@@ -1,12 +1,6 @@
-import {
-	Stack,
-	Text,
-	Flex,
-	Box,
-	Skeleton,
-	// SkeletonText,
-} from '@chakra-ui/react';
+import { Stack, Text, Flex } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
+import SkeletonLoader from '../../parts/SkeletonLoader';
 import useSWR from 'swr';
 import { BountyCard } from './Bounty';
 import React, { useEffect, useState } from 'react';
@@ -27,7 +21,7 @@ const fetcher = (url: string) =>
 const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
 	const [page, setPage] = useState(0);
-	const [status, setStatus] = useState('Open');
+	const [status, setStatus] = useState('All');
 	const [search, setSearch] = useState('');
 	const [gte, setGte] = useState(0);
 	// how to handle the lte === 0 case?
@@ -123,55 +117,8 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 								</Stack>
 							) : (
 								<Flex direction="column">
-									<BountyAccordion bounties={paginatedBounties} />
-									<Box
-										w={['100%', '700px']}
-										borderRadius={{ base: 0, lg: 10 }}
-										borderTopWidth={{ base: 0, lg: 1 }}
-										borderBottomWidth={1}
-										borderLeftWidth={{ base: 0, lg: 1 }}
-										borderRightWidth={{ base: 0, lg: 1 }}
-										px={5}
-										py={5}
-										pr={[0, '10']}
-										mb="24"
-									>
-										<Skeleton
-											h="8"
-											w={{ base: 40, lg: 60 }}
-											startColor="#323232"
-											endColor="#4b4b4b"
-										/>
-										<Skeleton
-											h="4"
-											mt={4}
-											w="90%"
-											startColor="#323232"
-											endColor="#4b4b4b"
-										/>
-										<Skeleton
-											h="4"
-											mt={2}
-											w="80%"
-											startColor="#323232"
-											endColor="#4b4b4b"
-										/>
-										<Skeleton
-											h="4"
-											mt={2}
-											w="85%"
-											startColor="#323232"
-											endColor="#4b4b4b"
-										/>
-
-										{/* <SkeletonText
-											h="10"
-											mt={5}
-											startColor="#323232"
-											endColor="#4b4b4b"
-										/> */}
-										{/* <Skeleton h="5" w={10} mt={3} /> */}
-									</Box>
+									<BountyAccordion bounties={bounties} />
+									<SkeletonLoader />
 								</Flex>
 							)}
 					</>
