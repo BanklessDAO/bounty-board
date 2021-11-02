@@ -20,7 +20,7 @@ const fetcher = (url: string) =>
 const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
 	const [page, setPage] = useState(0);
-	const [status, setStatus] = useState('');
+	const [status, setStatus] = useState('Open');
 	const [search, setSearch] = useState('');
 	const [gte, setGte] = useState(0);
 	// how to handle the lte === 0 case?
