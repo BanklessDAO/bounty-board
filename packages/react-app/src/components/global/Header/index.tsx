@@ -87,7 +87,7 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
 	<Flex
-		as="nav"
+		// as="nav"
 		position="sticky"
 		top={0}
 		align="center"
@@ -97,6 +97,9 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 		h="16"
 		px={5}
 		borderBottomWidth={1}
+		bg={useColorModeValue('#FFF', '#121212')}
+		zIndex={99999}
+		{...props}
 		{...props}
 	>
 		{props.children}

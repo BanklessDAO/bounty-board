@@ -86,6 +86,10 @@ const SearchFilter = ({
 					fontFamily="Calibre Bold"
 					cursor="pointer"
 					borderColor={statusFilterIsOpen ? 'gray.300' : 'inherit'}
+					_hover={{
+						borderColor: 'gray.300',
+					}}
+					transition="all 0.3s"
 					onClick={(): void => setStatusFilterIsOpen(!statusFilterIsOpen)}
 				>
 					All
@@ -319,7 +323,7 @@ const Filters = (props: {
 			borderBottomWidth={{ base: 1, lg: 0 }}
 		>
 			<Stack
-				position={{ lg: 'sticky' }}
+				position={{ base: 'relative', lg: 'sticky' }}
 				top={{ lg: '6.5rem' }}
 				width={{ base: '90%', lg: 350 }}
 				mx="auto"
