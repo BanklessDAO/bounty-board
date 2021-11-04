@@ -7,7 +7,7 @@ export default NextAuth({
 		DiscordProvider({
 			clientId: '892232488812965898',
 			clientSecret: 'IB33yqHzgiG4VhFxr6cB0Tr5oEAnihmq',
-			scope: 'identify guilds',
+			authorization: 'https://discord.com/api/oauth2/authorize?scope=identify+guilds',
 		}),
 	],
 });

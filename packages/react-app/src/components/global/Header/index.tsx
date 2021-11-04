@@ -81,7 +81,6 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
 				{/* </MenuItem>*/}
 				<MenuItem newTab={false}>
 					{/* <Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
-					
 					{ status === 'loading' ? <span>Loading...</span> : <Button onClick={() => status === 'authenticated' ? signOut() : signIn('discord' as RedirectableProvider)} id='DiscordButton'>{session ? session.user?.name : 'Join DAO'}</Button>}
 				</MenuItem>
 				<ThemeToggle />
