@@ -131,6 +131,8 @@ MONGODB_URI=mongodb://username:password@host:port/bountyboard
 ```
 Please refer to [the Mongoose docs](https://mongoosejs.com/docs/connections.html) for more information.
 
+For help setting up MongoDB locally, see their [installation instructions](https://docs.mongodb.com/manual/administration/install-community/).
+
 ### Setting Up Data in MongoDB
 The app expects a MongoDB db `bountyboard` with the collection `bounties`, as specified in the json files within `mongo/bounties` (note: these might need some slight tweaking to fit with the app).
 
