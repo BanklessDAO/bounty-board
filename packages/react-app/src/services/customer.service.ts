@@ -1,16 +1,7 @@
 import { CustomerProps } from '../models/Customer';
 import { DiscordGuild } from '../types/Discord';
-import { guilds } from '../../tests/stubs/guilds.stub';
 import Customer from '../models/Customer';
 import { BANKLESS } from '../constants/Bankless';
-
-export const getGuilds = async (): Promise<DiscordGuild[] | []> => {
-	/**
-   * @STUBBED
-   * @returns a list of discord guilds for the current user 
-   */
-	return guilds;
-};
 
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
@@ -38,12 +29,12 @@ export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersLis
 	return filterGuilds;
 };
 
-export const getCustomersInUsersGuilds = async (): Promise<CustomerProps[]> => {
+export const getCustomersInUsersGuilds = async (guildsList: DiscordGuild[] | []): Promise<CustomerProps[]> => {
 	/**
    * @returns the list of bankless bounty board customers
    * where the current user is also a discord member.
    */
-	const guildsList = await getGuilds();
+	// const guildsList = await getGuilds();
 	const customersList = await getCustomers();
 	const filteredGuilds = filterGuildsToCustomers(guildsList, customersList);
 	return filteredGuilds.length === 0 ? [BANKLESS] : filteredGuilds;

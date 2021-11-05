@@ -9,12 +9,15 @@ export default async function handler(
 	await dbConnect();
 
 	switch (req.method) {
-	case 'GET':
+	case 'POST':
 		try {
-			const data = await service.getCustomersInUsersGuilds();
+			// console.debug({ body: req.body });
+			const data = await service.getCustomersInUsersGuilds(JSON.parse(req.body));
+			console.debug({ data });
 			res.status(200).json({ success: true, data });
 		} catch (error) {
-			res.status(400).json({ success: false });
+			console.debug({ error });
+			res.status(400).json({ success: false, message: error });
 		}
 		break;
 	default:

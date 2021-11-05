@@ -49,10 +49,10 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	switch (originalInput) {
 	// redundant switch written for later extensibility
 	case 'reward':
-		output = 'reward.amountWithoutScale';
+		output = 'reward.amount';
 		break;
 	default:
-		output = 'reward.amountWithoutScale';
+		output = 'reward.amount';
 	}
 	return output;
 };
