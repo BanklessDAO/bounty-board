@@ -1,8 +1,8 @@
 import { Session } from 'next-auth';
 import { toggleDiscordSignIn } from '../../../src/services/discord.service';
-import * as client from 'next-auth/client';
+import * as client from 'next-auth/react';
 
-jest.mock('next-auth/client', () => ({
+jest.mock('next-auth/react', () => ({
 	signIn: jest.fn(),
 	signOut: jest.fn(),
 }));

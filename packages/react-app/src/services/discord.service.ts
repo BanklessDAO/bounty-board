@@ -1,5 +1,5 @@
 import { Session } from 'next-auth';
-import { signIn, signOut, RedirectableProvider } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 
 export const toggleDiscordSignIn = (
 	session: Session | unknown,
@@ -12,6 +12,6 @@ export const toggleDiscordSignIn = (
 	if (session) {
 		signOut();
 	} else {
-		signIn('discord' as RedirectableProvider);
+		signIn('discord' as any);
 	}
 };

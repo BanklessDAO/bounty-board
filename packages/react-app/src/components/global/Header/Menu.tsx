@@ -7,10 +7,9 @@ import { Button, Box, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
 import { CustomerProps } from '../../../models/Customer';
 import { toggleDiscordSignIn } from '../../../services/discord.service';
-import { fetcher } from '../../../utils/ApiUtils';
 import { BANKLESS } from '../../../constants/Bankless';
 import useSWR from 'swr';
-import { DiscordGuild } from 'types/Discord';
+import { DiscordGuild } from '../../../types/Discord';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -49,7 +48,6 @@ export const MenuToggle = ({ toggle, isOpen }: MenuToggleProps): JSX.Element => 
 		</Box>
 	);
 };
-
 interface MenuLinksProps {
 	isOpen: boolean;
 }
@@ -60,8 +58,8 @@ const tokenFetcher = (url: string, token: string) => fetch(
 		headers: {
 			authorization: `Bearer ${token}`,
 		},
-	})
-		.then(res => res.json())
+	}
+).then(res => res.json());
 
 export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 
@@ -71,27 +69,24 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 
 	// error handle
 	const { data: guildApiResponse } = useSWR<DiscordGuild[], unknown>(
-		session 
+		session
 			? ['https://discord.com/api/users/@me/guilds', session.accessToken]
 			: null
-			, tokenFetcher
+		, tokenFetcher
 	);
 
 	useEffect(() => {
-		if(session && guildApiResponse) setGuilds(guildApiResponse)
+		if(session && guildApiResponse) setGuilds(guildApiResponse);
 	}, [guildApiResponse]);
 
 	useEffect(() => {
 		if (session && guilds) {
 			fetch('/api/customers/user', {
 				method: 'POST',
-				body: JSON.stringify(guilds)
+				body: JSON.stringify(guilds),
 			})
-			.then(res => res.json())
-			.then(jsonResponse => {
-				setCustomers(jsonResponse.data);
-			})
-			;
+				.then(res => res.json())
+				.then(({ data }) => setCustomers(data));
 		}
 	}, [session, guilds]);
 

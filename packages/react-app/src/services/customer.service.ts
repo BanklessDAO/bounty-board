@@ -34,7 +34,6 @@ export const getCustomersInUsersGuilds = async (guildsList: DiscordGuild[] | [])
    * @returns the list of bankless bounty board customers
    * where the current user is also a discord member.
    */
-	// const guildsList = await getGuilds();
 	const customersList = await getCustomers();
 	const filteredGuilds = filterGuildsToCustomers(guildsList, customersList);
 	return filteredGuilds.length === 0 ? [BANKLESS] : filteredGuilds;

@@ -78,7 +78,7 @@ describe('Testing the bounty service', () => {
 
 		it('Sorts descending falsy strings', () => {
 			const expected: SortParams = {
-				sortBy: 'reward.amountWithoutScale',
+				sortBy: 'reward.amount',
 				order: 'desc',
 			};
 			sortQueries.forEach(query => {
