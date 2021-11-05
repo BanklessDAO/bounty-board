@@ -1,7 +1,7 @@
 import ThemeToggle from '../../parts/ThemeToggle';
 import AccessibleLink from '../../parts/AccessibleLink';
 import { DAOSelector } from './DAOSelector';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { Button, Box, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
@@ -54,8 +54,9 @@ interface MenuLinksProps {
 
 export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 
-	const [session, loading] = useSession();
+	const { data: session, status } = useSession({ required: false });
 	const [customers, setCustomers] = useState<CustomerProps[]>();
+	const [guilds, setGuilds] = useState(null);
 	// error handle
 	const { data } = useSWR<CustomerProps[], unknown>(
 		session ? '/api/customers/user' : null,
@@ -64,8 +65,18 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 	useEffect(() => {
 		if (session) {
 			setCustomers(data);
+
+			fetch('https://discord.com/api/users/@me/guilds', {
+				headers: {
+					authorization: `Bearer ${session.accessToken}`,
+				},
+			})
+				.then(res => res.json())
+				.then(res => setGuilds(res));
 		}
 	}, [session, data]);
+
+	console.log('guilds', { guilds });
 
 	return (
 		<Box
@@ -86,7 +97,7 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 				}
 				<MenuItem newTab={false} >
 					{
-						loading
+						status === 'loading'
 							? <span>Loading...</span>
 							: <Button
 								onClick={

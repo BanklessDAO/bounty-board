@@ -2,7 +2,7 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 import { AppProps } from 'next/app';
 import { useEffect, useState } from 'react';
-import { Provider } from 'next-auth/client';
+import { SessionProvider } from 'next-auth/react';
 import { DefaultSeo } from 'next-seo';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -20,7 +20,7 @@ Router.events.on('routeChangeError', () => NProgress.done());
 
 const MotionBox = motion(Box);
 
-function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
+function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps): JSX.Element {
 	const [theme, setTheme] = useState(baseTheme);
 	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
 	useEffect(() => {
@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
 	}, [customer]);
 
 	return (
-		<Provider session={pageProps.session}>
+		<SessionProvider session={session}>
 			<CustomerContext.Provider value={{ customer, setCustomer }}>
 				<ChakraProvider resetCSS theme={theme}>
 					<DefaultSeo {...SEO} />
@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps, router }: AppProps): JSX.Element {
 					</GlobalStyle>
 				</ChakraProvider>
 			</CustomerContext.Provider>
-		</Provider>
+		</SessionProvider>
 	);
 }
 
