@@ -1,4 +1,3 @@
-import { profile } from 'console';
 import NextAuth from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
@@ -12,36 +11,19 @@ export default NextAuth({
 		}),
 	],
 	callbacks: {
-		async jwt({token, user, account, profile}) {
-			// Add auth_time to token on signin in
-
-			if(user) {
-			token.profile = profile;
-			token.accessToken = account.accessToken;
-			token.refreshToken = account.refreshToken;
+		async jwt({token, account}) {
+			if(account) {
+				//token.profile = profile;
+				token.accessToken = account.access_token;
+				token.refreshToken = account.refresh_token;
 			}
 
-
-			console.log("jwt",{account, user})
 			return token;
 		},
-	// 	async session({ session, token, user }) {
-	// 	//   // Send properties to the client, like an access_token from a provider.
-
-	// 	//   session.user.accessToken = token.accessToken;
-	// 	//   session.user.refreshToken = token.refreshToken;
-
-	// 	//   session.user.profile = token.profile;
-	// 	//   console.log("session",{ session, token, user })
-	// 	//   const guildsfetch = await fetch('https://discord.com/api/users/@me', {
-	// 	// 	headers:  {
-	// 	// 		authorization: `Bearer ${token.accessToken}`,
-	// 	//   }
-	// 	// })
-	// 	// const guilds = await guildsfetch.json()
-	// 	// session.user.profile.guilds = guilds
-
-	// 	// return session
-	// 	// }
-	  },
+		async session({session, token}) {
+			// Send properties to the client, like access_token from a provider.
+			session.accessToken = token.accessToken
+			return session
+		}
+	},
 });
