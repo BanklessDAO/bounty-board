@@ -11,19 +11,19 @@ export default NextAuth({
 		}),
 	],
 	callbacks: {
-		async jwt({token, account}) {
+		async jwt({ token, account }) {
 			if(account) {
-				//token.profile = profile;
+				// token.profile = profile;
 				token.accessToken = account.access_token;
 				token.refreshToken = account.refresh_token;
 			}
 
 			return token;
 		},
-		async session({session, token}) {
+		async session({ session, token }) {
 			// Send properties to the client, like access_token from a provider.
-			session.accessToken = token.accessToken
-			return session
-		}
+			session.accessToken = token.accessToken;
+			return session;
+		},
 	},
 });
