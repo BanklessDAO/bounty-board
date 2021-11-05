@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession, signIn, signOut, RedirectableProvider } from 'next-auth/react';
 import { Button, Box, Flex, Text, Stack, useColorModeValue } from '@chakra-ui/react';
 
@@ -61,6 +61,21 @@ const MenuItem = ({
 
 const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
 	const { data: session, status } = useSession({ required: false });
+	const [guilds, setGuilds] = useState(null);
+
+	useEffect(() => {
+		if (session?.accessToken) {
+			fetch('https://discord.com/api/users/@me/guilds', {
+				headers: {
+					authorization: `Bearer ${session.accessToken}`,
+				},
+			})
+				.then(res => res.json())
+				.then(res => setGuilds(res));
+		}
+	}, [session]);
+
+	console.log('guilds', { guilds });
 
 	
 	return (
@@ -81,7 +96,6 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => {
 				{/* </MenuItem>*/}
 				<MenuItem newTab={false}>
 					{/* <Button onClick={DiscordOAuth(router.query.code)} id='DiscordButton'>Join DAO</Button>{' '}*/}
-					
 					{ status === 'loading' ? <span>Loading...</span> : <Button onClick={() => status === 'authenticated' ? signOut() : signIn('discord' as RedirectableProvider)} id='DiscordButton'>{session ? session.user?.name : 'Join DAO'}</Button>}
 				</MenuItem>
 				<ThemeToggle />
