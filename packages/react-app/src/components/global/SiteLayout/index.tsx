@@ -7,14 +7,12 @@ import Footer from '../Footer';
 type LayoutProps = {
   children: ReactNode
   title: string
-  props: any
 }
 
-const SiteLayout = ({ children, title, props }: LayoutProps): JSX.Element => {
+const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
 	return (
 		<>
-			<Header
-				props={props}/>
+			<Header />
 			<Stack
 				mx="10"
 				mt="30"

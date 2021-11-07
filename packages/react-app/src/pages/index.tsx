@@ -8,7 +8,6 @@ const Index = (): JSX.Element => {
 	return (
 		<Layout
 			title={`${customer.CustomerName ?? 'DAO'} Bounty Board`}
-			props={{}}
 		>
 			<Bounties />
 		</Layout>

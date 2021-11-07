@@ -18,9 +18,7 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 	</Flex>
 );
 
-const NavBar = ({ props }: {
-	props: any
-}): JSX.Element => {
+const NavBar: React.FC = (props): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
 	const { customer } = useContext(CustomerContext);
