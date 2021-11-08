@@ -2,15 +2,15 @@ import { CustomerProps } from '../../src/models/Customer';
 
 export const customers: CustomerProps[] = [
 	{
-		CustomerId: '834499078434979890',
-		CustomerName: 'BanklessDAO',
+		customerId: '834499078434979890',
+		customerName: 'BanklessDAO',
 	},
 	{
-		CustomerId: '402910780124561410',
-		CustomerName: 'Compound',
-		Customization: {
-			Logo: 'https://cryptologos.cc/logos/compound-comp-logo.png?v=014',
-			Colors: {
+		customerId: '402910780124561410',
+		customerName: 'Compound',
+		customization: {
+			logo: 'https://cryptologos.cc/logos/compound-comp-logo.png?v=014',
+			colors: {
 				background: {
 					light: '#0AA3D8',
 					dark: '#0A16D8',
@@ -21,11 +21,11 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		CustomerId: '845400066532704256',
-		CustomerName: 'Coordinape',
-		Customization: {
-			Logo: 'https://coordinape.com/imgs/logo/logo232.png',
-			Colors: {
+		customerId: '845400066532704256',
+		customerName: 'Coordinape',
+		customization: {
+			logo: 'https://coordinape.com/imgs/logo/logo232.png',
+			colors: {
 				background: {
 					light: 'blue.200',
 					dark: 'blue.800',
@@ -36,11 +36,11 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		CustomerId: '718590743446290492',
-		CustomerName: 'UMA',
-		Customization: {
-			Logo: 'https://umaproject.org/assets/images/UMA_square_red_logo.png',
-			Colors: {
+		customerId: '718590743446290492',
+		customerName: 'UMA',
+		customization: {
+			logo: 'https://umaproject.org/assets/images/UMA_square_red_logo.png',
+			colors: {
 				background: {
 					light: 'red.200',
 					dark: 'red.800',
@@ -51,11 +51,11 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		CustomerId: '402910780129999',
-		CustomerName: 'Should Not See',
-		Customization: {
-			Logo: '',
-			Colors: {
+		customerId: '402910780129999',
+		customerName: 'Should Not See',
+		customization: {
+			logo: '',
+			colors: {
 				background: {
 					light: '#0AA3D8',
 					dark: '#0A16D8',

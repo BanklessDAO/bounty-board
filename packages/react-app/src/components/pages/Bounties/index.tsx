@@ -32,7 +32,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const { colorMode } = useColorMode();
 
 	const { customer } = useContext(CustomerContext);
-	const customerId = customer.CustomerId;
+	const { customerId } = customer;
 
 	const maxPages = () => {
 		if (!bounties) return 0;

@@ -26,8 +26,8 @@ const NavBar: React.FC = (props): JSX.Element => {
 		<NavBarContainer {...props}>
 			{ !isOpen ?
 				<Logo
-					alt={`${customer?.CustomerName ?? 'DAO'} Logo`}
-					img={customer?.Customization?.Logo ?? './logo.png'}/>
+					alt={`${customer?.customerName ?? 'DAO'} Logo`}
+					img={customer?.customization?.logo ?? './logo.png'}/>
 				: null
 			}
 			<MenuToggle toggle={toggle} isOpen={isOpen} />

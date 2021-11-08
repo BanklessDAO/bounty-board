@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 export interface CustomerProps {
-    CustomerId: string;
-    CustomerName: string;
-    Customization?: Customization;
-    ApplicableRoles?: [] | string[];
+    customerId: string;
+    customerName: string;
+    customization?: Customization;
+    applicableRoles?: [] | string[];
 }
 export interface Customization {
-    Logo?: string;
-    Colors?: SupportedColorCustomizations;
+    logo?: string;
+    colors?: SupportedColorCustomizations;
 }
 export interface SupportedColorCustomizations {
     background?: LightDark;
@@ -26,8 +26,8 @@ export interface LightDark {
 }
 
 export const CustomizationSchema = new mongoose.Schema<Customization>({
-	Logo: String,
-	Colors: {
+	logo: String,
+	colors: {
 		type: Object,
 		background: {
 			type: Object,
@@ -39,16 +39,16 @@ export const CustomizationSchema = new mongoose.Schema<Customization>({
 }, { strict: false });
 
 export const CustomerSchema = new mongoose.Schema<CustomerProps>({
-	CustomerName: {
+	customerName: {
 		type: String,
 	},
-	CustomerId: {
+	customerId: {
 		type: String,
 	},
-	ApplicableRoles: {
+	applicableRoles: {
 		type: [String],
 	},
-	Customization: CustomizationSchema,
+	customization: CustomizationSchema,
 });
 
 export default mongoose.models.Customer as mongoose.Model<CustomerProps>

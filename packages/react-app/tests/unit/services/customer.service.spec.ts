@@ -17,6 +17,6 @@ describe('Testing the customer service', () => {
 			.mockReturnValue(Promise.resolve(customers));
 
 		const filteredCustomers = await service.getCustomersInUsersGuilds([]);
-		expect(filteredCustomers[0].CustomerName).toEqual('BanklessDAO');
+		expect(filteredCustomers[0].customerName).toEqual('BanklessDAO');
 	});
 });

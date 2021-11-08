@@ -6,20 +6,20 @@ const { customizeTheme, baseTheme, getCustomColors } = custom;
 describe('Testing custom styles', () => {
 
 	it('returns the base theme if there are no color customizations', () => {
-		const newTheme = customizeTheme({ Logo: 'not a color customization' });
+		const newTheme = customizeTheme({ logo: 'not a color customization' });
 		// named functions are replaced by anon in spread, so we just test keys
 		expect(Object.keys(newTheme)).toEqual(Object.keys(baseTheme));
 	});
 
 	it('Adds the background to the theme if passed', () => {
 		const spy = jest.spyOn(custom, 'getCustomBackground');
-		customizeTheme({ Colors: { background: { light: 'red', dark: 'blue' } } });
+		customizeTheme({ colors: { background: { light: 'red', dark: 'blue' } } });
 		expect(spy).toHaveBeenCalled();
 	});
 
 	it('Adds supported customizations if passed', () => {
 		const color = 'red';
-		const newTheme = customizeTheme({ Colors: { Open: color } });
+		const newTheme = customizeTheme({ colors: { Open: color } });
 		const newThemeColors = newTheme.colors;
 		expect(newThemeColors.Open).not.toEqual(baseTheme.colors.Open);
 		expect(newThemeColors.Open).toEqual(theme.colors[color]);

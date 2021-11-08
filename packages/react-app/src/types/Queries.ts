@@ -24,7 +24,7 @@ export type OutputSortQueryParameters = {
 }
 
 export interface FilterQuery extends OutputSortQueryParameters {
-	CustomerId?: string | undefined;
+	customerId?: string | undefined;
 	status?: string | string[] | undefined;
 	$text?: {
 		$search: string;

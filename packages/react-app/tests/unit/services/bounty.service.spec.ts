@@ -138,7 +138,7 @@ describe('Testing the bounty service', () => {
 			};
 			const expected: FilterQuery = {
 				status: 'Open',
-				CustomerId: 'testId',
+				customerId: 'testId',
 				$text: {
 					$search: 'Test',
 				},

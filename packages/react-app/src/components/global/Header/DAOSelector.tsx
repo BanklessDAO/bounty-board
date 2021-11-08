@@ -9,7 +9,7 @@ export const DAOSelector = ({ customers }: {
 	const { customer, setCustomer } = useContext(CustomerContext);
 
 	const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const _customer = customers.find(({ CustomerName }) => CustomerName === event.target.value);
+		const _customer = customers.find(({ customerName }) => customerName === event.target.value);
 		if (_customer && setCustomer) {
 			setCustomer(_customer);
 		} else {
@@ -21,11 +21,11 @@ export const DAOSelector = ({ customers }: {
 		<Select
 			mr="5"
 			onChange={onChange}
-			value={customer?.CustomerName ?? 'BanklessDAO'}
+			value={customer?.customerName ?? 'BanklessDAO'}
 		>
 			{customers.map((option) => (
-				<option key={option.CustomerId} value={option.CustomerName}>
-					{option.CustomerName}
+				<option key={option.customerId} value={option.customerName}>
+					{option.customerName}
 				</option>
 			))}
 		</Select>

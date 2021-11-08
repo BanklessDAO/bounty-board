@@ -15,7 +15,7 @@ export const getCustomers = async (): Promise<CustomerProps[] | []> => {
 	/**
    * @returns a list of bountyboard customers from the DB 
    */
-	return Customer.find({}).sort({ 'CustomerName': 1 });
+	return Customer.find({}).sort({ 'customerName': 1 });
 };
 
 export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersList: CustomerProps[]): CustomerProps[] | [] => {
@@ -25,7 +25,7 @@ export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersLis
    * @returns only the customers of BB where the user has joined the discord
    */
 	const guildIds = guildsList.map(({ id }) => id);
-	const filterGuilds = customersList.filter(({ CustomerId }) => guildIds.includes(CustomerId));
+	const filterGuilds = customersList.filter(({ customerId }) => guildIds.includes(customerId));
 	return filterGuilds;
 };
 

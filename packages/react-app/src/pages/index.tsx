@@ -7,7 +7,7 @@ const Index = (): JSX.Element => {
 	const { customer } = useContext(CustomerContext);
 	return (
 		<Layout
-			title={`${customer.CustomerName ?? 'DAO'} Bounty Board`}
+			title={`${customer.customerName ?? 'DAO'} Bounty Board`}
 		>
 			<Bounties />
 		</Layout>

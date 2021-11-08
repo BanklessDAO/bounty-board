@@ -25,10 +25,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
 	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
 	useEffect(() => {
 		// update the global theme when the customer changes 
-		const { Customization } = customer;
+		const { customization } = customer;
 		let newTheme = baseTheme;
-		if (Customization) {
-			newTheme = customizeTheme(Customization);
+		if (customization) {
+			newTheme = customizeTheme(customization);
 		}
 		setTheme(newTheme);
 	}, [customer]);
