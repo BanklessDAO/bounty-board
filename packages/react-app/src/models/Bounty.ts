@@ -7,7 +7,7 @@ export interface BountyBoardProps {
   title: string
   description: string
   criteria: string
-	customerId: string
+	CustomerId: string
   reward: {
     currency: string
     amount: number
@@ -49,7 +49,7 @@ const BountyBoardSchema = new mongoose.Schema({
 
 		type: String,
 	},
-	customerId: {
+	CustomerId: {
 		/* the DAO under which this bounty belongs */
 
 		type: String,

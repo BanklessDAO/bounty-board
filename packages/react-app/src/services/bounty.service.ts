@@ -113,7 +113,7 @@ export const filterCustomerId = (query: FilterQuery, customerId?: string): Filte
 	/**
 	 * Remove bounties not relating to the currently selected DAO
 	 */
-	query.customerId = customerId ?? BANKLESS.CustomerId;
+	query.CustomerId = customerId ?? BANKLESS.CustomerId;
 	return query;
 };
 

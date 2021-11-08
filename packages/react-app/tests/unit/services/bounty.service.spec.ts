@@ -1,6 +1,6 @@
 import Bounty from '../../../src/models/Bounty';
 import { FilterParams, SortParams } from '../../../src/types/Filter';
-import { NextApiQuery } from '../../../src/types/Queries';
+import { FilterQuery, NextApiQuery } from '../../../src/types/Queries';
 import * as service from '../../../src/services/bounty.service';
 
 describe('Testing the bounty service', () => {
@@ -136,9 +136,9 @@ describe('Testing the bounty service', () => {
 				$lte: 100,
 				asc: true,
 			};
-			const expected = {
+			const expected: FilterQuery = {
 				status: 'Open',
-				customerId: 'testId',
+				CustomerId: 'testId',
 				$text: {
 					$search: 'Test',
 				},
