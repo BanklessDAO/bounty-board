@@ -3,19 +3,19 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a4"
     },
-    "CustomerId":"834499078434979890",
-    "CustomerName":"BanklessDAO"
+    "customerId":"834499078434979890",
+    "customerName":"BanklessDAO"
   },
   {
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a5"
     },    
-    "CustomerId":"402910780124561410",
-    "CustomerName":"Compound",
-    "ApplicableRoles" : [ ],
-    "Customization":{
-      "Logo":"demo/compound.png",
-      "Colors":{
+    "customerId":"402910780124561410",
+    "customerName":"Compound",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"demo/compound.png",
+      "colors":{
         "background":{
           "light":"#0AA3D8",
           "dark":"#0A16D8"
@@ -29,12 +29,12 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a6"
     },
-    "CustomerId":"845400066532704256",
-    "CustomerName":"Coordinape",
-    "ApplicableRoles" : [ ],
-    "Customization":{
-      "Logo":"./demo/coordinape.png",
-      "Colors":{
+    "customerId":"845400066532704256",
+    "customerName":"Coordinape",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"./demo/coordinape.png",
+      "colors":{
         "background":{
           "light":"blue.200",
           "dark":"blue.800"
@@ -48,12 +48,12 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a7"
     },    
-    "CustomerId":"718590743446290492",
-    "CustomerName":"UMA",
-    "ApplicableRoles" : [ ],
-    "Customization":{
-      "Logo":"demo/uma.png",
-      "Colors":{
+    "customerId":"718590743446290492",
+    "customerName":"UMA",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"demo/uma.png",
+      "colors":{
         "background":{
           "light":"red.200",
           "dark":"red.800"
@@ -67,12 +67,12 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a8"
     },    
-    "CustomerId":"402910780129999",
-    "CustomerName":"Should Not See",
-    "ApplicableRoles" : [ ],
-    "Customization":{
-      "Logo":"",
-      "Colors":{
+    "customerId":"402910780129999",
+    "customerName":"Should Not See",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"",
+      "colors":{
         "background":{
           "light":"#0AA3D8",
           "dark":"#0A16D8"

@@ -4,7 +4,7 @@
         "$oid": "10f6585b453e70eed340e8e3"
       }
       ,
-      "CustomerId": "834499078434979890",
+      "customerId": "834499078434979890",
       "season": 1,
       "title": "Implement React Components for Filters",
       "description": "Description for new website landing page with specs",
@@ -62,7 +62,7 @@
       "_id": {
         "$oid": "20f6585b453e70eed340e8e3"
       },
-      "CustomerId": "834499078434979890",      
+      "customerId": "834499078434979890",      
       "season": 1,
       "title": "Implement Changes to the Bounty Board",
       "description": "Description for new website landing page with specs",
@@ -120,7 +120,7 @@
       "_id": {
         "$oid": "30f6585b453e70eed340e8e3"
       },
-      "CustomerId": "718590743446290492",      
+      "customerId": "718590743446290492",      
       "season": 1,
       "title": "Create Stunning NFT Artwork",
       "description": "Description for new website landing page with specs",
@@ -178,7 +178,7 @@
       "_id": {
         "$oid": "40f6585b453e70eed340e8e3"
       },
-      "CustomerId": "845400066532704256",      
+      "customerId": "845400066532704256",      
       "season": 1,
       "title": "Create new website landing page",
       "description": "Description for new website landing page with specs",
@@ -236,7 +236,7 @@
       "_id": {
         "$oid": "50f6585b453e70eed340e8e3"
       },
-      "CustomerId": "834499078434979890",      
+      "customerId": "834499078434979890",      
       "season": 1,
       "title": "Create logic to add Pagination to search filters",
       "description": "Description for new website landing page with specs",
@@ -294,7 +294,7 @@
       "_id": {
         "$oid": "60f6585b453e70eed340e8e3"
       },
-      "CustomerId": "834499078434979890",      
+      "customerId": "834499078434979890",      
       "season": 1,
       "title": "Create notes for one meeting",
       "description": "Description for new website landing page with specs",
