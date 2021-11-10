@@ -17,8 +17,9 @@ const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
 				mx="10"
 				mt="30"
 				mb="10"
-				justify="center"
 				transition="background 100ms linear"
+				align="center"
+				justify="center"
 				bg="primary"
 			>
 				<Box>
