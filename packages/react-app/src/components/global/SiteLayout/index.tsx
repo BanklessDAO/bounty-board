@@ -17,13 +17,12 @@ const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
 				mx="10"
 				mt="30"
 				mb="10"
-				align="center"
 				justify="center"
 				transition="background 100ms linear"
 				bg="primary"
 			>
 				<Box>
-					<Heading size="xl" as="h1">
+					<Heading size="xl" as="h1" textAlign="center">
 						{title}
 					</Heading>
 					{children}

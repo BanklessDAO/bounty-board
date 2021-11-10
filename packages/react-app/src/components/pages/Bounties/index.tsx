@@ -86,26 +86,26 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 				fontWeight="600"
 				gridGap="4"
 			>
-				{id ? (
-					<BountyCard {...bounties} />
-				) : (
-					<>
-						<Filters
-							status={status} setStatus={setStatus}
-							search={search} setSearch={setSearch}
-							lte={lte} setLte={setLte}
-							gte={gte} setGte={setGte}
-							sortBy={sortBy} setSortBy={setSortBy}
-							sortAscending={sortAscending} setSortAscending={setSortAscending}
-						/>
-						{(search || status) && bounties && paginatedBounties.length === 0 ?
-							<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
-								<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>
-							</Stack> :
-							<BountyAccordion bounties={paginatedBounties} />
-						}
-					</>
-				)}
+				{ id
+					? (<BountyCard {...bounties} />)
+					: (
+						<>
+							<Filters
+								status={status} setStatus={setStatus}
+								search={search} setSearch={setSearch}
+								lte={lte} setLte={setLte}
+								gte={gte} setGte={setGte}
+								sortBy={sortBy} setSortBy={setSortBy}
+								sortAscending={sortAscending} setSortAscending={setSortAscending}
+							/>
+							{(search || status) && bounties && paginatedBounties.length === 0 ?
+								<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
+									<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>
+								</Stack> :
+								<BountyAccordion bounties={paginatedBounties} />
+							}
+						</>
+					)}
 			</Stack>
 			{!id && (
 				<Stack justify="space-between" direction="row" mt={3}>

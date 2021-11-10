@@ -21,14 +21,12 @@
       },
       "createdAt": "2021-07-20T06:40:56.112Z",
       "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": [
-        {
+      "claimedBy": {
           "isDaoMember": false,
           "guildName": null,
           "discordHandle": "rick#5555",
           "discordId": "324423432343239764"
-        }
-      ],
+        },
       "claimedAt": "2021-07-20T07:00:31.166Z",
       "status": "Open",
       "statusHistory": [
@@ -79,14 +77,12 @@
       },
       "createdAt": "2021-07-20T06:40:56.112Z",
       "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": [
-        {
+      "claimedBy": {
           "isDaoMember": false,
           "guildName": null,
           "discordHandle": "rick#5555",
           "discordId": "324423432343239764"
-        }
-      ],
+        },
       "claimedAt": "2021-07-20T07:00:31.166Z",
       "status": "Completed",
       "statusHistory": [
@@ -137,14 +133,12 @@
       },
       "createdAt": "2021-07-20T06:40:56.112Z",
       "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": [
-        {
+      "claimedBy": {
           "isDaoMember": false,
           "guildName": null,
           "discordHandle": "rick#5555",
           "discordId": "324423432343239764"
-        }
-      ],
+        },
       "claimedAt": "2021-07-20T07:00:31.166Z",
       "status": "Open",
       "statusHistory": [
@@ -195,14 +189,12 @@
       },
       "createdAt": "2021-07-20T06:40:56.112Z",
       "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": [
-        {
+      "claimedBy": {
           "isDaoMember": false,
           "guildName": null,
           "discordHandle": "rick#5555",
           "discordId": "324423432343239764"
-        }
-      ],
+        },
       "claimedAt": "2021-07-20T07:00:31.166Z",
       "status": "In-Progress",
       "statusHistory": [
@@ -253,14 +245,12 @@
       },
       "createdAt": "2021-07-20T06:40:56.112Z",
       "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": [
-        {
+      "claimedBy": {
           "isDaoMember": false,
           "guildName": null,
           "discordHandle": "rick#5555",
           "discordId": "324423432343239764"
-        }
-      ],
+        },
       "claimedAt": "2021-07-20T07:00:31.166Z",
       "status": "In-Progress",
       "statusHistory": [
@@ -311,14 +301,12 @@
       },
       "createdAt": "2021-07-20T06:40:56.112Z",
       "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": [
-        {
+      "claimedBy": {
           "isDaoMember": false,
           "guildName": null,
           "discordHandle": "rick#5555",
           "discordId": "324423432343239764"
-        }
-      ],
+        },
       "claimedAt": "2021-07-20T07:00:31.166Z",
       "status": "In-Progress",
       "statusHistory": [

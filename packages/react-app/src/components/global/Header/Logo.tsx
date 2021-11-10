@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Image, Link as ChakraLink } from '@chakra-ui/react';
 import Link from 'next/link';
 

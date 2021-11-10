@@ -11,8 +11,8 @@ import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
 import { CustomerProps } from '../models/Customer';
 import 'styles/css/nprogress.css';
+import { CustomerContext, getDefaultCustomer } from '../context/CustomerContext';
 import { BANKLESS } from '../constants/Bankless';
-import { CustomerContext } from '../context/CustomerContext';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -24,6 +24,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
 	const [theme, setTheme] = useState(baseTheme);
 	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
 	useEffect(() => {
+		setCustomer(getDefaultCustomer());
+	}, []);
+	
+	useEffect(() => {
 		// update the global theme when the customer changes 
 		const { customization } = customer;
 		let newTheme = baseTheme;
@@ -31,6 +35,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
 			newTheme = customizeTheme(customization);
 		}
 		setTheme(newTheme);
+		localStorage.setItem('customer', JSON.stringify(customer));
+		console.debug({ localStorage });
 	}, [customer]);
 
 	return (

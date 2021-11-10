@@ -10,3 +10,11 @@ type CustomerContextProps = {
 export const CustomerContext = createContext<CustomerContextProps>({
 	customer: BANKLESS,
 });
+
+export const getDefaultCustomer = (): CustomerProps => {
+	if (typeof window !== 'undefined') {
+		const customer = localStorage.getItem('customer');
+		return customer ? JSON.parse(customer) : BANKLESS;
+	}
+	return BANKLESS;
+};
