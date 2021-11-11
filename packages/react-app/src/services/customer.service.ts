@@ -6,9 +6,9 @@ import { BANKLESS } from '../constants/Bankless';
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
 	 * @returns a single customer
-	 * @param id - the customer id number in the collections db
+	 * @param id - the customerId number in the collections db
 	 */
-	return Customer.findById(id);
+	return Customer.findOne({ customerId: id });
 };
 
 export const getCustomers = async (): Promise<CustomerProps[] | []> => {

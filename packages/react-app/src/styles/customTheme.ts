@@ -1,6 +1,6 @@
 import { theme, extendTheme, ChakraTheme, Colors } from '@chakra-ui/react';
 import { createBreakpoints, mode } from '@chakra-ui/theme-tools';
-import { Customization, LightDark, SupportedColorCustomizations } from '../models/Customer';
+import { CustomerProps, Customization, LightDark, SupportedColorCustomizations } from '../models/Customer';
 
 const breakpoints = createBreakpoints({
 	sm: '425px',
@@ -179,4 +179,16 @@ export const customizeTheme = (customization: Customization): Record<string, any
 	};
 	const newTheme = extendTheme(customTheme);
 	return newTheme;
+};
+
+export const updateThemeForCustomer = (
+	customer: CustomerProps,
+	setTheme: (t: typeof baseTheme) => void
+): void => {
+	let newTheme = baseTheme;
+	const { customization } = customer;
+	if (customization) {
+		newTheme = customizeTheme(customization);
+	}
+	setTheme(newTheme);
 };

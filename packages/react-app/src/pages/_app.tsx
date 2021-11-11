@@ -6,12 +6,12 @@ import { SessionProvider } from 'next-auth/react';
 import { DefaultSeo } from 'next-seo';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { customizeTheme, baseTheme } from '../styles/customTheme';
+import { baseTheme, updateThemeForCustomer } from '../styles/customTheme';
 import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
 import { CustomerProps } from '../models/Customer';
-import 'styles/css/nprogress.css';
-import { CustomerContext, getDefaultCustomer } from '../context/CustomerContext';
+import '../styles/css/nprogress.css';
+import { CustomerContext, getCustomerFromBountyId, setCustomerFromLocalStorage } from '../context/CustomerContext';
 import { BANKLESS } from '../constants/Bankless';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -23,20 +23,21 @@ const MotionBox = motion(Box);
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps): JSX.Element {
 	const [theme, setTheme] = useState(baseTheme);
 	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
+	const { id } = router.query;
+	console.debug('hi');
+	const customerFromId = getCustomerFromBountyId(id);
+
 	useEffect(() => {
-		setCustomer(getDefaultCustomer());
+		setCustomerFromLocalStorage(setCustomer);
 	}, []);
+
+	useEffect(() => {
+		if (customerFromId) setCustomer(customerFromId);
+	}, [customerFromId]);
 	
 	useEffect(() => {
-		// update the global theme when the customer changes 
-		const { customization } = customer;
-		let newTheme = baseTheme;
-		if (customization) {
-			newTheme = customizeTheme(customization);
-		}
-		setTheme(newTheme);
+		updateThemeForCustomer(customer, setTheme);
 		localStorage.setItem('customer', JSON.stringify(customer));
-		console.debug({ localStorage });
 	}, [customer]);
 
 	return (

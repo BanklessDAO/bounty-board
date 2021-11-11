@@ -19,7 +19,8 @@
  * On the client side:
  *  @setupFilesAfterEnv required for Enzyme testing
  *  @globals configures ts-jest to work with TSX files by extending the typescript config
- */
+ * @moduleNameMapper is used to replace static files like CSS
+ * */
 
 module.exports = {
   projects: [
@@ -39,6 +40,9 @@ module.exports = {
         },
       },
       testMatch: ["**/?(*.)+(spec|test).[tj]sx"],
+      moduleNameMapper: {
+        '^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts'
+      },
     }
   ]
 }
