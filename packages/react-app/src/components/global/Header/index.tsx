@@ -89,7 +89,7 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 	<Flex
 		// as="nav"
 		position="sticky"
-		top={0}
+		top="0px"
 		align="center"
 		justify="space-between"
 		wrap="wrap"

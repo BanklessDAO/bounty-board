@@ -40,59 +40,47 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 const BountySummary = ({
 	title,
 	description,
-	// reward,
 	status,
-}: // createdBy,
+}: // reward,
+//  createdBy
 BountyBoardProps): JSX.Element => (
 	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end">
-		<Box width={{ base: '100%', lg: '700px' }} align="left">
+		<Box width={{ base: '100vw', lg: '700px' }} align="left">
 			<Flex justifyContent="space-between" pr={{ base: '2', lg: '2' }}>
 				<Heading
 					w="100%"
 					flex="1"
-					fontSize={{ base: 26, lg: 28 }}
+					fontSize={{ base: 24, lg: 28 }}
 					mb={0}
-					// flex={{ base: 1, md: 0 }}
+					wordBreak="break-word"
 				>
 					{title}
 				</Heading>
 
-				<Box w="max" h="6">
-					<Flex
-						w="max"
-						h="100%"
-						px="3"
-						pt="0.15em"
-						borderRadius={100}
-						bgColor={
-							status === 'Open'
-								? 'Open'
-								: status === 'In-Review'
-									? 'In-Review'
-									: status === 'In-Progress'
-										? 'In-Progress'
-										: 'Completed'
-						}
-					>
-						{status}
-					</Flex>
-				</Box>
+				<Flex
+					display={{ base: 'none', lg: 'flex' }}
+					w="max"
+					h="6"
+					px="3"
+					pt="0.15em"
+					ml={{ base: 2, lg: 5 }}
+					borderRadius={100}
+					bgColor={
+						status === 'Open'
+							? 'Open'
+							: status === 'In-Review'
+								? 'In-Review'
+								: status === 'In-Progress'
+									? 'In-Progress'
+									: 'Completed'
+					}
+				>
+					{status}
+				</Flex>
 			</Flex>
-
-			{/* <Box
-				fontSize={20}
-				fontFamily="Calibre"
-				color={useColorModeValue('#5f606a', '#8b949e')}
-			>
-				{createdBy.discordHandle}
-				{' | '}
-				{reward.amount * reward.scale +
-					1 * Math.floor(Math.random() * 15000)}{' '}
-				{reward.currency}
-			</Box> */}
 			<Box
 				className="bounty-description"
-				mt={{ base: 2, lg: 2 }}
+				mt={{ base: 1, lg: 2 }}
 				fontSize={{ base: 22, lg: 21 }}
 				lineHeight={{ base: 1.3, lg: 1.3 }}
 				pr={{ base: 5, lg: 10 }}
@@ -100,6 +88,25 @@ BountyBoardProps): JSX.Element => (
 			>
 				{description}
 			</Box>
+			<Flex display={{ base: 'flex', lg: 'none' }} h="6" my={1}>
+				<Box
+					h="100%"
+					px="3"
+					pt="0.15em"
+					borderRadius={100}
+					bgColor={
+						status === 'Open'
+							? 'Open'
+							: status === 'In-Review'
+								? 'In-Review'
+								: status === 'In-Progress'
+									? 'In-Progress'
+									: 'Completed'
+					}
+				>
+					{status}
+				</Box>
+			</Flex>
 		</Box>
 	</Flex>
 );
@@ -140,7 +147,7 @@ const BountyDetails = ({
 			) : claimedBy ? (
 				<>
 					<Heading size="sm">Claimed By</Heading>
-					<DiscordStub name={claimedBy.discordHandle} />
+					<DiscordStub name={claimedBy?.discordHandle} />
 				</>
 			) : (
 				<>
@@ -182,7 +189,7 @@ export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
 		borderLeftWidth={{ base: 0, lg: 1 }}
 		borderRightWidth={{ base: 0, lg: 1 }}
 		borderRadius={{ lg: 10 }}
-		py={4}
+		pt={{ base: 3, lg: 4 }}
 		pb={2}
 		pl={{ base: 1.5, lg: 2 }}
 		mb={{ lg: 5 }}

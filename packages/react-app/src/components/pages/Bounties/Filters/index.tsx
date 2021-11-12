@@ -59,8 +59,9 @@ const SearchFilter = ({
 				<Input
 					h="100%"
 					pl="14"
-					fontSize="18"
-					pt="1.5"
+					fontSize="20"
+					// letterSpacing=".3px"
+					pt=".5rem"
 					borderLeftRadius="100"
 					outline="none"
 					boxShadow="none"
@@ -119,11 +120,10 @@ const SearchFilter = ({
 					>
 						<Box
 							position="absolute"
-							top="0.05rem"
+							top="-0.38rem"
 							right="1.3rem"
 							w="3"
 							h="3"
-							mt="-2"
 							bgColor={useColorModeValue('#FFF', '#121212')}
 							borderTopWidth={1}
 							borderLeftWidth={1}
@@ -133,14 +133,14 @@ const SearchFilter = ({
 						{options.map((option: any, key: any) => (
 							<Flex
 								key={key}
-								h="10"
-								fontSize="18"
+								h={{ base: '10', lg: '9' }}
+								fontSize={{ base: '18', lg: '16' }}
 								fontFamily="Calibre Bold"
 								fontWeight="900"
 								alignItems="center"
 								pl="5"
-								pr="10"
-								pt="2"
+								pr="8"
+								pt="1.5"
 								_hover={{
 									bgColor: useColorModeValue('#FFF', '#424242'),
 								}}

@@ -78,6 +78,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 				fontSize="sm"
 				fontWeight="600"
 				gridGap={{ lg: '10' }}
+				mx={0}
 			>
 				{id ? (
 					<BountyCard {...bounties} />
@@ -97,30 +98,34 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 							sortAscending={sortAscending}
 							setSortAscending={setSortAscending}
 						/>
-						{(search || status) &&
-						bounties &&
-						paginatedBounties.length === 0 ? (
-								<Stack
-									borderWidth={1}
-									borderRadius={10}
-									width={{ base: '95vw', lg: '700px' }}
-									textalign="center"
-									direction="row"
-									justify="center"
-									align="center"
-								>
-									<Text fontSize="lg">Found </Text>
-									<Text fontSize="lg" fontFamily="mono" fontWeight="bold">
-									0
-									</Text>
-									<Text fontSize="lg"> matching results</Text>
-								</Stack>
-							) : (
-								<Flex direction="column">
-									<BountyAccordion bounties={bounties} />
-									<SkeletonLoader />
-								</Flex>
-							)}
+						<Flex direction="column">
+							{(search || status) &&
+							bounties &&
+							paginatedBounties.length === 0 ? (
+									<Stack
+										mt={10}
+										h="40"
+										borderWidth={1}
+										borderRadius={10}
+										width={{ base: '100vw', lg: '700px' }}
+										textalign="center"
+										direction="row"
+										justify="center"
+										align="center"
+									>
+										<Text fontSize="lg">Found </Text>
+										<Text fontSize="lg" fontFamily="mono" fontWeight="bold">
+										0
+										</Text>
+										<Text fontSize="lg"> matching results</Text>
+									</Stack>
+								) : (
+									<>
+										<BountyAccordion bounties={bounties} />
+										{paginatedBounties === undefined ? <SkeletonLoader /> : null}
+									</>
+								)}
+						</Flex>
 					</>
 				)}
 			</Stack>
