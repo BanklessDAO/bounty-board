@@ -9,7 +9,7 @@ const ThemeToggle = (): JSX.Element => {
 			{/* Default to dark mode*/}
 			<Button
 				onClick={toggleColorMode}
-				bg={colorMode === 'light' ? 'gray.300' : 'gray.700'}
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 			>
 				{colorMode === 'light' ? <RiMoonFill /> : <RiSunLine />}
 			</Button>

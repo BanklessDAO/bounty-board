@@ -1,10 +1,11 @@
-import { Button, Stack, Text } from '@chakra-ui/react';
+import { Button, Stack, Text, useColorMode } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
 import useSWR from 'swr';
 import { BountyCard } from './Bounty';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Filters from './Filters';
 import useDebounce from '../../../hooks/useDebounce';
+import { CustomerContext } from '../../../context/CustomerContext';
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -20,7 +21,7 @@ const fetcher = (url: string) =>
 const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
 	const [page, setPage] = useState(0);
-	const [status, setStatus] = useState('');
+	const [status, setStatus] = useState('Open');
 	const [search, setSearch] = useState('');
 	const [gte, setGte] = useState(0);
 	// how to handle the lte === 0 case?
@@ -28,6 +29,10 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const [sortBy, setSortBy] = useState('');
 	const [sortAscending, setSortAscending] = useState(true);
 	const debounceSearch = useDebounce(search, 500, true);
+	const { colorMode } = useColorMode();
+
+	const { customer } = useContext(CustomerContext);
+	const { customerId } = customer;
 
 	const maxPages = () => {
 		if (!bounties) return 0;
@@ -48,10 +53,17 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 		window.scrollTo(0, 0);
 	};
 
+	let dynamicUrl = '/api/bounties';
+	dynamicUrl += `?status=${status === '' ? 'All' : status}`;
+	dynamicUrl += `&search=${debounceSearch}`;
+	dynamicUrl += `&lte=${lte}`;
+	dynamicUrl += `&gte=${gte}`;
+	dynamicUrl += `&sortBy=${sortBy}`;
+	dynamicUrl += `&asc=${sortAscending}`;
+	dynamicUrl += `&customerId=${customerId}`;
+		
 	const { data: bounties, error } = useSWR(
-		id
-			? `/api/bounties/${id}`
-			: `/api/bounties?status=${status}&search=${debounceSearch}&lte=${lte}&gte=${gte}&sortBy=${sortBy}&asc=${sortAscending}`,
+		id ? `/api/bounties/${id}` : dynamicUrl,
 		fetcher
 	);
 
@@ -74,26 +86,26 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 				fontWeight="600"
 				gridGap="4"
 			>
-				{id ? (
-					<BountyCard {...bounties} />
-				) : (
-					<>
-						<Filters
-							status={status} setStatus={setStatus}
-							search={search} setSearch={setSearch}
-							lte={lte} setLte={setLte}
-							gte={gte} setGte={setGte}
-							sortBy={sortBy} setSortBy={setSortBy}
-							sortAscending={sortAscending} setSortAscending={setSortAscending}
-						/>
-						{(search || status) && bounties && paginatedBounties.length === 0 ?
-							<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
-								<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>
-							</Stack> :
-							<BountyAccordion bounties={paginatedBounties} />
-						}
-					</>
-				)}
+				{ id
+					? (<BountyCard {...bounties} />)
+					: (
+						<>
+							<Filters
+								status={status} setStatus={setStatus}
+								search={search} setSearch={setSearch}
+								lte={lte} setLte={setLte}
+								gte={gte} setGte={setGte}
+								sortBy={sortBy} setSortBy={setSortBy}
+								sortAscending={sortAscending} setSortAscending={setSortAscending}
+							/>
+							{(search || status) && bounties && paginatedBounties.length === 0 ?
+								<Stack borderWidth={3} borderRadius={10} width={{ base: '95vw', lg: '700px' }} textalign="center" direction="row" justify="center" align="center">
+									<Text fontSize="lg">Found </Text><Text fontSize="lg" fontFamily="mono" fontWeight="bold">0</Text><Text fontSize="lg"> matching results</Text>
+								</Stack> :
+								<BountyAccordion bounties={paginatedBounties} />
+							}
+						</>
+					)}
 			</Stack>
 			{!id && (
 				<Stack justify="space-between" direction="row" mt={3}>
@@ -101,7 +113,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 						p={5}
 						disabled={page === 0}
 						size="sm"
-						colorScheme="teal"
+						bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 						onClick={decrementPage}
 					>
             &larr; Previous Page
@@ -110,7 +122,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 						p={5}
 						disabled={page === maxPages() - 1 || bounties && paginatedBounties.length === 0}
 						size="sm"
-						colorScheme="teal"
+						bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 						onClick={incrementPage}
 					>
             Next Page &rarr;

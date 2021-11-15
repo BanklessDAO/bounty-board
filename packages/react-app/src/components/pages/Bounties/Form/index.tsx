@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import React, { useEffect } from 'react';
@@ -109,7 +109,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 	}
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(onSubmit as SubmitHandler<JSON>)}>
 			<FormControl isInvalid={errors.title} mb={5}>
 				<FormLabel htmlFor="title">Title</FormLabel>
 				<Input id="title" placeholder="title" {...register('title')} />

@@ -10,6 +10,8 @@
     "build:prod": "yarn workspace @bounty-board/react-app build:prod",
     "lint": "yarn workspace @bounty-board/react-app lint",
     "test": "yarn workspace @bounty-board/react-app test",
+    "test:unit": "yarn workspace @bounty-board/react-app test:unit",
+    "test:cov": "yarn workspace @bounty-board/react-app test:cov",
     "react-app:lint-staged": "yarn workspace @bounty-board/react-app lint-staged",
     "react-app:type-check": "yarn workspace @bounty-board/react-app type-check",
     "react-app:format": "yarn workspace @bounty-board/react-app format",

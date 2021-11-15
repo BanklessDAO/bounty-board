@@ -22,7 +22,9 @@
     "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve",
     "export": "next export",
     "lint": "eslint src --ext js,jsx,ts,tsx",
-    "format": "eslint src --ext js,jsx,ts,tsx --fix"
+    "format": "eslint src --ext js,jsx,ts,tsx --fix",
+    "test:unit": "jest",
+    "test:cov": "jest --coverage"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
@@ -37,17 +39,12 @@
     "@fontsource/lexend": "^4.5.0",
     "@hookform/resolvers": "^2.7.1",
     "@netlify/plugin-nextjs": "^3.8.0",
-    "@types/node": "^16.4.7",
-    "@types/nprogress": "^0.2.0",
-    "@types/react": "^17.0.14",
-    "@typescript-eslint/eslint-plugin": "^4.28.3",
     "env-cmd": "^10.1.0",
-    "eslint": "^7.30.0",
-    "eslint-config-next": "^11.0.1",
     "framer-motion": "^4.1.17",
     "lint-staged": "^11.0.0",
     "mongoose": "^5.13.4",
     "next": "^11.0.0",
+    "next-auth": "4.0.0-next.26",
     "next-seo": "^4.26.0",
     "nprogress": "^0.2.0",
     "react": "^17.0.2",
@@ -55,11 +52,33 @@
     "react-hook-form": "^7.12.2",
     "react-icons": "^4.2.0",
     "swr": "^0.5.6",
-    "typescript": "^4.3.5",
     "yup": "^0.32.9"
   },
   "engines": {
     "yarn": "1.x",
     "node": ">=14.x.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "@types/enzyme": "^3.10.10",
+    "@types/jest": "^27.0.2",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
+    "@types/next-auth": "^3.15.0",
+    "@types/node": "^16.4.7",
+    "@types/nprogress": "^0.2.0",
+    "@types/react": "^17.0.14",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",    
+    "discord-api-types": "^0.24.0",
+    "enzyme": "^3.11.0",
+    "enzyme-to-json": "^3.6.2",
+    "eslint": "^7.30.0",
+    "eslint-config-next": "^11.0.1",    
+    "jest": "^27.3.1",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "react-test-utils": "^0.0.1",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.3.5"
   }
 }

@@ -21,9 +21,12 @@ export default async function handler(
 	case 'GET':
 		/* Get a model by its ID */
 		try {
+			if (id.length !== 24) {
+				return res.status(404).json({ success: false });
+			}
 			const bounty = await Bounty.findById(id).exec();
 			if (!bounty) {
-				return res.status(400).json({ success: false });
+				return res.status(404).json({ success: false });
 			}
 			res.status(200).json({ success: true, data: bounty });
 		} catch (error) {
