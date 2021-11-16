@@ -1,0 +1,85 @@
+[
+  {
+    "_id" : {
+      "$oid": "616f00ae05026959ede9a3a4"
+    },
+    "customerId":"834499078434979890",
+    "customerName":"BanklessDAO"
+  },
+  {
+    "_id" : {
+      "$oid": "616f00ae05026959ede9a3a5"
+    },    
+    "customerId":"402910780124561410",
+    "customerName":"Compound",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"demo/compound.png",
+      "colors":{
+        "background":{
+          "light":"#0AA3D8",
+          "dark":"#0A16D8"
+        },
+        "primary":"green",
+        "Open":"yellow"
+      }
+    }
+  },
+  {
+    "_id" : {
+      "$oid": "616f00ae05026959ede9a3a6"
+    },
+    "customerId":"845400066532704256",
+    "customerName":"Coordinape",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"./demo/coordinape.png",
+      "colors":{
+        "background":{
+          "light":"blue.200",
+          "dark":"blue.800"
+        },
+        "primary":"#0AA3D8",
+        "Open":"blue"
+      }
+    }
+  },
+  {
+    "_id" : {
+      "$oid": "616f00ae05026959ede9a3a7"
+    },    
+    "customerId":"718590743446290492",
+    "customerName":"UMA",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"demo/uma.png",
+      "colors":{
+        "background":{
+          "light":"red.200",
+          "dark":"red.800"
+        },
+        "primary":"#cb5c5c",
+        "Open":"blue"
+      }
+    }
+  },
+  {
+    "_id" : {
+      "$oid": "616f00ae05026959ede9a3a8"
+    },    
+    "customerId":"402910780129999",
+    "customerName":"Should Not See",
+    "applicableRoles" : [ ],
+    "customization":{
+      "logo":"",
+      "colors":{
+        "background":{
+          "light":"#0AA3D8",
+          "dark":"#0A16D8"
+        },
+        "primary":"green",
+        "Draft":"yellow"
+      }
+    }
+  }
+]
