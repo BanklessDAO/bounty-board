@@ -11,11 +11,18 @@ const breakpoints = createBreakpoints({
 });
 
 export const baseTheme = extendTheme({
+	styles: {
+		global: (props: any) => ({
+			body: {
+				bg: mode('#FFF', '#121212')(props),
+			},
+		}),
+	},
 	fonts: {
 		...theme.fonts,
-		heading: `'Inter', ${theme.fonts.heading}`,
-		body: `'Inter', ${theme.fonts.body}`,
-		mono: 'Menlo, monospace',
+		heading: `'Calibre Bold', ${theme.fonts.heading}`,
+		body: `'Calibre', ${theme.fonts.body}`,
+		mono: 'Calibre, monospace',
 	},
 	fontSizes: {
 		xs: '0.75rem',
@@ -35,10 +42,10 @@ export const baseTheme = extendTheme({
 	breakpoints,
 	colors: {
 		...theme.colors,
-		Open: theme.colors.blue,
-		'In-Review': theme.colors.purple,
-		'In-Progress': theme.colors.green,
-		Completed: theme.colors.green,
+		Open: theme.colors.green[600],
+		'In-Review': theme.colors.orange[600],
+		'In-Progress': theme.colors.purple[600],
+		Completed: theme.colors.cyan[600],
 		Done: theme.colors.green,
 		Deleted: theme.colors.red,
 		Draft: theme.colors.gray,
@@ -92,7 +99,8 @@ const shadeHexColor = (color: string, percent: number): string => {
 	const f = parseInt(color.slice(1), 16);
 	const t = percent < 0 ? 0 : 255;
 	const p = percent < 0 ? percent * -1 : percent;
-	const R = f >> 16, G = f >> 8 & 0x00FF;
+	const R = f >> 16;
+	const G = f >> 8 & 0x00FF;
 	const B = f & 0x0000FF;
 	const output = '#' + (
 		0x1000000 + (Math.round((t - R) * p) + R)
