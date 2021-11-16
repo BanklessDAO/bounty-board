@@ -4,6 +4,6 @@ import { CustomerProps } from '../models/Customer';
  */
 export const BANKLESS: CustomerProps = {
 	customerName: 'BanklessDAO',
-	customerId: '834499078434979890',
+	customer_id: '834499078434979890',
 	customization: { logo: './logo.png' },
 };

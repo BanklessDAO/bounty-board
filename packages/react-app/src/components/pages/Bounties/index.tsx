@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Filters from './Filters';
 import useDebounce from '../../../hooks/useDebounce';
 import { CustomerContext } from '../../../context/CustomerContext';
+import { BANKLESS } from '../../../constants/Bankless';
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -32,7 +33,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const { colorMode } = useColorMode();
 
 	const { customer } = useContext(CustomerContext);
-	const { customerId } = customer;
+	const { customer_id } = customer;
 
 	const maxPages = () => {
 		if (!bounties) return 0;
@@ -60,7 +61,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	dynamicUrl += `&gte=${gte}`;
 	dynamicUrl += `&sortBy=${sortBy}`;
 	dynamicUrl += `&asc=${sortAscending}`;
-	dynamicUrl += `&customerId=${customerId}`;
+	dynamicUrl += `&customer_id=${customer_id ?? BANKLESS.customer_id}`;
 		
 	const { data: bounties, error } = useSWR(
 		id ? `/api/bounties/${id}` : dynamicUrl,

@@ -4,7 +4,7 @@ import * as context from '../../../src/context/CustomerContext';
 describe('Testing the customer context', () => {
 	const setCustomer = jest.fn();
 	const customer: CustomerProps = {
-		customerId: '1',
+		customer_id: '1',
 		customerName: 'Test Customer',
 	};
 

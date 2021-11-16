@@ -11,10 +11,10 @@ describe('Testing the bounty service', () => {
 			search: 'search',
 			lte: '1',
 			gte: '1',
-			customerId: 'customerId',
+			customer_id: 'customer_id',
 		};
     
-		it('Extracts status, search, lte, gte, customerId from the query string', () => {
+		it('Extracts status, search, lte, gte, customer_id from the query string', () => {
 			const filters = service.getFilters(query);
 			const { $lte, $gte, ...rest } = filters;
 			expect(Object.keys(filters))
@@ -132,13 +132,13 @@ describe('Testing the bounty service', () => {
 			const filters: FilterParams = {
 				status: 'Open',
 				search: 'Test',
-				customerId: 'testId',
+				customer_id: 'testId',
 				$lte: 100,
 				asc: true,
 			};
 			const expected: FilterQuery = {
 				status: 'Open',
-				customerId: 'testId',
+				customer_id: 'testId',
 				$text: {
 					$search: 'Test',
 				},

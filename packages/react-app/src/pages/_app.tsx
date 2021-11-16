@@ -24,7 +24,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
 	const [theme, setTheme] = useState(baseTheme);
 	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
 	const { id } = router.query;
-	console.debug('hi');
 	const customerFromId = getCustomerFromBountyId(id);
 
 	useEffect(() => {

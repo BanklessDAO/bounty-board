@@ -36,7 +36,7 @@ paths:
           description: Not authorized to create customers
       tags:
         - Admin Actions
-  '/v1/customers/{customerId}':
+  '/v1/customers/{customer_id}':
     put:
       produces:
         - application/json
@@ -284,7 +284,7 @@ definitions:
     properties:
       _id:
         type: string
-      customerId:
+      customer_id:
         type: string
         description: (discord server id)
       title:
@@ -376,7 +376,7 @@ definitions:
   Customer:
     type: object
     properties:
-      customerId:
+      customer_id:
         type: string
       customerName:
         type: string

@@ -2,11 +2,11 @@ import { CustomerProps } from '../../src/models/Customer';
 
 export const customers: CustomerProps[] = [
 	{
-		customerId: '834499078434979890',
+		customer_id: '834499078434979890',
 		customerName: 'BanklessDAO',
 	},
 	{
-		customerId: '402910780124561410',
+		customer_id: '402910780124561410',
 		customerName: 'Compound',
 		customization: {
 			logo: 'https://cryptologos.cc/logos/compound-comp-logo.png?v=014',
@@ -21,7 +21,7 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		customerId: '845400066532704256',
+		customer_id: '845400066532704256',
 		customerName: 'Coordinape',
 		customization: {
 			logo: 'https://coordinape.com/imgs/logo/logo232.png',
@@ -36,7 +36,7 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		customerId: '718590743446290492',
+		customer_id: '718590743446290492',
 		customerName: 'UMA',
 		customization: {
 			logo: 'https://umaproject.org/assets/images/UMA_square_red_logo.png',
@@ -51,7 +51,7 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		customerId: '402910780129999',
+		customer_id: '402910780129999',
 		customerName: 'Should Not See',
 		customization: {
 			logo: '',
