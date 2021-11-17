@@ -3,7 +3,6 @@ import {
 	AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
-	Avatar,
 	Box,
 	Button,
 	Flex,
@@ -12,12 +11,15 @@ import {
 	Heading,
 	Tag,
 	TagLabel,
+	Stack,
 	Text,
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
 
 import { BountyBoardProps } from '../../../../models/Bounty';
 import { discordChannelUrl } from '../../../../constants/discordInfo';
+import Link from 'next/link';
+import ColorModeButton from '../../../../components/parts/ColorModeButton';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -27,7 +29,6 @@ const Status = ({ indication }: { indication: string }): JSX.Element => (
 
 const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
-		<Avatar size="sm" src="https://bit.ly/broken-link" />
 		<Text fontSize="md" color="steelblue">
       @{name}
 		</Text>
@@ -71,19 +72,6 @@ const BountySummary = ({
 			textAlign={{ base: 'left', md: 'right' }}
 			pr={7}
 		>
-			{/* {guilds &&
-            guilds.map((guild: string) => (
-              <Badge
-                key={guild}
-                borderRadius="10"
-                _notFirst={{ marginLeft: '10px' }}
-                mb={2}
-                py={1}
-                px={3}
-              >
-                {guild}
-              </Badge>
-            ))} */}
 		</Box>
 	</Flex>
 );
@@ -110,10 +98,14 @@ const BountyDetails = ({
 			<Heading size="sm">Done Criteria</Heading>
 			<Text>{criteria}</Text>
 		</GridItem>
-		<GridItem>
-			<Heading size="sm">Requested By</Heading>
-			<DiscordStub name={createdBy.discordHandle} />
-		</GridItem>
+		{
+			createdBy
+				? <GridItem>
+					<Heading size="sm">Requested By</Heading>
+					<DiscordStub name={createdBy.discordHandle} />
+				</GridItem>
+				: null
+		}
 		<GridItem>
 			{status && status.toLowerCase() === 'draft' ? (
 				<AccessibleLink href={`${_id}/edit`}>
@@ -146,18 +138,39 @@ const BountyDetails = ({
 	</Grid>
 );
 
-export const BountyCard = (props: BountyBoardProps): JSX.Element => (
-	<Box width={{ base: '95vw', lg: '700px' }}>
-		<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
-			<Box pb={5}>
-				<BountySummary {...props} />
+const BountyNotFound = (): JSX.Element => (
+	<Stack align="center" justify="center" h="400px">
+		<Heading size="4xl" align="center">
+			<strong>404</strong>
+		</Heading>
+		<Box>
+			<Heading size="xl">Bounty not found</Heading>
+		</Box>
+		<Link href='/'>
+			<Box my="5">
+				<ColorModeButton>Go Back</ColorModeButton>
 			</Box>
-			<Box mx={2}>
-				<BountyDetails {...props} />
+		</Link>
+	</Stack>
+);
+
+export const BountyCard = (props: BountyBoardProps): JSX.Element => {
+	if (!props || Object.entries(props).length === 0) {
+		return (<BountyNotFound />);
+	}
+	return (
+		<Box width={{ base: '95vw', lg: '700px' }}>
+			<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
+				<Box pb={5}>
+					<BountySummary {...props} />
+				</Box>
+				<Box mx={2}>
+					<BountyDetails {...props} />
+				</Box>
 			</Box>
 		</Box>
-	</Box>
-);
+	);
+};
 
 export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>

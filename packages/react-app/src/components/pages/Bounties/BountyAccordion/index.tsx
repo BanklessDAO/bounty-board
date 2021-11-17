@@ -31,6 +31,8 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
 						claimedBy={claimedBy}
 						reward={reward}
 						status={status}
+						// placeholder
+						customer_id={''}
 						discordMessageId={discordMessageId}
 					/>
 				)

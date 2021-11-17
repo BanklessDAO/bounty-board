@@ -1,22 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
-import Bounty from '../../../models/Bounty';
+import { getFilters, getSort, getBounties } from '../../../services/bounty.service';
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ): Promise<void> {
 	const { method } = req;
-	const status: string = req.query.status as string;
-	const search: string = req.query.search as string;
+	const filters = getFilters(req.query);
+	const sort = getSort(req.query);
 
 	await dbConnect();
 
 	switch (method) {
 	case 'GET':
 		try {
-			let bounties = [];
-			bounties = await handleFilters(status, search);
+			const bounties = await getBounties(filters, sort);
 			res.status(200).json({ success: true, data: bounties });
 		} catch (error) {
 			res.status(400).json({ success: false });
@@ -28,19 +27,3 @@ export default async function handler(
 	}
 }
 
-const handleFilters = async (status: string, search: string): Promise<any> => {
-	let filterQuery: {status?: any, $text?: any};
-	if (status == null || status == '' || status == 'All') {
-		filterQuery = { status: ['Open', 'In-Progress', 'In-Review', 'Completed'] };
-	} else {
-		filterQuery = { status: status };
-	}
-
-	if (!(search == null || search == '')) {
-		filterQuery['$text'] = { $search: search };
-	}
-
-	const isEmpty: boolean = Object.values(filterQuery).every(x => x === null || x === '');
-	filterQuery = isEmpty ? {} : filterQuery;
-	return Bounty.find(filterQuery);
-};
