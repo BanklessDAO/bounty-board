@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0-beta3 (2021-10-08)
+
+1. Fix CI/CD for preview and production
+2. Add bounty filters
+
 ## 1.0.0-beta2 (2021-08-26)
 
 1. Use QA specific environment variables

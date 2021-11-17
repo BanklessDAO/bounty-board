@@ -4,9 +4,7 @@ import Bounty from '../../../models/Bounty';
 import DiscordUtils from '../../../utils/DiscordUtils';
 import { BountyCollection } from '../../../types/BountyCollection';
 
-const BOUNTY_BOARD_WEBHOOK_URI =
-	(process.env.BUILD_ENV === 'production' ? process.env.PROD_DISCORD_BOUNTY_BOARD_WEBHOOK :
-		process.env.DEV_DISCORD_BOUNTY_BOARD_WEBHOOK) || '';
+const BOUNTY_BOARD_WEBHOOK_URI = process.env.DISCORD_BOUNTY_BOARD_WEBHOOK || '';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -23,9 +21,12 @@ export default async function handler(
 	case 'GET':
 		/* Get a model by its ID */
 		try {
+			if (id.length !== 24) {
+				return res.status(404).json({ success: false });
+			}
 			const bounty = await Bounty.findById(id).exec();
 			if (!bounty) {
-				return res.status(400).json({ success: false });
+				return res.status(404).json({ success: false });
 			}
 			res.status(200).json({ success: true, data: bounty });
 		} catch (error) {

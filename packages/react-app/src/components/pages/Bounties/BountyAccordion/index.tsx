@@ -9,7 +9,7 @@ type BountyListProps = {
 const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
 	return (
 		<Accordion allowToggle allowMultiple width={{ base: '95vw', lg: '700px' }}>
-			{bounties.map(
+			{bounties && bounties.map(
 				({
 					_id,
 					title,
@@ -31,6 +31,8 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
 						claimedBy={claimedBy}
 						reward={reward}
 						status={status}
+						// placeholder
+						customer_id={''}
 						discordMessageId={discordMessageId}
 					/>
 				)
