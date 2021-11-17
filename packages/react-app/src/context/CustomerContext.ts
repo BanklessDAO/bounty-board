@@ -18,7 +18,7 @@ const fetcher = (url: string) => fetch(url)
 export const getCustomerFromBountyId = (bountyId: string | string[] | undefined): CustomerProps | undefined => {
 	/**
 		 * Chain useSWR hooks into a single function to fetch the customer, corresponding to the passed bounty id.
-		 * @param bountyId will have an associated customerId, which is then used to fetch the customer.
+		 * @param bountyId will have an associated customer_id, which is then used to fetch the customer.
 		 * @returns the fetched customer, or undefined if either the bountyId is undefined or the customer is undefined.  
 		 */
 	const { data: bounty } = useSWR<BountyBoardProps>(
@@ -26,7 +26,7 @@ export const getCustomerFromBountyId = (bountyId: string | string[] | undefined)
 		fetcher
 	);
 	const { data: customer } = useSWR<CustomerProps>(
-		bounty ? `/api/customers/${bounty.customerId}` : null,
+		bounty ? `/api/customers/${bounty.customer_id}` : null,
 		fetcher
 	);
 	return customer;

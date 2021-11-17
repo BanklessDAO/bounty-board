@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 export interface CustomerProps {
-    customerId: string;
+    customer_id: string;
     customerName: string;
     customization?: Customization;
     applicableRoles?: [] | string[];
@@ -42,7 +42,7 @@ export const CustomerSchema = new mongoose.Schema<CustomerProps>({
 	customerName: {
 		type: String,
 	},
-	customerId: {
+	customer_id: {
 		type: String,
 	},
 	applicableRoles: {

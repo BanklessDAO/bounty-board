@@ -1,0 +1,387 @@
+swagger: '2.0'
+info:
+  title: Bounty Board REST API
+  version: 0.1.0
+host: bountyboard.bankless.community
+basePath: /api
+schemes:
+  - https
+paths:
+  '/v1/customers':
+    get:
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Customer'
+        '404':
+          description: No Customer records found
+      tags:
+        - List
+    post:
+      produces:
+        - application/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Customer'
+        '400':
+          description: Could not create customer
+        '403':
+          description: Not authorized to create customers
+      tags:
+        - Admin Actions
+  '/v1/customers/{customer_id}':
+    put:
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Customer'
+        '400':
+          description: Could not edit customer
+        '403':
+          description: Not authorized to edit customers        
+        '404':
+          description: Customer id not found
+      tags:
+        - Admin Actions
+    delete:
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Delete successful
+        '400':
+          description: Could not delete customer
+        '403':
+          description: Not authorized to delete customers        
+        '404':
+          description: Customer id not found
+      tags:
+        - Admin Actions        
+  '/v1/customers/user':
+    get:
+      summary:
+        Get list of DAOs for a given user, who are also bankless customers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Customer'
+        '404':
+          description: No Customer records found
+      tags:
+        - View
+          
+  /v1/bounties:
+    get:
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Bounty'
+            type: array
+        '404':
+          description: No Bounty records found
+      tags:
+        - List
+      summary: Get Bounty records
+  '/v1/bounties/{bountyId}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Bounty'
+              
+        '404':
+          description: No Bounty records found
+      tags:
+        - View
+      summary: Get Bounty record for a given ID
+  '/v1/bounties/user/{discordId}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: discordId
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            items:
+              $ref: '#/definitions/Bounty'
+            type: array
+        '404':
+          description: No Bounty records found for the User
+      tags:
+        - View
+      summary: Get Bounty records related to the User in any way
+  /v1/bounties/create:
+    # why are we not just having POST, PUT, DELETE on the /bounties endpoint?
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateBountyRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/BountyPayloadResponse'
+        '403':
+          description: Invalid authorization
+        '409':
+          description: >-
+            Bounty matches an already existing one
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - Owner Actions
+      summary: Create a new Bounty.
+  '/v1/bounties/{bountyId}/remove':
+    delete:
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: An error has occurred
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '403':
+          description: Invalid authorization
+      tags:
+        - Owner Actions
+      summary: Delete an existing Bounty
+  '/v1/bounties/{bountyId}/update':
+    put:
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateBountyRequest'
+      responses:
+        '200':
+          description: Success
+        '403':
+          description: Invalid authorization
+      tags:
+        - Owner Actions
+      summary: Update an existing Bounty
+  '/v1/bounties/{bountyId}/complete':
+    put:
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+        '403':
+          description: Invalid authorization
+      tags:
+        - Owner Actions
+      summary: Complete an existing Bounty
+  # Hunter actions
+  /v1/bounties/{bountyId}/claim:
+    put:
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '403':
+          description: Invalid authorization
+        '404':
+          description: Endpoint error
+      tags:
+        - Hunter Actions
+      summary: Claim a Bounty.
+  /v1/bounties/{bountyId}/submit:
+    put:
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: bountyId
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubmitBountyRequest'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '403':
+          description: Invalid authorization
+        '404':
+          description: Endpoint error
+      tags:
+        - Hunter Actions
+      summary: Submit a Bounty.
+definitions:
+  Bounty:
+    properties:
+      _id:
+        type: string
+      customer_id:
+        type: string
+        description: (discord server id)
+      title:
+        type: string
+      description:
+        type: string
+      criteria:
+        type: string
+      reward:
+        $ref: '#/definitions/Reward'
+      # ... more bounty props ...
+    type: object
+  Reward:
+    properties:
+      amount:
+        type: integer
+      currency:
+        type: string
+      scale:
+        type: integer
+    type: object
+  CreateBountyRequest:
+    properties:
+      customer_id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      criteria:
+        type: string
+      reward:
+        $ref: '#/definitions/Reward'
+      dueAt: 
+        type: number
+      # ... more bounty props ...
+    type: object
+  UpdateBountyRequest:
+    properties:
+      customer_id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      criteria:
+        type: string
+      reward:
+        $ref: '#/definitions/Reward'
+      dueAt: 
+        type: number
+      # ... more bounty props ...
+    type: object
+  SubmitBountyRequest:
+    properties:
+      resultUrl:
+        type: string
+      notes:
+        type: string
+      message:
+        type: string
+    type: object
+  BountyPayloadResponse2:
+    $ref: '#/definitions/Bounty'
+  ErrorResponse:
+    properties:
+      errorCode:
+        type: integer
+      errorMsg:
+        type: string
+      extraInfo:
+        items:
+          properties:
+            key:
+              type: string
+            value:
+              type: object
+          type: object
+        type: array
+    type: object
+  Customization:
+    description: customization properties for the DAO
+    properties:
+      logo:
+        type: string
+      colors: 
+        type: object
+    type: object
+  Customer:
+    type: object
+    properties:
+      customer_id:
+        type: string
+      customerName:
+        type: string
+      customization:
+        $ref: '#/definitions/BountyPayloadResponse2'
+#securityDefinitions:
+  # TODO: Add the target auth here like Basic, OAuth, etc..
+x-components: {}

@@ -6,9 +6,9 @@ import { BANKLESS } from '../constants/Bankless';
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
 	 * @returns a single customer
-	 * @param id - the customerId number in the collections db
+	 * @param id - the customer_id number in the collections db
 	 */
-	return Customer.findOne({ customerId: id });
+	return Customer.findOne({ customer_id: id });
 };
 
 export const getCustomers = async (): Promise<CustomerProps[] | []> => {
@@ -25,7 +25,7 @@ export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersLis
    * @returns only the customers of BB where the user has joined the discord
    */
 	const guildIds = guildsList.map(({ id }) => id);
-	const filterGuilds = customersList.filter(({ customerId }) => guildIds.includes(customerId));
+	const filterGuilds = customersList.filter(({ customer_id }) => guildIds.includes(customer_id));
 	return filterGuilds;
 };
 

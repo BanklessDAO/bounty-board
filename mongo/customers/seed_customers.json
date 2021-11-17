@@ -3,14 +3,14 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a4"
     },
-    "customerId":"834499078434979890",
+    "customer_id":"834499078434979890",
     "customerName":"BanklessDAO"
   },
   {
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a5"
     },    
-    "customerId":"402910780124561410",
+    "customer_id":"402910780124561410",
     "customerName":"Compound",
     "applicableRoles" : [ ],
     "customization":{
@@ -29,7 +29,7 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a6"
     },
-    "customerId":"845400066532704256",
+    "customer_id":"845400066532704256",
     "customerName":"Coordinape",
     "applicableRoles" : [ ],
     "customization":{
@@ -48,7 +48,7 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a7"
     },    
-    "customerId":"718590743446290492",
+    "customer_id":"718590743446290492",
     "customerName":"UMA",
     "applicableRoles" : [ ],
     "customization":{
@@ -67,7 +67,7 @@
     "_id" : {
       "$oid": "616f00ae05026959ede9a3a8"
     },    
-    "customerId":"402910780129999",
+    "customer_id":"402910780129999",
     "customerName":"Should Not See",
     "applicableRoles" : [ ],
     "customization":{
