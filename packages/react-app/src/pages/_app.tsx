@@ -19,40 +19,6 @@ Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
-/* ---------Start Sentry.io installation--------- */
-const Sentry = require("@sentry/node");
-const Tracing = require("@sentry/tracing");
-
-/* to access SENTRY_DSN in .env file */
-require('dotenv').config()
-
-Sentry.init({
-	dsn: process.env.SENTRY_DSN,
-
-	// Set tracesSampleRate to 1.0 to capture 100%
-	// of transactions for performance monitoring.
-	// We recommend adjusting this value in production
-	tracesSampleRate: 1.0,
-});
-
-const transaction = Sentry.startTransaction({
-	op: "test",
-	name: "My First Test Transaction",
-});
-
-/* intentional error */
-setTimeout(() => {
-	try {
-	  foo();
-	} catch (e) {
-	  Sentry.captureException(e);
-	} finally {
-	  transaction.finish();
-	}
-}, 99);
-
-/* ---------End Sentry.io installation--------- */
-
 
 const MotionBox = motion(Box);
 
