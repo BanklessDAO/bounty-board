@@ -41,6 +41,7 @@ const customTheme = extendTheme({
 	breakpoints,
 	colors: {
 		...theme.colors,
+		primary: mode('#121212', '#FFF')(theme),
 		Open: theme.colors.green[600],
 		'In-Review': theme.colors.orange[600],
 		'In-Progress': theme.colors.purple[600],
