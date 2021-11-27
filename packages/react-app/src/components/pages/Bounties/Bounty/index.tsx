@@ -135,7 +135,7 @@ const BountyDetails = ({
 		</GridItem>
 		<GridItem>
 			<Heading size="sm">Requested By</Heading>
-			<DiscordStub name={createdBy.discordHandle} />
+			<DiscordStub name={createdBy?.discordHandle} />
 		</GridItem>
 		<GridItem>
 			{status && status.toLowerCase() === 'draft' ? (

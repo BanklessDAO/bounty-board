@@ -10,13 +10,13 @@ const breakpoints = createBreakpoints({
 });
 
 const customTheme = extendTheme({
-	styles: {
-		global: (props: any) => ({
-			body: {
-				bg: mode('#FFF', '#121212')(props),
-			},
-		}),
-	},
+	// styles: {
+	// 	global: (props: any) => ({
+	// 		body: {
+	// 			bg: mode('#FFF', '#121212')(props),
+	// 		},
+	// 	}),
+	// },
 	fonts: {
 		...theme.fonts,
 		heading: `'Calibre Bold', ${theme.fonts.heading}`,
