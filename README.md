@@ -138,6 +138,8 @@ If you're firing up a fresh instance of Mongo, you will need to seed the databas
 
 If you're adding from command line, you can use the mongoimport utility to import one of the JSON files in the `mongo/bounties` folder. 
 
+Note: As of MongoDB 4.4 mongoimport is now a part of the MongoDB Database Tools package and must be downloaded seperately. For installation see the [MongoDB Database Tools](https://docs.mongodb.com/database-tools/installation/installation/)
+
 ```bash
 $ mongoimport\
     --db bountyboard\
