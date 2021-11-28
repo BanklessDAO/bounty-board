@@ -1,45 +1,59 @@
 import mongoose from 'mongoose';
+import {
+	string,
+	number,
+	object,
+	array,
+	TypeOf,
+} from 'yup';
+
 
 /* Global typing for Bounties */
-export interface BountyBoardProps {
-  _id: any
-  season?: number
-  title: string
-  description: string
-  criteria: string
-	customer_id: string
-  reward: {
-    currency: string
-    amount: number
-    scale: number
-		amountWithoutScale: number
-  }
-  createdBy: {
-    discordHandle: string
-    discordId: string
-  }
-  createdAt?: string
-  dueAt?: string
-  discordMessageId?: string
-  status: string
-  statusHistory?: { status: string; setAt: string }[]
-  claimedBy?: {
-    discordHandle: string
-    discordId: string
-  }
-  claimedAt?: string
-  submissionNotes?: string
-  submissionUrl?: string
-  submittedAt?: string
-  submittedBy?: {
-    discordHandle: string
-    discordId: string
-  }
-  reviewedAt?: string
-  reviewedBy?: {
-    discordHandle: string
-    discordId: string
-  }
+export const BountySchema = object({
+	season: number().optional(),
+	title: string().required(),
+	description: string().required(),
+	criteria: string().required(),
+	customer_id: string().required(),
+	reward: object({
+		currency: string().required(),
+		amount: number().min(0).required(),
+		scale: number().required(),
+		amountWithoutScale: number().required(),
+	}).required(),
+	createdBy: object({
+		discordHandle: string().required(),
+		discordId: string().required(),
+	}).required(),
+	createdAt: string().optional(),
+	dueAt: string().optional(),
+	discordMessageId: string().optional(),
+	status: string().required(),
+	statusHistory: array(object({
+		status: string(),
+		setAt: string(),
+	})).optional(),
+	claimedBy: object({
+		discordHandle: string().optional(),
+		discordId: string().optional(),
+	}).optional(),
+	claimedAt: string().optional(),
+	submissionNotes: string().optional(),
+	submissionUrl: string().optional(),
+	submittedAt: string().optional(),
+	submittedBy: object({
+		discordHandle: string().required(),
+		discordId: string().required(),
+	}).required(),
+	reviewedAt: string().optional(),
+	reviewedBy: object({
+		discordHandle: string(),
+		discordId: string(),
+	}).optional(),
+});
+
+export interface BountyBoardProps extends TypeOf<typeof BountySchema> {
+	_id: any;
 }
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
