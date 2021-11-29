@@ -111,7 +111,7 @@ const SearchFilter = ({
 						position="absolute"
 						top="3.8rem"
 						right="0"
-						bgColor={useColorModeValue('#FFF', '#121212')}
+						bgColor="primary"
 						borderRadius={8}
 						borderWidth={1}
 						py={2}
@@ -123,7 +123,7 @@ const SearchFilter = ({
 							right="1.3rem"
 							w="3"
 							h="3"
-							bgColor={useColorModeValue('#FFF', '#121212')}
+							bgColor="primary"
 							borderTopWidth={1}
 							borderLeftWidth={1}
 							transform="rotate(45deg)"
@@ -141,7 +141,7 @@ const SearchFilter = ({
 								pr="8"
 								pt="1.5"
 								_hover={{
-									bgColor: useColorModeValue('#FFF', '#424242'),
+									bgColor: 'primary',
 								}}
 								onClick={(): void => setStatus(option.value)}
 								onBlur={(): void => setStatusFilterIsOpen(false)}

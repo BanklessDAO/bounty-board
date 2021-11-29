@@ -17,9 +17,7 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 		h="16"
 		px={5}
 		borderBottomWidth={1}
-		bg="Open"
-		zIndex={99999}
-		{...props}
+		bg="primary"
 		{...props}
 	>
 		{props.children}

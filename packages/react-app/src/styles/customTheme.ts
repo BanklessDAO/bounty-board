@@ -11,13 +11,13 @@ const breakpoints = createBreakpoints({
 });
 
 export const baseTheme = extendTheme({
-	styles: {
-		global: (props: any) => ({
-			body: {
-				bg: mode('#FFF', '#121212')(props),
-			},
-		}),
-	},
+	// styles: {
+	// 	global: (props: any) => ({
+	// 		body: {
+	// 			bg: mode('#FFF', '#121212')(props),
+	// 		},
+	// 	}),
+	// },
 	fonts: {
 		...theme.fonts,
 		heading: `'Calibre Bold', ${theme.fonts.heading}`,
@@ -42,6 +42,7 @@ export const baseTheme = extendTheme({
 	breakpoints,
 	colors: {
 		...theme.colors,
+		primary: mode('#121212', '#FFF')(theme),
 		Open: theme.colors.green[600],
 		'In-Review': theme.colors.orange[600],
 		'In-Progress': theme.colors.purple[600],
@@ -49,7 +50,6 @@ export const baseTheme = extendTheme({
 		Done: theme.colors.green,
 		Deleted: theme.colors.red,
 		Draft: theme.colors.gray,
-		primary: theme.colors.teal,
 	},
 	components: {
 		Heading: {
