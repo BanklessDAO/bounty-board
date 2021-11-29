@@ -144,7 +144,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 			</FormControl>
 
 			<Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-        Submit
+				Submit
 			</Button>
 		</form>
 	);

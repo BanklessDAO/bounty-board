@@ -6,13 +6,13 @@ import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
 import Logo from './Logo';
 import ThemeToggle from '../../parts/ThemeToggle';
 import AccessibleLink from '../../parts/AccessibleLink';
-import ColorModeButton from '../../parts/ColorModeButton';
+// import ColorModeButton from '../../parts/ColorModeButton';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
 );
 const MenuIcon = ({ color }: { color: string }) => (
-	<RiMenuFill size="2.5em" color={color} />
+	<RiMenuFill size="2em" color={color} />
 );
 
 const NavBar: React.FC = (props): JSX.Element => {
@@ -21,7 +21,7 @@ const NavBar: React.FC = (props): JSX.Element => {
 
 	return (
 		<NavBarContainer {...props}>
-			<Logo w="100px" />
+			<Logo />
 			<MenuToggle toggle={toggle} isOpen={isOpen} />
 			<MenuLinks isOpen={isOpen} />
 		</NavBarContainer>
@@ -32,8 +32,8 @@ const MenuToggle = ({
 	toggle,
 	isOpen,
 }: {
-  toggle: VoidFunction
-  isOpen: boolean
+	toggle: VoidFunction;
+	isOpen: boolean;
 }): JSX.Element => {
 	const fgColor = useColorModeValue('black', 'white');
 	return (
@@ -49,10 +49,10 @@ const MenuItem = ({
 	newTab,
 	...rest
 }: {
-  children?: React.ReactNode
-  isLast?: boolean
-  to: string
-  newTab?: boolean
+	children?: React.ReactNode;
+	isLast?: boolean;
+	to: string;
+	newTab?: boolean;
 }): JSX.Element => (
 	<AccessibleLink href={to} isExternal={newTab}>
 		<Text display="block" {...rest}>
@@ -78,7 +78,7 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
 			{/*  <ColorModeButton>Connect Wallet</ColorModeButton>{' '}*/}
 			{/* </MenuItem>*/}
 			<MenuItem to="https://bankless.community" newTab={true}>
-				<ColorModeButton>Join DAO</ColorModeButton>{' '}
+				{/* <ColorModeButton>Join DAO</ColorModeButton>{' '} */}
 			</MenuItem>
 			<ThemeToggle />
 		</Stack>
@@ -87,12 +87,16 @@ const MenuLinks = ({ isOpen }: { isOpen: boolean }): JSX.Element => (
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
 	<Flex
-		as="nav"
+		position="sticky"
+		top="0px"
 		align="center"
 		justify="space-between"
 		wrap="wrap"
 		w="100%"
-		p={8}
+		h="16"
+		px={5}
+		borderBottomWidth={1}
+		bg="primary"
 		{...props}
 	>
 		{props.children}

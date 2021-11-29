@@ -3,7 +3,7 @@ import Bounties from '../components/pages/Bounties';
 
 const Index = (): JSX.Element => {
 	return (
-		<Layout title="DAO Bounty Board">
+		<Layout>
 			<Bounties />
 		</Layout>
 	);
