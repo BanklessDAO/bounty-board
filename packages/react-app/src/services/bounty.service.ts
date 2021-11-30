@@ -1,10 +1,11 @@
-import Bounty, { BountyBoardProps } from '../models/Bounty';
-import { Query } from 'mongoose';
+import Bounty, { BountyCollection } from '../models/Bounty';
+import { Query, FilterQuery } from 'mongoose';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
-import { FilterQuery, NextApiQuery } from '../types/Queries';
+import { NextApiQuery } from '../types/Queries';
 import { BANKLESS } from '../constants/Bankless';
 
-type BountyQuery = Query<BountyBoardProps[], BountyBoardProps>;
+
+type BountyQuery = Query<BountyCollection[], BountyCollection>;
 
 export const getFilters = (query: NextApiQuery): FilterParams => {
 	/**
@@ -57,19 +58,19 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	return output;
 };
 
-export const filterStatus = (query: FilterQuery, status?: string): FilterQuery => {
+export const filterStatus = (query: FilterQuery<BountyCollection>, status?: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Pass status and append the corresponding status query to the query object
 	 */
 	if (status == null || status == '' || status == 'All' || status == undefined) {
-		query.status = ['Open', 'In-Progress', 'In-Review', 'Completed'];
+		query.status = { $in: ['Open', 'In-Progress', 'In-Review', 'Completed'] };
 	} else {
 		query.status = status;
 	}
 	return query;
 };
 
-export const filterSearch = (query: FilterQuery, search: string): FilterQuery => {
+export const filterSearch = (query: FilterQuery<BountyCollection>, search: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Pass any text search terms to the query object
 	 */
@@ -81,10 +82,10 @@ export const filterSearch = (query: FilterQuery, search: string): FilterQuery =>
 
 export const filterLessGreater = ({ by, query, $lte, $gte }: {
 	by: AcceptedSortOutputs;
-	query: FilterQuery;
+	query: FilterQuery<BountyCollection>;
 	$lte?: number;
 	$gte?: number;
-}): FilterQuery => {
+}): FilterQuery<BountyCollection> => {
 	/**
 	 * Filters the passed @param by according to a standardised filter query:
 	 * Filters are in terms of `by` <= @param $lte 
@@ -104,12 +105,12 @@ export const filterLessGreater = ({ by, query, $lte, $gte }: {
 	return query;
 };
 
-export const handleEmpty = (query: FilterQuery): FilterQuery | Record<string, unknown> => {
+export const handleEmpty = (query: FilterQuery<BountyCollection>): FilterQuery<BountyCollection> | Record<string, unknown> => {
 	const isEmpty: boolean = Object.values(query).every(x => x === null || x === '' || x === undefined);
 	return isEmpty ? {} : query;
 };
 
-export const filterCustomerId = (query: FilterQuery, customer_id?: string): FilterQuery => {
+export const filterCustomerId = (query: FilterQuery<BountyCollection>, customer_id?: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Remove bounties not relating to the currently selected DAO
 	 */
@@ -121,7 +122,8 @@ export const handleFilters = (filters: FilterParams): BountyQuery => {
 	/**
 	 * Construct the filter query and return query object from mongoose
 	 */
-	let filterQuery = {} as FilterQuery;
+	// let filterQuery = {} as FQ<BountyCollection>;
+	let filterQuery = {} as FilterQuery<BountyCollection>
 	
 	const { status, search, $lte, $gte, customer_id } = filters;
 	

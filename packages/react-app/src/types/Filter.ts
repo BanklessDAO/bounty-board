@@ -1,6 +1,6 @@
-import { BountyBoardProps } from '../models/Bounty';
+import { BountyCollection } from '../models/Bounty';
 
-type StringKeysBountyBoardReward = Extract<keyof BountyBoardProps['reward'], string>;
+type StringKeysBountyBoardReward = Extract<keyof BountyCollection['reward'], string>;
 
 export type AcceptedSortInputs = 'reward';
 export type AcceptedSortOutputs = `reward.${StringKeysBountyBoardReward}`;

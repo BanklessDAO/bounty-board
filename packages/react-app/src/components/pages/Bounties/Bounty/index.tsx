@@ -16,10 +16,11 @@ import {
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
 
-import { BountyBoardProps } from '../../../../models/Bounty';
+import { BountyCollection, Reward } from '../../../../models/Bounty';
 import { discordChannelUrl } from '../../../../constants/discordInfo';
 import Link from 'next/link';
 import ColorModeButton from '../../../../components/parts/ColorModeButton';
+import { TypeOf } from 'yup';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -39,7 +40,17 @@ const BountySummary = ({
 	title,
 	reward,
 	status,
-}: BountyBoardProps): JSX.Element => (
+}: Pick<BountyCollection, "title" | "reward" | "status">): JSX.Element => {
+	
+	const calculateReward = (_reward: typeof reward): string => {
+		if (_reward.amount && _reward.scale) {
+			return `${_reward.amount / 10 ** _reward.scale ?? 0} ${_reward.currency}`
+		} else {
+			return '0'
+		}
+	};
+	
+	return (
 	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
 		<Box
 			width={{ base: '100%', md: '60%' }}
@@ -60,7 +71,7 @@ const BountySummary = ({
 		>
 			{reward && (
 				<Heading mt={1} size="md">
-					{reward.amount / 10 ** reward.scale} {reward.currency}
+					{calculateReward(reward)}
 				</Heading>
 			)}
 		</Box>
@@ -74,7 +85,8 @@ const BountySummary = ({
 		>
 		</Box>
 	</Flex>
-);
+	)
+};
 
 const BountyDetails = ({
 	_id,
@@ -84,7 +96,7 @@ const BountyDetails = ({
 	claimedBy,
 	status,
 	discordMessageId,
-}: BountyBoardProps): JSX.Element => (
+}: BountyCollection): JSX.Element => (
 	<Grid gap={6}>
 		<GridItem>
 			<Heading size="sm">HashID</Heading>
@@ -99,12 +111,12 @@ const BountyDetails = ({
 			<Text>{criteria}</Text>
 		</GridItem>
 		{
-			createdBy
-				? <GridItem>
+			createdBy && 
+				<GridItem>
 					<Heading size="sm">Requested By</Heading>
-					<DiscordStub name={createdBy.discordHandle} />
+					<DiscordStub name={createdBy?.discordHandle ?? 'Discord User'} />
 				</GridItem>
-				: null
+				
 		}
 		<GridItem>
 			{status && status.toLowerCase() === 'draft' ? (
@@ -116,7 +128,7 @@ const BountyDetails = ({
 			) : claimedBy ? (
 				<>
 					<Heading size="sm">Claimed By</Heading>
-					<DiscordStub name={claimedBy.discordHandle} />
+					<DiscordStub name={claimedBy?.discordHandle ?? 'Discord User'} />
 				</>
 			) : (
 				<>
@@ -154,7 +166,7 @@ const BountyNotFound = (): JSX.Element => (
 	</Stack>
 );
 
-export const BountyCard = (props: BountyBoardProps): JSX.Element => {
+export const BountyCard = (props: BountyCollection): JSX.Element => {
 	if (!props || Object.entries(props).length === 0) {
 		return (<BountyNotFound />);
 	}
@@ -172,16 +184,20 @@ export const BountyCard = (props: BountyBoardProps): JSX.Element => {
 	);
 };
 
-export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
+export const AccordionBountyItem = ({ bounty }: { bounty: BountyCollection }): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
 		<AccordionButton pb={5}>
-			<BountySummary {...props} />
+			<BountySummary
+				title={bounty.title}
+				reward={bounty.reward}
+				status={bounty.status}
+			/>
 			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
 				<AccordionIcon />
 			</Box>
 		</AccordionButton>
 		<AccordionPanel mx={2}>
-			<BountyDetails {...props} />
+			<BountyDetails {...bounty} />
 		</AccordionPanel>
 	</AccordionItem>
 );

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import {
 	string,
 	number,
@@ -7,6 +7,17 @@ import {
 	TypeOf,
 } from 'yup';
 
+const UserObject = object({
+	discordHandle: string().required(),
+	discordId: string().required(),
+});
+
+const Reward = object({
+	currency: string().min(0).required(),
+	amount: number().min(0).required(),
+	scale: number().min(0).required(),
+	amountWithoutScale: number().min(0).required(),
+})
 
 /* Global typing for Bounties */
 export const BountySchema = object({
@@ -15,45 +26,32 @@ export const BountySchema = object({
 	description: string().required(),
 	criteria: string().required(),
 	customer_id: string().required(),
-	reward: object({
-		currency: string().required(),
-		amount: number().min(0).required(),
-		scale: number().required(),
-		amountWithoutScale: number().required(),
-	}).required(),
-	createdBy: object({
-		discordHandle: string().required(),
-		discordId: string().required(),
-	}).required(),
-	createdAt: string().optional(),
-	dueAt: string().optional(),
+	reward: Reward.required(),
+	
 	discordMessageId: string().optional(),
 	status: string().required(),
 	statusHistory: array(object({
 		status: string(),
 		setAt: string(),
 	})).optional(),
-	claimedBy: object({
-		discordHandle: string().optional(),
-		discordId: string().optional(),
-	}).optional(),
-	claimedAt: string().optional(),
+	
 	submissionNotes: string().optional(),
 	submissionUrl: string().optional(),
+	
+	dueAt: string().optional(),
+	createdAt: string().optional(),
+	claimedAt: string().optional(),
 	submittedAt: string().optional(),
-	submittedBy: object({
-		discordHandle: string().required(),
-		discordId: string().required(),
-	}).required(),
 	reviewedAt: string().optional(),
-	reviewedBy: object({
-		discordHandle: string(),
-		discordId: string(),
-	}).optional(),
+	
+	createdBy: UserObject.required(),
+	claimedBy: UserObject.optional(),
+	submittedBy: UserObject.required(),
+	reviewedBy: UserObject.optional(),
 });
 
-export interface BountyBoardProps extends TypeOf<typeof BountySchema> {
-	_id: any;
+export interface BountyCollection extends TypeOf<typeof BountySchema> {
+	_id: ObjectId;
 }
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
@@ -152,5 +150,5 @@ const BountyBoardSchema = new mongoose.Schema({
 	},
 });
 
-export default mongoose.models.Bounty ||
-  mongoose.model('Bounty', BountyBoardSchema);
+export default mongoose.models.Bounty as mongoose.Model<BountyCollection> ||
+  mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);

@@ -2,7 +2,7 @@ import { BANKLESS } from '../constants/Bankless';
 import { CustomerProps } from '../models/Customer';
 import { createContext, Dispatch, SetStateAction } from 'react';
 import useSWR from 'swr';
-import { BountyBoardProps } from '../models/Bounty';
+import { BountyCollection } from '../models/Bounty';
 
 type SetCustomerType = Dispatch<SetStateAction<CustomerProps>>;
 
@@ -21,7 +21,7 @@ export const getCustomerFromBountyId = (bountyId: string | string[] | undefined)
 		 * @param bountyId will have an associated customer_id, which is then used to fetch the customer.
 		 * @returns the fetched customer, or undefined if either the bountyId is undefined or the customer is undefined.  
 		 */
-	const { data: bounty } = useSWR<BountyBoardProps>(
+	const { data: bounty } = useSWR<BountyCollection>(
 		typeof bountyId === 'string' ? `/api/bounties/${bountyId}` : null,
 		fetcher
 	);
