@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
-type AuthURLProps = { url: string, scopes: string[] };
-export const DISCORD_AUTH_SETTINGS: AuthURLProps = {
+// type AuthURLProps = { url: string, scopes: string[] };
+export const DISCORD_AUTH_SETTINGS = {
 	url: 'https://discord.com/api/oauth2/authorize?scope=',
 	scopes: [
 		'identify',
@@ -12,7 +12,7 @@ export const DISCORD_AUTH_SETTINGS: AuthURLProps = {
 	],
 };
 
-export const getAuthUrl = ({ url, scopes }: AuthURLProps): string => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
+export const getAuthUrl = ({ url, scopes }) => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
 
 export default NextAuth({
 	// Configure one or more authentication providers
