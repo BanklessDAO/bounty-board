@@ -25,6 +25,7 @@ export const DAOSelector = ({ customers }: {
 
 	return (
 		<Select
+			aria-label="dao-selector"
 			mr="5"
 			onChange={onChange}
 			value={customer?.customerName ?? 'BanklessDAO'}

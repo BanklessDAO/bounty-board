@@ -39,6 +39,7 @@
     "@fontsource/lexend": "^4.5.0",
     "@hookform/resolvers": "^2.7.1",
     "@netlify/plugin-nextjs": "^3.8.0",
+    "axios": "^0.24.0",
     "env-cmd": "^10.1.0",
     "framer-motion": "^4.1.17",
     "lint-staged": "^11.0.0",

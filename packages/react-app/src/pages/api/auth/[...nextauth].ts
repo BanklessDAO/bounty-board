@@ -1,13 +1,26 @@
 import NextAuth from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
+type AuthURLProps = { url: string, scopes: string[] };
+export const DISCORD_AUTH_SETTINGS: AuthURLProps = {
+	url: 'https://discord.com/api/oauth2/authorize?scope=',
+	scopes: [
+		'identify',
+		'email',
+		'guilds',
+		'guilds.join',
+	],
+};
+
+export const getAuthUrl = ({ url, scopes }: AuthURLProps): string => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
+
 export default NextAuth({
 	// Configure one or more authentication providers
 	providers: [
 		DiscordProvider({
-			clientId: '892232488812965898',
-			clientSecret: 'IB33yqHzgiG4VhFxr6cB0Tr5oEAnihmq',
-			scope: 'identify guilds',
+			clientId: process.env.DISCORD_CLIENT_ID,
+			clientSecret: process.env.DISCORD_CLIENT_SECRET,
+			authorization: getAuthUrl(DISCORD_AUTH_SETTINGS),
 		}),
 	],
 	callbacks: {

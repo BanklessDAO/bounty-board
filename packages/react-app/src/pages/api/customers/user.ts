@@ -7,14 +7,11 @@ export default async function handler(
 	res: NextApiResponse
 ): Promise<void> {
 	await dbConnect();
-
 	switch (req.method) {
 	case 'POST':
 		try {
-			const data = await service.getCustomersInUsersGuilds(
-				JSON.parse(req.body)
-			);
-			res.status(200).json({ success: true, data });
+			const items = await service.getCustomersInUsersGuilds(req.body.guilds);
+			res.status(200).json({ success: true, items });
 		} catch (error) {
 			res.status(400).json({ success: false, message: error });
 		}
