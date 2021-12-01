@@ -14,7 +14,7 @@
     "customerName":"Compound",
     "applicableRoles" : [ ],
     "customization":{
-      "logo":"demo/compound.png",
+      "logo": "https://bafybeiee4vt3iryv7t5ovn7ksw55fnj65k6lw4yo3ilujo32osr5k7b63a.ipfs.dweb.link/CityDao_Green-logo.png",
       "colors":{
         "background":{
           "light":"#0AA3D8",

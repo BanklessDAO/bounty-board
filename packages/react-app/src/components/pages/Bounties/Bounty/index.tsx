@@ -43,11 +43,7 @@ const BountySummary = ({
 }: Pick<BountyCollection, "title" | "reward" | "status">): JSX.Element => {
 	
 	const calculateReward = (_reward: typeof reward): string => {
-		if (_reward.amount && _reward.scale) {
-			return `${_reward.amount / 10 ** _reward.scale ?? 0} ${_reward.currency}`
-		} else {
-			return '0'
-		}
+		return `${_reward.amount / 10 ** _reward.scale ?? 0} ${_reward.currency}`
 	};
 	
 	return (
