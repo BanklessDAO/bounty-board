@@ -1,7 +1,5 @@
 # DAO Bounty Board
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/8e12fc34-94a3-4c7a-8323-fc2b7e1d4d14/deploy-status)](https://app.netlify.com/sites/bounty-board-29081e/deploys)
-
 Project Page:
 https://www.notion.so/bankless/Bounty-Board-318dc164cc5640cca17e0fb5f484fd90
 
