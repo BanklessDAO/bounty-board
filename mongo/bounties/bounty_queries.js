@@ -28,7 +28,6 @@ db.bounties.find({ season: 1 }).sort({ "reward.amount": -1 });
 
 db.bounties.find({ season: 1 }).sort({ createdAt: -1 });
 
-
 // Who created the most bounties?
 
 db.bounties
@@ -137,13 +136,13 @@ db.bounties.find().sort({ "reward.amount": -1 });
 db.bounties.find().sort({ "reward.amount": 1 });
 
 // Bounties filtered by reward value at least X
-db.bounties.find({ "reward.amount": {  $gte: 3000 } });
+db.bounties.find({ "reward.amount": { $gte: 3000 } });
 
 // Bounties filtered by reward value up to X
-db.bounties.find({ "reward.amount": {  $lte: 2000 } });
+db.bounties.find({ "reward.amount": { $lte: 2000 } });
 
 // Bounties filtered by reward value between X & Y
-db.bounties.find({ "reward.amount": { $gte:  2000, $lte: 3000 } });
+db.bounties.find({ "reward.amount": { $gte: 2000, $lte: 3000 } });
 
 // GUILD SPECIFIC QUERIES (need to add data fields)
 
@@ -153,3 +152,28 @@ db.bounties.find({ "reward.amount": { $gte:  2000, $lte: 3000 } });
 // Which Guild received the most submitted bounties?
 // How much bounty reward (in BANK) were given by each Guild?
 // Which Guild gave the most reward?
+
+// MULTI-TENANCY QUERIES
+
+// Join bounties and customers collection
+// only list bounty bounty title & customer name
+db.bounties.aggregate([
+  {
+    $lookup: {
+      from: "customers",
+      localField: "customer_id",
+      foreignField: "customer_id",
+      as: "customerName",
+    },
+  },
+  {
+    $unwind: "$customerName",
+  },
+  {
+    $project: {
+      _id: 0,
+      title: 1,
+      "customerName.customerName": 1,
+    },
+  },
+]);
