@@ -14,7 +14,7 @@
     "customerName":"CityDAO",
     "applicableRoles" : [ ],
     "customization":{
-      "logo": "logos/citydao_logo.png",
+      "logo": "assets/logos/citydao.png",
       "colors":{
         "background":{
           "light":"#0AA3D8",
