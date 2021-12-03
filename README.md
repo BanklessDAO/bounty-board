@@ -132,7 +132,47 @@ Please refer to [the Mongoose docs](https://mongoosejs.com/docs/connections.html
 For help setting up MongoDB locally, see their [installation instructions](https://docs.mongodb.com/manual/administration/install-community/).
 
 ### Setting Up Data in MongoDB
-The app expects a MongoDB db `bountyboard` with the collection `bounties`, as specified in the json files within `mongo/bounties` (note: these might need some slight tweaking to fit with the app).
+The app expects a MongoDB db `bountyboard` with the collection `bounties`, as specified in the json files within `mongo/bounties`, you can either maintain an instance of mongo manually, or use the prebuilt docker image (recommended).
+
+### Using Docker
+Ensure you have docker and docker-compose installed (and running) on your desktop.
+
+All the revelant files are in the `mongo/` folder of the monorepo, to run the container:
+
+```sh
+cd mongo
+docker-compose up
+```
+
+This should start the database on port 27017, and automatically seed with test data. The application will restart with fresh seed data everytime you run the docker compose command, so don't worry about messing it up.
+
+The seed data handles:
+
+* Loading bounty data with correct object ids
+* Loading customer data with correct object ids
+* Attaching the correct text index to the bounty data
+
+**Troubleshooting**
+
+*I want to make changes to the data*
+
+Just edit the `seed_customers.json` or `bboard_[version].json` file, alternatively edit the `seed.sh` script and change the JSON file to load from.
+
+*mongo_seed exited with code 127*
+
+Indicates the seed script cannot be found, usually a problem with windows. Ensure [line breaks are set as 'LF'](https://dev.to/wagslane/how-to-get-consistent-line-breaks-in-vs-code-lf-vs-crlf-2c3p#:~:text=At%20the%20bottom%20right%20of,has%20the%20correct%20line%20breaks.)
+
+*data is not updating*
+
+force Rebuild the container:
+
+```sh
+docker-compose up --build
+```
+
+### Manually (Not recommended)
+
+Use this approach if you do not want to use docker, or are having troubles installing it. Be mindful that this approach will be more error prone, you may instead want to request test access to the DB.
 
 If you're firing up a fresh instance of Mongo, you will need to seed the database from the command line or discord, as the board does not currently have an 'add bounty` functionality.
 

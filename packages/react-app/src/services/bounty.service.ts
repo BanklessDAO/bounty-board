@@ -3,7 +3,7 @@ import { Query, FilterQuery } from 'mongoose';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { NextApiQuery } from '../types/Queries';
 import { BANKLESS } from '../constants/Bankless';
-
+import * as discord from './discord.service';
 
 type BountyQuery = Query<BountyCollection[], BountyCollection>;
 
@@ -123,7 +123,7 @@ export const handleFilters = (filters: FilterParams): BountyQuery => {
 	 * Construct the filter query and return query object from mongoose
 	 */
 	// let filterQuery = {} as FQ<BountyCollection>;
-	let filterQuery = {} as FilterQuery<BountyCollection>
+	let filterQuery = {} as FilterQuery<BountyCollection>;
 	
 	const { status, search, $lte, $gte, customer_id } = filters;
 	
@@ -153,4 +153,39 @@ export const getBounties = async (filters: FilterParams, sort: SortParams): Prom
 	query = handleFilters(filters);
 	query = handleSort(query, sort);
 	return query;
+};
+
+export const getBounty = async (id: string): Promise<BountyCollection | null> => {
+	/**
+	 * @param id is a 24 character string, try to find it in the db
+	 * If the character !== 24 chars, or we can't find the bounty, return null 
+	 */
+	return id.length === 24 ? await Bounty.findById(id) : null;
+};
+
+export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: string }): boolean => {
+	/**
+	 * We allow edits to the bounty only if the status is currently `draft` or `open`, and if a valid
+	 * edit key is passed.
+	 * 
+	 * @TODO the edit key is an external dependency from bounty bot, it would be better to wrap a more
+	 * complete user-based auth mechanism
+	 */
+	const validBountyEditKey = bounty.editKey !== key;
+	const bountyOpenForEdits = ['draft', 'open'].includes(bounty.status.toLowerCase());
+	return validBountyEditKey && bountyOpenForEdits;
+};
+
+export const editBounty = async ({ bounty, body }: { bounty: BountyCollection, body: Record<string, unknown> }): Promise<BountyCollection> => {
+	const updatedBounty = await Bounty.findByIdAndUpdate(bounty._id, body, {
+		new: true,
+		omitUndefined: true,
+		runValidators: true,
+	}) as BountyCollection;
+	await discord.publishBountyToDiscordChannel(updatedBounty, updatedBounty.status);
+	return updatedBounty;
+};
+
+export const deleteBounty = async (id: string): Promise<void> => {
+	await Bounty.findByIdAndDelete(id);
 };

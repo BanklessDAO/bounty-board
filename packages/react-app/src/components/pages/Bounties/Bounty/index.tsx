@@ -16,11 +16,10 @@ import {
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
 
-import { BountyCollection, Reward } from '../../../../models/Bounty';
+import { BountyCollection } from '../../../../models/Bounty';
 import { discordChannelUrl } from '../../../../constants/discordInfo';
 import Link from 'next/link';
 import ColorModeButton from '../../../../components/parts/ColorModeButton';
-import { TypeOf } from 'yup';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -40,48 +39,48 @@ const BountySummary = ({
 	title,
 	reward,
 	status,
-}: Pick<BountyCollection, "title" | "reward" | "status">): JSX.Element => {
+}: Pick<BountyCollection, 'title' | 'reward' | 'status'>): JSX.Element => {
 	
 	const calculateReward = (_reward: typeof reward): string => {
-		return `${_reward.amount / 10 ** _reward.scale ?? 0} ${_reward.currency}`
+		return `${_reward.amount / 10 ** _reward.scale ?? 0} ${_reward.currency}`;
 	};
 	
 	return (
-	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
-		<Box
-			width={{ base: '100%', md: '60%' }}
-			pr={{ base: 7, md: 0 }}
-			align="left"
-			mt="4"
-		>
-			<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
-				{title}
-			</Heading>
-		</Box>
-		<Box
-			width={{ base: '50%', md: '30%' }}
-			textAlign={{ base: 'left', md: 'right' }}
-			mt={{ base: 0, md: 4 }}
-			ml="auto"
-			pr={7}
-		>
-			{reward && (
-				<Heading mt={1} size="md">
-					{calculateReward(reward)}
+		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
+			<Box
+				width={{ base: '100%', md: '60%' }}
+				pr={{ base: 7, md: 0 }}
+				align="left"
+				mt="4"
+			>
+				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
+					{title}
 				</Heading>
-			)}
-		</Box>
-		<Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
-			{status && <Status indication={status} />}
-		</Box>
-		<Box
-			width={{ base: '100%', md: '50%' }}
-			textAlign={{ base: 'left', md: 'right' }}
-			pr={7}
-		>
-		</Box>
-	</Flex>
-	)
+			</Box>
+			<Box
+				width={{ base: '50%', md: '30%' }}
+				textAlign={{ base: 'left', md: 'right' }}
+				mt={{ base: 0, md: 4 }}
+				ml="auto"
+				pr={7}
+			>
+				{reward && (
+					<Heading mt={1} size="md">
+						{calculateReward(reward)}
+					</Heading>
+				)}
+			</Box>
+			<Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
+				{status && <Status indication={status} />}
+			</Box>
+			<Box
+				width={{ base: '100%', md: '50%' }}
+				textAlign={{ base: 'left', md: 'right' }}
+				pr={7}
+			>
+			</Box>
+		</Flex>
+	);
 };
 
 const BountyDetails = ({
@@ -107,7 +106,7 @@ const BountyDetails = ({
 			<Text>{criteria}</Text>
 		</GridItem>
 		{
-			createdBy && 
+			createdBy &&
 				<GridItem>
 					<Heading size="sm">Requested By</Heading>
 					<DiscordStub name={createdBy?.discordHandle ?? 'Discord User'} />
