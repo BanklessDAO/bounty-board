@@ -4,6 +4,7 @@ export interface CustomerProps {
     customerName: string;
     customization?: Customization;
     applicableRoles?: [] | string[];
+	bountyChannel: string;
 }
 export interface Customization {
     logo?: string;
@@ -49,6 +50,9 @@ export const CustomerSchema = new mongoose.Schema<CustomerProps>({
 		type: [String],
 	},
 	customization: CustomizationSchema,
+	bountyChannel: {
+		type: String,
+	},
 });
 
 export default mongoose.models.Customer as mongoose.Model<CustomerProps>

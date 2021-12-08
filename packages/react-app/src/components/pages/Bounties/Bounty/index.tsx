@@ -17,9 +17,10 @@ import {
 import AccessibleLink from '../../../parts/AccessibleLink';
 
 import { BountyBoardProps } from '../../../../models/Bounty';
-import { discordChannelUrl } from '../../../../constants/discordInfo';
+import { baseUrl } from '../../../../constants/discordInfo';
 import Link from 'next/link';
 import ColorModeButton from '../../../../components/parts/ColorModeButton';
+import { getCustomerFromBountyId } from '../../../../context/CustomerContext';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -34,6 +35,17 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 		</Text>
 	</Flex>
 );
+
+const ClaimURL = ({ bountyId }: {bountyId: string}): string | undefined => {
+	console.log(`ClaimURL: ${bountyId}`);
+	let url;
+	const customer = getCustomerFromBountyId(bountyId);
+	if (customer) {
+		url = `${baseUrl}/${customer.customer_id}/${customer.bountyChannel}`;
+		console.log('formed URL');
+	}
+	return url;
+};
 
 const BountySummary = ({
 	title,
@@ -123,8 +135,8 @@ const BountyDetails = ({
 					<Heading size="sm">Claimed By</Heading>
 					<AccessibleLink
 						href={
-							discordMessageId
-								? `${discordChannelUrl}/${discordMessageId}`
+							discordMessageId && ClaimURL(_id)
+								? `${ClaimURL(_id)}/${discordMessageId}`
 								: '/'
 						}
 					>
