@@ -25,7 +25,8 @@ const handler = async (
 		break;
 
 	case 'POST':
-		res.status(200).json({ ...req.body });
+		const bounty = await service.createBounty(req.body);
+		res.status(200).json({ success: true, data: bounty });
 		break;
 
 	default:

@@ -36,7 +36,7 @@ export const Status = mixed().oneOf([
 
 export const StatusHistory = object({
 	status: Status,
-	setAt: string(),
+	modifiedAt: string(),
 });
 
 /* Global typing for Bounties */
@@ -51,14 +51,14 @@ export const BountySchema = object({
 	
 	statusHistory: array(
 		StatusHistory as Nested<typeof StatusHistory>
-	).optional(),
+		).optional(),
 		
 	discordMessageId: string().optional(),
 	submissionNotes: string().optional(),
 	submissionUrl: string().optional(),
 	season: number().optional(),
-	dueAt: string().optional(),
 
+	dueAt: string().required(),
 	createdAt: string().optional(),
 	claimedAt: string().optional(),
 	submittedAt: string().optional(),
@@ -72,7 +72,7 @@ export const BountySchema = object({
 
 
 export interface BountyCollection extends InferType<typeof BountySchema> {
-	_id: ObjectId | string;
+	_id: string;
 }
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */

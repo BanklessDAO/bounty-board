@@ -12,14 +12,14 @@ const validateStringInputs = (req: NextApiRequest, res: NextApiResponse): [strin
 	 * Also allows safe typecasting
 	 */
 	const { query: { id, key } } = req;
-	if (typeof id !== 'string' || typeof key !== 'string') {
-		res.status(400).json({
-			success: false,
-			message: 'Multiple values for id and key are not supported',
-			id,
-			key,
-		});
-	}
+	// if (typeof id !== 'string' || typeof key !== 'string') {
+	// 	res.status(400).json({
+	// 		success: false,
+	// 		message: 'Multiple values for id and key are not supported',
+	// 		id,
+	// 		key,
+	// 	});
+	// }
 	return [id, key] as [string, string];
 };
 

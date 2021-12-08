@@ -44,5 +44,9 @@ module.exports = {
         '^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts'
       },
     }
-  ]
+  ],
+  collectCoverageFrom: [
+    "<rootDir>/src/**/*.{js,jsx,ts,tsx}",
+    "!**/node_modules/**",
+  ],
 }

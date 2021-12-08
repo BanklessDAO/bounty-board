@@ -24,7 +24,8 @@
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
     "test:unit": "jest",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "test:integration": "MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --detectOpenHandles packages/react-app/tests/integration"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
@@ -47,6 +48,7 @@
     "next": "^11.0.0",
     "next-auth": "4.0.0-next.26",
     "next-seo": "^4.26.0",
+    "node-mocks-http": "^1.11.0",
     "nprogress": "^0.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

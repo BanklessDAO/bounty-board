@@ -189,3 +189,7 @@ export const editBounty = async ({ bounty, body }: { bounty: BountyCollection, b
 export const deleteBounty = async (id: string): Promise<void> => {
 	await Bounty.findByIdAndDelete(id);
 };
+
+export const createBounty = async (body: BountyCollection): Promise<BountyCollection> => {
+	return await Bounty.create(body);
+};
