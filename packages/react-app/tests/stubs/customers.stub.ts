@@ -4,10 +4,12 @@ export const customers: CustomerProps[] = [
 	{
 		customer_id: '834499078434979890',
 		customerName: 'BanklessDAO',
+		bountyChannel: '850402063741091880',
 	},
 	{
 		customer_id: '402910780124561410',
 		customerName: 'Compound',
+		bountyChannel: '',
 		customization: {
 			logo: 'https://cryptologos.cc/logos/compound-comp-logo.png?v=014',
 			colors: {
@@ -23,6 +25,7 @@ export const customers: CustomerProps[] = [
 	{
 		customer_id: '845400066532704256',
 		customerName: 'Coordinape',
+		bountyChannel: '',
 		customization: {
 			logo: 'https://coordinape.com/imgs/logo/logo232.png',
 			colors: {
@@ -38,6 +41,7 @@ export const customers: CustomerProps[] = [
 	{
 		customer_id: '718590743446290492',
 		customerName: 'UMA',
+		bountyChannel: '',
 		customization: {
 			logo: 'https://umaproject.org/assets/images/UMA_square_red_logo.png',
 			colors: {
@@ -53,6 +57,7 @@ export const customers: CustomerProps[] = [
 	{
 		customer_id: '402910780129999',
 		customerName: 'Should Not See',
+		bountyChannel: '',
 		customization: {
 			logo: '',
 			colors: {

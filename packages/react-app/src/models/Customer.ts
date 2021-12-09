@@ -4,7 +4,7 @@ export interface CustomerProps {
     customerName: string;
     customization?: Customization;
     applicableRoles?: [] | string[];
-		bountyChannel: string;
+	bountyChannel: string;
 }
 export interface Customization {
     logo?: string;
