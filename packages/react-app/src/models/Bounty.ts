@@ -1,28 +1,32 @@
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
+import { InferInterface } from '../types/Yup';
 import {
 	string,
 	number,
 	object,
 	array,
-	SchemaOf,
-	InferType,
 	mixed,
 } from 'yup';
-import { TypedSchema } from 'yup/lib/util/types';
 
-// funky casting to avoid undefined
-type Nested<T extends TypedSchema> = SchemaOf<InferType<T>>
+export const DiscordUser = object().shape({
+	discordHandle: string().optional(),
+	discordId: string().optional(),
+});
 
-export const DiscordUser = object({
-	discordHandle: string().required(),
-	discordId: string().required(),
+/**
+ * Nested objects in yup behave strangely. We require a separate 
+ * object to conditionally require the fields inside of it 
+ */
+export const RequiredDiscordUser = object().shape({
+	discordHandle: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	discordId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 });
 
 export const Reward = object({
-	currency: string().min(0).required(),
-	amount: number().min(0).required(),
-	scale: number().min(0).required(),
-	amountWithoutScale: number().min(0).required(),
+	currency: string().min(0).when('$method', (method, schema) => requiredForPost({ method, schema })),
+	amount: number().min(0).when('$method', (method, schema) => requiredForPost({ method, schema })),
+	scale: number().min(0).optional().default(0),
+	amountWithoutScale: number().min(0).optional(),
 });
 
 export const Status = mixed().oneOf([
@@ -39,44 +43,54 @@ export const StatusHistory = object({
 	modifiedAt: string(),
 });
 
-/* Global typing for Bounties */
-export const BountySchema = object({
-	title: string().required(),
-	description: string().required(),
-	criteria: string().required(),
-	customer_id: string().required(),
-	status: Status.required(),
-	reward: Reward.required() as Nested<typeof Reward>,
-	editKey: string(),
+const requiredForPost = ({ method, schema, isObject }: { method: 'POST' | 'PUT', schema: any, isObject?: boolean }) => {
+	if (method === 'POST') {
+		return schema.defined()
+	};
+	if (isObject) {
+		// prevent overwriting object with null
+		return schema.optional().default(undefined)
+	} else {
+		return schema.optional()
+	};
+};
+
+/**
+ * Global typing for Bounties with validation checks
+ * */
+export const BountySchema = object().shape({
+	_id: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	title: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	description: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	customer_id: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	status: Status.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 	
-	statusHistory: array(
-		StatusHistory as Nested<typeof StatusHistory>
-		).optional(),
+	statusHistory: array(StatusHistory).optional(),
 		
+	editKey: string().optional(),
 	discordMessageId: string().optional(),
 	submissionNotes: string().optional(),
 	submissionUrl: string().optional(),
 	season: number().optional(),
 
-	dueAt: string().required(),
-	createdAt: string().optional(),
+	createdAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	claimedAt: string().optional(),
 	submittedAt: string().optional(),
 	reviewedAt: string().optional(),
 	
-	createdBy: DiscordUser.required() as Nested<typeof DiscordUser>,
-	claimedBy: DiscordUser.optional() as Nested<typeof DiscordUser>,
-	submittedBy: DiscordUser.required() as Nested<typeof DiscordUser>,
-	reviewedBy: DiscordUser.optional() as Nested<typeof DiscordUser>,
+	createdBy: RequiredDiscordUser.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	claimedBy: DiscordUser.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	submittedBy: DiscordUser.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	reviewedBy: DiscordUser.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 });
 
-
-export interface BountyCollection extends InferType<typeof BountySchema> {
-	_id: string;
-}
+export type BountyCollection = InferInterface<typeof BountySchema>;
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
-const BountyBoardSchema = new mongoose.Schema({
+const BountyBoardSchema = new mongoose.Schema<BountyCollection>({
 	title: {
 		/* The name of this Bounty */
 

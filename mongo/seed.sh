@@ -23,7 +23,6 @@ load_customers () {
         --jsonArray
 }
 
-
 echo "Seeding the local Mongo Database with bounties..."
 load_bounties $localDb
 
@@ -33,8 +32,8 @@ mongosh --host mongo usr/tmp/mongo/bounties/init.js
 echo "Adding Customers..."
 load_customers $localDb
 
-echo "Seeding the test Mongo Database with bounties..."
-load_bounties $testDb
+# echo "Seeding the test Mongo Database with bounties..."
+# load_bounties $testDb
 
-echo "Adding test Customers..."
-load_customers $testDb
+# echo "Adding test Customers..."
+# load_customers $testDb

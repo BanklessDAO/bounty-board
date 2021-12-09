@@ -9,11 +9,7 @@ type ValidatorProps = {
 
 const has = (object: unknown, key: string) => object ? Object.prototype.hasOwnProperty.call(object, key) : false;
 
-const checkIsEmpty = (req: NextApiRequest, res: NextApiResponse) => {
-	if (!req.body || Object.entries(req.body).length === 0) {
-		return res.status(400).json({ error: 'Request cannot have an empty body' });
-	}
-};
+const checkIsEmpty = (req: NextApiRequest) => !req.body || Object.entries(req.body).length === 0;
 
 const handleErrResponse = (err: unknown): Record<string, unknown> => {
 	/**
@@ -40,17 +36,29 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
  */
 const validate = ({ schema, handler }: ValidatorProps): ValidatorFunction => {
 	return async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-		if (req.method && ['POST', 'PATCH', 'PUT'].includes(req.method)) {
-			checkIsEmpty(req, res);
-			try {
+		if (checkIsEmpty(req)) {
+			return res
+				.status(400)
+				.json({ error: 'Request cannot have an empty body' });
+		};
+		try {
+			if (req.method && req.method === 'POST') {
 				req.body = await schema.validate(req.body, {
-					stripUnknown: true,
+					stripUnknown: false,
 					abortEarly: false,
+					context: { method: req.method }
 				});
-			} catch (err: any) {
-				const _json = handleErrResponse(err);
-				return res.status(400).json(_json);
+			} else if (req.method && req.method === 'PUT') {
+				console.debug(req.method);
+				req.body = await schema.validate(req.body, {
+					stripUnknown: false,
+					abortEarly: false,
+					context: { method: req.method }
+				});
 			}
+		} catch (err: any) {
+			const _json = handleErrResponse(err);
+			return res.status(400).json(_json);
 		}
 		await handler(req, res);
 	};

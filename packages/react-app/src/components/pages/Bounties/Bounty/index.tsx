@@ -20,7 +20,8 @@ import { BountyCollection } from '../../../../models/Bounty';
 import { baseUrl } from '../../../../constants/discordInfo';
 import Link from 'next/link';
 import ColorModeButton from '../../../../components/parts/ColorModeButton';
-import { getCustomerFromBountyId } from '../../../../context/CustomerContext';
+import { CustomerContext } from '../../../../context/CustomerContext';
+import { useContext } from 'react';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -35,17 +36,6 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 		</Text>
 	</Flex>
 );
-
-const ClaimURL = (bountyId: BountyCollection['_id']): string | undefined => {
-	console.log(`ClaimURL: ${bountyId}`);
-	let url;
-	const customer = getCustomerFromBountyId(bountyId);
-	if (customer) {
-		url = `${baseUrl}/${customer.customer_id}/${customer.bountyChannel}`;
-		console.log('formed URL');
-	}
-	return url;
-};
 
 const BountySummary = ({
 	title,
@@ -103,59 +93,57 @@ const BountyDetails = ({
 	claimedBy,
 	status,
 	discordMessageId,
-}: BountyCollection): JSX.Element => (
-	<Grid gap={6}>
-		<GridItem>
-			<Heading size="sm">HashID</Heading>
-			<Text>{_id}</Text>
-		</GridItem>
-		<GridItem>
-			<Heading size="sm">Description</Heading>
-			<Text>{description}</Text>
-		</GridItem>
-		<GridItem>
-			<Heading size="sm">Done Criteria</Heading>
-			<Text>{criteria}</Text>
-		</GridItem>
-		{
-			createdBy &&
-				<GridItem>
-					<Heading size="sm">Requested By</Heading>
-					<DiscordStub name={createdBy?.discordHandle ?? 'Discord User'} />
-				</GridItem>
-				
-		}
-		<GridItem>
-			{status && status.toLowerCase() === 'draft' ? (
-				<AccessibleLink href={`${_id}/edit`}>
-					<Button my={2} size="sm" colorScheme="red">
-            Edit This Draft
-					</Button>
-				</AccessibleLink>
-			) : claimedBy ? (
-				<>
-					<Heading size="sm">Claimed By</Heading>
-					<DiscordStub name={claimedBy?.discordHandle ?? 'Discord User'} />
-				</>
-			) : (
-				<>
-					<Heading size="sm">Claimed By</Heading>
-					<AccessibleLink
-						href={
-							discordMessageId && ClaimURL(_id as string)
-								? `${ClaimURL(_id as string)}/${discordMessageId}`
-								: '/'
-						}
-					>
-						<Button my={2} size="sm" colorScheme="green">
-              Claim It
+}: BountyCollection): JSX.Element => {
+	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
+	const url = discordMessageId ? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}` : '/';
+	return (
+		<Grid gap={6}>
+			<GridItem>
+				<Heading size="sm">HashID</Heading>
+				<Text>{_id}</Text>
+			</GridItem>
+			<GridItem>
+				<Heading size="sm">Description</Heading>
+				<Text>{description}</Text>
+			</GridItem>
+			<GridItem>
+				<Heading size="sm">Done Criteria</Heading>
+				<Text>{criteria}</Text>
+			</GridItem>
+			{
+				createdBy
+					? <GridItem>
+						<Heading size="sm">Requested By</Heading>
+						<DiscordStub name={createdBy.discordHandle} />
+					</GridItem>
+					: null
+			}
+			<GridItem>
+				{status && status.toLowerCase() === 'draft' ? (
+					<AccessibleLink href={`${_id}/edit`}>
+						<Button my={2} size="sm" colorScheme="red">
+							Edit This Draft
 						</Button>
 					</AccessibleLink>
-				</>
-			)}
-		</GridItem>
-	</Grid>
-);
+				) : claimedBy ? (
+					<>
+						<Heading size="sm">Claimed By</Heading>
+						<DiscordStub name={claimedBy.discordHandle} />
+					</>
+				) : (
+					<>
+						<Heading size="sm">Claimed By</Heading>
+						<AccessibleLink href={url}>
+							<Button my={2} size="sm" colorScheme="green">
+								Claim It
+							</Button>
+						</AccessibleLink>
+					</>
+				)}
+			</GridItem>
+		</Grid>
+	);
+};
 
 const BountyNotFound = (): JSX.Element => (
 	<Stack align="center" justify="center" h="400px">

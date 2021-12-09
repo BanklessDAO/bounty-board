@@ -15,23 +15,24 @@ const handler = async (
 	await dbConnect();
 
 	switch (method) {
-	case 'GET':
-		try {
-			const bounties = await service.getBounties(filters, sort);
-			res.status(200).json({ success: true, data: bounties });
-		} catch (error) {
-			res.status(400).json({ success: false });
+		case 'GET': {
+			try {
+				const bounties = await service.getBounties(filters, sort);
+				res.status(200).json({ success: true, data: bounties });
+			} catch (error) {
+				res.status(400).json({ success: false });
+			}
+			break;
 		}
-		break;
-
-	case 'POST':
-		const bounty = await service.createBounty(req.body);
-		res.status(200).json({ success: true, data: bounty });
-		break;
-
-	default:
-		res.status(400).json({ success: false });
-		break;
+		case 'POST': {
+			const bounty = await service.createBounty(req.body);
+			res.status(200).json({ success: true, data: bounty });
+			break;
+		}
+		default: {
+			res.status(400).json({ success: false });
+			break;
+		}
 	}
 };
 

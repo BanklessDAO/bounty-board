@@ -1,7 +1,8 @@
-import Bounty from '../../../src/models/Bounty';
+import Bounty, { BountyCollection } from '../../../src/models/Bounty';
 import { FilterParams, SortParams } from '../../../src/types/Filter';
-import { FilterQuery, NextApiQuery } from '../../../src/types/Queries';
+import { NextApiQuery } from '../../../src/types/Queries';
 import * as service from '../../../src/services/bounty.service';
+import { FilterQuery, Query } from 'mongoose';
 
 describe('Testing the bounty service', () => {
   
@@ -136,7 +137,7 @@ describe('Testing the bounty service', () => {
 				$lte: 100,
 				asc: true,
 			};
-			const expected: FilterQuery = {
+			const expected: FilterQuery<BountyCollection> = {
 				status: 'Open',
 				customer_id: 'testId',
 				$text: {

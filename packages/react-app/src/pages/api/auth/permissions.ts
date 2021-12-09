@@ -12,7 +12,7 @@ const handler = async (
 	switch (method) {
 	case 'GET':
 		try {
-      const permissions = service.getPermissions();
+			const permissions = service.getPermissions();
 			res.status(200).json({ success: true, data: permissions });
 		} catch (error) {
 			res.status(400).json({ success: false, error });
@@ -20,8 +20,8 @@ const handler = async (
 		break;
 
 	default:
-    internalServerError(res);
-    break;
+		internalServerError(res);
+		break;
 	}
 };
 

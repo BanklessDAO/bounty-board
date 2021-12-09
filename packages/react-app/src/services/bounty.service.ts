@@ -163,7 +163,7 @@ export const getBounty = async (id: string): Promise<BountyCollection | null> =>
 	return id.length === 24 ? await Bounty.findById(id) : null;
 };
 
-export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: string }): boolean => {
+export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: string | undefined }): boolean => {
 	/**
 	 * We allow edits to the bounty only if the status is currently `draft` or `open`, and if a valid
 	 * edit key is passed.
@@ -171,12 +171,14 @@ export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: st
 	 * @TODO the edit key is an external dependency from bounty bot, it would be better to wrap a more
 	 * complete user-based auth mechanism
 	 */
-	const validBountyEditKey = bounty.editKey !== key;
+	// const validBountyEditKey = Boolean(key) && (bounty.editKey === key);
+	const validBountyEditKey = true;
 	const bountyOpenForEdits = ['draft', 'open'].includes(bounty.status.toLowerCase());
 	return validBountyEditKey && bountyOpenForEdits;
 };
 
-export const editBounty = async ({ bounty, body }: { bounty: BountyCollection, body: Record<string, unknown> }): Promise<BountyCollection> => {
+type EditBountyProps = { bounty: BountyCollection, body: Record<string, unknown> };
+export const editBounty = async ({ bounty, body }: EditBountyProps): Promise<BountyCollection> => {
 	const updatedBounty = await Bounty.findByIdAndUpdate(bounty._id, body, {
 		new: true,
 		omitUndefined: true,

@@ -1,11 +1,11 @@
-import dbConnect from "../../src/utils/dbConnect";
-import Bounty from "../../src/models/Bounty";
+import dbConnect from "../../../src/utils/dbConnect";
+import Bounty from "../../../src/models/Bounty";
 import { Connection } from "mongoose";
 import { createMocks } from 'node-mocks-http';
-import bountiesHandler from "../../src/pages/api/bounties";
-import bountyHandler from "../../src/pages/api/bounties/[id]";
+import bountiesHandler from "../../../src/pages/api/bounties";
+import bountyHandler from "../../../src/pages/api/bounties/[id]";
 import { NextApiRequest, NextApiResponse } from "next";
-import { createBounty } from "services/bounty.service";
+import * as bountyService from "../../../src/services/bounty.service";
 
 describe('Integration testing', () => {
   let connection: Connection;

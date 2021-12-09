@@ -24,7 +24,7 @@
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
     "test:unit": "jest",
-    "test:cov": "jest --coverage",
+    "test:cov": "MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --coverage --watchAll",
     "test:integration": "MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --detectOpenHandles packages/react-app/tests/integration"
   },
   "lint-staged": {
