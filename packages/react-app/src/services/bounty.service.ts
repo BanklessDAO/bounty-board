@@ -43,7 +43,7 @@ export const getSort = (query: NextApiQuery): SortParams => {
 export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	/**
 	 * Allows passing of various values as sort params. These need to coalesce
-	 * to a mongoDB schema item, so I've put in a Type for accepted sort outputs
+	 * to a mongoDB schema item, so I'vepatch in a Type for accepted sort outputs
 	 * to indicate the required @return value.
 	 */
 	let output: AcceptedSortOutputs;
@@ -171,8 +171,7 @@ export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: st
 	 * @TODO the edit key is an external dependency from bounty bot, it would be better to wrap a more
 	 * complete user-based auth mechanism
 	 */
-	// const validBountyEditKey = Boolean(key) && (bounty.editKey === key);
-	const validBountyEditKey = true;
+	const validBountyEditKey = Boolean(key) && (bounty.editKey === key);
 	const bountyOpenForEdits = ['draft', 'open'].includes(bounty.status.toLowerCase());
 	return validBountyEditKey && bountyOpenForEdits;
 };

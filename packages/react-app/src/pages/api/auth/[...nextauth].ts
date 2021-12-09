@@ -12,7 +12,7 @@ export const DISCORD_AUTH_SETTINGS = {
 	],
 };
 
-export const getAuthUrl = ({ url, scopes }) => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
+export const getAuthUrl = ({ url, scopes }: { url: string, scopes: string[] }): string => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
 
 export default NextAuth({
 	// Configure one or more authentication providers

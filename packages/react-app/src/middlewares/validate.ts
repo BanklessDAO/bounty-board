@@ -25,7 +25,7 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
 
 /**
  * Generic validation middleware that can we used to wrap all routes.
- * Currently checks validation schema for POST PATCH PUT methods.
+ * Currently checks validation schema for POST PATCHpatch methods.
  * 
  * These must be defined as a yup schema object. You can then wrap routes
  * in the exported function below.
@@ -36,27 +36,20 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
  */
 const validate = ({ schema, handler }: ValidatorProps): ValidatorFunction => {
 	return async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-		if (checkIsEmpty(req)) {
-			return res
-				.status(400)
-				.json({ error: 'Request cannot have an empty body' });
-		};
 		try {
-			if (req.method && req.method === 'POST') {
+			if (req.method && ['POST', 'PATCH'].includes(req.method)) {
+				if (checkIsEmpty(req)) {
+					return res
+						.status(400)
+						.json({ error: 'Request cannot have an empty body' });
+				}
 				req.body = await schema.validate(req.body, {
-					stripUnknown: false,
+					strict: true,
 					abortEarly: false,
-					context: { method: req.method }
-				});
-			} else if (req.method && req.method === 'PUT') {
-				console.debug(req.method);
-				req.body = await schema.validate(req.body, {
-					stripUnknown: false,
-					abortEarly: false,
-					context: { method: req.method }
+					context: { method: req.method },
 				});
 			}
-		} catch (err: any) {
+		} catch (err: unknown) {
 			const _json = handleErrResponse(err);
 			return res.status(400).json(_json);
 		}

@@ -1,10 +1,8 @@
 import { BountyCollection } from '../../src/models/Bounty';
 
-export const testBounty: Partial<BountyCollection> = {
+export const testBountyPartial: Partial<BountyCollection> = {
 	customer_id: '834499078434979890',
 	season: 1,
-	title: 'TEST TITLE',
-	description: 'TEST DESCRIPTION',
 	criteria: 'TEST CRITERIA',
 	editKey: '123',
 	reward: {
@@ -13,10 +11,6 @@ export const testBounty: Partial<BountyCollection> = {
 		scale: 2,
 		amountWithoutScale: 10,
 	},
-	discordMessageId: '',
-	submissionNotes: '',
-	submissionUrl: '',
-	submittedAt: '',
 	createdBy: {
 		discordHandle: 'TESTHANDLE#1234',
 		discordId: '324439902343239764',
@@ -28,6 +22,26 @@ export const testBounty: Partial<BountyCollection> = {
 	statusHistory: [
 		{
 			status: 'Open',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+		{
+			status: 'Draft',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+		{
+			status: 'In-Progress',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+		{
+			status: 'In-Review',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+		{
+			status: 'Completed',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+		{
+			status: 'Deleted',
 			modifiedAt: '2021-07-20T07:00:31.166Z',
 		},
 	],

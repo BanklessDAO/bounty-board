@@ -2,7 +2,7 @@ import Bounty, { BountyCollection } from '../../../src/models/Bounty';
 import { FilterParams, SortParams } from '../../../src/types/Filter';
 import { NextApiQuery } from '../../../src/types/Queries';
 import * as service from '../../../src/services/bounty.service';
-import { FilterQuery, Query } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 
 describe('Testing the bounty service', () => {
   
@@ -100,7 +100,7 @@ describe('Testing the bounty service', () => {
 		it('Sets status as array of values when nothing passed', () => {
 			[undefined, '', 'All'].forEach(entry => {
 				expect(
-					service.filterStatus({}, entry).status
+					service.filterStatus({}, entry).status.$in
 				)
 					.toBeInstanceOf(Array);
 			});

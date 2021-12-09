@@ -37,7 +37,7 @@ paths:
       tags:
         - Admin Actions
   '/v1/customers/{customer_id}':
-    put:
+   patch:
       produces:
         - application/json
       responses:
@@ -144,7 +144,7 @@ paths:
         - View
       summary: Get Bounty records related to the User in any way
   /v1/bounties/create:
-    # why are we not just having POST, PUT, DELETE on the /bounties endpoint?
+    # why are we not just having POST,patch, DELETE on the /bounties endpoint?
     post:
       consumes:
         - application/json
@@ -193,7 +193,7 @@ paths:
         - Owner Actions
       summary: Delete an existing Bounty
   '/v1/bounties/{bountyId}/update':
-    put:
+   patch:
       consumes:
         - application/json
       parameters:
@@ -215,7 +215,7 @@ paths:
         - Owner Actions
       summary: Update an existing Bounty
   '/v1/bounties/{bountyId}/complete':
-    put:
+   patch:
       consumes:
         - application/json
       parameters:
@@ -233,7 +233,7 @@ paths:
       summary: Complete an existing Bounty
   # Hunter actions
   /v1/bounties/{bountyId}/claim:
-    put:
+   patch:
       consumes:
         - application/json
       parameters:
@@ -254,7 +254,7 @@ paths:
         - Hunter Actions
       summary: Claim a Bounty.
   /v1/bounties/{bountyId}/submit:
-    put:
+   patch:
       consumes:
         - application/json
       parameters:

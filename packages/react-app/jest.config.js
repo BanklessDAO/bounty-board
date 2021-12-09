@@ -46,7 +46,7 @@ module.exports = {
     }
   ],
   collectCoverageFrom: [
-    "<rootDir>/src/**/*.{js,jsx,ts,tsx}",
+    "<rootDir>/src/**/*.{js,ts}",
     "!**/node_modules/**",
   ],
 }

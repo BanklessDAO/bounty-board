@@ -36,7 +36,7 @@ export const handler = async (
 		}
 		break;
 
-	case 'PUT' :
+	case 'PATCH' :
 		/* Edit a model by its ID */
 		try {
 			const bountyIsEditable = service.canBeEdited({ bounty, key });

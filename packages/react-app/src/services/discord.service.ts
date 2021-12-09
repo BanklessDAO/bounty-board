@@ -54,6 +54,14 @@ export const publishBountyToDiscordChannel = async (
 	}
 };
 
+export const rewardValue = (reward: BountyCollection['reward']): string => {
+	/**
+	 * Construct a runtime safe reward
+	 */
+	const { amount, currency, scale } = reward;
+	return ((amount ?? 0).valueOf() / 10 ** (scale ?? 0).valueOf()) + ' ' + (currency ?? 'BANK');
+};
+
 /**
  * Creates the required bounty message to integrate with discord
  * @TODO check if there is an off-the-shelf api typing for the return object
@@ -79,7 +87,7 @@ export const generateBountyEmbedsMessage = (bounty: BountyCollection): DiscordEm
 				},
 				{
 					name: 'Reward',
-					value: (bounty.reward.amount.valueOf() / 10 ** bounty.reward.scale.valueOf()) + ' ' + bounty.reward.currency,
+					value: rewardValue(bounty.reward),
 					inline: true,
 				},
 				{

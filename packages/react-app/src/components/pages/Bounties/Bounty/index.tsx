@@ -37,15 +37,15 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	</Flex>
 );
 
+const calculateReward = (_reward: BountyCollection['reward']): string => {
+	return `${(_reward.amount ?? 0) / (10 ** (_reward.scale ?? 0))} ${_reward.currency}`;
+};
+
 const BountySummary = ({
 	title,
 	reward,
 	status,
 }: Pick<BountyCollection, 'title' | 'reward' | 'status'>): JSX.Element => {
-	
-	const calculateReward = (_reward: typeof reward): string => {
-		return `${_reward.amount / 10 ** _reward.scale ?? 0} ${_reward.currency}`;
-	};
 	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
@@ -114,7 +114,7 @@ const BountyDetails = ({
 				createdBy
 					? <GridItem>
 						<Heading size="sm">Requested By</Heading>
-						<DiscordStub name={createdBy.discordHandle} />
+						<DiscordStub name={createdBy.discordHandle as string} />
 					</GridItem>
 					: null
 			}
