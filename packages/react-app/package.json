@@ -44,7 +44,7 @@
     "framer-motion": "^4.1.17",
     "lint-staged": "^11.0.0",
     "mongoose": "^5.13.4",
-    "next": "^11.0.0",
+    "next": "^11.1.3",
     "next-auth": "4.0.0-next.26",
     "next-seo": "^4.26.0",
     "nprogress": "^0.2.0",
