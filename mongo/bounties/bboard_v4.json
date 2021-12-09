@@ -6,6 +6,7 @@
       ,
       "customer_id": "834499078434979890",
       "season": 1,
+      "editKey": "EK2",
       "title": "Implement React Components for Filters",
       "description": "Description for new website landing page with specs",
       "criteria": "A completed bounty has the following deliverables...",
@@ -60,7 +61,8 @@
       "_id": {
         "$oid": "20f6585b453e70eed340e8e3"
       },
-      "customer_id": "834499078434979890",      
+      "customer_id": "834499078434979890",
+      "editKey": "EK3",      
       "season": 1,
       "title": "Implement Changes to the Bounty Board",
       "description": "Description for new website landing page with specs",
@@ -119,6 +121,7 @@
       "discordMessageId": "123",
       "customer_id": "718590743446290492",      
       "season": 1,
+      "editKey": "EK4",      
       "title": "Create Stunning NFT Artwork",
       "description": "Description for new website landing page with specs",
       "criteria": "A completed bounty has the following deliverables...",
@@ -166,7 +169,8 @@
       "_id": {
         "$oid": "40f6585b453e70eed340e8e3"
       },
-      "customer_id": "845400066532704256",      
+      "customer_id": "845400066532704256",
+      "editKey": "EK1",     
       "season": 1,
       "title": "Create new website landing page",
       "description": "Description for new website landing page with specs",
@@ -224,6 +228,7 @@
       },
       "customer_id": "834499078434979890",      
       "season": 1,
+      "editKey": "EK5",
       "title": "Create logic to add Pagination to search filters",
       "description": "Description for new website landing page with specs",
       "criteria": "A completed bounty has the following deliverables...",
@@ -280,6 +285,7 @@
       },
       "customer_id": "834499078434979890",      
       "season": 1,
+      "editKey": "EK6",      
       "title": "Create notes for one meeting",
       "description": "Description for new website landing page with specs",
       "criteria": "A completed bounty has the following deliverables...",
