@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 /* Global typing for Bounties */
 export interface BountyBoardProps {
-  _id: any
+  _id: string
   season?: number
   title: string
   description: string

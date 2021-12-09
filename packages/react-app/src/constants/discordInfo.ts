@@ -3,7 +3,7 @@ const discordInfo = {
 	server: process.env.NEXT_PUBLIC_DISCORD_SERVER_ID,
 	channel: process.env.NEXT_PUBLIC_DISCORD_CHANNEL_BOUNTY_BOARD_ID,
 };
-
+export const baseUrl = 'https://discord.com/channels';
 const supportChannelId = '834499078434979893';
 const serverId = '834499078434979890';
 // separation of concerns: discordInfo.server (bountyboard) vs serverId (support)
@@ -14,4 +14,3 @@ export const discordChannelUrl = `${discordInfo.baseUrl}/${discordInfo.server}/$
 export const discordSupportChannelUrl = `${discordInfo.baseUrl}/${serverId}/${supportChannelId}`;
 export const feedbackUrl = 'https://forms.gle/NhTrynZ8pkkepHzN8';
 
-export default discordInfo;
