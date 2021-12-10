@@ -15,11 +15,12 @@ import {
 	Text,
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
-
 import { BountyBoardProps } from '../../../../models/Bounty';
-import { discordChannelUrl } from '../../../../constants/discordInfo';
+import { baseUrl } from '../../../../constants/discordInfo';
 import Link from 'next/link';
 import ColorModeButton from '../../../../components/parts/ColorModeButton';
+import { CustomerContext } from '../../../../context/CustomerContext';
+import { useContext } from 'react';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -84,60 +85,59 @@ const BountyDetails = ({
 	claimedBy,
 	status,
 	discordMessageId,
-}: BountyBoardProps): JSX.Element => (
-	<Grid gap={6}>
-		<GridItem>
-			<Heading size="sm">HashID</Heading>
-			<Text>{_id}</Text>
-		</GridItem>
-		<GridItem>
-			<Heading size="sm">Description</Heading>
-			<Text>{description}</Text>
-		</GridItem>
-		<GridItem>
-			<Heading size="sm">Done Criteria</Heading>
-			<Text>{criteria}</Text>
-		</GridItem>
-		{
-			createdBy
-				? <GridItem>
-					<Heading size="sm">Requested By</Heading>
-					<DiscordStub name={createdBy.discordHandle} />
-				</GridItem>
-				: null
-		}
-		<GridItem>
-			{status && status.toLowerCase() === 'draft' ? (
-				<AccessibleLink href={`${_id}/edit`}>
-					<Button my={2} size="sm" colorScheme="red">
-            Edit This Draft
-					</Button>
-				</AccessibleLink>
-			) : claimedBy ? (
-				<>
-					<Heading size="sm">Claimed By</Heading>
-					<DiscordStub name={claimedBy.discordHandle} />
-				</>
-			) : (
-				<>
-					<Heading size="sm">Claimed By</Heading>
-					<AccessibleLink
-						isExternal={true}
-						href={
-							discordMessageId
-								? `${discordChannelUrl}/${discordMessageId}`
-								: '/'
-						}
-					>
-						<Button my={2} size="sm" colorScheme="green">
-              Claim It
+}: BountyBoardProps): JSX.Element => {
+	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
+	const url = discordMessageId ? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}` : '/';
+	return (
+		<Grid gap={6}>
+			<GridItem>
+				<Heading size="sm">HashID</Heading>
+				<Text>{_id}</Text>
+			</GridItem>
+			<GridItem>
+				<Heading size="sm">Description</Heading>
+				<Text>{description}</Text>
+			</GridItem>
+			<GridItem>
+				<Heading size="sm">Done Criteria</Heading>
+				<Text>{criteria}</Text>
+			</GridItem>
+			{
+				createdBy
+					? <GridItem>
+						<Heading size="sm">Requested By</Heading>
+						<DiscordStub name={createdBy.discordHandle} />
+					</GridItem>
+					: null
+			}
+			<GridItem>
+				{status && status.toLowerCase() === 'draft' ? (
+					<AccessibleLink href={`${_id}/edit`}>
+						<Button my={2} size="sm" colorScheme="red">
+							Edit This Draft
 						</Button>
 					</AccessibleLink>
-				</>
-			)}
-		</GridItem>
-	</Grid>
-);
+				) : claimedBy ? (
+					<>
+						<Heading size="sm">Claimed By</Heading>
+						<DiscordStub name={claimedBy.discordHandle} />
+					</>
+				) : (
+					<>
+						<Heading size="sm">Claimed By</Heading>
+						<AccessibleLink 
+              isExternal={true}
+              href={url}>
+							<Button my={2} size="sm" colorScheme="green">
+								Claim It
+							</Button>
+						</AccessibleLink>
+					</>
+				)}
+			</GridItem>
+		</Grid>
+	);
+};
 
 const BountyNotFound = (): JSX.Element => (
 	<Stack align="center" justify="center" h="400px">
