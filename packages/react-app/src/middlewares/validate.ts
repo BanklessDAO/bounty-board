@@ -19,7 +19,8 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
 		const { message, errors } = err as { message: string, errors: string[] };
 		return { message, errors };
 	} else {
-		return { err };
+		console.debug(err);
+		return { error: err };
 	}
 };
 

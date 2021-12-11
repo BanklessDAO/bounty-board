@@ -69,7 +69,7 @@ describe('Testing the bounty API', () => {
 			expect(res.statusCode).toEqual(200);
 		});
 
-		it('Can update a bounty', async () => {
+		it('Can update a bounty with PATCH', async () => {
 			const _id = '61b1b528348333e470fd8c99';
 			const testPatchBounty = { _id, ...testBounty };
 
@@ -79,6 +79,8 @@ describe('Testing the bounty API', () => {
 				reward: {
 					currency: 'BANK',
 					amount: 200_000,
+					scale: 0,
+					amountWithoutScale: 200_000,
 				},
 			};
 			req.body = testFieldChange;
@@ -154,6 +156,39 @@ describe('Testing the bounty API', () => {
 				id: _id,
 				key: 'F41L',
 			};
+			await bountyHandler(req, res);
+			expect(res.statusCode).toEqual(400);
+		});
+
+		it('Rejects editing a nested property without specifying all fields for reward', async () => {
+			const _id = '61b1b528348333e470fd8c99';
+			const editKey = 'TESTK3Y';
+			const testPatchBounty = { _id, editKey, ...testBounty };
+			await Bounty.create(testPatchBounty);
+			req.body = { reward: { amount: 200 } };
+			req.method = 'PATCH';
+			req.query = {
+				id: _id,
+				key: editKey,
+			};
+			await bountyHandler(req, res);
+			expect(res.statusCode).toEqual(400);
+		});
+
+		it('Rejects editing a nested property without specifying all fields for discord ids', async () => {
+			const _id = '61b1b528348333e470fd8c99';
+			const editKey = 'TESTK3Y';
+			const testPatchBounty = { _id, editKey, ...testBounty };
+			await Bounty.create(testPatchBounty);
+			req.body = { createdBy: { discordHandle: 'Missing discord Id' } };
+			req.method = 'PATCH';
+			req.query = {
+				id: _id,
+				key: editKey,
+			};
+			await bountyHandler(req, res);
+			expect(res.statusCode).toEqual(400);
+			req.body = { claimedBy: { discordId: 'Missing discord handle' } };
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 		});

@@ -1,33 +1,61 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
-import { getCustomer } from '../../../services/customer.service';
+import * as service from '../../../services/customer.service';
+import { internalServerError, notFound } from '../../../errors';
+import validate from '../../../middlewares/validate';
+import { CustomerSchema } from '../../../models/Customer';
 
-export default async function handler(
+export const handler = async (
 	req: NextApiRequest,
 	res: NextApiResponse
-): Promise<void> {
-	const {
-		query: { id },
-		method,
-	} = req;
+): Promise<void> => {
+
+	const { id } = req.query;
+	if (typeof id !== 'string') {
+		return res.status(400).json({
+			success: false,
+			message: 'Multiple values for id are not supported',
+			id,
+		});
+	}
 
 	await dbConnect();
 
-	switch (method) {
-	case 'GET':
-		try {
-			if (typeof id === 'string') {
-				const customer = await getCustomer(id);
-				res.status(200).json({ success: true, data: customer });
-			} else {
-				res.status(400).json({ success: false, message: 'id must be a string' });
-			}
-		} catch (error) {
-			res.status(404).json({ success: false });
-		}
-		break;
-	default:
-		res.status(400).json({ success: false });
+	const customer = await service.getCustomer(id);
+	if (!customer) {
+		return notFound(res);
+	}
+
+	switch (req.method) {
+	case 'GET': {
+		res.status(200).json({ success: true, data: customer });
 		break;
 	}
-}
+
+	case 'PUT': {
+		try {
+			await service.editCustomer({ customer, body: req.body });
+		} catch (error) {
+			res.status(400).json({ success: false, error });
+		}
+		break;
+	}
+
+	case 'DELETE': {
+		try {
+			await service.deleteCustomer(id);
+			res.status(204).end();
+		} catch (error) {
+			res.status(400).json({ success: false, error });
+		}
+		break;
+	}
+
+	default: {
+		internalServerError(res);
+		break;
+	}
+	}
+};
+
+export default validate({ schema: CustomerSchema, handler });

@@ -2,6 +2,7 @@ import { CustomerProps } from '../models/Customer';
 import { DiscordGuild } from '../types/Discord';
 import Customer from '../models/Customer';
 import { BANKLESS } from '../constants/Bankless';
+import { NotImplementedError } from '../errors';
 
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
@@ -37,5 +38,16 @@ export const getCustomersInUsersGuilds = async (guildsList: DiscordGuild[] | [])
 	const customersList = await getCustomers();
 	const filteredGuilds = filterGuildsToCustomers(guildsList, customersList);
 	return filteredGuilds.length === 0 ? [BANKLESS] : filteredGuilds;
+};
+
+type EditCustomerProps = { customer: CustomerProps, body: Record<string, unknown> };
+export const editCustomer = async ({ customer, body }: EditCustomerProps) => {
+	console.debug({ customer, body });
+	throw new NotImplementedError();
+};
+
+export const deleteCustomer = async (id: string) => {
+	console.debug({ id });
+	throw new NotImplementedError();
 };
 

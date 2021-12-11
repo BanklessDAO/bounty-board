@@ -29,11 +29,7 @@ export const handler = async (
 	switch (req.method) {
 	case 'GET':
 		/* Get a model by its ID */
-		try {
-			res.status(200).json({ success: true, data: bounty });
-		} catch (error) {
-			internalServerError(res);
-		}
+		res.status(200).json({ success: true, data: bounty });
 		break;
 
 	case 'PATCH' :
