@@ -144,6 +144,49 @@ db.bounties.find({ "reward.amount": { $lte: 2000 } });
 // Bounties filtered by reward value between X & Y
 db.bounties.find({ "reward.amount": { $gte: 2000, $lte: 3000 } });
 
+// Bounties filtered twice - season and reward amount range (10-100), then listing all season, title and reward amount to meet criteria
+db.bounties.find(
+  { season: 2, "reward.amount": { $gt: 10, $lt: 100 } },
+  { season: 1, title: 1, "reward.amount": 1, _id: 0 }
+);
+
+// MORE GENERAL HIGH LEVEL QUERIES
+
+// Filter, then List the title of all Season 2 bounties
+db.bounties.find({ season: 2 }, { season: 1, title: 1, _id: 0 });
+
+// Filter, then List title and reward amount of all Season 2 bounties, sorted in descending order by amount
+db.bounties
+  .find({ season: 2 }, { title: 1, "reward.amount": 1 })
+  .sort({ "reward.amount": -1 });
+
+// Filter, then List title and reward amount of Season 2 bounties, for amounts > 99, sorted in descending order
+db.bounties
+  .find(
+    { season: 2, "reward.amount": { $gt: 99 } },
+    { title: 1, "reward.amount": 1 }
+  )
+  .sort({ "reward.amount": -1 });
+
+// Filter for two conditions, then list season, title and reward amount
+db.bounties.find(
+  { season: 2, "reward.amount": { $lt: 20 } },
+  { season: 1, title: 1, "reward.amount": 1, _id: 0 }
+);
+
+// Filter for two conditions, then list, season, title, reward amount, and sort in ascending order
+db.bounties
+  .find(
+    { season: 2, "reward.amount": { $lt: 20 } },
+    { season: 1, title: 1, "reward.amount": 1, _id: 0 }
+  )
+  .sort({ "reward.amount": 1 });
+
+// Find all Season 2 bounties with the word "deploy" in the title
+db.bounties.find({ season: 2, title: { $regex: "deploy" } });
+db.bounties.find({ season: 2, title: /deploy/ });
+db.bounties.find({ season: 2, title: { $regex: /deploy/i } });
+
 // GUILD SPECIFIC QUERIES (need to add data fields)
 
 // How many bounties were created by each Guild? (need to add new data field)
