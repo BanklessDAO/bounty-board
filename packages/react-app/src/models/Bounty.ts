@@ -12,7 +12,7 @@ export interface BountyBoardProps {
     currency: string
     amount: number
     scale: number
-		amountWithoutScale: number
+	amountWithoutScale: number
   }
   createdBy: {
     discordHandle: string

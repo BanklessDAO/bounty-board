@@ -29,7 +29,7 @@ export default {
 						},
 						{
 							name: 'Reward',
-							value: (bounty.reward.amount.valueOf() / 10 ** bounty.reward.scale.valueOf()) + ' ' + bounty.reward.currency,
+							value: bounty.reward.amount.valueOf() + ' ' + bounty.reward.currency,
 							inline: true,
 						},
 						{
