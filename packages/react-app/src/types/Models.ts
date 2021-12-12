@@ -20,6 +20,6 @@ export interface PaginateModel<
 	paginate<O extends PaginateOptions>(
 		query?: FilterQuery<T>,
 		options?: O,
-		callback?: (err: any, result: PaginateResult<PaginateDocument<T, TMethods, TVirtuals, O>>) => void,
+		callback?: (err: any, result: PaginateResult<PaginateDocument<T, TMethods, TVirtuals, O>>) => void
 	): Promise<PaginateResult<PaginateDocument<T, TMethods, TVirtuals, O>>>;
 }

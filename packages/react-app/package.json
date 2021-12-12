@@ -19,17 +19,13 @@
     "build:qa": "env-cmd -f .env.qa yarn build",
     "build:prod": "env-cmd -f .env.prod yarn build",
     "prebuild": "yarn lint",
-    "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve",
+    "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve --resolveJsonModule --allowJs",
     "export": "next export",
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
     "test:unit": "jest",
     "test:cov": "MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --coverage",
     "test:integration": "MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --detectOpenHandles packages/react-app/tests/integration"
-  },
-  "paths": {
-    "@/*": ["./dist/*"],
-    "@tests/*": ["./tests/*"]
   },
   "lint-staged": {
     "*.@(ts|tsx)": [

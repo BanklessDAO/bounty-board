@@ -2,10 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks, MockResponse, MockRequest } from 'node-mocks-http';
 import { Connection } from 'mongoose';
 import dbConnect from '../../../src/utils/dbConnect';
-import Bounty from '../../../src/models/Bounty';
+import Bounty, { BountyCollection, BountyBoardSchema } from '../../../src/models/Bounty';
 import bountiesHandler from '../../../src/pages/api/bounties';
+import { BANKLESS } from '../../../src/constants/Bankless';
 import bountyHandler from '../../../src/pages/api/bounties/[id]';
 import { testBounty } from '../../stubs/bounty.stub';
+import bounties from '../../stubs/bounties.stub.json';
 
 describe('Testing the bounty API', () => {
 	let connection: Connection;
@@ -15,6 +17,8 @@ describe('Testing the bounty API', () => {
 	beforeAll(async () => {
 		const connect = await dbConnect();
 		connection = connect.connections[0];
+		BountyBoardSchema.index({ title: 'text' });
+		await Bounty.createIndexes();
 	});
   
 	afterAll(async () => {
@@ -215,9 +219,91 @@ describe('Testing the bounty API', () => {
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(404);
 		});
+		
+	});
+	
+	describe('Pagination, searching, sorting and filtering', () => {
+		
+		beforeEach(async () => {
+			await Bounty.insertMany(bounties);
+		});
 
-		it('Pagination', async () => {
-			jest.fn();
+		it('Filters results by status', async () => {
+			req.method = 'GET';
+			req.query = {
+				status: 'Open',
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const allOpenStatuses = data.every((d: BountyCollection) => d.status === 'Open');
+			expect(allOpenStatuses).toEqual(true);
+		});
+
+		it('Defaults to filtering to bankless', async () => {
+			req.method = 'GET';
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const allOpenStatuses = data.every((d: BountyCollection) => d.customer_id === BANKLESS.customer_id);
+			expect(allOpenStatuses).toEqual(true);
+		});
+
+		it('Can perform a text search', async () => {
+			req.method = 'GET';
+			req.query = {
+				search: 'react',
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const correctSearchTerm = data[0].title === 'Implement React Components for Filters';
+			expect(correctSearchTerm).toEqual(true);
+		});
+
+		it('Can paginate', async () => {
+			req.method = 'GET';
+			req.query = {
+				limit: '1',
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			expect(data.length).toEqual(1);
+		});
+
+		it('Has a reusable cursor', async () => {
+			req.method = 'GET';
+			req.query = {
+				limit: '1',
+			};
+			await bountiesHandler(req, res);
+			console.warn('Testing for cursors needs more specific test cases');
+		});
+
+		it('defaults to being sorted by reward in ascending order', async () => {
+			req.method = 'GET';
+			await bountiesHandler(req, res);
+			const { data }: { data: BountyCollection[] } = res._getJSONData();
+			const sortedByRewardAsc = data.slice().sort((a, b) => {
+				if (a.reward && b.reward && a.reward.amount && b.reward.amount) {
+					return a.reward.amount - b.reward.amount;
+				}
+				return 1;
+			});
+			expect(data).toEqual(sortedByRewardAsc);
+		});
+
+		it('Can be sorted by reward in descending order', async () => {
+			req.method = 'GET';
+			req.query = {
+				asc: 'false',
+			};
+			await bountiesHandler(req, res);
+			const { data }: { data: BountyCollection[] } = res._getJSONData();
+			const sortedByRewardDesc = data.slice().sort((a, b) => {
+				if (a.reward && b.reward && a.reward.amount && b.reward.amount) {
+					return b.reward.amount - a.reward.amount;
+				}
+				return 1;
+			});
+			expect(data).toEqual(sortedByRewardDesc);
 		});
 	});
 });

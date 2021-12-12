@@ -134,7 +134,7 @@ export const BountySchema = object({
 export type BountyCollection = SchemaToInterface<typeof BountySchema>;
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
-const BountyBoardSchema = new mongoose.Schema({
+export const BountyBoardSchema = new mongoose.Schema({
 	title: {
 		/* The name of this Bounty */
 
@@ -233,7 +233,7 @@ const BountyBoardSchema = new mongoose.Schema({
 	},
 });
 
-BountyBoardSchema.plugin(mongoosePaginate.mongoosePlugin as any);
+BountyBoardSchema.plugin(mongoosePaginate.mongoosePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
   mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);
