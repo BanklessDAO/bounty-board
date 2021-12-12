@@ -1,1 +1,3 @@
-declare module 'mongo-cursor-pagination';
+declare module 'mongo-cursor-pagination' {
+  function mongoosePlugin(): any;
+}
