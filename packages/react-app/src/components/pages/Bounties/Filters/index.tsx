@@ -11,13 +11,10 @@ import {
 	Spacer,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
-
 import ColorModeButton from '../../../parts/ColorModeButton';
-
+import AccessibleLink from '../../../parts/AccessibleLink';
 import { discordSupportChannelUrl } from '../../../../constants/discordInfo';
 import { feedbackUrl } from '../../../../constants/discordInfo';
-
-import AccessibleLink from '../../../parts/AccessibleLink';
 import bountyStatus from '../../../../constants/bountyStatus';
 
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (

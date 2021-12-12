@@ -128,7 +128,7 @@ const BountyDetails = ({
 				) : claimedBy ? (
 					<>
 						<Heading size="sm">Claimed By</Heading>
-						<DiscordStub name={claimedBy.discordHandle} />
+						<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
 					</>
 				) : (
 					<>

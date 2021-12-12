@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session, TokenSet } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
 // type AuthURLProps = { url: string, scopes: string[] };
@@ -24,7 +24,7 @@ export default NextAuth({
 		}),
 	],
 	callbacks: {
-		async jwt({ token, account }) {
+		async jwt({ token, account }: any) {
 			if(account) {
 				// token.profile = profile;
 				token.accessToken = account.access_token;
@@ -33,7 +33,7 @@ export default NextAuth({
 
 			return token;
 		},
-		async session({ session, token }) {
+		async session({ session, token }: { session: Session, token: TokenSet }) {
 			// Send properties to the client, like access_token from a provider.
 			session.accessToken = token.accessToken;
 			return session;

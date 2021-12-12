@@ -26,11 +26,9 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
 
 /**
  * Generic validation middleware that can we used to wrap all routes.
- * Currently checks validation schema for POST PATCHpatch methods.
  * 
  * These must be defined as a yup schema object. You can then wrap routes
  * in the exported function below.
- * 
  * 
  * @param schema is the yup schema object to validate against 
  * @param handler is the next route handler
@@ -38,7 +36,7 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
 const validate = ({ schema, handler }: ValidatorProps): ValidatorFunction => {
 	return async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
 		try {
-			if (req.method && ['POST', 'PATCH'].includes(req.method)) {
+			if (req.method && ['POST', 'PATCH', 'PUT'].includes(req.method)) {
 				if (checkIsEmpty(req)) {
 					return res
 						.status(400)

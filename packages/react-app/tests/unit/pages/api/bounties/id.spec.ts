@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks, MockRequest, MockResponse } from 'node-mocks-http';
 import { handler } from '../../../../../src/pages/api/bounties/[id]';
 import * as service from '../../../../../src/services/bounty.service';
-import { testBounty } from '../../../../stubs/testBounty';
+import { testBounty } from '../../../../stubs/bounty.stub';
 import validate from '../../../../../src/middlewares/validate';
 
 // Prevent code from firing on import by mocking the whole module

@@ -1,9 +1,9 @@
-import { BountySchema } from '../../../../../src/models/Bounty';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks } from 'node-mocks-http';
-import { testBounty } from '../../../../stubs/testBounty';
-import { testBountyPartial } from '../../../../stubs/testBountyPartial';
+import { BountySchema } from '../../../../../src/models/Bounty';
 import validate from '../../../../../src/middlewares/validate';
+import { testBounty } from '../../../../stubs/bounty.stub';
+import { testBountyPartial } from '../../../../stubs/bountyPartial.stub';
 
 describe('Testing POST bounty validation', () => {
 	let [req, res] = [] as unknown as [NextApiRequest, any];

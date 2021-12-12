@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { SchemaToInterface } from '../types/Models';
+import { SchemaToInterface, PaginateModel } from '../types/Models';
 import {
 	string,
 	number,
@@ -7,6 +7,7 @@ import {
 	array,
 	mixed,
 } from 'yup';
+import mongoosePaginate from 'mongo-cursor-pagination';
 
 type RequiredForPostProps = { method: 'POST' | 'PATCH', schema: any, isObject?: boolean };
 const requiredForPost = ({ method, schema, isObject }: RequiredForPostProps) => {
@@ -133,7 +134,7 @@ export const BountySchema = object({
 export type BountyCollection = SchemaToInterface<typeof BountySchema>;
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
-const BountyBoardSchema = new mongoose.Schema<BountyCollection>({
+const BountyBoardSchema = new mongoose.Schema({
 	title: {
 		/* The name of this Bounty */
 
@@ -232,5 +233,7 @@ const BountyBoardSchema = new mongoose.Schema<BountyCollection>({
 	},
 });
 
-export default mongoose.models.Bounty as mongoose.Model<BountyCollection> ||
+BountyBoardSchema.plugin(mongoosePaginate.mongoosePlugin as any);
+
+export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
   mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);

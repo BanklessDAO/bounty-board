@@ -29,10 +29,8 @@ export const publishBountyToDiscordChannel = async (
 	previousStatus: string
 ): Promise<any> => {
 
-	const { DISCORD_BOUNTY_BOARD_WEBHOOK, NEXT_PUBLIC_DISCORD_SERVER_ID, MONGODB_URI } = process.env;
-
-	console.debug(DISCORD_BOUNTY_BOARD_WEBHOOK, NEXT_PUBLIC_DISCORD_SERVER_ID, MONGODB_URI);
-
+	const { DISCORD_BOUNTY_BOARD_WEBHOOK } = process.env;
+	
 	if (!DISCORD_BOUNTY_BOARD_WEBHOOK) {
 		console.warn('Attempting to edit bounties without a discord webhook set, users will not be notified of changes - please ensure the DISCORD_BOUNTY_BOARD_WEBHOOK is correctly set');
 		return;

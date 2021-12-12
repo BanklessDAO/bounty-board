@@ -1,11 +1,12 @@
+import { NextApiRequest } from 'next';
+import { FilterQuery, PaginateResult } from 'mongoose';
 import Bounty, { BountyCollection } from '../models/Bounty';
-import { Query, FilterQuery } from 'mongoose';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { NextApiQuery } from '../types/Queries';
 import { BANKLESS } from '../constants/Bankless';
 import * as discord from './discord.service';
 
-type BountyQuery = Query<BountyCollection[], BountyCollection>;
+type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
 
 export const getFilters = (query: NextApiQuery): FilterParams => {
 	/**
@@ -13,12 +14,12 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	 */
 	const filters = {} as FilterParams;
 	
-	typeof query.status === 'string' ? filters.status = query.status : null;
-	typeof query.search === 'string' ? filters.search = query.search : null;
-	typeof query.customer_id === 'string' ? filters.customer_id = query.customer_id : null;
+	if (typeof query.status === 'string') filters.status = query.status;
+	if (typeof query.search === 'string') filters.search = query.search;
+	if (typeof query.customer_id === 'string') filters.customer_id = query.customer_id;
 	
-	query.lte ? filters.$lte = Number(query.lte) : null;
-	query.gte ? filters.$gte = Number(query.gte) : null;
+	if(query.lte) filters.$lte = Number(query.lte);
+	if(query.gte) filters.$gte = Number(query.gte);
 
 	return filters;
 };
@@ -31,10 +32,7 @@ export const getSort = (query: NextApiQuery): SortParams => {
 	const sort = {} as SortParams;
 	const FALSY_STRINGS = ['false', '0', 'desc', 'no'];
 	
-	const isDescending = FALSY_STRINGS.includes(query.asc as string);
-
-	isDescending ? sort.order = 'desc' : sort.order = 'asc';
-	
+	sort.order = !FALSY_STRINGS.includes(query.asc as string);
 	sort.sortBy = getSortByValue(query.sortBy as string);
 	
 	return sort;
@@ -43,7 +41,7 @@ export const getSort = (query: NextApiQuery): SortParams => {
 export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	/**
 	 * Allows passing of various values as sort params. These need to coalesce
-	 * to a mongoDB schema item, so I'vepatch in a Type for accepted sort outputs
+	 * to a mongoDB schema item, so there is a Type for accepted sort outputs
 	 * to indicate the required @return value.
 	 */
 	let output: AcceptedSortOutputs;
@@ -53,7 +51,7 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 		output = 'reward.amount';
 		break;
 	default:
-		output = 'reward.amount';
+		output = '_id';
 	}
 	return output;
 };
@@ -118,11 +116,22 @@ export const filterCustomerId = (query: FilterQuery<BountyCollection>, customer_
 	return query;
 };
 
+export const getPagination = (query: NextApiQuery): BountyQuery => ({
+	/**
+	 * Extracts pagination variables from the request into a bountyQuery
+	 * @param query is the next query object
+	 * @returns a valid bountyQuery
+	 */
+	next: (query.next && typeof query.next === 'string') ? query.next : undefined,
+	prev: (query.previous && typeof query.previous === 'string') ? query.previous : undefined,
+	limit: (Number(query.limit)) ? Number(query.limit) : undefined,
+});
+
+
 export const handleFilters = (filters: FilterParams): BountyQuery => {
 	/**
 	 * Construct the filter query and return query object from mongoose
 	 */
-	// let filterQuery = {} as FQ<BountyCollection>;
 	let filterQuery = {} as FilterQuery<BountyCollection>;
 	
 	const { status, search, $lte, $gte, customer_id } = filters;
@@ -133,26 +142,41 @@ export const handleFilters = (filters: FilterParams): BountyQuery => {
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
 	filterQuery = handleEmpty(filterQuery);
 
-	return Bounty.find(filterQuery);
+	return filterQuery;
 };
 
-export const handleSort = (query: BountyQuery, sort: SortParams): BountyQuery => {
+export const handleSort = (sort: SortParams): BountyQuery => {
 	/**
 	 * Take the existing query object and add any sorting information before returning
 	 */
-	const sortStatement = { [sort.sortBy as string]: sort.order };
-	return query.sort(sortStatement);
+	return {
+		paginatedField: sort.sortBy,
+		sortAscending: sort.order,
+	};
 };
 
-export const getBounties = async (filters: FilterParams, sort: SortParams): Promise<BountyQuery> => {
+
+export const getBounties = async (req: NextApiRequest): Promise<PaginateResult<BountyCollection> | PaginateResult<[]>> => {
 	/**
-	 * @returns the query object (awaiting execution) for getting bounties
-	 * having applied the relevant server-side filtering and sorting
+	 * Grabs the filter, sort and pagination options from the request into a BountyQuery
+	 * Object that can be passed to the Bounty.paginate function.
+	 * @returns a list of bounties
 	 */
-	let query: BountyQuery;
-	query = handleFilters(filters);
-	query = handleSort(query, sort);
-	return query;
+	const filters = getFilters(req.query);
+	const sort = getSort(req.query);
+	const paginationOptions = getPagination(req.query);
+	const filterQuery = handleFilters(filters);
+	const sortQuery = handleSort(sort);
+	
+	const bountyQuery: BountyQuery = {
+		query: {
+			...filterQuery,
+		},
+		...paginationOptions,
+		...sortQuery,
+	};
+	console.debug({ bountyQuery });
+	return await Bounty.paginate(bountyQuery);
 };
 
 export const getBounty = async (id: string): Promise<BountyCollection | null> => {

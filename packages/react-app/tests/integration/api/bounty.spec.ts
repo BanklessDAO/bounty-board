@@ -1,11 +1,11 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createMocks, MockResponse, MockRequest } from 'node-mocks-http';
+import { Connection } from 'mongoose';
 import dbConnect from '../../../src/utils/dbConnect';
 import Bounty from '../../../src/models/Bounty';
-import { Connection } from 'mongoose';
-import { createMocks, MockResponse, MockRequest } from 'node-mocks-http';
 import bountiesHandler from '../../../src/pages/api/bounties';
 import bountyHandler from '../../../src/pages/api/bounties/[id]';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { testBounty } from '../../stubs/testBounty';
+import { testBounty } from '../../stubs/bounty.stub';
 
 describe('Testing the bounty API', () => {
 	let connection: Connection;
@@ -40,7 +40,7 @@ describe('Testing the bounty API', () => {
 			expect(res._getJSONData().data).toEqual(
 				expect.objectContaining(testBounty)
 			);
-			expect(res.statusCode).toEqual(200);
+			expect(res.statusCode).toEqual(201);
 		});
 
 		it('Can get bounties', async () => {

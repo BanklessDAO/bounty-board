@@ -34,7 +34,8 @@ export const handler = async (
 
 	case 'PUT': {
 		try {
-			await service.editCustomer({ customer, body: req.body });
+			const editedCustomer = await service.editCustomer({ id, body: req.body });
+			res.status(201).json({ success: true, data: editedCustomer });
 		} catch (error) {
 			res.status(400).json({ success: false, error });
 		}
