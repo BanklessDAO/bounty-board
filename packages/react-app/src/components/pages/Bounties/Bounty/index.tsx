@@ -61,7 +61,7 @@ const BountySummary = ({
 		>
 			{reward && (
 				<Heading mt={1} size="md">
-					{reward.amount / 10 ** reward.scale} {reward.currency}
+					{reward.amount} {reward.currency}
 				</Heading>
 			)}
 		</Box>
