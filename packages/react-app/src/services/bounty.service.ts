@@ -6,7 +6,7 @@ import { NextApiQuery } from '../types/Queries';
 import { BANKLESS } from '../constants/Bankless';
 import * as discord from './discord.service';
 
-type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
+export type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
 
 export const getFilters = (query: NextApiQuery): FilterParams => {
 	/**
@@ -24,19 +24,16 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	return filters;
 };
 
-export const getSort = (query: NextApiQuery): SortParams => {
+export const getSort = (query: NextApiQuery): BountyQuery => (
 	/**
 	 * Retrieve implemented sort filters from query string params
 	 * Sort defaults to ascending order
 	 */
-	const sort = {} as SortParams;
-	const FALSY_STRINGS = ['false', '0', 'desc', 'no'];
-	
-	sort.order = !FALSY_STRINGS.includes(query.asc as string);
-	sort.sortBy = getSortByValue(query.sortBy as string);
-	
-	return sort;
-};
+	{
+		sortAscending: !['false', '0', 'desc', 'no'].includes(query.asc as string),
+		paginatedField: getSortByValue(query.sortBy as string),
+	}
+);
 
 export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	/**
@@ -51,7 +48,7 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 		output = 'reward.amount';
 		break;
 	default:
-		output = '_id';
+		output = 'reward.amount';
 	}
 	return output;
 };
@@ -123,16 +120,18 @@ export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	 * @returns a valid bountyQuery
 	 */
 	next: (query.next && typeof query.next === 'string') ? query.next : undefined,
-	prev: (query.previous && typeof query.previous === 'string') ? query.previous : undefined,
+	previous: (query.previous && typeof query.previous === 'string') ? query.previous : undefined,
 	limit: (Number(query.limit)) ? Number(query.limit) : undefined,
 });
 
 
-export const handleFilters = (filters: FilterParams): BountyQuery => {
+export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	/**
 	 * Construct the filter query and return query object from mongoose
 	 */
 	let filterQuery = {} as FilterQuery<BountyCollection>;
+
+	const filters = getFilters(query);
 	
 	const { status, search, $lte, $gte, customer_id } = filters;
 	
@@ -162,11 +161,9 @@ export const getBounties = async (req: NextApiRequest): Promise<PaginateResult<B
 	 * Object that can be passed to the Bounty.paginate function.
 	 * @returns a list of bounties
 	 */
-	const filters = getFilters(req.query);
-	const sort = getSort(req.query);
+	const filterQuery = getFilterQuery(req.query);
+	const sortQuery = getSort(req.query);
 	const paginationOptions = getPagination(req.query);
-	const filterQuery = handleFilters(filters);
-	const sortQuery = handleSort(sort);
 	
 	const bountyQuery: BountyQuery = {
 		query: {
@@ -175,7 +172,7 @@ export const getBounties = async (req: NextApiRequest): Promise<PaginateResult<B
 		...paginationOptions,
 		...sortQuery,
 	};
-	console.debug({ bountyQuery });
+
 	return await Bounty.paginate(bountyQuery);
 };
 

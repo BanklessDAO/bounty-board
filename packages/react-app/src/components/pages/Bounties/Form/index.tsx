@@ -86,8 +86,6 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 				},
 				body: JSON.stringify(output),
 			});
-			const j = await res.json();
-			console.debug(j);
 
 			if (!res.ok) {
 				if (res.status === 400) {

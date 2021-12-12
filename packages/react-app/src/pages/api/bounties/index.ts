@@ -23,7 +23,8 @@ const handler = async (
 				...paginationStats,
 			});
 		} catch (error) {
-			res.status(400).json({ success: false });
+			console.warn(error);
+			res.status(400).json({ success: false, error });
 		}
 		break;
 	}
