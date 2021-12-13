@@ -14,9 +14,11 @@ import '../styles/css/nprogress.css';
 import { CustomerContext, getCustomerFromBountyId, setCustomerFromLocalStorage } from '../context/CustomerContext';
 import { BANKLESS } from '../constants/Bankless';
 
+
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
+
 
 const MotionBox = motion(Box);
 

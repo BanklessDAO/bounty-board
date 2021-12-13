@@ -7,7 +7,7 @@ export default async function handler(
 	res: NextApiResponse
 ): Promise<void> {
 	await dbConnect();
-
+	
 	switch (req.method) {
 	case 'GET':
 		try {
