@@ -1,36 +1,37 @@
-import { Box, Stack, Heading } from '@chakra-ui/react';
+import {
+	Box,
+	Stack,
+	Flex,
+	// Heading
+} from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
+// import Sidebar from '../Sidebar';
 import Header from '../Header';
 import Footer from '../Footer';
 
-type LayoutProps = {
-  children: ReactNode
-  title: string
-}
+// import { useColorModeValue } from "@chakra-ui/react";
 
-const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
+type LayoutProps = {
+	children: ReactNode;
+};
+
+const SiteLayout = ({ children }: LayoutProps): JSX.Element => {
 	return (
-		<>
-			<Header />
-			<Stack
-				mx="10"
-				mt="30"
-				mb="10"
-				transition="background 100ms linear"
-				align="center"
-				justify="center"
-				bg="primary"
-			>
-				<Box>
-					<Heading size="xl" as="h1" textAlign="center">
-						{title}
-					</Heading>
-					{children}
-				</Box>
-			</Stack>
-			<Footer />
-		</>
+		<Flex minHeight="100vh" bgColor="primary">
+			{/* <Sidebar /> */}
+			<Box flex="1">
+				<Header />
+				<Stack
+					align="center"
+					justify="center"
+					transition="background 100ms linear"
+				>
+					<Box>{children}</Box>
+				</Stack>
+				<Footer />
+			</Box>
+		</Flex>
 	);
 };
 

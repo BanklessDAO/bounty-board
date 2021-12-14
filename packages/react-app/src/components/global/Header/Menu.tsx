@@ -10,7 +10,6 @@ import { toggleDiscordSignIn } from '../../../services/discord.service';
 import { BANKLESS } from '../../../constants/Bankless';
 import useSWR from 'swr';
 import { DiscordGuild } from '../../../types/Discord';
-import axios from 'axios';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -53,14 +52,14 @@ interface MenuLinksProps {
 	isOpen: boolean;
 }
 
-const tokenFetcher = (url: string, token: string) => axios.get(
+const tokenFetcher = (url: string, token: string) => fetch(
 	url,
 	{
 		headers: {
 			authorization: `Bearer ${token}`,
 		},
 	}
-).then(res => res.data).catch(error => console.warn(error));
+).then(res => res.json());
 
 export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 
@@ -69,25 +68,25 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 	const [guilds, setGuilds] = useState<DiscordGuild[]>();
 
 	// error handle
-	const { data: guildApiResponse, error } = useSWR<DiscordGuild[], unknown>(
+	const { data: guildApiResponse } = useSWR<DiscordGuild[], unknown>(
 		session
 			? ['https://discord.com/api/users/@me/guilds', session.accessToken]
 			: null
 		, tokenFetcher
 	);
 
-	if (error) console.warn('Unable to fetch guilds for the current user, ensure the permissions are correctly set');
-
-
 	useEffect(() => {
-		const guildsExist = guildApiResponse && (guildApiResponse.length > 0);
-		if(session && guildsExist) setGuilds(guildApiResponse);
+		if(session && guildApiResponse) setGuilds(guildApiResponse);
 	}, [guildApiResponse]);
 
 	useEffect(() => {
 		if (session && guilds) {
-			axios.post('/api/customers/user', { guilds })
-				.then(({ data: { items } }) => setCustomers(items));
+			fetch('/api/customers/user', {
+				method: 'POST',
+				body: JSON.stringify(guilds),
+			})
+				.then(res => res.json())
+				.then(({ data }) => setCustomers(data));
 		}
 	}, [session, guilds]);
 

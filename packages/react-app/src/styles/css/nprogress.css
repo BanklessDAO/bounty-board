@@ -79,3 +79,28 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: "Calibre";
+  src: url("../../../assets/fonts/Calibre-Medium.woff2");
+}
+
+@font-face {
+  font-family: "Calibre Bold";
+  src: url("../../../assets/fonts/Calibre-Semibold.woff2");
+}
+
+.bounty-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
