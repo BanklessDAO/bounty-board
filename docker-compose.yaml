@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+
+  frontend:
+    build: .
+    environment:
+      - CHOKIDAR_USEPOLLING="true"
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    volumes:
+      - ./mongo:/usr/tmp/mongo
+
+  mongo-seed:
+    image: mongo
+    volumes:
+      - ./mongo:/usr/tmp/mongo
+    command: /usr/tmp/mongo/seed.sh
+    links:
+      - mongo
+    depends_on:
+      - mongo

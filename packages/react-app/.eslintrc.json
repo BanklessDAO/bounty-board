@@ -74,6 +74,16 @@
     "space-infix-ops": "error",
     "space-unary-ops": "error",
     "spaced-comment": "error",
-    "yoda": "error"
-  }
+    "yoda": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  },
+  "overrides": [
+    {
+      // enable the rule specifically for TypeScript files
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": ["error"]
+      }
+    }
+  ]
 }

@@ -151,3 +151,20 @@ If you've made it this far, the application should run and should be showing a b
 ### Setting Up the Discord Webhook
 The `DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be fetched from a member of the bounty board development team. Add it to your `.env.local` file once you have it. 
 
+## Running from Docker Compose
+You can run the bounty-board project from docker-compose
+
+**Features:**
+- Frontend UI with Hot Reload
+- MongoDB Database
+- MongoDB Seed data
+
+### Configure local `.env` file
+This is required because react-app looks for a `.env.local` file and should contain `MONGODB_URI=mongodb://mongo:27017/bountyboard`
+
+### Start
+To start the entire project run the following command then navigate to http://localhost:3000
+
+```
+docker compose up -d
+```
