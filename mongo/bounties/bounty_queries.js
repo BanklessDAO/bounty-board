@@ -150,7 +150,10 @@ db.bounties.find(
   { season: 1, title: 1, "reward.amount": 1, _id: 0 }
 );
 
-// MORE GENERAL HIGH LEVEL QUERIES
+// GENERAL HIGH LEVEL QUERIES WITH SORTING
+
+// Using Projection to shape results
+db.bounties.find({}, { season: 1, title: 1, "reward.amount": 1, _id: 0 });
 
 // Filter, then List the title of all Season 2 bounties
 db.bounties.find({ season: 2 }, { season: 1, title: 1, _id: 0 });
@@ -217,6 +220,202 @@ db.bounties.aggregate([
       _id: 0,
       title: 1,
       "customerName.customerName": 1,
+    },
+  },
+]);
+
+// COMPLEX QUERIES THROUGH AGGREGATION
+
+// seasonal filter
+// group by Bounty Creator, number of bounties per creator
+// average reward posted
+// sort by total bounties per person
+
+db.bounties
+  .aggregate([
+    { $match: { season: 2 } },
+    {
+      $group: {
+        _id: { creator_name: "$createdBy.discordHandle" },
+        num_bounties_created: { $sum: 1 },
+        avg_reward_amt: { $avg: "$reward.amount" },
+      },
+    },
+    { $sort: { num_bounties_created: -1 } },
+  ])
+  .pretty();
+
+// seasonal filter
+// group by Currency, number of bounties per Currency,
+// average reward posted
+// sort by average reward posted, descending order
+
+db.bounties
+  .aggregate([
+    { $match: { season: 2 } },
+    {
+      $group: {
+        _id: { currency: "$reward.currency" },
+        num_bounties_in_currency: { $sum: 1 },
+        avg_reward_amt: { $avg: "$reward.amount" },
+      },
+    },
+    { $sort: { avg_reward_amt: -1 } },
+  ])
+  .pretty();
+
+// seasonal filter
+// group by customer_id, number of bounties by customer,
+// total rewards posted
+// sort by total rewards posted, descending order
+
+db.bounties
+  .aggregate([
+    { $match: { season: 1 } },
+    {
+      $group: {
+        _id: { customer_id: "$customer_id" },
+        num_bounties_per_customer: { $sum: 1 },
+        total_reward_amt: { $sum: "$reward.amount" },
+      },
+    },
+    { $sort: { total_reward_amt: -1 } },
+  ])
+  .pretty();
+
+// seasonal filter
+// group by submitter discordhandle, number of bounties per submitter,
+// total rewards claimed
+// sort by total rewards claimed, descending order
+
+db.bounties
+  .aggregate([
+    { $match: { season: 1 } },
+    {
+      $group: {
+        _id: { submitter_name: "$submittedBy.discordHandle" },
+        num_submissions: { $sum: 1 },
+        total_reward_claimed: { $sum: "$reward.amount" },
+      },
+    },
+    { $sort: { total_reward_claimed: -1 } },
+  ])
+  .pretty();
+
+//short cut to grouping by Bounty Creator
+// can apply to Claimers and Submitters
+db.bounties.aggregate([
+  { $match: { season: 2 } },
+  { $sortByCount: "$createdBy.discordHandle" },
+]);
+
+// seasonal filter
+// group by bounty 'status', number of bounties per each status
+// sort by number of bounties
+
+db.bounties
+  .aggregate([
+    { $match: { season: 2 } },
+    {
+      $group: { _id: { bounty_status: "$status" }, num_bounties: { $sum: 1 } },
+    },
+    { $sort: { num_bounties: -1 } },
+  ])
+  .pretty();
+
+// short cut to do grouping by status
+db.bounties.aggregate([{ $match: { season: 2 } }, { $sortByCount: "$status" }]);
+
+// seasonal filter
+// sort by createdAt date, starting with most recent
+// project/display only title and createdAt date
+// note: can use '$toDate' instead of '$convert, input, to'
+
+db.bounties
+  .aggregate([
+    { $match: { season: 2 } },
+    { $sort: { createdAt: -1 } },
+    {
+      $project: {
+        _id: 0,
+        title: 1,
+        createdAt: { $convert: { input: "$createdAt", to: "date" } },
+      },
+    },
+  ])
+  .pretty();
+
+// seasonal filter
+// display avg_reward bountied per week
+// group by week
+// sort by week, by week in descending order
+db.bounties.aggregate([
+  { $match: { season: 1 } },
+  {
+    $project: {
+      _id: 0,
+      season: 1,
+      "reward.amount": 1,
+      createdAt: { $toDate: "$createdAt" },
+    },
+  },
+  {
+    $group: {
+      _id: { week: { $isoWeek: "$createdAt" } },
+      avg_reward: { $avg: "$reward.amount" },
+    },
+  },
+  { $sort: { week: -1 } },
+]);
+
+// seasonal filter
+// display total rewards bountied per week
+// group by week
+// sort by week, by week in descending order
+db.bounties.aggregate([
+  { $match: { season: 1 } },
+  {
+    $project: {
+      _id: 0,
+      season: 1,
+      "reward.amount": 1,
+      createdAt: { $toDate: "$createdAt" },
+    },
+  },
+  {
+    $group: {
+      _id: { week: { $isoWeek: "$createdAt" } },
+      total_reward: { $sum: "$reward.amount" },
+    },
+  },
+  { $sort: { week: -1 } },
+]);
+
+// DISPLAY ($project) SPECIFIC FIELDS
+
+// display subset of fields in bounties
+// then, sort by reward amount
+db.bounties.aggregate([
+  {
+    $project: {
+      _id: 0,
+      season: 1,
+      title: 1,
+      "reward.amount": 1,
+      "reward.currency": 1,
+    },
+  },
+  { $sort: { "reward.amount": -1 } },
+]);
+
+// group bounty by Season,
+// average reward committed
+db.bounties.aggregate([
+  { $project: { _id: 0, season: 1, "reward.amount": 1 } },
+  {
+    $group: {
+      _id: { bounty_season: "$season" },
+      avg_reward: { $avg: "$reward.amount" },
     },
   },
 ]);
