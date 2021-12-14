@@ -162,9 +162,21 @@ You can run the bounty-board project from docker-compose
 ### Configure local `.env` file
 This is required because react-app looks for a `.env.local` file and should contain `MONGODB_URI=mongodb://mongo:27017/bountyboard`
 
-### Start
+### Start all Services
 To start the entire project run the following command then navigate to http://localhost:3000
 
 ```
 docker compose up -d
 ```
+
+### Start individual Services
+To start a subset of services for the project run the following
+
+```
+docker compose up <servicename> ... -d
+```
+Example:
+```
+docker compose up mongo mongo-seed -d
+```
+
