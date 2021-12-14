@@ -122,7 +122,6 @@ const BountyDetails = ({
 				<>
 					<Heading size="sm">Claimed By</Heading>
 					<AccessibleLink
-						isExternal={true}
 						href={
 							discordMessageId
 								? `${discordChannelUrl}/${discordMessageId}`
