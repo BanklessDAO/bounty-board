@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
 import { BountySchema } from '../../../models/Bounty';
-import validate from '../../../middlewares/validate';
 import { internalServerError, notFound } from '../../../errors';
 import * as service from '../../../services/bounty.service';
+import middlewares from '../../../middlewares';
 
 export const handler = async (
 	req: NextApiRequest,
@@ -65,4 +65,4 @@ export const handler = async (
 	}
 };
 
-export default validate({ schema: BountySchema, handler });
+export default middlewares({ schema: BountySchema, handler });

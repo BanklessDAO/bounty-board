@@ -2,7 +2,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { OptionalObjectSchema, ObjectShape } from 'yup/lib/object';
 
 type ValidatorFunction = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
-type ValidatorProps = {
+export type ValidatorProps = {
   schema: OptionalObjectSchema<ObjectShape>,
   handler: NextApiHandler,
 };

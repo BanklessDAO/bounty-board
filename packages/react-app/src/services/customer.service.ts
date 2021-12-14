@@ -45,9 +45,9 @@ export const getCustomersInUsersGuilds = async ({ guilds }: { guilds: DiscordGui
 	return filteredGuilds.length === 0 ? [BANKLESS] : filteredGuilds;
 };
 
-type EditCustomerProps = { id: string, body: Record<string, unknown> };
-export const editCustomer = async ({ id, body }: EditCustomerProps): Promise<CustomerProps> => {
-	const updatedCustomer = await Customer.findByIdAndUpdate(id, body, {
+type EditCustomerProps = { customer: CustomerProps, body: Record<string, unknown> };
+export const editCustomer = async ({ customer, body }: EditCustomerProps): Promise<CustomerProps> => {
+	const updatedCustomer = await Customer.findByIdAndUpdate(customer._id, body, {
 		new: true,
 		omitUndefined: true,
 		runValidators: true,

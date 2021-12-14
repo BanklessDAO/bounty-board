@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
 import * as service from '../../../services/customer.service';
 import { CustomerSchema } from '../../../models/Customer';
-import validate from '../../../middlewares/validate';
+import middlewares from '../../../middlewares';
 
 export const handler = async (
 	req: NextApiRequest,
@@ -38,4 +38,4 @@ export const handler = async (
 	}
 };
 
-export default validate({ schema: CustomerSchema, handler });
+export default middlewares({ schema: CustomerSchema, handler });

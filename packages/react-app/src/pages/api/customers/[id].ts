@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../../utils/dbConnect';
 import * as service from '../../../services/customer.service';
 import { internalServerError, notFound } from '../../../errors';
-import validate from '../../../middlewares/validate';
 import { CustomerSchema } from '../../../models/Customer';
+import middlewares from '../../../middlewares';
 
 export const handler = async (
 	req: NextApiRequest,
@@ -34,7 +34,7 @@ export const handler = async (
 
 	case 'PUT': {
 		try {
-			const editedCustomer = await service.editCustomer({ id, body: req.body });
+			const editedCustomer = await service.editCustomer({ customer, body: req.body });
 			res.status(201).json({ success: true, data: editedCustomer });
 		} catch (error) {
 			res.status(400).json({ success: false, error });
@@ -59,4 +59,4 @@ export const handler = async (
 	}
 };
 
-export default validate({ schema: CustomerSchema, handler });
+export default middlewares({ schema: CustomerSchema, handler });
