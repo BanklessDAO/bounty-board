@@ -86,7 +86,7 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 		// better to move this to a use swr hook with defaults and trigger/mutate
 		if (session && guilds) {
 			axios.post('/api/customers/user', { guilds })
-				.then(({ data: { items } }) => setCustomers(items))
+				.then(({ data: res }) => setCustomers(res.data))
 				.catch(() => console.warn('There was a problem fetching the user\'s guilds from the bountyboard server'));
 		}
 	}, [session, guilds]);

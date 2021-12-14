@@ -7,6 +7,7 @@ import Filters from './Filters';
 import useDebounce from '../../../hooks/useDebounce';
 import { CustomerContext } from '../../../context/CustomerContext';
 import { BANKLESS } from '../../../constants/Bankless';
+import { useRouter } from 'next/router';
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -34,6 +35,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 
 	const { customer } = useContext(CustomerContext);
 	const { customer_id } = customer;
+	const router = useRouter();
 
 	const maxPages = () => {
 		if (!bounties) return 0;
@@ -61,7 +63,6 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	dynamicUrl += `&gte=${gte}`;
 	dynamicUrl += `&sortBy=${sortBy}`;
 	dynamicUrl += `&asc=${sortAscending}`;
-	// empty customer id will pass string as "undefined"
 	dynamicUrl += `&customer_id=${customer_id ?? BANKLESS.customer_id}`;
 		
 	const { data: bounties, error } = useSWR(

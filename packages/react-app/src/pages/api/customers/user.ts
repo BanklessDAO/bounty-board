@@ -10,8 +10,8 @@ export default async function handler(
 	switch (req.method) {
 	case 'POST':
 		try {
-			const items = await service.getCustomersInUsersGuilds(req.body);
-			res.status(200).json({ success: true, items });
+			const data = await service.getCustomersInUsersGuilds(req.body);
+			res.status(200).json({ success: true, data });
 		} catch (error) {
 			res.status(400).json({ success: false, message: error });
 		}

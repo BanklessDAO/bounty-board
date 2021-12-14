@@ -14,12 +14,14 @@ const handler = async (
 	case 'GET': {
 		try {
 			const bounties = await service.getBounties(req);
-			const { results, ...paginationStats } = bounties;
-			const resultsPerPage = Array.isArray(results) ? results.length : 0;
+			const { results: data, limit: _limit, ...paginationStats } = bounties;
+			const results = Array.isArray(data) ? data.length : 0;
+			const limit = req.query.limit ? req.query.limit : null; 
 			res.status(200).json({
 				success: true,
-				data: results,
-				resultsPerPage,
+				data,
+				results,
+				limit,
 				...paginationStats,
 			});
 		} catch (error) {

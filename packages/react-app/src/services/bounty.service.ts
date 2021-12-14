@@ -105,11 +105,11 @@ export const handleEmpty = (query: FilterQuery<BountyCollection>): FilterQuery<B
 	return isEmpty ? {} : query;
 };
 
-export const filterCustomerId = (query: FilterQuery<BountyCollection>, customer_id?: string): FilterQuery<BountyCollection> => {
+export const filterCustomerId = (query: FilterQuery<BountyCollection>, customer_id: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Remove bounties not relating to the currently selected DAO
 	 */
-	query.customer_id = customer_id ?? BANKLESS.customer_id;
+	query.customer_id = customer_id;
 	return query;
 };
 
@@ -137,7 +137,7 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
-	filterQuery = filterCustomerId(filterQuery, customer_id);
+	if(customer_id) filterQuery = filterCustomerId(filterQuery, customer_id);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
 	filterQuery = handleEmpty(filterQuery);
 
