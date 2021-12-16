@@ -419,3 +419,34 @@ db.bounties.aggregate([
     },
   },
 ]);
+
+// seasonal comparison for BanklessDAO
+// group by Season
+// number of bounties created
+
+db.bounties.aggregate([
+  { $match: { customer_id: "834499078434979890" } },
+  { $project: { _id: 1, title: 1, season: 1 } },
+  {
+    $group: {
+      _id: { bounty_season: "$season" },
+      number_of_bounties: { $sum: 1 },
+    },
+  },
+]);
+
+// GETTING NUMBER OF BOUNTIES PAST 7-days
+
+// type in shell to get date from 7-days ago
+var d = new Date();
+d.setDate(d.getDate() - 7);
+
+db.bounties
+  .aggregate([
+    { $match: { season: 2 } },
+    { $project: { _id: 1, title: 1, createdAt: { $toDate: "$createdAt" } } },
+    { $match: { createdAt: { $gt: d } } },
+    { $unwind: "$createdAt" },
+    { $match: { createdAt: { $gt: d } } },
+  ])
+  .pretty();
