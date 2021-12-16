@@ -4,7 +4,6 @@ import { Connection } from 'mongoose';
 import dbConnect from '../../../src/utils/dbConnect';
 import Bounty, { BountyCollection, BountyBoardSchema } from '../../../src/models/Bounty';
 import bountiesHandler from '../../../src/pages/api/bounties';
-import { BANKLESS } from '../../../src/constants/Bankless';
 import bountyHandler from '../../../src/pages/api/bounties/[id]';
 import { testBounty } from '../../stubs/bounty.stub';
 import bounties from '../../stubs/bounties.stub.json';
@@ -239,12 +238,13 @@ describe('Testing the bounty API', () => {
 			expect(allOpenStatuses).toEqual(true);
 		});
 
-		it('Defaults to filtering to bankless', async () => {
+		it('Defaults to filtering all', async () => {
 			req.method = 'GET';
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const allOpenStatuses = data.every((d: BountyCollection) => d.customer_id === BANKLESS.customer_id);
-			expect(allOpenStatuses).toEqual(true);
+			const customerIds = data.map((d: BountyCollection) => d.customer_id);
+			const uniqueIds = new Set(customerIds);
+			expect(uniqueIds.size).toBeGreaterThan(1);
 		});
 
 		it('Can perform a text search', async () => {

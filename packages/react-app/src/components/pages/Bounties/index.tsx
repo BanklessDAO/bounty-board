@@ -7,7 +7,6 @@ import Filters from './Filters';
 import useDebounce from '../../../hooks/useDebounce';
 import { CustomerContext } from '../../../context/CustomerContext';
 import { BANKLESS } from '../../../constants/Bankless';
-import { useRouter } from 'next/router';
 
 export type PreFilterProps = {
   id?: string | string[]
@@ -35,7 +34,6 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 
 	const { customer } = useContext(CustomerContext);
 	const { customer_id } = customer;
-	const router = useRouter();
 
 	const maxPages = () => {
 		if (!bounties) return 0;

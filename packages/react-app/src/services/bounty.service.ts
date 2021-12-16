@@ -3,7 +3,6 @@ import { FilterQuery, PaginateResult } from 'mongoose';
 import Bounty, { BountyCollection } from '../models/Bounty';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { NextApiQuery } from '../types/Queries';
-import { BANKLESS } from '../constants/Bankless';
 import * as discord from './discord.service';
 
 export type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };

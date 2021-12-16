@@ -16,7 +16,7 @@ const handler = async (
 			const bounties = await service.getBounties(req);
 			const { results: data, limit: _limit, ...paginationStats } = bounties;
 			const results = Array.isArray(data) ? data.length : 0;
-			const limit = req.query.limit ? req.query.limit : null; 
+			const limit = req.query.limit ? req.query.limit : _limit;
 			res.status(200).json({
 				success: true,
 				data,

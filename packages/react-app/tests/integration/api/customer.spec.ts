@@ -107,7 +107,7 @@ describe('Testing the customer API', () => {
 			req.method = 'POST';
 			req.body = { guilds };
 			await userCustomerHandler(req, res);
-			expect(res._getJSONData().items.length).toEqual(4);
+			expect(res._getJSONData().data.length).toEqual(4);
 		});
 	});
 

@@ -1,8 +1,16 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function (
+export default async function(
 	req: NextApiRequest,
 	res: NextApiResponse
 ): Promise<void> {
-  if (req.method = 'GET') res.status(200).json({ 'Message': 'Welcome to the bountyboard API' });
-};
+	switch (req.method) {
+	case 'GET': {
+		res.status(200).json({ 'Message': 'Welcome to the bountyboard API' });
+		break;
+	}
+	default: {
+		res.status(400).json({ 'Message': 'Method not implemented' });
+	}
+	}
+}
