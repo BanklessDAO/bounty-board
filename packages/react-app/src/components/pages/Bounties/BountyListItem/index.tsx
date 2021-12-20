@@ -27,7 +27,7 @@ export const BountyListItem = ({
 			}}
 		>
 			<Box width={{ base: '100vw', lg: '700px' }} align="left">
-				<Flex justifyContent="space-between" pr={{ base: '2', lg: '2' }}>
+				<Flex justifyContent="space-between" pr={{ base: '2', lg: '0' }}>
 					<Heading
 						w="100%"
 						flex="1"
@@ -48,11 +48,10 @@ export const BountyListItem = ({
 						w="max"
 						h={{ base: 6, lg: 7 }}
 						px="4"
-						pt="-0.2rem"
-						mt={1}
 						ml={{ base: 2, lg: 5 }}
 						borderRadius={100}
 						fontFamily="Calibre Semi-Bold"
+						fontWeight="400"
 						fontSize={{ base: 12, lg: 15 }}
 						bgColor={
 							status === 'Open'

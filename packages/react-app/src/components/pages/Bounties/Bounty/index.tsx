@@ -1,7 +1,7 @@
 /* eslint-disable no-inline-comments */
 import React from 'react';
 import { Box, Heading, Text, Link, Flex } from '@chakra-ui/layout';
-import { Skeleton, Icon, Image } from '@chakra-ui/react';
+import { Skeleton, Icon, Image, Button } from '@chakra-ui/react';
 
 const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 	console.log(bounty);
@@ -16,6 +16,7 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 					color="#646464"
 					mb={bounty ? 3 : 5}
 					style={{ textDecoration: 'none' }}
+					boxShadow="none !important"
 				>
 					<Icon w={5} h={5}>
 						<svg
@@ -45,7 +46,12 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 				</Link>
 				{bounty ? (
 					<>
-						<Heading fontSize={35} mb={0} mt={5} fontFamily="Calibre Semi-Bold">
+						<Heading
+							fontSize={35}
+							mb={0}
+							mt={{ base: 3, lg: 5 }}
+							fontFamily="Calibre Semi-Bold"
+						>
 							{bounty.title}
 						</Heading>
 						<Flex
@@ -60,7 +66,7 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 									borderRadius={100}
 									src={bounty.createdBy.iconUrl}
 								></Image>
-								<Flex flexDirection="column">
+								<Flex alignItems="center" gridColumnGap={1.5} fontSize={20}>
 									<Text
 										h="max"
 										maxWidth={40}
@@ -68,10 +74,13 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 										overflow="hidden"
 										textOverflow="ellipsis"
 										ml={3}
-										fontSize={20}
 									>
 										{bounty.createdBy.discordHandle}
 									</Text>
+									{/* <Text fontSize={13}>●</Text>
+									<Text>
+										{bounty.reward.amount} {bounty.reward.currency}
+									</Text> */}
 								</Flex>
 							</Flex>
 
@@ -113,6 +122,20 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 							</Text>
 							<Text>{bounty.criteria}</Text>
 						</Box>
+						<Button
+							size="md"
+							px={5}
+							bgColor="#e8e8e8"
+							color="#333"
+							borderRadius={100}
+							borderWidth={1}
+							mt={5}
+							fontSize={18}
+							fontFamily="Calibre Semi-Bold"
+							fontWeight="400"
+						>
+							Claim
+						</Button>
 					</>
 				) : (
 					<Box>
