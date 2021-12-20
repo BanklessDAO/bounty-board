@@ -1,12 +1,13 @@
+/* eslint-disable no-inline-comments */
 import React from 'react';
 import { Box, Heading, Text, Link, Flex } from '@chakra-ui/layout';
-import { Skeleton, Icon } from '@chakra-ui/react';
+import { Skeleton, Icon, Image } from '@chakra-ui/react';
 
-const Bounty = ({ bounty }: any): JSX.Element => {
+const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 	console.log(bounty);
 
 	return (
-		<Box w={{ base: '100vw' }} py={6} px={6} fontFamily="Calibre Bold">
+		<Box w={{ base: '100vw' }} maxWidth={{ lg: '800px' }} py={6} px={6}>
 			<Box gridGap={0}>
 				<Link
 					href={'/'}
@@ -28,51 +29,86 @@ const Bounty = ({ bounty }: any): JSX.Element => {
 								strokeLinecap="round"
 								strokeLinejoin="round"
 								strokeWidth="2"
-								d="M10 19l-7-7m0 0l7-7m-7 7h18"
+								d="M7 16l-4-4m0 0l4-4m-4 4h18"
 							/>
 						</svg>
 					</Icon>
-					<Heading as="h3" fontSize={20} my={0}>
+					<Heading
+						as="h3"
+						fontFamily="Calibre Semi-Bold"
+						fontWeight="500"
+						fontSize={17}
+						my={0}
+					>
 						Back
 					</Heading>
 				</Link>
 				{bounty ? (
 					<>
-						<Heading fontSize={35} mb={0}>
+						<Heading fontSize={35} mb={0} mt={5} fontFamily="Calibre Semi-Bold">
 							{bounty.title}
 						</Heading>
-						<Box mt={2} mb={6}>
-							<Flex
-								w="max"
-								h="7"
-								px="4"
-								alignItems="center"
-								justifyContent="center"
-								pt="0.2rem"
-								borderRadius={100}
-								fontSize={16}
-								bgColor={
-									bounty.status === 'Open'
-										? 'Open'
-										: bounty.status === 'In-Review'
-											? 'In-Review'
-											: bounty.status === 'In-Progress'
-												? 'In-Progress'
-												: 'Completed'
-								}
-							>
-								{bounty.status}
+						<Flex
+							w="100%"
+							justifyContent="space-between"
+							my={{ base: 3, lg: 5 }}
+						>
+							<Flex fontFamily="Calibre Medium" fontWeight="400">
+								<Image
+									w={7}
+									h={7}
+									borderRadius={100}
+									src={bounty.createdBy.iconUrl}
+								></Image>
+								<Flex flexDirection="column">
+									<Text
+										h="max"
+										maxWidth={40}
+										whiteSpace="nowrap"
+										overflow="hidden"
+										textOverflow="ellipsis"
+										ml={3}
+										fontSize={20}
+									>
+										{bounty.createdBy.discordHandle}
+									</Text>
+								</Flex>
 							</Flex>
-						</Box>
+
+							<Flex gridColumnGap={2}>
+								<Flex
+									w="max"
+									h="1.9rem"
+									px="4"
+									alignItems="center"
+									justifyContent="center"
+									borderRadius={100}
+									fontFamily="Calibre"
+									fontWeight="400"
+									fontSize={17}
+									bgColor={
+										bounty.status === 'Open'
+											? 'Open'
+											: bounty.status === 'In-Review'
+												? 'In-Review'
+												: bounty.status === 'In-Progress'
+													? 'In-Progress'
+													: 'Completed'
+									}
+								>
+									{bounty.status}
+								</Flex>
+							</Flex>
+						</Flex>
 						<Box
 							fontSize={25}
 							lineHeight={1.3}
-							fontFamily="Calibre Bold"
-							fontWeight="400"
+							fontFamily="Calibre"
+							fontWeight="500"
 							color="#646464"
 						>
 							<Text>{bounty.description}</Text>
-							<Text mt={5} mb={1} color="#e8e8e8">
+							<Text mt={3} mb={1} color="#e8e8e8">
 								Criteria
 							</Text>
 							<Text>{bounty.criteria}</Text>

@@ -62,7 +62,6 @@ const SearchFilter = ({
 					fontFamily="Calibre"
 					fontWeight="400"
 					fontSize="20"
-					pt=".5rem"
 					borderLeftRadius="100"
 					outline="none"
 					boxShadow="none"
@@ -80,13 +79,12 @@ const SearchFilter = ({
 					h="100%"
 					w="max"
 					px="5"
-					pt="1"
 					borderRightRadius={100}
 					borderWidth={1}
 					alignItems="center"
 					justify="center"
 					fontSize="18"
-					fontFamily="Calibre Bold"
+					fontFamily="Calibre Semi-Bold"
 					cursor="pointer"
 					borderColor={statusFilterIsOpen ? 'gray.300' : 'inherit'}
 					_hover={{
@@ -100,8 +98,8 @@ const SearchFilter = ({
 						alignItems="center"
 						justifyContent="center"
 						h="100%"
-						mt="-0.2em"
-						pl="1.5"
+						mt="0.1rem"
+						pl="0.2rem"
 					>
 						<FaCaretDown size=".8em" />
 					</Flex>
@@ -129,21 +127,19 @@ const SearchFilter = ({
 							borderTopWidth={1}
 							borderLeftWidth={1}
 							transform="rotate(45deg)"
-							fontFamily="Calibre Bold"
 						></Box>
 						{options.map((option: any, key: any) => (
 							<Flex
 								key={key}
-								h={{ base: '10', lg: '9' }}
-								fontSize={{ base: '18', lg: '16' }}
-								fontFamily="Calibre Bold"
-								fontWeight="900"
+								h={{ base: '10', lg: '10' }}
+								fontSize={{ base: '18', lg: '18' }}
+								fontFamily="Calibre Medium"
+								fontWeight="400"
 								alignItems="center"
 								pl="5"
 								pr="8"
-								pt="1.5"
 								_hover={{
-									bgColor: 'primary',
+									bgColor: '#333',
 								}}
 								onClick={(): void => setStatus(option.value)}
 								onBlur={(): void => setStatusFilterIsOpen(false)}

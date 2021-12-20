@@ -35,7 +35,7 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	const { customer } = useContext(CustomerContext);
 	const { customer_id } = customer;
 
-	let dynamicUrl = '/api/bounties';
+	let dynamicUrl = 'https://bountyboard.bankless.community/api/bounties';
 	dynamicUrl += `?status=${status === '' ? 'All' : status}`;
 	dynamicUrl += `&search=${debounceSearch}`;
 	dynamicUrl += `&lte=${lte}`;
@@ -46,7 +46,9 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	dynamicUrl += `&customer_id=${customer_id ?? BANKLESS.customer_id}`;
 
 	const { data: bounties, error } = useSWR(
-		id ? `/api/bounties/${id}` : dynamicUrl,
+		id
+			? `https://bountyboard.bankless.community/api/bounties/${id}`
+			: dynamicUrl,
 		fetcher
 	);
 
