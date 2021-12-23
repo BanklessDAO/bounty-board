@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Heading, Text, useColorModeValue } from '@chakra-ui/react';
 import { BountyBoardProps } from '../../../../models/Bounty';
 import Link from 'next/link';
 
@@ -63,7 +63,7 @@ export const BountyListItem = ({
 										: 'Completed'
 						}
 					>
-						{status}
+						<Text mt="-0.1rem">{status}</Text>
 					</Flex>
 				</Flex>
 				<Box

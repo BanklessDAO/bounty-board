@@ -7,7 +7,7 @@ const ColorModeButton = ({
 }): JSX.Element => {
 	return (
 		<Button
-			bg="transparent"
+			bg="rgba(0,0,0,0)"
 			borderRadius={100}
 			borderWidth={2}
 			fontFamily="Calibre"

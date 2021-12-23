@@ -19,13 +19,17 @@ const MenuIcon = ({ color }: { color: string }) => (
 );
 
 interface MenuItemProps {
-  children?: React.ReactNode
-  isLast?: boolean
-  newTab?: boolean
+	children?: React.ReactNode;
+	isLast?: boolean;
+	newTab?: boolean;
 }
 
-const MenuItem = ({ children, newTab, ...rest }: MenuItemProps): JSX.Element => (
-	<AccessibleLink href='/' isExternal={newTab}>
+const MenuItem = ({
+	children,
+	newTab,
+	...rest
+}: MenuItemProps): JSX.Element => (
+	<AccessibleLink href="/" isExternal={newTab}>
 		<Text display="block" {...rest}>
 			{children}
 		</Text>
@@ -33,18 +37,18 @@ const MenuItem = ({ children, newTab, ...rest }: MenuItemProps): JSX.Element => 
 );
 
 interface MenuToggleProps {
-  toggle: VoidFunction
-  isOpen: boolean
+	toggle: VoidFunction;
+	isOpen: boolean;
 }
 
-export const MenuToggle = ({ toggle, isOpen }: MenuToggleProps): JSX.Element => {
+export const MenuToggle = ({
+	toggle,
+	isOpen,
+}: MenuToggleProps): JSX.Element => {
 	const fgColor = useColorModeValue('black', 'white');
 	return (
 		<Box display={{ base: 'block', md: 'none' }} onClick={toggle}>
-			{isOpen
-				? <CloseIcon color={fgColor} />
-				: <MenuIcon color={fgColor} />
-			}
+			{isOpen ? <CloseIcon color={fgColor} /> : <MenuIcon color={fgColor} />}
 		</Box>
 	);
 };
@@ -52,17 +56,14 @@ interface MenuLinksProps {
 	isOpen: boolean;
 }
 
-const tokenFetcher = (url: string, token: string) => fetch(
-	url,
-	{
+const tokenFetcher = (url: string, token: string) =>
+	fetch(url, {
 		headers: {
 			authorization: `Bearer ${token}`,
 		},
-	}
-).then(res => res.json());
+	}).then((res) => res.json());
 
 export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
-
 	const { data: session, status } = useSession({ required: false });
 	const [customers, setCustomers] = useState<CustomerProps[]>([BANKLESS]);
 	const [guilds, setGuilds] = useState<DiscordGuild[]>();
@@ -71,12 +72,12 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 	const { data: guildApiResponse } = useSWR<DiscordGuild[], unknown>(
 		session
 			? ['https://discord.com/api/users/@me/guilds', session.accessToken]
-			: null
-		, tokenFetcher
+			: null,
+		tokenFetcher
 	);
 
 	useEffect(() => {
-		if(session && guildApiResponse) setGuilds(guildApiResponse);
+		if (session && guildApiResponse) setGuilds(guildApiResponse);
 	}, [guildApiResponse]);
 
 	useEffect(() => {
@@ -85,7 +86,7 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 				method: 'POST',
 				body: JSON.stringify(guilds),
 			})
-				.then(res => res.json())
+				.then((res) => res.json())
 				.then(({ data }) => setCustomers(data));
 		}
 	}, [session, guilds]);
@@ -96,30 +97,29 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 			flexBasis={{ base: '100%', md: 'auto' }}
 		>
 			<Stack
-				spacing={4}
+				spacing={2}
 				align="center"
 				justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
 				direction={{ base: 'column', md: 'row' }}
 			>
-				{ customers && session
-					? <DAOSelector
-						customers={customers}
-					/>
-					: null
-				}
-				<MenuItem newTab={false} >
-					{
-						status === 'loading'
-							? <span>Loading...</span>
-							: <Button
-								onClick={
-									() => toggleDiscordSignIn(session)
-								}
-								id='DiscordButton'
-							>
-								{ session ? session.user?.name : 'Join DAO'}
-							</Button>
-					}
+				{customers && session ? <DAOSelector customers={customers} /> : null}
+				<MenuItem newTab={false}>
+					{status === 'loading' ? (
+						<span>Loading...</span>
+					) : (
+						<Button
+							borderRadius={100}
+							borderWidth={1}
+							px={5}
+							bgColor="transparent"
+							fontFamily="Calibre"
+							fontWeight="400"
+							onClick={() => toggleDiscordSignIn(session)}
+							id="DiscordButton"
+						>
+							{session ? session.user?.name : 'Join DAO'}
+						</Button>
+					)}
 				</MenuItem>
 				<ThemeToggle />
 			</Stack>

@@ -49,10 +49,10 @@ export const baseTheme = extendTheme({
 	colors: {
 		...theme.colors,
 		primary: mode('#121212', '#FFF')(theme),
-		Open: theme.colors.green[600],
+		Open: theme.colors.green[500],
 		'In-Review': theme.colors.orange[600],
 		'In-Progress': theme.colors.purple[600],
-		Completed: theme.colors.cyan[600],
+		Completed: theme.colors.blue[500],
 		Done: theme.colors.green,
 		Deleted: theme.colors.red,
 		Draft: theme.colors.gray,
