@@ -450,3 +450,234 @@ db.bounties
     { $match: { createdAt: { $gt: d } } },
   ])
   .pretty();
+
+// this version works - non-hardcoded way to do past 7-days
+// need to adjust new Date(new Date()) - do not use Format in Mongo Compass
+// change customer_id
+// note: $project twice for ordering and preserving original field names
+// change for createdAt, change for claimedAt, submittedAt etc.
+db.bounties.aggregate([
+  { $match: { $and: [{ season: 2 }, { customer_id: "905250069463326740" }] } },
+  {
+    $project: {
+      _id: 1,
+      _customer_id: "$customer_id",
+      _title: "$title",
+      _status: "$status",
+      _createdAt: "$createdAt",
+      _claimedAt: "$claimedAt",
+      _submittedAt: "$submittedAt",
+      _reviewedAt: "$reviewedAt",
+    },
+  },
+  {
+    $project: {
+      _id: 1,
+      customer_id: "$_customer_id",
+      title: "$_title",
+      status: "$_status",
+      createdAt: { $toDate: "$_createdAt" },
+      claimedAt: { $toDate: "$_claimedAt" },
+      submittedAt: { $toDate: "$_submittedAt" },
+      reviewedAt: { $toDate: "$_reviewedAt" },
+    },
+  },
+  {
+    $match: {
+      createdAt: { $gte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000) },
+    },
+  },
+]);
+
+// MONGO COMPASS / CHART
+
+// Total BANK Allocated for Bounties (S2)
+// change customer_id for production
+// filter on multiple condition
+db.bounties.aggregate([
+  { $match: { $and: [{ season: 2 }, { customer_id: "905250069463326740" }] } },
+  {
+    $project: {
+      _id: 0,
+      customer_id: 1,
+      "reward.amount": 1,
+      "reward.currency": 1,
+      status: 1,
+    },
+  },
+  { $group: { _id: "$status", sum: { $sum: "$reward.amount" } } },
+]);
+
+// Total BANK Claimed from Completed Bounties (S2)
+// note customer_id
+db.bounties.aggregate([
+  {
+    $match: {
+      $and: [
+        { season: 2 },
+        { customer_id: "834499078434979890" },
+        { status: "Completed" },
+      ],
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      customer_id: 1,
+      "reward.amount": 1,
+      "reward.currency": 1,
+      status: 1,
+    },
+  },
+  { $group: { _id: "$customer_id", sum: { $sum: "$reward.amount" } } },
+]);
+
+// Bounty Statuses (Count) (S2)
+db.bounties.aggregate([
+  { $match: { $and: [{ season: 2 }, { customer_id: "834499078434979890" }] } },
+  {
+    $project: {
+      _id: 0,
+      customer_id: 1,
+      "reward.amount": 1,
+      "reward.currency": 1,
+      status: 1,
+    },
+  },
+  { $group: { _id: "$status", num_bounties: { $sum: 1 } } },
+]);
+
+// Total BANK valued locked at each status (S2)
+db.bounties.aggregate([
+  { $match: { $and: [{ season: 2 }, { customer_id: "834499078434979890" }] } },
+  {
+    $project: {
+      _id: 0,
+      customer_id: 1,
+      "reward.amount": 1,
+      "reward.currency": 1,
+      status: 1,
+    },
+  },
+  { $group: { _id: "$status", sum: { $sum: "$reward.amount" } } },
+]);
+
+// BOUNTY STATUS TIME / SPEED METRICS
+
+// time-to-claim, time-to-submit, time-to-review
+// Use Mongo Charts for distribution statistics (min, max, mean, sd)
+// Convert date string to timestamp
+// Subtract two timestamps
+// $project three times
+db.bounties.aggregate([
+  {
+    $match: {
+      $and: [
+        { season: 2 },
+        { customer_id: "834499078434979890" },
+        { status: "Completed" },
+      ],
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      _customer_id: "$customer_id",
+      _title: "$title",
+      _status: "$status",
+      _createdAt: "$createdAt",
+      _claimedAt: "$claimedAt",
+      _submittedAt: "$submittedAt",
+      _reviewedAt: "$reviewedAt",
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      customer_id: "$_customer_id",
+      title: "$_title",
+      status: "$_status",
+      createdAt: { $toDate: "$_createdAt" },
+      claimedAt: { $toDate: "$_claimedAt" },
+      submittedAt: { $toDate: "$_submittedAt" },
+      reviewedAt: { $toDate: "$_reviewedAt" },
+    },
+  },
+  {
+    $project: {
+      title: 1,
+      time_to_claim: {
+        $divide: [{ $subtract: ["$claimedAt", "$createdAt"] }, 3600000],
+      },
+      time_to_submit: {
+        $divide: [{ $subtract: ["$submittedAt", "$claimedAt"] }, 3600000],
+      },
+      time_to_review: {
+        $divide: [{ $subtract: ["$reviewedAt", "$submittedAt"] }, 3600000],
+      },
+    },
+  },
+]);
+
+// OTHER CHARTS MISC
+
+// Number of Bounties Across Customers
+// NOTE: Do join in Mongo Charts to see customer 'name'
+db.bounties.aggregate([
+  {
+    $match: {
+      season: 2,
+    },
+  },
+  {
+    $group: {
+      _id: {
+        customer_id: "$customer_id",
+      },
+      num_bounties_per_customer: {
+        $sum: 1,
+      },
+      total_reward_amt: {
+        $sum: "$reward.amount",
+      },
+    },
+  },
+  {
+    $sort: {
+      total_reward_amt: -1,
+    },
+  },
+]);
+
+// Total BANK allocated to Bounties
+// variations in Bank spelling
+db.bounties.aggregate([
+  {
+    $match: {
+      season: 2,
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      customer_id: 1,
+      "reward.amount": 1,
+      "reward.currency": 1,
+    },
+  },
+  {
+    $match: {
+      customer_id: "834499078434979890",
+    },
+  },
+  {
+    $group: {
+      _id: {
+        currency: "$reward.currency",
+      },
+      total_assets: {
+        $sum: "$reward.amount",
+      },
+    },
+  },
+]);
