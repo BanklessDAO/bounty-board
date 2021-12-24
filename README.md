@@ -1,7 +1,5 @@
 # DAO Bounty Board
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/8e12fc34-94a3-4c7a-8323-fc2b7e1d4d14/deploy-status)](https://app.netlify.com/sites/bounty-board-29081e/deploys)
-
 Project Page:
 https://www.notion.so/bankless/Bounty-Board-318dc164cc5640cca17e0fb5f484fd90
 
@@ -139,6 +137,8 @@ The app expects a MongoDB db `bountyboard` with the collection `bounties`, as sp
 If you're firing up a fresh instance of Mongo, you will need to seed the database from the command line or discord, as the board does not currently have an 'add bounty` functionality.
 
 If you're adding from command line, you can use the mongoimport utility to import one of the JSON files in the `mongo/bounties` folder. 
+
+Note: As of MongoDB 4.4 mongoimport is now a part of the MongoDB Database Tools package and must be downloaded seperately. For installation see the [MongoDB Database Tools](https://docs.mongodb.com/database-tools/installation/installation/)
 
 ```bash
 $ mongoimport\

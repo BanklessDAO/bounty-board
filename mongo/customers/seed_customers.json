@@ -11,10 +11,10 @@
       "$oid": "616f00ae05026959ede9a3a5"
     },    
     "customer_id":"402910780124561410",
-    "customerName":"Compound",
+    "customerName":"CityDAO",
     "applicableRoles" : [ ],
     "customization":{
-      "logo":"demo/compound.png",
+      "logo": "assets/logos/citydao.png",
       "colors":{
         "background":{
           "light":"#0AA3D8",
