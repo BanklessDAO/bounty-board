@@ -619,6 +619,57 @@ db.bounties.aggregate([
   },
 ]);
 
+// ALTERNATIVE BOUNTY STATUS TIME / SPEED METRICS
+// using statusHistory
+// pull values from nested array
+// calculate time difference (in hrs)
+// note: change customer_id
+db.bounties.aggregate([
+  {
+    $match: {
+      $and: [
+        { season: 2 },
+        { customer_id: "905250069463326740" },
+        { status: "Completed" },
+      ],
+    },
+  },
+  { $project: { "statusHistory.status": 1, "statusHistory.setAt": 1 } },
+  {
+    $project: {
+      draft: { $arrayElemAt: ["$statusHistory", 0] },
+      open: { $arrayElemAt: ["$statusHistory", 1] },
+      in_progress: { $arrayElemAt: ["$statusHistory", 2] },
+      in_review: { $arrayElemAt: ["$statusHistory", 3] },
+      completed: { $arrayElemAt: ["$statusHistory", 4] },
+    },
+  },
+  {
+    $project: {
+      draft: { $toDate: "$draft.setAt" },
+      open: { $toDate: "$open.setAt" },
+      in_progress: { $toDate: "$in_progress.setAt" },
+      in_review: { $toDate: "$in_review.setAt" },
+      completed: { $toDate: "$completed.setAt" },
+    },
+  },
+  {
+    $project: {
+      _id: 1,
+      draft_to_open: { $divide: [{ $subtract: ["$open", "$draft"] }, 3600000] },
+      open_to_progress: {
+        $divide: [{ $subtract: ["$in_progress", "$open"] }, 3600000],
+      },
+      progress_to_review: {
+        $divide: [{ $subtract: ["$in_review", "$in_progress"] }, 3600000],
+      },
+      review_to_completed: {
+        $divide: [{ $subtract: ["$completed", "$in_review"] }, 3600000],
+      },
+    },
+  },
+]);
+
 // OTHER CHARTS MISC
 
 // Number of Bounties Across Customers
