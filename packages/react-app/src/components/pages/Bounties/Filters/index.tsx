@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import {
 	HStack,
 	Input,
 	InputGroup,
-	// InputLeftElement,
+	InputLeftElement,
 	Select,
 	Stack,
 	Flex,
@@ -11,12 +12,15 @@ import {
 	Heading,
 	Switch,
 	Box,
-	// Center,
-	// Divider,
-
-	// useColorModeValue,
+	Center,
+	Divider,
+	useColorModeValue,
+	Text,
+	Button,
+	Icon,
 } from '@chakra-ui/react';
 import { FaCaretDown } from 'react-icons/fa';
+import { SwitchVerticalIcon } from '@heroicons/react/outline';
 
 // import ColorModeButton from '../../../parts/ColorModeButton';
 
@@ -57,8 +61,8 @@ const SearchFilter = ({
 		<Flex h="12">
 			<InputGroup>
 				{/* <InputLeftElement pointerEvents="none">
-					<SearchIcon />
-				</InputLeftElement> */}
+          <SearchIcon />
+        </InputLeftElement> */}
 				<Input
 					h="100%"
 					pl="6"
@@ -164,34 +168,34 @@ const SearchFilter = ({
 	);
 };
 
-// const SelectFilters = ({
-// 	name,
-// 	options,
-// 	status,
-// 	setStatus,
-// }: {
-//   name?: string;
-//   options: { name: string; value: string }[];
-//   status: string;
-//   setStatus: (str: string) => any;
-// }): JSX.Element => {
-// 	const updateStatus = (event: any): void => {
-// 		setStatus(event.target.value);
-// 	};
+const SelectFilters = ({
+	name,
+	options,
+	status,
+	setStatus,
+}: {
+	name?: string;
+	options: { name: string; value: string }[];
+	status: string;
+	setStatus: (str: string) => any;
+}): JSX.Element => {
+	const updateStatus = (event: any): void => {
+		setStatus(event.target.value);
+	};
 
-// 	return (
-// 		<>
-// 			{name && <Heading size="xs">{name}</Heading>}
-// 			<Select placeholder="All" mb="4" onChange={updateStatus} value={status}>
-// 				{options.map((option: { name: string; value: string }) => (
-// 					<option key={option.name} value={option.value}>
-// 						{option.value}
-// 					</option>
-// 				))}
-// 			</Select>
-// 		</>
-// 	);
-// };
+	return (
+		<>
+			{name && <Heading size="xs">{name}</Heading>}
+			<Select placeholder="All" mb="4" onChange={updateStatus} value={status}>
+				{options.map((option: { name: string; value: string }) => (
+					<option key={option.name} value={option.value}>
+						{option.value}
+					</option>
+				))}
+			</Select>
+		</>
+	);
+};
 
 const SortBy = ({
 	name,
@@ -216,33 +220,31 @@ const SortBy = ({
 	};
 
 	return (
-		<>
-			<Flex className="composite-heading" alignItems="center">
-				{name && (
-					<Heading size="xs" mb="0">
-						{name}
-					</Heading>
-				)}
-				<Spacer />
-				<Flex className="switch" alignItems="center">
-					<Heading size="xs" mr="3" mb="0">
-						{sortAscending ? 'Ascending' : 'Descending'}
-					</Heading>
-					<Switch
-						onChange={toggleSortAscending}
-						defaultChecked
-						isChecked={sortAscending}
-					/>
-				</Flex>
-			</Flex>
-			<Select onChange={updateSort} value={sortBy}>
-				{options.map((option: { name: string; value: string }) => (
-					<option key={option.name} value={option.value}>
-						{option.value}
-					</option>
-				))}
-			</Select>
-		</>
+		<Button
+			h="100%"
+			bg="transparent"
+			borderWidth={1}
+			borderRightRadius={100}
+			pr={7}
+			pl={6}
+			color="#e8e8e8"
+			_hover={{
+				bg: 'transparent',
+				borderColor: 'white',
+			}}
+			_focus={{
+				bg: 'transparent',
+				borderColor: 'white',
+			}}
+			onClick={toggleSortAscending}
+		>
+			<Icon
+				as={SwitchVerticalIcon}
+				w={6}
+				h={6}
+				transform={sortAscending ? 'rotate(0deg)' : 'rotate(180deg)'}
+			></Icon>
+		</Button>
 	);
 };
 
@@ -279,6 +281,7 @@ const SortBy = ({
 // 		</>
 // 	);
 // };
+
 const MinMaxFilter = ({
 	name,
 	setLte,
@@ -299,11 +302,35 @@ const MinMaxFilter = ({
 
 	return (
 		<>
-			{name && <Heading size="xs">{name}</Heading>}
-			<HStack my="2">
-				<Input placeholder="Min" onChange={updateMin} />
-				<Input placeholder="Max" onChange={updateMax} />
-			</HStack>
+			{/* {name && <Heading size="xs">{name}</Heading>} */}
+			<Flex h={12} fontFamily="Calibre">
+				<Input
+					placeholder="Min"
+					h="100%"
+					borderRadius={100}
+					borderRightRadius={0}
+					onChange={updateMin}
+					boxShadow="none"
+					fontSize={18}
+					pl={6}
+					_focus={{
+						borderColor: 'gray.300',
+					}}
+				/>
+				<Input
+					placeholder="Max"
+					h="100%"
+					borderRadius={100}
+					borderLeftRadius={0}
+					borderRightRadius={0}
+					onChange={updateMin}
+					boxShadow="none"
+					fontSize={18}
+					_focus={{
+						borderColor: 'gray.300',
+					}}
+				/>
+			</Flex>
 		</>
 	);
 };
@@ -372,7 +399,7 @@ const Filters = (props: {
 		<Stack
 			w="100%"
 			py={5}
-			pt={{ base: 5, lg: 10 }}
+			pt={{ base: 5, lg: 8 }}
 			borderBottomWidth={{ base: 1, lg: 0 }}
 		>
 			<Stack
@@ -388,43 +415,26 @@ const Filters = (props: {
 					status={props.status}
 					setStatus={props.setStatus}
 				/>
-				{/* <Center
-					pt={2}
-					px={1}
-					fontFamily="Calibre"
-					fontWeight="400"
-					gridColumnGap={2}
-					color="#404040"
-					cursor="pointer"
-				>
-					<Divider />
-					<Flex>Advanced</Flex>
-					<Divider />
-				</Center> */}
+				<Flex pt={2}>
+					<MinMaxFilter
+						name="Filter Bounty Value"
+						lte={props.lte}
+						setLte={props.setLte}
+						gte={props.gte}
+						setGte={props.setGte}
+					/>
+					<SortBy
+						name="Sort By"
+						options={[{ name: 'reward', value: 'Reward' }]}
+						sortBy={props.sortBy}
+						setSortBy={props.setSortBy}
+						sortAscending={props.sortAscending}
+						setSortAscending={props.setSortAscending}
+					/>
+				</Flex>
 
-				{/* <SelectFilters
-          name="Filter Status"
-          options={filterStatusList}
-          status={props.status}
-          setStatus={props.setStatus}
-        />*/}
-				<MinMaxFilter
-					name="Filter Bounty Value"
-					lte={props.lte}
-					setLte={props.setLte}
-					gte={props.gte}
-					setGte={props.setGte}
-				/>
-				<SortBy
-					name="Sort By"
-					options={[{ name: 'reward', value: 'Reward' }]}
-					sortBy={props.sortBy}
-					setSortBy={props.setSortBy}
-					sortAscending={props.sortAscending}
-					setSortAscending={props.setSortAscending}
-				/>
-				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
-				{/* <SelectFilters name="Group By" options={placeholderOptions} /> */}
+				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} />
+				<SelectFilters name="Group By" options={placeholderOptions} /> */}
 			</Stack>
 		</Stack>
 	);
