@@ -22,19 +22,10 @@ import {
 import { FaCaretDown } from 'react-icons/fa';
 import { SwitchVerticalIcon } from '@heroicons/react/outline';
 
-// import ColorModeButton from '../../../parts/ColorModeButton';
-
 // import { discordSupportChannelUrl } from '../../../../constants/discordInfo';
 // import { feedbackUrl } from '../../../../constants/discordInfo';
 
-// import AccessibleLink from '../../../parts/AccessibleLink';
 import bountyStatus from '../../../../constants/bountyStatus';
-
-// const SearchIcon = (): JSX.Element => (
-// 	<Flex h="100%" display="flex" alignItems="center" pl="5" pt="2">
-// 		<FaSearch size="1.1em" color={useColorModeValue('#57606a', '#999')} />
-// 	</Flex>
-// );
 
 const SearchFilter = ({
 	placeholder = 'Search',
@@ -244,40 +235,6 @@ const SortBy = ({
 	);
 };
 
-// const updateSort = (event: any): void => {
-// 	setSortBy(event.target.value);
-// };
-// const toggleSortAscending = (_: any): void => {
-// 	setSortAscending(sortAscending = !sortAscending);
-// };
-// 	return (
-// 		<>
-// 			<Flex className="composite-heading" alignItems="center">
-// 				{name && <Heading size="xs" mb="0">{name}</Heading>}
-// 				<Spacer />
-// 				<Flex className="switch" alignItems="center">
-// 					<Heading size="xs" mr="3" mb="0">
-// 						{sortAscending ? 'Ascending' : 'Descending'}
-// 					</Heading>
-// 					<Switch
-// 						colorScheme="primary"
-// 						onChange={toggleSortAscending}
-// 						defaultChecked
-// 						isChecked={sortAscending}
-// 					/>
-// 				</Flex>
-// 			</Flex>
-// 			<Select mb="4" onChange={updateSort} value={sortBy}>
-// 				{options.map((option: { name: string; value: string }) => (
-// 					<option key={option.name} value={option.value}>
-// 						{option.value}
-// 					</option>
-// 				))}
-// 			</Select>
-// 		</>
-// 	);
-// };
-
 const MinMaxFilter = ({
 	name,
 	setLte,
@@ -428,9 +385,6 @@ const Filters = (props: {
 						setSortAscending={props.setSortAscending}
 					/>
 				</Flex>
-
-				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} />
-				<SelectFilters name="Group By" options={placeholderOptions} /> */}
 			</Stack>
 		</Stack>
 	);

@@ -2,44 +2,45 @@ import mongoose from 'mongoose';
 
 /* Global typing for Bounties */
 export interface BountyBoardProps {
-  _id: any
-  season?: number
-  title: string
-  description: string
-  criteria: string
-	customer_id: string
-  reward: {
-    currency: string
-    amount: number
-    scale: number
-		amountWithoutScale: number
-  }
-  createdBy: {
-    discordHandle: string
-    discordId: string
-  }
-  createdAt?: string
-  dueAt?: string
-  discordMessageId?: string
-  status: string
-  statusHistory?: { status: string; setAt: string }[]
-  claimedBy?: {
-    discordHandle: string
-    discordId: string
-  }
-  claimedAt?: string
-  submissionNotes?: string
-  submissionUrl?: string
-  submittedAt?: string
-  submittedBy?: {
-    discordHandle: string
-    discordId: string
-  }
-  reviewedAt?: string
-  reviewedBy?: {
-    discordHandle: string
-    discordId: string
-  }
+	_id: any;
+	season?: number;
+	title: string;
+	description: string;
+	criteria: string;
+	customer_id: string;
+	reward: {
+		currency: string;
+		amount: number;
+		scale: number;
+		amountWithoutScale: number;
+	};
+	createdBy: {
+		discordHandle: string;
+		discordId: string;
+		iconUrl: string;
+	};
+	createdAt?: string;
+	dueAt?: string;
+	discordMessageId?: string;
+	status: string;
+	statusHistory?: { status: string; setAt: string }[];
+	claimedBy?: {
+		discordHandle: string;
+		discordId: string;
+	};
+	claimedAt?: string;
+	submissionNotes?: string;
+	submissionUrl?: string;
+	submittedAt?: string;
+	submittedBy?: {
+		discordHandle: string;
+		discordId: string;
+	};
+	reviewedAt?: string;
+	reviewedBy?: {
+		discordHandle: string;
+		discordId: string;
+	};
 }
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
@@ -139,4 +140,4 @@ const BountyBoardSchema = new mongoose.Schema({
 });
 
 export default mongoose.models.Bounty ||
-  mongoose.model('Bounty', BountyBoardSchema);
+	mongoose.model('Bounty', BountyBoardSchema);
