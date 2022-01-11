@@ -67,6 +67,8 @@ export const BountyListItem = ({
 					</Flex>
 				</Flex>
 				<Box
+					w="100%"
+					maxWidth="100%"
 					className="bounty-description"
 					mt={{ base: 1, lg: 2 }}
 					fontFamily="Calibre Medium"

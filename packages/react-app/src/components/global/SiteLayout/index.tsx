@@ -18,7 +18,7 @@ type LayoutProps = {
 
 const SiteLayout = ({ children }: LayoutProps): JSX.Element => {
 	return (
-		<Flex minHeight="100vh" bgColor="primary">
+		<Flex minHeight="100vh" bg="Primary">
 			{/* <Sidebar /> */}
 			<Box flex="1">
 				<Header />

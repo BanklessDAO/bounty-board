@@ -1,4 +1,4 @@
-import ThemeToggle from '../../parts/ThemeToggle';
+// import ThemeToggle from '../../parts/ThemeToggle';
 import AccessibleLink from '../../parts/AccessibleLink';
 import { DAOSelector } from './DAOSelector';
 import { useSession } from 'next-auth/react';
@@ -121,7 +121,7 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 						</Button>
 					)}
 				</MenuItem>
-				<ThemeToggle />
+				{/* <ThemeToggle /> */}
 			</Stack>
 		</Box>
 	);

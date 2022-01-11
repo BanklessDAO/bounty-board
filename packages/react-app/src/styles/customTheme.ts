@@ -22,6 +22,9 @@ export const baseTheme = extendTheme({
 				WebkitTapHighlightColor: 'rgba(0,0,0,0)',
 				outline: 'none',
 			},
+			body: {
+				background: '#121212',
+			},
 		}),
 	},
 	fonts: {
@@ -48,7 +51,7 @@ export const baseTheme = extendTheme({
 	breakpoints,
 	colors: {
 		...theme.colors,
-		primary: mode('#121212', '#FFF')(theme),
+		Primary: mode('#121212', '#FFF')(theme),
 		Open: '#007a56',
 		'In-Review': theme.colors.orange[600],
 		'In-Progress': theme.colors.purple[600],
@@ -58,30 +61,40 @@ export const baseTheme = extendTheme({
 		Draft: theme.colors.gray,
 	},
 	components: {
-		Heading: {
-			sizes: {
-				'4xl': {
-					marginBottom: '1.5rem',
-				},
-				'2xl': {
-					marginBottom: '1.5rem',
-				},
-				xl: {
-					marginBottom: '1.5rem',
-				},
-				lg: {
-					marginBottom: '1.5rem',
-				},
-				md: {
-					marginBottom: '1rem',
-				},
-				sm: {
-					marginBottom: '0.5rem',
-				},
-				xs: {
-					marginBottom: '0.5rem',
+		// remove outline from default button on hover
+		Button: {
+			styles: {
+				root: {
+					outline: 'none',
+					boxShadow: '0 0 rgba(0,0,0,0.1)',
 				},
 			},
+		},
+
+		Heading: {
+			// sizes: {
+			// 	'4xl': {
+			// 		marginBottom: '1.5rem',
+			// 	},
+			// 	'2xl': {
+			// 		marginBottom: '1.5rem',
+			// 	},
+			// 	xl: {
+			// 		marginBottom: '1.5rem',
+			// 	},
+			// 	lg: {
+			// 		marginBottom: '1.5rem',
+			// 	},
+			// 	md: {
+			// 		marginBottom: '1rem',
+			// 	},
+			// 	sm: {
+			// 		marginBottom: '0.5rem',
+			// 	},
+			// 	xs: {
+			// 		marginBottom: '0.5rem',
+			// 	},
+			// },
 		},
 	},
 });

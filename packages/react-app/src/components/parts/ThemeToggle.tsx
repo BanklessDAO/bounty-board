@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, useColorMode } from '@chakra-ui/react';
-import { RiMoonFill, RiSunLine } from 'react-icons/ri';
+import { Icon } from '@chakra-ui/react';
+import { SunIcon, MoonIcon } from '@heroicons/react/solid';
 
 const ThemeToggle = (): JSX.Element => {
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -14,7 +15,11 @@ const ThemeToggle = (): JSX.Element => {
 				borderWidth={1}
 				onClick={toggleColorMode}
 			>
-				{colorMode === 'light' ? <RiMoonFill /> : <RiSunLine size={20} />}
+				{colorMode === 'light' ? (
+					<Icon as={MoonIcon} w={4} h={4} />
+				) : (
+					<Icon as={SunIcon} w="1.15rem" h="1.15rem" />
+				)}
 			</Button>
 		</>
 	);

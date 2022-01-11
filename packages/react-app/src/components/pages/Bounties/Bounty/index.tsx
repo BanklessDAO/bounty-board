@@ -10,6 +10,7 @@ import {
 	Spacer,
 } from '@chakra-ui/layout';
 import { Skeleton, Icon, Image } from '@chakra-ui/react';
+// import { BountyBoardProps } from 'models/Bounty';
 
 const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 	// bounty = null;
@@ -61,7 +62,7 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 					{bounty ? (
 						<>
 							<Heading
-								fontSize={35}
+								fontSize={38}
 								mb={0}
 								mt={{ base: 3, lg: 3 }}
 								fontFamily="Calibre Semi-Bold"
@@ -192,16 +193,20 @@ const Bounty = ({ bounty }: { bounty: any }): JSX.Element => {
 						<Flex>
 							<Text color="#646464">Created</Text>
 							<Spacer></Spacer>
-							<Text color="#e8e8e8">2021-12-13</Text>
+							<Text color="#e8e8e8">
+								{new Date(Date.parse(bounty.createdAt))
+									.toLocaleDateString('en-US')
+									.replace(/\//g, '-')}
+							</Text>
 						</Flex>
 
 						<Flex>
 							<Text color="#646464">Due Date</Text>
 							<Spacer></Spacer>
 							<Text color="#e8e8e8">
-								{new Date(Date.parse(bounty.createdAt)).toLocaleDateString(
-									'en-US'
-								)}
+								{new Date(Date.parse(bounty.dueAt))
+									.toLocaleDateString('en-US')
+									.replace(/\//g, '-')}
 							</Text>
 						</Flex>
 					</Stack>

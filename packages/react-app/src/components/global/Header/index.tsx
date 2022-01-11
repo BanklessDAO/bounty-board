@@ -12,10 +12,10 @@ const NavBarContainer: React.FC = (props): JSX.Element => (
 		justify="space-between"
 		wrap="wrap"
 		w="100%"
-		h={16}
+		h="4rem"
 		px={5}
-		borderBottomWidth={1}
-		bg="primary"
+		borderBottomWidth="0.5px"
+		bgColor="Primary"
 		{...props}
 	>
 		{props.children}
