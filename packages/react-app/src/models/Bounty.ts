@@ -7,6 +7,10 @@ import {
 	array,
 	mixed,
 } from 'yup';
+
+// Have to use ignore here due to some strange error with typescript not picking
+// up the declaration file, unless you change the name every deploy
+// @ts-ignore
 import mongoosePaginate from 'mongo-cursor-pagination';
 
 type RequiredForPostProps = { method: 'POST' | 'PATCH', schema: any, isObject?: boolean };

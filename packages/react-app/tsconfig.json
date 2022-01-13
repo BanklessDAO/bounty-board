@@ -25,7 +25,14 @@
       "@tests/*": ["tests/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "../../mongo/abc.test.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "mongo-cursor-paginate.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "../../mongo/abc.test.tsx"
+  ],
   "exclude": [
     "node_modules",
     ".next", 
