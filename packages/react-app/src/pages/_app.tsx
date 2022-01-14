@@ -11,6 +11,7 @@ import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
 import { CustomerProps } from '../models/Customer';
 import '../styles/css/nprogress.css';
+import '../styles/css/date-picker.css';
 import { CustomerContext, getCustomerFromBountyId, setCustomerFromLocalStorage } from '../context/CustomerContext';
 import { BANKLESS } from '../constants/Bankless';
 

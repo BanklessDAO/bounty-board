@@ -34,6 +34,7 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/icons": "^1.1.1",
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
@@ -53,6 +54,7 @@
     "node-mocks-http": "^1.11.0",
     "nprogress": "^0.2.0",
     "react": "^17.0.2",
+    "react-datepicker": "^4.6.0",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.12.2",
     "react-icons": "^4.2.0",
@@ -72,6 +74,7 @@
     "@types/node": "^16.4.7",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^17.0.14",
+    "@types/react-datepicker": "^4.3.4",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "discord-api-types": "^0.24.0",
