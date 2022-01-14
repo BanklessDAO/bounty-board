@@ -1,15 +1,15 @@
-import BountyPage from '../../../../src/pages/[id]';
 import React from 'react';
 import { mount } from 'enzyme';
 import * as router from 'next/router';
 import { NextRouter } from 'next/router';
+import BountyPage from '../../../../src/pages/[id]';
 import Layout from '../../../../src/components/global/SiteLayout';
 
-jest.mock('../../../../src/components/pages/Bounties', () => {
+jest.mock('@/components/pages/Bounties', () => {
 	return jest.fn(() => null);
 });
 
-jest.mock('../../../../src/components/global/SiteLayout', () => {
+jest.mock('@/components/global/SiteLayout', () => {
 	return jest.fn(() => null);
 });
 

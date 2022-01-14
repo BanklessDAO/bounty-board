@@ -4,6 +4,9 @@ import * as context from '../../../src/context/CustomerContext';
 describe('Testing the customer context', () => {
 	const setCustomer = jest.fn();
 	const customer: CustomerProps = {
+		bountyChannel: '',
+		applicableRoles: [],
+		customization: {},
 		customer_id: '1',
 		customerName: 'Test Customer',
 	};

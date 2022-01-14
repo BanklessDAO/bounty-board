@@ -30,7 +30,7 @@ export const DAOSelector = ({ customers }: {
 			onChange={onChange}
 			value={customer?.customerName ?? 'BanklessDAO'}
 		>
-			{customers.map((option) => (
+			customers && {customers.map((option) => (
 				<option key={option.customer_id} value={option.customerName}>
 					{option.customerName}
 				</option>

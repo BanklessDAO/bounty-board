@@ -11,6 +11,9 @@ jest.mock('next-auth/react', () => ({
 }));
 
 describe('Testing the menu', () => {
+	jest.spyOn(console, 'error')
+		.mockImplementation(() => console.log('Supressed Console Error'));
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});
