@@ -16,7 +16,7 @@ import {
 import AccessibleLink from '../../../parts/AccessibleLink';
 import { BountyCollection } from '../../../../models/Bounty';
 import { baseUrl } from '../../../../constants/discordInfo';
-import { CustomerContext } from '../../../../context/CustomerContext';
+import { CustomerContext } from '@app/context/CustomerContext';
 import { useContext } from 'react';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
