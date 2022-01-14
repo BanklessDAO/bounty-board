@@ -1,9 +1,14 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import * as router from 'next/router';
+import * as hooks from '../../../../src/hooks/useBounties';
 import { NextRouter } from 'next/router';
-import BountyPage from '../../../../src/pages/[id]';
+import BountyPageLayout, { BountyLoader, BountyNotFound, BountyPage } from '../../../../src/pages/[id]';
 import Layout from '../../../../src/components/global/SiteLayout';
+import { BountyCollection } from '../../../../src/models/Bounty';
+import { BountyCard } from '../../../../src/components/pages/Bounties/Bounty';
+
+const CUSTOMERNAME = 'Test';
 
 jest.mock('@/components/pages/Bounties', () => {
 	return jest.fn(() => null);
@@ -14,10 +19,7 @@ jest.mock('@/components/global/SiteLayout', () => {
 });
 
 describe('Testing the bounty id page', () => {
-
-	const customerName = 'Test';
-
-	it('Renders with the correct customer name', () => {
+	beforeEach(() => {
 		jest.spyOn(router, 'useRouter').mockImplementation(() => ({
 			query: {
 				id: '1',
@@ -26,16 +28,64 @@ describe('Testing the bounty id page', () => {
 
 		jest.spyOn(React, 'useContext').mockImplementation(() => ({
 			customer: {
-				customerName,
+				customerName: CUSTOMERNAME,
 			},
 		}));
+	});
 
-		mount(<BountyPage />);
-
+	it('Renders with the correct customer name', () => {
+		mount(<BountyPageLayout />);
 		expect(Layout)
 			.toHaveBeenCalledWith(
-				expect.objectContaining({ title: `${customerName} Bounty Board` })
+				expect.objectContaining({ title: `${CUSTOMERNAME} Bounty Board` })
 				, {}
 			);
+	});
+
+	it('Shows the loading page if loading', () => {
+		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+			isLoading: true,
+			isError: false,
+			bounty: undefined,
+		}));
+		const wrapper = shallow(<BountyPage />);
+		expect(wrapper.containsMatchingElement(<BountyLoader />)).toEqual(true);
+	});
+
+	it('Shows the error page if error', () => {
+		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+			isLoading: false,
+			isError: true,
+			bounty: undefined,
+		}));
+		const wrapper = shallow(<BountyPage />);
+		expect(wrapper.containsMatchingElement(<BountyNotFound />)).toEqual(true);
+	});
+
+	it('Shows no error if we dont have a bounty id', () => {
+		jest.spyOn(router, 'useRouter').mockImplementation(() => ({
+			query: {
+				id: undefined,
+			},
+		}) as unknown as NextRouter);
+		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+			isLoading: false,
+			isError: true,
+			bounty: undefined,
+		}));
+		const wrapper = shallow(<BountyPage />);
+		expect(wrapper.containsMatchingElement(<BountyNotFound />)).toEqual(false);
+	});
+
+	it('Otherwise renders the bounty', () => {
+		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+			isLoading: false,
+			isError: false,
+			bounty: { _id: 'test' } as unknown as BountyCollection,
+		}));
+		const wrapper = shallow(<BountyPage />);
+		expect(wrapper.containsMatchingElement(
+			<BountyCard { ...{} as BountyCollection } />
+		)).toEqual(true);
 	});
 });
