@@ -19,12 +19,13 @@
     "build:qa": "env-cmd -f .env.qa yarn build",
     "build:prod": "env-cmd -f .env.prod yarn build",
     "prebuild": "yarn lint",
-    "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve",
+    "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve --resolveJsonModule --allowJs",
     "export": "next export",
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
-    "test:unit": "jest",
-    "test:cov": "jest --coverage"
+    "test:unit": "TESTING=true jest packages/react-app/tests/unit",
+    "test:cov": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --coverage",
+    "test:integration": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --detectOpenHandles packages/react-app/tests/integration"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
@@ -39,21 +40,24 @@
     "@fontsource/lexend": "^4.5.0",
     "@hookform/resolvers": "^2.7.1",
     "@netlify/plugin-nextjs": "^3.8.0",
+    "@types/mongoose-paginate-v2": "^1.4.1",
     "axios": "^0.24.0",
     "env-cmd": "^10.1.0",
     "framer-motion": "^4.1.17",
     "lint-staged": "^11.0.0",
+    "mongo-cursor-pagination": "^7.6.1",
     "mongoose": "^5.13.4",
     "next": "^11.0.0",
     "next-auth": "4.0.0-next.26",
     "next-seo": "^4.26.0",
+    "node-mocks-http": "^1.11.0",
     "nprogress": "^0.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.12.2",
     "react-icons": "^4.2.0",
     "swr": "^0.5.6",
-    "yup": "^0.32.9"
+    "yup": "^0.32.11"
   },
   "engines": {
     "yarn": "1.x",
@@ -64,7 +68,6 @@
     "@testing-library/react": "^12.1.2",
     "@types/enzyme": "^3.10.10",
     "@types/jest": "^27.0.2",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.5",
     "@types/next-auth": "^3.15.0",
     "@types/node": "^16.4.7",
     "@types/nprogress": "^0.2.0",

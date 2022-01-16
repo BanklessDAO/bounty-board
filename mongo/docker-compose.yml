@@ -11,6 +11,8 @@ services:
   mongo-seed:
     build:
       context: '.'
+    volumes:
+      - .:/usr/tmp/mongo      
     links:
       - mongo
     depends_on:

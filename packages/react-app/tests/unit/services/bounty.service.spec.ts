@@ -1,7 +1,8 @@
-import Bounty from '../../../src/models/Bounty';
-import { FilterParams, SortParams } from '../../../src/types/Filter';
-import { FilterQuery, NextApiQuery } from '../../../src/types/Queries';
+import Bounty, { BountyCollection } from '../../../src/models/Bounty';
+import { FilterParams } from '../../../src/types/Filter';
+import { NextApiQuery } from '../../../src/types/Queries';
 import * as service from '../../../src/services/bounty.service';
+import { FilterQuery } from 'mongoose';
 
 describe('Testing the bounty service', () => {
   
@@ -77,9 +78,9 @@ describe('Testing the bounty service', () => {
 			}));
 
 		it('Sorts descending falsy strings', () => {
-			const expected: SortParams = {
-				sortBy: 'reward.amount',
-				order: 'desc',
+			const expected: service.BountyQuery = {
+				paginatedField: 'reward.amount',
+				sortAscending: false,
 			};
 			sortQueries.forEach(query => {
 				expect(service.getSort(query)).toEqual(expected);
@@ -91,7 +92,7 @@ describe('Testing the bounty service', () => {
 				asc: 'literally anything else',
 				sortBy: 'reward',
 			};
-			expect(service.getSort(query).order).toEqual('asc');
+			expect(service.getSort(query).sortAscending).toEqual(true);
 		});
 	});
 
@@ -99,7 +100,7 @@ describe('Testing the bounty service', () => {
 		it('Sets status as array of values when nothing passed', () => {
 			[undefined, '', 'All'].forEach(entry => {
 				expect(
-					service.filterStatus({}, entry).status
+					service.filterStatus({}, entry).status.$in
 				)
 					.toBeInstanceOf(Array);
 			});
@@ -129,14 +130,14 @@ describe('Testing the bounty service', () => {
 		});
 
 		it('Returns the filters query object as expected', async () => {
-			const filters: FilterParams = {
+			const query: NextApiQuery = {
 				status: 'Open',
 				search: 'Test',
 				customer_id: 'testId',
-				$lte: 100,
-				asc: true,
+				lte: '100',
+				asc: 'true',
 			};
-			const expected: FilterQuery = {
+			const expected: FilterQuery<BountyCollection> = {
 				status: 'Open',
 				customer_id: 'testId',
 				$text: {
@@ -147,10 +148,29 @@ describe('Testing the bounty service', () => {
 					$gte: 0,
 				},
 			};
-			const spy = jest.spyOn(Bounty, 'find')
-				.mockImplementation(jest.fn());
-			await service.handleFilters(filters);
-			expect(spy).toBeCalledWith(expected);
+			const actual = service.getFilterQuery(query);
+			expect(actual).toEqual(expected);
 		});
 	});
+
+	describe('Testing pagination logic', () => {
+		it('Creates a pagination object as expected', () => {
+			const query = {
+				next: '123',
+				limit: '10'
+			};
+			const expected = { next: query.next, limit: Number(query.limit), previous: undefined };
+			const actual = service.getPagination(query);
+			expect(actual).toEqual(expected);
+		});
+		it('Handles the non number case', () => {
+			const query = {
+				next: '123',
+				limit: 'fkekafk'
+			};
+			const expected = { next: query.next, limit: undefined, previous: undefined };
+			const actual = service.getPagination(query);
+			expect(actual).toEqual(expected);
+		});		
+	})
 });

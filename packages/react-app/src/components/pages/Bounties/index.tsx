@@ -61,7 +61,6 @@ const Bounties = ({ id }: PreFilterProps): JSX.Element => {
 	dynamicUrl += `&gte=${gte}`;
 	dynamicUrl += `&sortBy=${sortBy}`;
 	dynamicUrl += `&asc=${sortAscending}`;
-	// empty customer id will pass string as "undefined"
 	dynamicUrl += `&customer_id=${customer_id ?? BANKLESS.customer_id}`;
 		
 	const { data: bounties, error } = useSWR(

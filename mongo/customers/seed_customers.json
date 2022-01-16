@@ -4,7 +4,8 @@
       "$oid": "616f00ae05026959ede9a3a4"
     },
     "customer_id":"834499078434979890",
-    "customerName":"BanklessDAO"
+    "customerName":"BanklessDAO",
+    "bountyChannel": "850402063741091880"
   },
   {
     "_id" : {
@@ -12,6 +13,7 @@
     },    
     "customer_id":"402910780124561410",
     "customerName":"CityDAO",
+    "bountyChannel": "123498",
     "applicableRoles" : [ ],
     "customization":{
       "logo": "assets/logos/citydao.png",
@@ -31,6 +33,7 @@
     },
     "customer_id":"845400066532704256",
     "customerName":"Coordinape",
+    "bountyChannel": "12347",
     "applicableRoles" : [ ],
     "customization":{
       "logo":"./demo/coordinape.png",
@@ -50,6 +53,7 @@
     },    
     "customer_id":"718590743446290492",
     "customerName":"UMA",
+    "bountyChannel": "12345",
     "applicableRoles" : [ ],
     "customization":{
       "logo":"demo/uma.png",
@@ -69,6 +73,7 @@
     },    
     "customer_id":"402910780129999",
     "customerName":"Should Not See",
+    "bountyChannel": "12346",
     "applicableRoles" : [ ],
     "customization":{
       "logo":"",

@@ -56,7 +56,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 		reset(defaults);
 	}, [reset]);
 
-	const putData = async (values: any) => {
+	const patchData = async (values: any) => {
 		/* Sanitize output data and change status to open */
 		/* Convert input amount's decimal place into scale */
 		const amount = values.rewardAmount.toString().replace(/\./g, '');
@@ -79,7 +79,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 		const { id } = router.query;
 		try {
 			const res = await fetch(`/api/bounties/${id}`, {
-				method: 'PUT',
+				method: 'PATCH',
 				headers: {
 					Accept: contentType,
 					'Content-Type': contentType,
@@ -103,7 +103,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 	};
 	function onSubmit(values: JSON) {
 		return new Promise<void>((resolve) => {
-			putData(values).catch(console.error);
+			patchData(values).catch(console.error);
 			resolve();
 		});
 	}
