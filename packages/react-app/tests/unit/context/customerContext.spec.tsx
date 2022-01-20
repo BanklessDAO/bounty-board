@@ -1,5 +1,5 @@
 import { CustomerProps } from '../../../src/models/Customer';
-import * as context from '../../../src/context/CustomerContext';
+import * as hooks from '@app/hooks/useCustomer';
 
 describe('Testing the customer context', () => {
 	const setCustomer = jest.fn();
@@ -17,13 +17,13 @@ describe('Testing the customer context', () => {
 
 	it('Retrieves the customer from local storage, if it exists', () => {
 		localStorage.setItem('customer', JSON.stringify(customer));
-		context.setCustomerFromLocalStorage(setCustomer);
+		hooks.setCustomerFromLocalStorage(setCustomer);
 		expect(setCustomer).toHaveBeenCalled();
 	});
 
 	it('Does not set the customer if the customer is empty', () => {
 		localStorage.removeItem('customer');
-		context.setCustomerFromLocalStorage(setCustomer);
+		hooks.setCustomerFromLocalStorage(setCustomer);
 		expect(setCustomer).not.toHaveBeenCalled();
 	});
   
@@ -31,7 +31,7 @@ describe('Testing the customer context', () => {
 	it('Only sets the customer if the window is defined', () => {
 		localStorage.setItem('customer', JSON.stringify(customer));
 		jest.spyOn(window, 'window', 'get').mockImplementation(undefined);
-		context.setCustomerFromLocalStorage(setCustomer);
+		hooks.setCustomerFromLocalStorage(setCustomer);
 		expect(setCustomer).not.toHaveBeenCalled();
 	});
 });

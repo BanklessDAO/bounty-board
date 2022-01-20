@@ -11,6 +11,7 @@ import { BANKLESS } from '../../../constants/Bankless';
 import useSWR from 'swr';
 import { DiscordGuild } from '../../../types/Discord';
 import axios from 'axios';
+import NewBounty from './NewBounty';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -102,6 +103,7 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 				justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
 				direction={{ base: 'column', md: 'row' }}
 			>
+				<NewBounty />
 				{ customers && session
 					? <DAOSelector
 						customers={customers}
