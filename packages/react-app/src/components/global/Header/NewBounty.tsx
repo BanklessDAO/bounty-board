@@ -5,7 +5,7 @@ import RestrictedTo from '@app/components/global/Auth';
 
 const NewBounty = () => {
 	return (
-		<RestrictedTo roles={['create-bounty']}>
+		// <RestrictedTo roles={[]}>
 			<Link
 				aria-label="create-bounty-btn"
 				href='/new'
@@ -14,7 +14,7 @@ const NewBounty = () => {
 					<ColorModeButton>New Bounty</ColorModeButton>
 				</Box>
 			</Link>
-		</RestrictedTo>
+		// </RestrictedTo>
 	);
 };
 
