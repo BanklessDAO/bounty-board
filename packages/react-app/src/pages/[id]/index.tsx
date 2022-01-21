@@ -47,7 +47,7 @@ export const BountyPage = (): JSX.Element => {
 						fontWeight="600"
 						gridGap="4"
 					>
-						<BountyCard {...bounty} />
+						<BountyCard bounty={bounty} />
 					</Stack>
 					: (id && isError) && <BountyNotFound />
 		}</>

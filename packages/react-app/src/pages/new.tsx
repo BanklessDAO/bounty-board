@@ -1,11 +1,11 @@
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+// import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { mutate } from 'swr';
+import React, { useContext, useEffect, useState } from 'react';
+import  { useRouter } from 'next/router';
+import useSWR, { mutate } from 'swr';
 import DatePicker from "@app/components/parts/DatePicker";
-import { Box, HStack, Text } from '@chakra-ui/layout';
+import { Box, Heading, HStack, Stack, Text } from '@chakra-ui/layout';
 import Layout from '@app/components/global/SiteLayout'
 import {
   InfoIcon,
@@ -32,24 +32,29 @@ import Bounty, { BountyCollection, BountySchema, Status } from '@app/models/Boun
 import { filterGuildsToCustomers } from '@app/services/customer.service';
 import { FaFileVideo } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
+import { CustomerContext } from '@app/context/CustomerContext';
+import { User } from 'next-auth';
+import { APIUser } from 'discord-api-types'
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+import { useRoles } from '@app/hooks/useRoles';
+import Page400 from './400';
 
-const currencies = [
-  'bank', 'eth', 'city'
-]
+const useCurrencies = (): string[] => {
+  return ['BANK'];  
+}
 
 const defaultValues = {
-  title: 'Create a logo for the bountyboard',
-  description: 'We need a sharp and stylish logo in the next couple of weeks',
+  title: '',
+  description: '',
   reward: '1000',
   currency: 'BANK',
-  criteria: 'PNG and SVG images submitted and approved by the team',
-  dueAt: new Date().toDateString(),
-  gatedTo: '#level2',
+  criteria: '',
+  dueAt: new Date().toISOString(),
+  gatedTo: '',
   multiClaim: false,
   evergreen: false,
 } 
-
-
 
 const ExpansionField = ({
   label, children, value, onChange
@@ -93,6 +98,22 @@ const ExpansionField = ({
   )
 }
 
+type LocalStorageReturn<T extends any> = {
+  loading: boolean;
+  data: T | undefined
+}
+
+export function useLocalStorage<T>(key: string): LocalStorageReturn<T> {
+  let data = undefined;
+  let loading = true;
+  if (typeof localStorage !== 'undefined') {
+    const item = localStorage.getItem(key);
+    if (item) data = JSON.parse(item);
+    loading = false;
+  } 
+  return { loading, data }
+}
+
 const dateIsNotInPast = (d: string): string | boolean => {
   const dt = new Date(d).getTime();
   const today = new Date();
@@ -121,7 +142,12 @@ const NotNeededFields = [
   'submittedBy'
 ] as const
 
-const generatePreviewData = (data: typeof defaultValues): Omit<BountyCollection, typeof NotNeededFields[number]> => {
+const useDefaultValues = () => {
+  const { loading, data: cachedBounty } = useLocalStorage<typeof defaultValues>('cachedEdit');
+  return cachedBounty ?? defaultValues;
+}
+
+const generatePreviewData = (data: typeof defaultValues, customer_id: string, user: APIUser): Omit<BountyCollection, typeof NotNeededFields[number]> => {
   const amount = Number(data.reward);
   const decimalSplit = data.reward.split('.');
   const hasDecimals = decimalSplit.length > 1
@@ -131,32 +157,69 @@ const generatePreviewData = (data: typeof defaultValues): Omit<BountyCollection,
     title: data.title,
     description: data.description,
     criteria: data.criteria,
-    customer_id: '',
+    customer_id,
     status: bountyStatus.DRAFT,
-    dueAt: data.dueAt,
+    dueAt: new Date(data.dueAt).toISOString(),
     reward: {
       amount,
       currency: data.currency.toUpperCase(),
       amountWithoutScale,
       scale,
     },
-    editKey: '',
+    editKey: `edit-${user.id}`,
     statusHistory: [
       {
         status: bountyStatus.DRAFT,
-        modifiedAt: new Date().toDateString()
+        modifiedAt: new Date().toISOString()
       }
     ],
     discordMessageId: '',
-    createdAt: new Date().toDateString(),
+    createdAt: new Date().toISOString(),
     createdBy: {
-      discordHandle: '',
-      discordId: ''
+      discordHandle: `${user.username}#${user.discriminator}`,
+      discordId: user.id
     }
   }
 }
 
+export const tokenFetcher = (url: string, token: string) => axios.get(
+	url,
+	{
+		headers: {
+			authorization: `Bearer ${token}`,
+		},
+	}
+).then(res => res.data).catch(error => console.warn(error));
+
+const useUser = (): {
+  loading: boolean;
+  user?: APIUser
+} => {
+  const { data: session } = useSession({ required: false });
+  const { data: user, error } = useSWR<APIUser, unknown>(session
+    ? ['https://discord.com/api/users/@me', session.accessToken]
+    : null
+  , tokenFetcher)
+  return { 
+    loading: !error && !user,
+    user
+  }
+}
+
+const PLACEHOLDERS = {
+  TITLE: 'Example: Create new Logo',
+  DESCRIPTION: 'Example: We need someone to create some snappy looking logos for our new Web3 project.',
+  CRITERIA: 'Example: SVG and PNG images approved by the team'
+}
+
 const Form = () => {
+  const { status } = useSession({ required: false })
+  const router = useRouter();
+  const unauthorized = (status !== 'loading' && status !== 'authenticated')
+  const { user } = useUser();
+  const cachedBounty = useDefaultValues();
+  const currencies = useCurrencies();
+  const { customer: { customer_id } } = useContext(CustomerContext);
   const formControlProps: FormControlProps = { mt: '5'};
   const [gated, setGated] = useState(false);
   const {
@@ -167,53 +230,86 @@ const Form = () => {
       errors
     }
   } = useForm({
-    defaultValues,
+    defaultValues: cachedBounty,
   })
   return (
-    <Layout title="Create a new Bounty">
-    <form onSubmit={handleSubmit(data => {
-        let _data: Partial<typeof data>;
-        // console.debug({ data });
-        const preview = generatePreviewData(data);
-        console.debug({preview})
-      })}>
-      <FormControl
-        isInvalid={!!errors.title}
-        {...formControlProps}
-        >
-        <FormLabel htmlFor='title'>Bounty Title</FormLabel>
-        <Input id='title' {...register('title', { required }) }/>
-        <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
-      </FormControl>
+    <Layout title={unauthorized ? 'Not Authorized' : "Create a new Bounty"}>
+    {
+      unauthorized
+      ?	(
+        <Stack align="center" justify="center" h="400px">
+			    <Heading size="4xl" align="center">
+			    	<strong>400</strong>
+			    </Heading>
+			    <Heading size="xl">Unauthorized - Sign In to Access</Heading>
+		    </Stack> 
+        )
+      : <form onSubmit={handleSubmit(data => {
+          let _data: Partial<typeof data>;
+          const preview = user && generatePreviewData(data, customer_id, user);
+          console.debug({preview})
+          localStorage.setItem('cachedEdit', JSON.stringify(data))
+          localStorage.setItem('previewBounty', JSON.stringify(preview))
+          router.push('/preview')
+        })}>
+        <FormControl
+          isInvalid={!!errors.title}
+          {...formControlProps}
+          >
+          <FormLabel htmlFor='title'>Bounty Title</FormLabel>
+          <Box
+            bg="rgba(0,0,0,0.2)"
+            p="4"
+            my="2"
+          >Give the bounty a catchy title</Box>
+          <Input
+            id='title'
+            placeholder={PLACEHOLDERS.TITLE}
+            {...register('title', { required }) }
+            />
+          <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+        </FormControl>
 
-      <FormControl
-        isInvalid={!!errors.description}
-        {...formControlProps}
-        >
-        <FormLabel htmlFor='description'>Description</FormLabel>
-        <Box
-          bg="rgba(0,0,0,0.2)"
-          p="4"
-          my="2"
-        >Provide a brief description of the bounty</Box>
-        <Textarea id='description' {...register('description') }/>
-        <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
-      </FormControl>
-      
-      <FormControl
-        isInvalid={!!errors.criteria}
-        {...formControlProps}
-        >
-        <FormLabel htmlFor='criteria'>Criteria</FormLabel>
-        <Textarea id='criteria' {...register('criteria', { required }) }/>
-        <FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
-      </FormControl>
+        <FormControl
+          isInvalid={!!errors.description}
+          {...formControlProps}
+          >
+          <FormLabel htmlFor='description'>Description</FormLabel>
+          <Box
+            bg="rgba(0,0,0,0.2)"
+            p="4"
+            my="2"
+          >Provide a brief description of the bounty</Box>
+          <Textarea
+            id='description'
+            placeholder={PLACEHOLDERS.DESCRIPTION}
+            {...register('description') }/>
+          <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+        </FormControl>
 
-      <FormControl
-        isInvalid={!!errors.dueAt}
-        {...formControlProps}
-      >
-        <FormLabel htmlFor="dueat"
+        <FormControl
+          isInvalid={!!errors.criteria}
+          {...formControlProps}
+          >
+          <FormLabel htmlFor='criteria'>Criteria</FormLabel>
+          <Box
+            bg="rgba(0,0,0,0.2)"
+            p="4"
+            my="2"
+          >What is absolutely required before the bounty will be considered complete?</Box>        
+          <Textarea
+            id='criteria' 
+            placeholder={PLACEHOLDERS.CRITERIA}
+            {...register('criteria', { required }) }
+            />
+          <FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl
+          isInvalid={!!errors.dueAt}
+          {...formControlProps}
+        >
+        <FormLabel htmlFor="dueAt"
           mr="0"
           >
           Due At
@@ -306,11 +402,11 @@ const Form = () => {
                 onChange={field.onChange}
                 label="Recurring Bounty?"
                 >
-              <FormLabel htmlFor='maxClaim'></FormLabel>
+              <FormLabel htmlFor='evergreen'></FormLabel>
                 <Flex
-                  justifyContent="space-evenly"
+                  // justifyContent="space-evenly"
                 >
-                  <InfoIcon mr="3" mt="1"/>
+                  <InfoIcon mr="3"/>
                   <Text
                     p="0"
                     m="0"
@@ -336,11 +432,9 @@ const Form = () => {
                 >
                   <FormLabel htmlFor='gatedTo'>
                     <Flex
-                      justifyContent="space-evenly"
                       alignItems="start"
-                      px="1"
                     >
-                      <InfoIcon mr="3" mt="1"/>
+                      <InfoIcon mr="3"/>
                       <Text
                         p="0"
                         m="0"
@@ -369,10 +463,11 @@ const Form = () => {
           mt="5"
           w="full" 
           type="submit"
+          disabled={!user}
         >
           Preview
         </Button>
-      </form>
+      </form>}
     </Layout>
   )
 }

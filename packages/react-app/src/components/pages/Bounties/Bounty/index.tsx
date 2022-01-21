@@ -18,6 +18,49 @@ import { BountyCollection } from '../../../../models/Bounty';
 import { baseUrl } from '../../../../constants/discordInfo';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { useContext } from 'react';
+import { rewardValue } from '@app/services/discord.service';
+import axios from "@app/utils/AxiosUtils"
+import { STATUS_CODES } from 'http';
+import bountyStatus from '@app/constants/bountyStatus';
+import { useRouter } from 'next/router';
+
+const BountyActions = ({ bounty }: { bounty: BountyCollection }) => {
+	const router = useRouter();
+	const upload = () => {
+		bounty.status = bountyStatus.OPEN;
+		axios.post<any, { data: { data: BountyCollection } }>('api/bounties', bounty)
+			.then(({ data: res }) => {
+				router.push(`/${res.data._id}`).then(() => {
+						localStorage.removeItem('cachedEdit');
+						localStorage.removeItem('previewBounty');			
+					}	
+				);
+			})
+			.catch(err => {
+				const errorData = err.response?.data 
+				errorData ? console.debug({ errorData }) : console.debug({ err })
+			}
+		)
+	} 
+	return (
+	<>
+		<AccessibleLink href={`/new`}>
+			<Button my={2} size="sm" colorScheme="yellow">
+				Edit This Draft
+			</Button>
+		</AccessibleLink>
+		<Button
+			m={2}
+			size="sm"
+			colorScheme="red"
+			onClick={() => upload()}
+		>
+			Confirm
+		</Button>
+	</>
+	)
+}
+
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -34,7 +77,7 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 );
 
 const calculateReward = (_reward: BountyCollection['reward']): string => {
-	return `${(_reward.amount ?? 0) / (10 ** (_reward.scale ?? 0))} ${_reward.currency}`;
+	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
 const BountySummary = ({
@@ -81,23 +124,27 @@ const BountySummary = ({
 	);
 };
 
-const BountyDetails = ({
-	_id,
-	description,
-	criteria,
-	createdBy,
-	claimedBy,
-	status,
-	discordMessageId,
-}: BountyCollection): JSX.Element => {
+const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+	const {
+		_id,
+		description,
+		criteria,
+		createdBy,
+		claimedBy,
+		status,
+		discordMessageId,
+		dueAt,
+	} = bounty;
 	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
 	const url = discordMessageId ? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}` : '/';
 	return (
 		<Grid gap={6}>
-			<GridItem>
-				<Heading size="sm">HashID</Heading>
-				<Text>{_id}</Text>
-			</GridItem>
+			{ _id && 
+				<GridItem>
+					<Heading size="sm">HashID</Heading>
+					<Text>{_id}</Text>
+				</GridItem>
+			}
 			<GridItem>
 				<Heading size="sm">Description</Heading>
 				<Text>{description}</Text>
@@ -106,6 +153,12 @@ const BountyDetails = ({
 				<Heading size="sm">Done Criteria</Heading>
 				<Text>{criteria}</Text>
 			</GridItem>
+			{ dueAt &&
+				<GridItem>
+					<Heading size="sm">Deadline</Heading>
+					<Text>{new Date(dueAt).toDateString()}</Text>
+				</GridItem>
+			}			
 			{
 				createdBy
 					? <GridItem>
@@ -115,41 +168,41 @@ const BountyDetails = ({
 					: null
 			}
 			<GridItem>
-				{status && status.toLowerCase() === 'draft' ? (
-					<AccessibleLink href={`${_id}/edit`}>
-						<Button my={2} size="sm" colorScheme="red">
-							Edit This Draft
-						</Button>
-					</AccessibleLink>
-				) : claimedBy ? (
-					<>
-						<Heading size="sm">Claimed By</Heading>
-						<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
-					</>
-				) : (
-					<>
-						<Heading size="sm">Claimed By</Heading>
-						<AccessibleLink href={url}>
-							<Button my={2} size="sm" colorScheme="green">
-								Claim It
-							</Button>
-						</AccessibleLink>
-					</>
-				)}
+				{
+					status && status.toLowerCase() === 'draft'
+					? <BountyActions bounty={bounty} />
+					: claimedBy
+						? (
+								<>
+									<Heading size="sm">Claimed By</Heading>
+									<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
+								</>
+							) 
+						: (
+								<>
+									<Heading size="sm">Claimed By</Heading>
+									<AccessibleLink href={url}>
+										<Button my={2} size="sm" colorScheme="green">
+											Claim It
+										</Button>
+									</AccessibleLink>
+								</>
+							)
+				}
 			</GridItem>
 		</Grid>
 	);
 };
 
-export const BountyCard = (props: BountyCollection): JSX.Element => {
+export const BountyCard = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	return (
 		<Box width={{ base: '95vw', lg: '700px' }}>
 			<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
 				<Box pb={5}>
-					<BountySummary {...props} />
+					<BountySummary {...bounty} />
 				</Box>
 				<Box mx={2}>
-					<BountyDetails {...props} />
+					<BountyDetails bounty={bounty} />
 				</Box>
 			</Box>
 		</Box>
@@ -169,7 +222,7 @@ export const AccordionBountyItem = ({ bounty }: { bounty: BountyCollection }): J
 			</Box>
 		</AccordionButton>
 		<AccordionPanel mx={2}>
-			<BountyDetails {...bounty} />
+			<BountyDetails bounty={bounty} />
 		</AccordionPanel>
 	</AccordionItem>
 );
