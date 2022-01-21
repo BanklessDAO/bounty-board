@@ -3,18 +3,18 @@ import { mount, shallow } from 'enzyme';
 import * as router from 'next/router';
 import * as hooks from '../../../../src/hooks/useBounties';
 import { NextRouter } from 'next/router';
-import BountyPageLayout, { BountyLoader, BountyNotFound, BountyPage } from '../../../../src/pages/[id]';
+import BountyPageLayout, { BountyLoader, BountyNotFound, BountyPage } from '@app/pages/[id]';
 import Layout from '../../../../src/components/global/SiteLayout';
 import { BountyCollection } from '../../../../src/models/Bounty';
 import { BountyCard } from '../../../../src/components/pages/Bounties/Bounty';
 
 const CUSTOMERNAME = 'Test';
 
-jest.mock('@/components/pages/Bounties', () => {
+jest.mock('@app/components/pages/Bounties', () => {
 	return jest.fn(() => null);
 });
 
-jest.mock('@/components/global/SiteLayout', () => {
+jest.mock('@app/components/global/SiteLayout', () => {
 	return jest.fn(() => null);
 });
 

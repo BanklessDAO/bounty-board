@@ -29,7 +29,7 @@ module.exports = {
       preset: 'ts-jest',
       testMatch: ["**/?(*.)+(spec|test).[tj]s"],
       moduleNameMapper: {
-        '@/(.*)$': '<rootDir>/src/$1',
+        '@app/(.*)$': '<rootDir>/src/$1',
         '@tests/(.*)$': '<rootDir>/tests/$1'
       },   
     },
@@ -46,7 +46,8 @@ module.exports = {
       testMatch: ["**/?(*.)+(spec|test).[tj]sx"],
       moduleNameMapper: {
         '^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts',
-        '@/(.*)$': '<rootDir>/src/$1'
+        '@app/(.*)$': '<rootDir>/src/$1',
+        '@tests/(.*)$': '<rootDir>/tests/$1'
       },
     }
   ],
