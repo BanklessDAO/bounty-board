@@ -28,10 +28,23 @@ import {
   FormHelperText,
 	Textarea,
 } from '@chakra-ui/react';
+import Bounty, { BountySchema } from '@app/models/Bounty';
 
 const currencies = [
   'bank', 'eth', 'city'
 ]
+
+const defaultValues = {
+  title: 'Create a logo for the bountyboard',
+  description: 'We need a sharp and stylish logo in the next couple of weeks',
+  reward: 1000,
+  currency: 'BANK',
+  criteria: 'PNG and SVG images submitted and approved by the team',
+  dueAt: new Date(),
+  gated: '#level-2',
+  multiClaim: false,
+  evergreen: false,
+} 
 
 const ExpansionField = ({ label, children }: { label: string, children: React.ReactNode }) => {
   const [multi, setMulti] = useState(false);
@@ -68,6 +81,28 @@ const ExpansionField = ({ label, children }: { label: string, children: React.Re
   )
 }
 
+const required = 'This field is required';
+
+const BountyCreateSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required('Please provide a title for this Bounty.')
+    .max(250, 'Title cannot be more than 250 characters'),
+  description: yup
+    .string()
+    .required('Please provide the bounty description')
+    .max(4000, 'Description cannot be more than 4000 characters'),
+  criteria: yup
+    .string()
+    .required('Please provide the bounty criteria')
+    .max(4000, 'Criteria cannot be more than 4000 characters'),
+  rewardAmount: yup
+    .number()
+    .typeError('Invalid number')
+    .positive()
+    .required('Please provide the bounty reward amount'),
+});
+
 const Form = () => {
   const formControlProps: FormControlProps = { mt: '5'};
   const [dueAt, setDueAt] = useState<Date>(new Date());
@@ -78,26 +113,23 @@ const Form = () => {
       errors
     }
   } = useForm({
-    defaultValues: {
-      title: 'Create a logo for the bountyboard',
-      description: 'We need a sharp and stylish logo in the next couple of weeks',
-      reward: 1000,
-      currency: 'BANK',
-      criteria: 'PNG and SVG images submitted and approved by the team',
-      dueAt: new Date(),
-    } 
+    defaultValues,
+    resolver: yupResolver(BountyCreateSchema)
   })
   return (
     <Layout title="Create a new Bounty">
-    <form onSubmit={() => handleSubmit(data => console.debug({ data }))}>
+    <form onSubmit={handleSubmit(data => console.debug({ data }))}>
       <FormControl
+        isInvalid={!!errors.title}
         {...formControlProps}
         >
         <FormLabel htmlFor='title'>Bounty Title</FormLabel>
-        <Input id='title' type='text' placeholder="Catchy Name"/>
+        <Input id='title' {...register('title', { required }) }/>
+        <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
       </FormControl>
 
       <FormControl
+        isInvalid={!!errors.description}
         {...formControlProps}
         >
         <FormLabel htmlFor='description'>Description</FormLabel>
@@ -106,14 +138,17 @@ const Form = () => {
           p="4"
           my="2"
         >Provide a brief description of the bounty</Box>
-        <Input id='description' type='text' placeholder="Brief Description"/>
+        <Textarea id='description' {...register('description') }/>
+        <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
       </FormControl>
       
       <FormControl
+        isInvalid={!!errors.criteria}
         {...formControlProps}
         >
         <FormLabel htmlFor='criteria'>Criteria</FormLabel>
-        <Input id='criteria' type='text' placeholder="Absolute Requirements" />
+        <Textarea id='criteria' {...register('criteria', { required }) }/>
+        <FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
       </FormControl>
 
       <FormControl
@@ -132,26 +167,39 @@ const Form = () => {
         </FormLabel>
       </FormControl>
 
-      <FormControl
-        {...formControlProps}
-        >
-        <FormLabel htmlFor='criteria'>Reward</FormLabel>
-        <Flex>
-        <Input id='reward' type='number' placeholder="0" mr="3"/>
-        <Select id='currency' placeholder='BANK'>
-          {currencies.map(c => <option key={c}>{c.toUpperCase()}</option>)}
-        </Select>
-        </Flex>
-      </FormControl>
+      <Flex>
+        <FormControl
+          {...formControlProps}
+          isInvalid={!!errors.reward}
+          mr="1"
+          >
+          <FormLabel htmlFor='reward'>Reward</FormLabel>
+          <Input id='reward' {...register('reward', {
+              required, min: 1
+            })} />
+          <FormErrorMessage>{errors.reward?.message}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl
+          {...formControlProps}
+          isInvalid={!!errors.currency}
+          >
+          <FormLabel htmlFor='currency'>Currency</FormLabel>
+          <Select id='currency' {...register('currency', { required })}>
+            {currencies.map(c => <option key={c}>{c.toUpperCase()}</option>)}
+          </Select>
+          <FormErrorMessage>{errors.currency?.message}</FormErrorMessage>
+        </FormControl>
+      </Flex>
 
       <FormControl
-        bg="black"
+        bg="rgba(0,0,0,0.2)"
         {...formControlProps}
       >
         <ExpansionField label="Allow Multiple Claimants?">
           <FormControl>
-            <Flex mb="3">
-            <InfoIcon mr="3" mt="1"/>
+            <Flex mb="3" alignItems="center">
+            <InfoIcon mr="3"/>
                 <Text
                   p="0"
                   m="0"
@@ -160,19 +208,16 @@ const Form = () => {
                 >
                  Multiple People will be able to claim the bounty
             </Text>
-            </Flex>            
-            <FormLabel htmlFor='maxClaim'>Max Claimants</FormLabel>
-            <Input id='maxClaim' type='number' placeholder="2" />
+          </Flex>            
           </FormControl>
         </ExpansionField>
       </FormControl>
 
       <FormControl
-        bg="black"
+        bg="rgba(0,0,0,0.2)"
         {...formControlProps}
       >
         <ExpansionField label="Recurring Bounty?">
-          <FormControl>
             <FormLabel htmlFor='maxClaim'></FormLabel>
               <Flex
                 justifyContent="space-evenly"
@@ -187,8 +232,36 @@ const Form = () => {
                   A recurring bounty will automatically re-list once claimed
                 </Text>
               </Flex>
-          </FormControl>
         </ExpansionField>
+        </FormControl>
+
+        <FormControl
+        bg="rgba(0,0,0,0.2)"
+        {...formControlProps}
+      >
+        <ExpansionField label="Restrict Claimants?">
+            <FormLabel htmlFor='gated'>
+              <Flex
+                justifyContent="space-evenly"
+                alignItems="start"
+                px="1"
+              >
+                <InfoIcon mr="3" mt="1"/>
+                <Text
+                  p="0"
+                  m="0"
+                  fontSize="12"
+                  fontStyle="italic"
+                  overflowWrap="break-word"
+                >
+                  Restrict the bounty to allow claiming only by certain users or roles
+                </Text>
+              </Flex>
+              </FormLabel>
+              <Select id='gated' {...register('gated', { required })}>
+                {currencies.map(c => <option key={c}>{c.toUpperCase()}</option>)}
+              </Select>
+        </ExpansionField>        
       </FormControl>
       <Button
         mt="5"

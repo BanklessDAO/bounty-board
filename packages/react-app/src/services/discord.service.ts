@@ -59,7 +59,7 @@ export const rewardValue = (reward: BountyCollection['reward']): string => {
 	 * Construct a runtime safe reward
 	 */
 	const { amount, currency, scale } = reward;
-	return ((amount ?? 0).valueOf() / 10 ** (scale ?? 0).valueOf()) + ' ' + (currency ?? 'BANK');
+	return ((amount ?? 0).valueOf() / (10 ** (scale ?? 0).valueOf())) + ' ' + (currency ?? 'BANK');
 };
 
 /**

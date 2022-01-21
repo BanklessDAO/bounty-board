@@ -15,9 +15,17 @@ import { useCustomer } from '@app/hooks/useCustomer';
 import AuthContextProvider from '@app/context/AuthContext';
 import { User } from 'next-auth';
 
-Router.events.on('routeChangeStart', () => NProgress.start());
-Router.events.on('routeChangeComplete', () => NProgress.done());
-Router.events.on('routeChangeError', () => NProgress.done());
+Router.events.on('routeChangeStart', function() {
+	return NProgress.start()
+});
+
+Router.events.on('routeChangeComplete', function() {
+	return NProgress.done()
+});
+
+Router.events.on('routeChangeError', function() {
+	return NProgress.done()
+});
 
 const MotionBox = motion(Box);
 
