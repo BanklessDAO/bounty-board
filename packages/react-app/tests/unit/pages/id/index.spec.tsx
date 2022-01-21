@@ -85,7 +85,7 @@ describe('Testing the bounty id page', () => {
 		}));
 		const wrapper = shallow(<BountyPage />);
 		expect(wrapper.containsMatchingElement(
-			<BountyCard { ...{} as BountyCollection } />
+			<BountyCard bounty={{} as BountyCollection} />
 		)).toEqual(true);
 	});
 });

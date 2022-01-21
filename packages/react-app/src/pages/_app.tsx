@@ -13,26 +13,20 @@ import { CustomerContext } from '../context/CustomerContext';
 import { useTheme } from '@app/hooks/useTheme';
 import { useCustomer } from '@app/hooks/useCustomer';
 import AuthContextProvider from '@app/context/AuthContext';
-import { User } from 'next-auth';
 
 Router.events.on('routeChangeStart', function() {
-	return NProgress.start()
+	return NProgress.start();
 });
 
 Router.events.on('routeChangeComplete', function() {
-	return NProgress.done()
+	return NProgress.done();
 });
 
 Router.events.on('routeChangeError', function() {
-	return NProgress.done()
+	return NProgress.done();
 });
 
 const MotionBox = motion(Box);
-
-const exampleUser: User = {
-	id: '',
-	email: '',
-};
 
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps): JSX.Element {
 	const { id } = router.query;
@@ -42,7 +36,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppP
 		<SessionProvider session={session}>
 			<CustomerContext.Provider value={{ customer, setCustomer }}>
 				<ChakraProvider resetCSS theme={theme}>
-					<AuthContextProvider user={exampleUser}>
+					<AuthContextProvider>
 						<DefaultSeo {...SEO} />
 						<GlobalStyle>
 							<AnimatePresence exitBeforeEnter>

@@ -29,9 +29,9 @@ export const getSort = (query: NextApiQuery): BountyQuery => (
 	 * Sort defaults to ascending order
 	 */
 	({
-        sortAscending: !['false', '0', 'desc', 'no'].includes(query.asc as string),
-        paginatedField: getSortByValue(query.sortBy as string)
-    })
+		sortAscending: !['false', '0', 'desc', 'no'].includes(query.asc as string),
+		paginatedField: getSortByValue(query.sortBy as string),
+	})
 );
 
 export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {

@@ -18,9 +18,7 @@ import { BountyCollection } from '../../../../models/Bounty';
 import { baseUrl } from '../../../../constants/discordInfo';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { useContext } from 'react';
-import { rewardValue } from '@app/services/discord.service';
-import axios from "@app/utils/AxiosUtils"
-import { STATUS_CODES } from 'http';
+import axios from '@app/utils/AxiosUtils';
 import bountyStatus from '@app/constants/bountyStatus';
 import { useRouter } from 'next/router';
 
@@ -31,35 +29,35 @@ const BountyActions = ({ bounty }: { bounty: BountyCollection }) => {
 		axios.post<any, { data: { data: BountyCollection } }>('api/bounties', bounty)
 			.then(({ data: res }) => {
 				router.push(`/${res.data._id}`).then(() => {
-						localStorage.removeItem('cachedEdit');
-						localStorage.removeItem('previewBounty');			
-					}	
+					localStorage.removeItem('cachedEdit');
+					localStorage.removeItem('previewBounty');
+				}
 				);
 			})
 			.catch(err => {
-				const errorData = err.response?.data 
-				errorData ? console.debug({ errorData }) : console.debug({ err })
+				const errorData = err.response?.data;
+				errorData ? console.debug({ errorData }) : console.debug({ err });
 			}
-		)
-	} 
+			);
+	};
 	return (
-	<>
-		<AccessibleLink href={`/new`}>
-			<Button my={2} size="sm" colorScheme="yellow">
+		<>
+			<AccessibleLink href={'/new'}>
+				<Button my={2} size="sm" colorScheme="yellow">
 				Edit This Draft
-			</Button>
-		</AccessibleLink>
-		<Button
-			m={2}
-			size="sm"
-			colorScheme="red"
-			onClick={() => upload()}
-		>
+				</Button>
+			</AccessibleLink>
+			<Button
+				m={2}
+				size="sm"
+				colorScheme="red"
+				onClick={() => upload()}
+			>
 			Confirm
-		</Button>
-	</>
-	)
-}
+			</Button>
+		</>
+	);
+};
 
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
@@ -139,7 +137,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 	const url = discordMessageId ? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}` : '/';
 	return (
 		<Grid gap={6}>
-			{ _id && 
+			{ _id &&
 				<GridItem>
 					<Heading size="sm">HashID</Heading>
 					<Text>{_id}</Text>
@@ -158,7 +156,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					<Heading size="sm">Deadline</Heading>
 					<Text>{new Date(dueAt).toDateString()}</Text>
 				</GridItem>
-			}			
+			}
 			{
 				createdBy
 					? <GridItem>
@@ -170,15 +168,15 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			<GridItem>
 				{
 					status && status.toLowerCase() === 'draft'
-					? <BountyActions bounty={bounty} />
-					: claimedBy
-						? (
+						? <BountyActions bounty={bounty} />
+						: claimedBy
+							? (
 								<>
 									<Heading size="sm">Claimed By</Heading>
 									<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
 								</>
-							) 
-						: (
+							)
+							: (
 								<>
 									<Heading size="sm">Claimed By</Heading>
 									<AccessibleLink href={url}>

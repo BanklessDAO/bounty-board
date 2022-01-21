@@ -4,10 +4,28 @@ import { DiscordEmbed } from '../types/Discord';
 import { BountyCollection } from '../models/Bounty';
 import axios from '../utils/AxiosUtils';
 import ServiceUtils from '../utils/ServiceUtils';
+import { APIGuildMember } from 'discord-api-types';
+import { AxiosResponse } from 'axios';
 
 const BOUNTY_BOARD_URL = process.env.NEXT_PUBLIC_DAO_BOUNTY_BOARD_URL || '';
 const IN_PROGRESS_COLOR_YELLOW = 1998388;
 const END_OF_SEASON = process.env.NEXT_PUBLIC_DAO_CURRENT_SEASON_END_DATE as string;
+
+export const getDiscordUserInGuild = async (
+	session: Session,
+	customer_id: string
+): Promise<AxiosResponse<APIGuildMember, any>> => {
+	/**
+	 * Fetches detailed information from discord about a user's guild stats
+	 * @param session is the next auth session
+	 * @param customer_id is the guildId
+	 */
+	return await axios.get<APIGuildMember>(`https://discord.com/api/users/@me/guilds/${customer_id}/member`, 	{
+		headers: {
+			authorization: `Bearer ${session?.accessToken}`,
+		},
+	});
+};
 
 export const toggleDiscordSignIn = (
 	session: Session | unknown,

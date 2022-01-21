@@ -54,7 +54,7 @@ interface MenuLinksProps {
 	isOpen: boolean;
 }
 
-export const tokenFetcher = (url: string, token: string) => axios.get(
+export const tokenFetcher = (url: string, token: string): any => axios.get(
 	url,
 	{
 		headers: {

@@ -7,7 +7,7 @@ type BountyPaginateProps = {
   maxPages: number;
 }
 
-function BountyPaginate({ page, setPage, maxPages }: BountyPaginateProps) {
+function BountyPaginate({ page, setPage, maxPages }: BountyPaginateProps): JSX.Element {
 
 	const { colorMode } = useColorMode();
 

@@ -4,23 +4,23 @@ import { Box } from '@chakra-ui/react';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-function DatePicker(props: ReactDatePickerProps) {
-  const {
-    isClearable = false,
-    showPopperArrow = false,
-    ...rest
-  } = props;
+function DatePicker(props: ReactDatePickerProps): JSX.Element {
+	const {
+		isClearable = false,
+		showPopperArrow = false,
+		...rest
+	} = props;
 
-  return (
-    <Box className="dark-theme">
-      <ReactDatePicker
-        isClearable={isClearable}
-        showPopperArrow={showPopperArrow}
-        className="react-datapicker__input-text"
-        {...rest}
-      />
-    </Box>
-  );
-};
+	return (
+		<Box className="dark-theme">
+			<ReactDatePicker
+				isClearable={isClearable}
+				showPopperArrow={showPopperArrow}
+				className="react-datapicker__input-text"
+				{...rest}
+			/>
+		</Box>
+	);
+}
 
-export default DatePicker
+export default DatePicker;

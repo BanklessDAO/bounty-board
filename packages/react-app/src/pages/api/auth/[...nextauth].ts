@@ -9,6 +9,7 @@ export const DISCORD_AUTH_SETTINGS = {
 		'email',
 		'guilds',
 		'guilds.join',
+		'guilds.members.read',
 	],
 };
 
