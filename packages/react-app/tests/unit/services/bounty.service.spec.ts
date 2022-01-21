@@ -1,5 +1,4 @@
-import Bounty, { BountyCollection } from '../../../src/models/Bounty';
-import { FilterParams } from '../../../src/types/Filter';
+import { BountyCollection } from '../../../src/models/Bounty';
 import { NextApiQuery } from '../../../src/types/Queries';
 import * as service from '../../../src/services/bounty.service';
 import { FilterQuery } from 'mongoose';
@@ -157,7 +156,7 @@ describe('Testing the bounty service', () => {
 		it('Creates a pagination object as expected', () => {
 			const query = {
 				next: '123',
-				limit: '10'
+				limit: '10',
 			};
 			const expected = { next: query.next, limit: Number(query.limit), previous: undefined };
 			const actual = service.getPagination(query);
@@ -166,11 +165,11 @@ describe('Testing the bounty service', () => {
 		it('Handles the non number case', () => {
 			const query = {
 				next: '123',
-				limit: 'fkekafk'
+				limit: 'fkekafk',
 			};
 			const expected = { next: query.next, limit: undefined, previous: undefined };
 			const actual = service.getPagination(query);
 			expect(actual).toEqual(expected);
-		});		
-	})
+		});
+	});
 });
