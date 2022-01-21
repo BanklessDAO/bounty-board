@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { SchemaToInterface, PaginateModel } from '../types/Models';
+import { SchemaToInterface } from '../types/Models';
+import { PaginateModel } from '../types/Paginate';
 import {
 	string,
 	number,
