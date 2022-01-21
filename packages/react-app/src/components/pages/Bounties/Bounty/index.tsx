@@ -11,15 +11,11 @@ import {
 	Heading,
 	Tag,
 	TagLabel,
-	Stack,
 	Text,
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
-
 import { BountyCollection } from '../../../../models/Bounty';
 import { baseUrl } from '../../../../constants/discordInfo';
-import Link from 'next/link';
-import ColorModeButton from '../../../../components/parts/ColorModeButton';
 import { CustomerContext } from '../../../../context/CustomerContext';
 import { useContext } from 'react';
 
@@ -145,26 +141,7 @@ const BountyDetails = ({
 	);
 };
 
-const BountyNotFound = (): JSX.Element => (
-	<Stack align="center" justify="center" h="400px">
-		<Heading size="4xl" align="center">
-			<strong>404</strong>
-		</Heading>
-		<Box>
-			<Heading size="xl">Bounty not found</Heading>
-		</Box>
-		<Link href='/'>
-			<Box my="5">
-				<ColorModeButton>Go Back</ColorModeButton>
-			</Box>
-		</Link>
-	</Stack>
-);
-
 export const BountyCard = (props: BountyCollection): JSX.Element => {
-	if (!props || Object.entries(props).length === 0) {
-		return (<BountyNotFound />);
-	}
 	return (
 		<Box width={{ base: '95vw', lg: '700px' }}>
 			<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
