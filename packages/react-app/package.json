@@ -19,7 +19,7 @@
     "build:qa": "env-cmd -f .env.qa yarn build",
     "build:prod": "env-cmd -f .env.prod yarn build",
     "prebuild": "yarn lint",
-    "type-check": "tsc --pretty --noEmit --skipLibCheck --esModuleInterop --strict --jsx preserve --resolveJsonModule --allowJs",
+    "type-check": "tsc -p .",
     "export": "next export",
     "lint": "eslint src --ext js,jsx,ts,tsx",
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
@@ -29,7 +29,7 @@
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
-      "yarn run type-check",
+      "bash -c tsc -p .",
       "yarn format"
     ]
   },
@@ -76,6 +76,7 @@
     "@types/nprogress": "^0.2.0",
     "@types/react": "^17.0.14",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "discord-api-types": "^0.24.0",
     "enzyme": "^3.11.0",
     "enzyme-to-json": "^3.6.2",
