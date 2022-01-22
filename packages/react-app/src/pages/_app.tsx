@@ -1,18 +1,19 @@
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import { AppProps } from 'next/app';
-import { useEffect, useState } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { DefaultSeo } from 'next-seo';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { baseTheme, updateThemeForCustomer } from '../styles/customTheme';
 import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
-import { CustomerProps } from '../models/Customer';
 import '../styles/css/nprogress.css';
-import { CustomerContext, getCustomerFromBountyId, setCustomerFromLocalStorage } from '../context/CustomerContext';
-import { BANKLESS } from '../constants/Bankless';
+import '../styles/css/date-picker.css';
+import { CustomerContext } from '../context/CustomerContext';
+import { useTheme } from '@app/hooks/useTheme';
+import { useCustomer } from '@app/hooks/useCustomer';
+import AuthContextProvider from '@app/context/AuthContext';
+import { User } from 'next-auth';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -20,49 +21,41 @@ Router.events.on('routeChangeError', () => NProgress.done());
 
 const MotionBox = motion(Box);
 
+const exampleUser: User = {
+	id: '',
+	email: '',
+};
+
 function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps): JSX.Element {
-	const [theme, setTheme] = useState(baseTheme);
-	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
 	const { id } = router.query;
-	const customerFromId = getCustomerFromBountyId(id);
-
-	useEffect(() => {
-		setCustomerFromLocalStorage(setCustomer);
-	}, []);
-
-	useEffect(() => {
-		if (customerFromId) setCustomer(customerFromId);
-	}, [customerFromId]);
-	
-	useEffect(() => {
-		updateThemeForCustomer(customer, setTheme);
-		localStorage.setItem('customer', JSON.stringify(customer));
-	}, [customer]);
-
+	const { customer, setCustomer } = useCustomer(id);
+	const theme = useTheme(customer);
 	return (
 		<SessionProvider session={session}>
 			<CustomerContext.Provider value={{ customer, setCustomer }}>
 				<ChakraProvider resetCSS theme={theme}>
-					<DefaultSeo {...SEO} />
-					<GlobalStyle>
-						<AnimatePresence exitBeforeEnter>
-							<MotionBox
-								key={router.route}
-								animate="enter"
-								as="main"
-								exit="exit"
-								flexGrow={1}
-								initial="initial"
-								variants={{
-									initial: { opacity: 0, y: -10 },
-									enter: { opacity: 1, y: 0 },
-									exit: { opacity: 0, y: 10 },
-								}}
-							>
-								<Component {...pageProps} />
-							</MotionBox>
-						</AnimatePresence>
-					</GlobalStyle>
+					<AuthContextProvider user={exampleUser}>
+						<DefaultSeo {...SEO} />
+						<GlobalStyle>
+							<AnimatePresence exitBeforeEnter>
+								<MotionBox
+									key={router.route}
+									animate="enter"
+									as="main"
+									exit="exit"
+									flexGrow={1}
+									initial="initial"
+									variants={{
+										initial: { opacity: 0, y: -10 },
+										enter: { opacity: 1, y: 0 },
+										exit: { opacity: 0, y: 10 },
+									}}
+								>
+									<Component {...pageProps} />
+								</MotionBox>
+							</AnimatePresence>
+						</GlobalStyle>
+					</AuthContextProvider>
 				</ChakraProvider>
 			</CustomerContext.Provider>
 		</SessionProvider>
