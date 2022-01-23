@@ -1,6 +1,5 @@
 import * as service from '@app/services/auth.service';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Session } from 'next-auth';
 import { getSession } from 'next-auth/react';
 
 const handler = async (
@@ -11,22 +10,15 @@ const handler = async (
 	switch (req.method) {
 	case 'GET': {
 		try {
-			const { customer_id } = req.query;
-			if (!customer_id || typeof customer_id !== 'string') {
-				res.status(400).json({ success: false, error: 'Missing single customer_id field' });
-			}
-
 			const session = await getSession({ req });
-			if (!session) {
+			if (session && session.accessToken) {
+				const roles = await service.getPermissions(session.accessToken as string);
+				res.status(200).json({ success: true, data: roles });
+			} else {
 				res.status(401).json({ success: false, error: 'No session found' });
 			}
-
-			const roles = await service.getPermissions(session as Session, customer_id as string);
-			console.debug({ rolesAPI: roles });
-			res.status(200).json({ success: true, data: roles });
-
-		} catch (error) {
-			res.status(400).json({ success: false, error });
+		} catch (error: any) {
+			res.status(error.status ?? 400).json({ success: false, error: error?.response?.statusText });
 		}
 		break;
 	}

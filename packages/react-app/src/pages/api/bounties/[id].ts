@@ -4,6 +4,12 @@ import { BountySchema } from '../../../models/Bounty';
 import { internalServerError, notFound } from '../../../errors';
 import * as service from '../../../services/bounty.service';
 import middlewares from '../../../middlewares';
+import { RoleRestrictions } from '@app/types/Role';
+
+const restrictions: RoleRestrictions = {
+	PATCH: ['admin', 'edit-bounties'],
+	DELETE: ['admin', 'delete-bounties'],
+};
 
 export const handler = async (
 	req: NextApiRequest,
@@ -65,4 +71,4 @@ export const handler = async (
 	}
 };
 
-export default middlewares({ schema: BountySchema, handler });
+export default middlewares({ schema: BountySchema, handler, restrictions });

@@ -1,40 +1,38 @@
-import { BANKLESS } from '@app/constants/Bankless';
-import { BANKLESS_ROLE_IDS } from '@app/constants/Roles';
+import { BANKLESS_ROLES } from '@app/constants/Roles';
 import { Role } from '@app/types/Role';
-import { Session } from 'next-auth';
 import * as discordService from './discord.service';
 
-const roleIds = Object.keys(BANKLESS_ROLE_IDS);
+/**
+ * The auth service is aiming to wrap several other identity provdiers and
+ * return a list of roles associated with the current user.
+ * This can then be called by middlwares or directly in API endpoints
+ */
 
-export const getPermissions = async (session: Session, customer_id: string): Promise<Role[]> => {
+const ROLE_IDS = Object.values(BANKLESS_ROLES);
+
+export const getPermissions = async (accessToken: string): Promise<Role[]> => {
 	/**
    * Returns a list of permissions for the current user
    * We currently only support the `bounty-create` role, for discord level 2s in bankless DAO
    */
-	if (customer_id !== BANKLESS.customer_id) return [];
-	const banklessRolesForUser = await getRolesForUserInGuild(session, customer_id);
-	return banklessRolesForUser.includes('level-2') ? ['create-bounty'] : [];
-};
-
-
-export const discordRoleIdsToNamedRoles = (discordRoleIds: string[]): string[] => {
-	/**
-    * Discord role ids are strings of numbers, we want to transform them to something
-    * readable until we can fetch the roles directly
-    * NOTE: this only fetches the roles where we have provided role ids in BANKLESS_ROLE_IDS
-    */
-	return discordRoleIds
-		.filter((role: string) => roleIds.includes(role))
-		.map((role: string) => BANKLESS_ROLE_IDS[role]);
+	// note: only currently supports bankless
+	const banklessRolesForUser = await getRolesForUserInGuild(accessToken);
+	const permissions: Role[] = [];
+	console.debug({ banklessRolesForUser, ROLE_IDS });
+	if (banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_2)) permissions.push('create-bounty');
+	if (banklessRolesForUser.includes(BANKLESS_ROLES.BB_CORE)) permissions.push('admin');
+	return permissions;
 };
 
 export const getRolesForUserInGuild = async (
-	session: Session,
-	customer_id: string
+	accessToken: string
 ): Promise<string[]> => {
 	/**
-    * Get discord roleIds (numeric) from the API then return named roles
+    * Get discord roleIds (numeric) then filter to only roles that are supported
+		* By the application
     */
-	const discordUserStats = await discordService.getDiscordUserInGuild(session, customer_id);
-	return discordRoleIdsToNamedRoles(discordUserStats.data.roles);
+	// currently only supports bankless
+	const discordUserStats = await discordService.getDiscordUserInGuild(accessToken);
+	console.debug(discordUserStats.data.roles);
+	return discordUserStats.data.roles.filter(role => ROLE_IDS.includes(role));
 };

@@ -42,15 +42,15 @@ const BountyActions = ({ bounty }: { bounty: BountyCollection }) => {
 	};
 	return (
 		<>
-			<AccessibleLink href={'/new'}>
-				<Button my={2} size="sm" colorScheme="yellow">
+			<AccessibleLink href={'/create-bounty'}>
+				<Button my={2} size="sm">
 				Edit This Draft
 				</Button>
 			</AccessibleLink>
 			<Button
 				m={2}
 				size="sm"
-				colorScheme="red"
+				colorScheme="primary"
 				onClick={() => upload()}
 			>
 			Confirm
@@ -134,7 +134,9 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 		dueAt,
 	} = bounty;
 	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
-	const url = discordMessageId ? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}` : '/';
+	const url = discordMessageId
+		? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}`
+		: `${baseUrl}/${customer_id}/${bountyChannel}`;
 	return (
 		<Grid gap={6}>
 			{ _id &&

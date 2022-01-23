@@ -1,3 +1,4 @@
+import { SessionWithToken } from '@app/types/SessionExtended';
 import NextAuth, { Session, TokenSet } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
@@ -25,19 +26,19 @@ export default NextAuth({
 		}),
 	],
 	callbacks: {
+		
 		async jwt({ token, account }: any) {
 			if(account) {
 				// token.profile = profile;
 				token.accessToken = account.access_token;
 				token.refreshToken = account.refresh_token;
 			}
-
 			return token;
 		},
-		async session({ session, token }: { session: Session, token: TokenSet }) {
+		async session({ session, token }: { session: Session, token: TokenSet }): Promise<SessionWithToken> {
 			// Send properties to the client, like access_token from a provider.
 			session.accessToken = token.accessToken;
-			return session;
+			return session as SessionWithToken;
 		},
 	},
 });

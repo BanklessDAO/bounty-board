@@ -2,15 +2,15 @@ import { BountyCard } from '@app/components/pages/Bounties/Bounty';
 import Layout from '@app/components/global/SiteLayout';
 import { Stack } from '@chakra-ui/layout';
 import { BountyCollection } from '@app/models/Bounty';
-import { useLocalStorage } from './new';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useLocalStorage } from '@app/hooks/useLocalStorage';
 
 export const BountyPage = (): JSX.Element => {
 	const router = useRouter();
 	const { data: bounty, loading } = useLocalStorage<BountyCollection>('previewBounty');
 	useEffect(() => {
-		if ((!loading && !bounty)) router.push('/new');
+		if ((!loading && !bounty)) router.push('/create-bounty');
 	}, [loading, bounty]);
 	return (
 		<Stack

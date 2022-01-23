@@ -1,3 +1,4 @@
+import { RoleRestrictions } from '@app/types/Role';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { OptionalObjectSchema, ObjectShape } from 'yup/lib/object';
 
@@ -5,6 +6,7 @@ type ValidatorFunction = (req: NextApiRequest, res: NextApiResponse) => Promise<
 export type ValidatorProps = {
   schema: OptionalObjectSchema<ObjectShape>,
   handler: NextApiHandler,
+	restrictions?: RoleRestrictions
 };
 
 const has = (object: unknown, key: string) => object ? Object.prototype.hasOwnProperty.call(object, key) : false;
