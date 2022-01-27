@@ -3,7 +3,6 @@ import { toggleDiscordSignIn } from '../../../src/services/discord.service';
 import * as client from 'next-auth/react';
 import { DISCORD_AUTH_SETTINGS, getAuthUrl } from '../../../src/pages/api/auth/[...nextauth]';
 
-
 jest.mock('next-auth/react', () => ({
 	signIn: jest.fn(),
 	signOut: jest.fn(),

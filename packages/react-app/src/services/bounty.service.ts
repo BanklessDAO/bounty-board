@@ -1,10 +1,11 @@
-import Bounty, { BountyBoardProps } from '../models/Bounty';
-import { Query } from 'mongoose';
+import { NextApiRequest } from 'next';
+import { FilterQuery, PaginateResult } from 'mongoose';
+import Bounty, { BountyCollection } from '../models/Bounty';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
-import { FilterQuery, NextApiQuery } from '../types/Queries';
-import { BANKLESS } from '../constants/Bankless';
+import { NextApiQuery } from '../types/Queries';
+import * as discord from './discord.service';
 
-type BountyQuery = Query<BountyBoardProps[], BountyBoardProps>;
+export type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
 
 export const getFilters = (query: NextApiQuery): FilterParams => {
 	/**
@@ -12,37 +13,31 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	 */
 	const filters = {} as FilterParams;
 	
-	typeof query.status === 'string' ? filters.status = query.status : null;
-	typeof query.search === 'string' ? filters.search = query.search : null;
-	typeof query.customer_id === 'string' ? filters.customer_id = query.customer_id : null;
+	if (typeof query.status === 'string') filters.status = query.status;
+	if (typeof query.search === 'string') filters.search = query.search;
+	if (typeof query.customer_id === 'string') filters.customer_id = query.customer_id;
 	
-	query.lte ? filters.$lte = Number(query.lte) : null;
-	query.gte ? filters.$gte = Number(query.gte) : null;
+	if(query.lte) filters.$lte = Number(query.lte);
+	if(query.gte) filters.$gte = Number(query.gte);
 
 	return filters;
 };
 
-export const getSort = (query: NextApiQuery): SortParams => {
+export const getSort = (query: NextApiQuery): BountyQuery => (
 	/**
 	 * Retrieve implemented sort filters from query string params
 	 * Sort defaults to ascending order
 	 */
-	const sort = {} as SortParams;
-	const FALSY_STRINGS = ['false', '0', 'desc', 'no'];
-	
-	const isDescending = FALSY_STRINGS.includes(query.asc as string);
-
-	isDescending ? sort.order = 'desc' : sort.order = 'asc';
-	
-	sort.sortBy = getSortByValue(query.sortBy as string);
-	
-	return sort;
-};
+	{
+		sortAscending: !['false', '0', 'desc', 'no'].includes(query.asc as string),
+		paginatedField: getSortByValue(query.sortBy as string),
+	}
+);
 
 export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	/**
 	 * Allows passing of various values as sort params. These need to coalesce
-	 * to a mongoDB schema item, so I've put in a Type for accepted sort outputs
+	 * to a mongoDB schema item, so there is a Type for accepted sort outputs
 	 * to indicate the required @return value.
 	 */
 	let output: AcceptedSortOutputs;
@@ -57,19 +52,19 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	return output;
 };
 
-export const filterStatus = (query: FilterQuery, status?: string): FilterQuery => {
+export const filterStatus = (query: FilterQuery<BountyCollection>, status?: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Pass status and append the corresponding status query to the query object
 	 */
 	if (status == null || status == '' || status == 'All' || status == undefined) {
-		query.status = ['Open', 'In-Progress', 'In-Review', 'Completed'];
+		query.status = { $in: ['Open', 'In-Progress', 'In-Review', 'Completed'] };
 	} else {
 		query.status = status;
 	}
 	return query;
 };
 
-export const filterSearch = (query: FilterQuery, search: string): FilterQuery => {
+export const filterSearch = (query: FilterQuery<BountyCollection>, search: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Pass any text search terms to the query object
 	 */
@@ -81,10 +76,10 @@ export const filterSearch = (query: FilterQuery, search: string): FilterQuery =>
 
 export const filterLessGreater = ({ by, query, $lte, $gte }: {
 	by: AcceptedSortOutputs;
-	query: FilterQuery;
+	query: FilterQuery<BountyCollection>;
 	$lte?: number;
 	$gte?: number;
-}): FilterQuery => {
+}): FilterQuery<BountyCollection> => {
 	/**
 	 * Filters the passed @param by according to a standardised filter query:
 	 * Filters are in terms of `by` <= @param $lte 
@@ -104,51 +99,118 @@ export const filterLessGreater = ({ by, query, $lte, $gte }: {
 	return query;
 };
 
-export const handleEmpty = (query: FilterQuery): FilterQuery | Record<string, unknown> => {
+export const handleEmpty = (query: FilterQuery<BountyCollection>): FilterQuery<BountyCollection> | Record<string, unknown> => {
 	const isEmpty: boolean = Object.values(query).every(x => x === null || x === '' || x === undefined);
 	return isEmpty ? {} : query;
 };
 
-export const filterCustomerId = (query: FilterQuery, customer_id?: string): FilterQuery => {
+export const filterCustomerId = (query: FilterQuery<BountyCollection>, customer_id: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Remove bounties not relating to the currently selected DAO
 	 */
-	query.customer_id = customer_id ?? BANKLESS.customer_id;
+	query.customer_id = customer_id;
 	return query;
 };
 
-export const handleFilters = (filters: FilterParams): BountyQuery => {
+export const getPagination = (query: NextApiQuery): BountyQuery => ({
+	/**
+	 * Extracts pagination variables from the request into a bountyQuery
+	 * @param query is the next query object
+	 * @returns a valid bountyQuery
+	 */
+	next: (query.next && typeof query.next === 'string') ? query.next : undefined,
+	previous: (query.previous && typeof query.previous === 'string') ? query.previous : undefined,
+	limit: (Number(query.limit)) ? Number(query.limit) : undefined,
+});
+
+
+export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	/**
 	 * Construct the filter query and return query object from mongoose
 	 */
-	let filterQuery = {} as FilterQuery;
+	let filterQuery = {} as FilterQuery<BountyCollection>;
+
+	const filters = getFilters(query);
 	
 	const { status, search, $lte, $gte, customer_id } = filters;
 	
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
-	filterQuery = filterCustomerId(filterQuery, customer_id);
+	if(customer_id) filterQuery = filterCustomerId(filterQuery, customer_id);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
 	filterQuery = handleEmpty(filterQuery);
 
-	return Bounty.find(filterQuery);
+	return filterQuery;
 };
 
-export const handleSort = (query: BountyQuery, sort: SortParams): BountyQuery => {
+export const handleSort = (sort: SortParams): BountyQuery => {
 	/**
 	 * Take the existing query object and add any sorting information before returning
 	 */
-	const sortStatement = { [sort.sortBy as string]: sort.order };
-	return query.sort(sortStatement);
+	return {
+		paginatedField: sort.sortBy,
+		sortAscending: sort.order,
+	};
 };
 
-export const getBounties = async (filters: FilterParams, sort: SortParams): Promise<BountyQuery> => {
+
+export const getBounties = async (req: NextApiRequest): Promise<PaginateResult<BountyCollection> | PaginateResult<[]>> => {
 	/**
-	 * @returns the query object (awaiting execution) for getting bounties
-	 * having applied the relevant server-side filtering and sorting
+	 * Grabs the filter, sort and pagination options from the request into a BountyQuery
+	 * Object that can be passed to the Bounty.paginate function.
+	 * @returns a list of bounties
 	 */
-	let query: BountyQuery;
-	query = handleFilters(filters);
-	query = handleSort(query, sort);
-	return query;
+	const filterQuery = getFilterQuery(req.query);
+	const sortQuery = getSort(req.query);
+	const paginationOptions = getPagination(req.query);
+	
+	const bountyQuery: BountyQuery = {
+		query: {
+			...filterQuery,
+		},
+		...paginationOptions,
+		...sortQuery,
+	};
+
+	return await Bounty.paginate(bountyQuery);
+};
+
+export const getBounty = async (id: string): Promise<BountyCollection | null> => {
+	/**
+	 * @param id is a 24 character string, try to find it in the db
+	 * If the character !== 24 chars, or we can't find the bounty, return null 
+	 */
+	return id.length === 24 ? await Bounty.findById(id) : null;
+};
+
+export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: string | undefined }): boolean => {
+	/**
+	 * We allow edits to the bounty only if the status is currently `draft` or `open`, and if a valid
+	 * edit key is passed.
+	 * 
+	 * @TODO the edit key is an external dependency from bounty bot, it would be better to wrap a more
+	 * complete user-based auth mechanism
+	 */
+	const validBountyEditKey = Boolean(key) && (bounty.editKey === key);
+	const bountyOpenForEdits = ['draft', 'open'].includes(bounty.status.toLowerCase());
+	return validBountyEditKey && bountyOpenForEdits;
+};
+
+type EditBountyProps = { bounty: BountyCollection, body: Record<string, unknown> };
+export const editBounty = async ({ bounty, body }: EditBountyProps): Promise<BountyCollection> => {
+	const updatedBounty = await Bounty.findByIdAndUpdate(bounty._id, body, {
+		new: true,
+		omitUndefined: true,
+		runValidators: true,
+	}) as BountyCollection;
+	await discord.publishBountyToDiscordChannel(updatedBounty, updatedBounty.status);
+	return updatedBounty;
+};
+
+export const deleteBounty = async (id: string): Promise<void> => {
+	await Bounty.findByIdAndDelete(id);
+};
+
+export const createBounty = async (body: BountyCollection): Promise<BountyCollection> => {
+	return await Bounty.create(body);
 };

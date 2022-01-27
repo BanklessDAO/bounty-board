@@ -6,9 +6,15 @@ import { BANKLESS } from '../constants/Bankless';
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
 	 * @returns a single customer
-	 * @param id - the customer_id number in the collections db
+	 * @param id - either the id in the database or the customer_id number in the db
+	 * It's easy to forget that we need the discord id, so the string id is used as a fallback
+	 * @TODO decide if this approach is sensible long term
 	 */
-	return Customer.findOne({ customer_id: id });
+	const findWithCustomerId = await Customer.findOne({ customer_id: id });
+	if (!findWithCustomerId) {
+		return Customer.findById(id);
+	}
+	return findWithCustomerId;
 };
 
 export const getCustomers = async (): Promise<CustomerProps[] | []> => {
@@ -29,13 +35,30 @@ export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersLis
 	return filterGuilds;
 };
 
-export const getCustomersInUsersGuilds = async (guildsList: DiscordGuild[] | []): Promise<CustomerProps[]> => {
+export const getCustomersInUsersGuilds = async ({ guilds }: { guilds: DiscordGuild[] | [] }): Promise<CustomerProps[]> => {
 	/**
    * @returns the list of bankless bounty board customers
    * where the current user is also a discord member.
    */
 	const customersList = await getCustomers();
-	const filteredGuilds = filterGuildsToCustomers(guildsList, customersList);
+	const filteredGuilds = filterGuildsToCustomers(guilds, customersList);
 	return filteredGuilds.length === 0 ? [BANKLESS] : filteredGuilds;
 };
 
+type EditCustomerProps = { customer: CustomerProps, body: Record<string, unknown> };
+export const editCustomer = async ({ customer, body }: EditCustomerProps): Promise<CustomerProps> => {
+	const updatedCustomer = await Customer.findByIdAndUpdate(customer._id, body, {
+		new: true,
+		omitUndefined: true,
+		runValidators: true,
+	}) as CustomerProps;
+	return updatedCustomer;
+};
+
+export const deleteCustomer = async (id: string): Promise<void> => {
+	await Customer.findByIdAndDelete(id);
+};
+
+export const createCustomer = async (body: CustomerProps): Promise<CustomerProps> => {
+	return await Customer.create(body);
+};

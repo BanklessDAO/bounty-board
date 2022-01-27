@@ -22,11 +22,3 @@ export type OutputSortQueryParameters = {
 		$lte?: number;
 	};
 }
-
-export interface FilterQuery extends OutputSortQueryParameters {
-	customer_id?: string | undefined;
-	status?: string | string[] | undefined;
-	$text?: {
-		$search: string;
-	} | undefined;
-}

@@ -40,8 +40,8 @@ export const customers: CustomerProps[] = [
 	},
 	{
 		customer_id: '718590743446290492',
-		customerName: 'UMA',
 		bountyChannel: '',
+		customerName: 'UMA',
 		customization: {
 			logo: 'https://umaproject.org/assets/images/UMA_square_red_logo.png',
 			colors: {

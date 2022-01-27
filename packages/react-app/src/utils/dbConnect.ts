@@ -21,7 +21,7 @@ if (!cached) {
 	cached = globalAny.mongoose = { conn: null, promise: null };
 }
 
-async function dbConnect(): Promise<any> {
+async function dbConnect(): Promise<Mongoose> {
 	if (cached.conn) {
 		return cached.conn;
 	}

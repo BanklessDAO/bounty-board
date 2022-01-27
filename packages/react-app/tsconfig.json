@@ -9,6 +9,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -17,9 +18,21 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": "src"
+    "noErrorTruncation": true,
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["src/*"],
+      "@tests/*": ["tests/*"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "../../mongo/abc.test.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "mongo-cursor-paginate.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "../../mongo/abc.test.tsx"
+  ],
   "exclude": [
     "node_modules",
     ".next", 

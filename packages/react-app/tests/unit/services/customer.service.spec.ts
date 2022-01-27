@@ -8,7 +8,7 @@ describe('Testing the customer service', () => {
 		jest.spyOn(service, 'getCustomers')
 			.mockReturnValue(Promise.resolve(customers));
 
-		const filteredCustomers = await service.getCustomersInUsersGuilds(guilds);
+		const filteredCustomers = await service.getCustomersInUsersGuilds({ guilds });
 		expect(filteredCustomers.length).toEqual(customers.length - 1);
 	});
 
@@ -16,7 +16,7 @@ describe('Testing the customer service', () => {
 		jest.spyOn(service, 'getCustomers')
 			.mockReturnValue(Promise.resolve(customers));
 
-		const filteredCustomers = await service.getCustomersInUsersGuilds([]);
+		const filteredCustomers = await service.getCustomersInUsersGuilds({ guilds: [] });
 		expect(filteredCustomers[0].customerName).toEqual('BanklessDAO');
 	});
 });

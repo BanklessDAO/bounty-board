@@ -11,6 +11,7 @@ import { BANKLESS } from '../../../constants/Bankless';
 import useSWR from 'swr';
 import { DiscordGuild } from '../../../types/Discord';
 import axios from 'axios';
+import NewBounty from './NewBounty';
 
 const CloseIcon = ({ color }: { color: string }) => (
 	<RiCloseFill size="2.7em" color={color} />
@@ -68,7 +69,6 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 	const [customers, setCustomers] = useState<CustomerProps[]>([BANKLESS]);
 	const [guilds, setGuilds] = useState<DiscordGuild[]>();
 
-	// error handle
 	const { data: guildApiResponse, error } = useSWR<DiscordGuild[], unknown>(
 		session
 			? ['https://discord.com/api/users/@me/guilds', session.accessToken]
@@ -78,16 +78,17 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 
 	if (error) console.warn('Unable to fetch guilds for the current user, ensure the permissions are correctly set');
 
-
 	useEffect(() => {
 		const guildsExist = guildApiResponse && (guildApiResponse.length > 0);
 		if(session && guildsExist) setGuilds(guildApiResponse);
 	}, [guildApiResponse]);
 
 	useEffect(() => {
+		// better to move this to a use swr hook with defaults and trigger/mutate
 		if (session && guilds) {
 			axios.post('/api/customers/user', { guilds })
-				.then(({ data: { items } }) => setCustomers(items));
+				.then(({ data: res }) => setCustomers(res.data))
+				.catch(() => console.warn('There was a problem fetching the user\'s guilds from the bountyboard server'));
 		}
 	}, [session, guilds]);
 
@@ -102,6 +103,7 @@ export const MenuLinks = ({ isOpen }: MenuLinksProps): JSX.Element => {
 				justify={{ base: 'center', sm: 'space-between', md: 'flex-end' }}
 				direction={{ base: 'column', md: 'row' }}
 			>
+				<NewBounty />
 				{ customers && session
 					? <DAOSelector
 						customers={customers}
