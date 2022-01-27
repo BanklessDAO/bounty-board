@@ -11,13 +11,6 @@ import {
 	Spacer,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
-
-import ColorModeButton from '../../../parts/ColorModeButton';
-
-import { discordSupportChannelUrl } from '../../../../constants/discordInfo';
-import { feedbackUrl } from '../../../../constants/discordInfo';
-
-import AccessibleLink from '../../../parts/AccessibleLink';
 import bountyStatus from '../../../../constants/bountyStatus';
 
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
@@ -141,18 +134,6 @@ const MinMaxFilter = ({ name, setLte, setGte }: {
 	);
 };
 
-const HelpLinks = (): JSX.Element => (
-	<HStack>
-		<AccessibleLink href={feedbackUrl} isExternal={true}>
-			<ColorModeButton>Give us Feedback</ColorModeButton>
-		</AccessibleLink>
-
-		<AccessibleLink href={discordSupportChannelUrl} isExternal={true}>
-			<ColorModeButton>Need Help?</ColorModeButton>
-		</AccessibleLink>
-	</HStack>
-);
-
 const Filters = (props: {
 	status: string,
 	setStatus: any,
@@ -212,10 +193,7 @@ const Filters = (props: {
 					sortAscending={props.sortAscending}
 					setSortAscending={props.setSortAscending}
 				/>
-				{/* <SelectFilters name="Filter Guilds" options={placeholderOptions} /> */}
-				{/* <SelectFilters name="Group By" options={placeholderOptions} /> */}
 			</Stack>
-			<HelpLinks />
 		</Stack>
 	);
 };

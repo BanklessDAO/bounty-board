@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { MenuLinks } from '../../../../../src/components/global/Header/Menu';
+import { MenuLinks } from '@app/components/global/Header/Menu';
 import { useSession } from 'next-auth/react';
 import { BANKLESS } from '../../../../../src/constants/Bankless';
-import { guilds as guildsStub } from '../../../../stubs/guilds.stub';
+import { guilds as guildsStub } from '@tests/stubs/guilds.stub';
 import { render, screen } from '@testing-library/react';
 
 jest.mock('next-auth/react', () => ({
@@ -11,6 +11,9 @@ jest.mock('next-auth/react', () => ({
 }));
 
 describe('Testing the menu', () => {
+	jest.spyOn(console, 'error')
+		.mockImplementation(() => console.log('Supressed Console Error'));
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});

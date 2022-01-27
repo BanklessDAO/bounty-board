@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session, TokenSet } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
 // type AuthURLProps = { url: string, scopes: string[] };
@@ -12,7 +12,7 @@ export const DISCORD_AUTH_SETTINGS = {
 	],
 };
 
-export const getAuthUrl = ({ url, scopes }) => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
+export const getAuthUrl = ({ url, scopes }: { url: string, scopes: string[] }): string => scopes.reduce((prev, curr) => `${prev}+${curr}`, url);
 
 export default NextAuth({
 	// Configure one or more authentication providers
@@ -24,7 +24,7 @@ export default NextAuth({
 		}),
 	],
 	callbacks: {
-		async jwt({ token, account }) {
+		async jwt({ token, account }: any) {
 			if(account) {
 				// token.profile = profile;
 				token.accessToken = account.access_token;
@@ -33,7 +33,7 @@ export default NextAuth({
 
 			return token;
 		},
-		async session({ session, token }) {
+		async session({ session, token }: { session: Session, token: TokenSet }) {
 			// Send properties to the client, like access_token from a provider.
 			session.accessToken = token.accessToken;
 			return session;

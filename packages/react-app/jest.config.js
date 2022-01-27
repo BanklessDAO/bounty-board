@@ -27,7 +27,11 @@ module.exports = {
     {
       displayName: 'server',
       preset: 'ts-jest',
-      testMatch: ["**/?(*.)+(spec|test).[tj]s"],      
+      testMatch: ["**/?(*.)+(spec|test).[tj]s"],
+      moduleNameMapper: {
+        '@app/(.*)$': '<rootDir>/src/$1',
+        '@tests/(.*)$': '<rootDir>/tests/$1'
+      },   
     },
     {
       displayName: 'client',
@@ -41,8 +45,14 @@ module.exports = {
       },
       testMatch: ["**/?(*.)+(spec|test).[tj]sx"],
       moduleNameMapper: {
-        '^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts'
+        '^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts',
+        '@app/(.*)$': '<rootDir>/src/$1',
+        '@tests/(.*)$': '<rootDir>/tests/$1'
       },
     }
-  ]
+  ],
+  collectCoverageFrom: [
+    "<rootDir>/src/**/*.{js,ts}",
+    "!**/node_modules/**",
+  ],
 }

@@ -1,10 +1,43 @@
 import mongoose from 'mongoose';
+import { array, object, string } from 'yup';
+
+export const ColorSchema = object({
+	background: object({
+		light: string().optional(),
+		dark: string().optional(),
+	}).noUnknown(true),
+	'In-Review': string().optional(),
+	'In-Progress': string().optional(),
+	Open: string().optional(),
+	Completed: string().optional(),
+	Done: string().optional(),
+	Deleted: string().optional(),
+	Draft: string().optional(),
+	primary: string().optional(),
+})
+	.noUnknown(true);
+
+export const CustomizationSchema = object({
+	logo: string().optional(),
+	colors: ColorSchema,
+})
+	.noUnknown(true);
+
+export const CustomerSchema = object({
+	customer_id: string().defined(),
+	customerName: string().defined(),
+	bountyChannel: string().defined(),
+	customization: CustomizationSchema.optional().default(undefined),
+	applicableRoles: array(string()).optional(),
+})
+	.noUnknown(true);
 export interface CustomerProps {
+		_id?: string;
     customer_id: string;
     customerName: string;
     customization?: Customization;
     applicableRoles?: [] | string[];
-	bountyChannel: string;
+		bountyChannel: string;
 }
 export interface Customization {
     logo?: string;
@@ -26,7 +59,7 @@ export interface LightDark {
     dark: string;
 }
 
-export const CustomizationSchema = new mongoose.Schema<Customization>({
+export const CustomizationModel = new mongoose.Schema<Customization>({
 	logo: String,
 	colors: {
 		type: Object,
@@ -39,7 +72,7 @@ export const CustomizationSchema = new mongoose.Schema<Customization>({
 	},
 }, { strict: false });
 
-export const CustomerSchema = new mongoose.Schema<CustomerProps>({
+export const CustomerModel = new mongoose.Schema<CustomerProps>({
 	customerName: {
 		type: String,
 	},
@@ -49,11 +82,11 @@ export const CustomerSchema = new mongoose.Schema<CustomerProps>({
 	applicableRoles: {
 		type: [String],
 	},
-	customization: CustomizationSchema,
+	customization: CustomizationModel,
 	bountyChannel: {
 		type: String,
 	},
 });
 
 export default mongoose.models.Customer as mongoose.Model<CustomerProps>
-	|| mongoose.model<CustomerProps>('Customer', CustomerSchema);
+	|| mongoose.model<CustomerProps>('Customer', CustomerModel);

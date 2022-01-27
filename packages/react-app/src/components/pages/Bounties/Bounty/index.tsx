@@ -11,15 +11,12 @@ import {
 	Heading,
 	Tag,
 	TagLabel,
-	Stack,
 	Text,
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
-import { BountyBoardProps } from '../../../../models/Bounty';
+import { BountyCollection } from '../../../../models/Bounty';
 import { baseUrl } from '../../../../constants/discordInfo';
-import Link from 'next/link';
-import ColorModeButton from '../../../../components/parts/ColorModeButton';
-import { CustomerContext } from '../../../../context/CustomerContext';
+import { CustomerContext } from '@app/context/CustomerContext';
 import { useContext } from 'react';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
@@ -36,46 +33,53 @@ const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	</Flex>
 );
 
+const calculateReward = (_reward: BountyCollection['reward']): string => {
+	return `${(_reward.amount ?? 0) / (10 ** (_reward.scale ?? 0))} ${_reward.currency}`;
+};
+
 const BountySummary = ({
 	title,
 	reward,
 	status,
-}: BountyBoardProps): JSX.Element => (
-	<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
-		<Box
-			width={{ base: '100%', md: '60%' }}
-			pr={{ base: 7, md: 0 }}
-			align="left"
-			mt="4"
-		>
-			<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
-				{title}
-			</Heading>
-		</Box>
-		<Box
-			width={{ base: '50%', md: '30%' }}
-			textAlign={{ base: 'left', md: 'right' }}
-			mt={{ base: 0, md: 4 }}
-			ml="auto"
-			pr={7}
-		>
-			{reward && (
-				<Heading mt={1} size="md">
-					{reward.amount} {reward.currency}
+}: Pick<BountyCollection, 'title' | 'reward' | 'status'>): JSX.Element => {
+	
+	return (
+		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
+			<Box
+				width={{ base: '100%', md: '60%' }}
+				pr={{ base: 7, md: 0 }}
+				align="left"
+				mt="4"
+			>
+				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
+					{title}
 				</Heading>
-			)}
-		</Box>
-		<Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
-			{status && <Status indication={status} />}
-		</Box>
-		<Box
-			width={{ base: '100%', md: '50%' }}
-			textAlign={{ base: 'left', md: 'right' }}
-			pr={7}
-		>
-		</Box>
-	</Flex>
-);
+			</Box>
+			<Box
+				width={{ base: '50%', md: '30%' }}
+				textAlign={{ base: 'left', md: 'right' }}
+				mt={{ base: 0, md: 4 }}
+				ml="auto"
+				pr={7}
+			>
+				{reward && (
+					<Heading mt={1} size="md">
+						{calculateReward(reward)}
+					</Heading>
+				)}
+			</Box>
+			<Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
+				{status && <Status indication={status} />}
+			</Box>
+			<Box
+				width={{ base: '100%', md: '50%' }}
+				textAlign={{ base: 'left', md: 'right' }}
+				pr={7}
+			>
+			</Box>
+		</Flex>
+	);
+};
 
 const BountyDetails = ({
 	_id,
@@ -85,7 +89,7 @@ const BountyDetails = ({
 	claimedBy,
 	status,
 	discordMessageId,
-}: BountyBoardProps): JSX.Element => {
+}: BountyCollection): JSX.Element => {
 	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
 	const url = discordMessageId ? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}` : '/';
 	return (
@@ -106,7 +110,7 @@ const BountyDetails = ({
 				createdBy
 					? <GridItem>
 						<Heading size="sm">Requested By</Heading>
-						<DiscordStub name={createdBy.discordHandle} />
+						<DiscordStub name={createdBy.discordHandle as string} />
 					</GridItem>
 					: null
 			}
@@ -120,7 +124,7 @@ const BountyDetails = ({
 				) : claimedBy ? (
 					<>
 						<Heading size="sm">Claimed By</Heading>
-						<DiscordStub name={claimedBy.discordHandle} />
+						<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
 					</>
 				) : (
 					<>
@@ -137,26 +141,7 @@ const BountyDetails = ({
 	);
 };
 
-const BountyNotFound = (): JSX.Element => (
-	<Stack align="center" justify="center" h="400px">
-		<Heading size="4xl" align="center">
-			<strong>404</strong>
-		</Heading>
-		<Box>
-			<Heading size="xl">Bounty not found</Heading>
-		</Box>
-		<Link href='/'>
-			<Box my="5">
-				<ColorModeButton>Go Back</ColorModeButton>
-			</Box>
-		</Link>
-	</Stack>
-);
-
-export const BountyCard = (props: BountyBoardProps): JSX.Element => {
-	if (!props || Object.entries(props).length === 0) {
-		return (<BountyNotFound />);
-	}
+export const BountyCard = (props: BountyCollection): JSX.Element => {
 	return (
 		<Box width={{ base: '95vw', lg: '700px' }}>
 			<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
@@ -171,16 +156,20 @@ export const BountyCard = (props: BountyBoardProps): JSX.Element => {
 	);
 };
 
-export const AccordionBountyItem = (props: BountyBoardProps): JSX.Element => (
+export const AccordionBountyItem = ({ bounty }: { bounty: BountyCollection }): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
 		<AccordionButton pb={5}>
-			<BountySummary {...props} />
+			<BountySummary
+				title={bounty.title}
+				reward={bounty.reward}
+				status={bounty.status}
+			/>
 			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
 				<AccordionIcon />
 			</Box>
 		</AccordionButton>
 		<AccordionPanel mx={2}>
-			<BountyDetails {...props} />
+			<BountyDetails {...bounty} />
 		</AccordionPanel>
 	</AccordionItem>
 );
