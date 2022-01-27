@@ -27,7 +27,6 @@
       "pre-commit": "react-app:lint-staged"
     }
   },
-  "dependencies": {},
   "workspaces": {
     "packages": [
       "packages/*"
