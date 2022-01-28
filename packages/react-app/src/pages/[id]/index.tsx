@@ -24,7 +24,7 @@ export const BountyNotFound = (): JSX.Element => (
 	</Stack>
 );
 
-export const BountyLoader = () => (
+export const BountyLoader = (): JSX.Element => (
 	<Box padding='6' boxShadow='lg'>
 		<SkeletonCircle size='10' />
 		<SkeletonText mt='4' noOfLines={10} spacing='4' />
@@ -47,7 +47,7 @@ export const BountyPage = (): JSX.Element => {
 						fontWeight="600"
 						gridGap="4"
 					>
-						<BountyCard {...bounty} />
+						<BountyCard bounty={bounty} />
 					</Stack>
 					: (id && isError) && <BountyNotFound />
 		}</>

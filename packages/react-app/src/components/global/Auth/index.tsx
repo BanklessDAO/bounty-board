@@ -2,7 +2,7 @@ import { AuthContext } from '@app/context/AuthContext';
 import { Role } from '@app/types/Role';
 import { useContext } from 'react';
 
-const RestrictedTo = ({ roles, children }: { roles: Role[], children: React.ReactNode }) => {
+const RestrictedTo = ({ roles, children }: { roles: Role[], children: React.ReactNode }): JSX.Element => {
 	/**
    * Higher order component to show/hide display based on RBAC
    * Wrap your regular comonents inside this to apply consistent show/hide functionality
