@@ -70,28 +70,38 @@ describe('Testing the bounty service', () => {
 	});
 
 	describe('Testing sorts', () => {
-		const sortQueries: NextApiQuery[] = ['false', '0', 'desc']
+		const sortQueries: NextApiQuery[] = ['true', '1', 'asc']
 			.map(item => ({
 				asc: item,
 				sortBy: 'reward',
 			}));
 
-		it('Sorts descending falsy strings', () => {
+		it('Sorts ascending truthy strings', () => {
 			const expected: service.BountyQuery = {
 				paginatedField: 'reward.amount',
-				sortAscending: false,
+				sortAscending: true,
 			};
 			sortQueries.forEach(query => {
 				expect(service.getSort(query)).toEqual(expected);
 			});
 		});
 
-		it('otherwise sorts ascending', () => {
+		it('otherwise sorts descending', () => {
 			const query = {
-				asc: 'literally anything else',
+				asc: '0',
 				sortBy: 'reward',
 			};
-			expect(service.getSort(query).sortAscending).toEqual(true);
+			expect(service.getSort(query).paginatedField).toEqual('reward.amount');
+			expect(service.getSort(query).sortAscending).toEqual(false);
+		});
+
+		it('Sorted by created Date if passed', () => {
+			const query = {
+				sortBy: 'createdAt',
+				asc: 'false',
+			};
+			expect(service.getSort(query).paginatedField).toEqual('createdAt');
+			expect(service.getSort(query).sortAscending).toEqual(false);
 		});
 	});
 

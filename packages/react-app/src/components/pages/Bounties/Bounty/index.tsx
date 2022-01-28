@@ -86,6 +86,7 @@ const BountyDetails = ({
 	description,
 	criteria,
 	createdBy,
+	createdAt,
 	claimedBy,
 	status,
 	discordMessageId,
@@ -97,6 +98,10 @@ const BountyDetails = ({
 			<GridItem>
 				<Heading size="sm">HashID</Heading>
 				<Text>{_id}</Text>
+			</GridItem>
+			<GridItem>
+				<Heading size="sm">Created Date</Heading>
+				<Text>{createdAt.substring(0, 10)}</Text>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Description</Heading>

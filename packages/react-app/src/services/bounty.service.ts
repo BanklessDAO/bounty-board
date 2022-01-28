@@ -46,8 +46,11 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	case 'reward':
 		output = 'reward.amount';
 		break;
+	case 'createdAt':
+		output = 'createdAt';
+		break;
 	default:
-		output = 'reward.amount';
+		output = 'createdAt';
 	}
 	return output;
 };
