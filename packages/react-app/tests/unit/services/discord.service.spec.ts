@@ -29,7 +29,7 @@ describe('Testing the discord service', () => {
 	});
 
 	it('Correctly concatenates permissions into an auth url', () => {
-		const expectedUrl = 'https://discord.com/api/oauth2/authorize?scope=+identify+email+guilds+guilds.join';
+		const expectedUrl = 'https://discord.com/api/oauth2/authorize?scope=+identify+email+guilds+guilds.join+guilds.members.read';
 		expect(getAuthUrl(DISCORD_AUTH_SETTINGS)).toEqual(expectedUrl);
 	});
 });

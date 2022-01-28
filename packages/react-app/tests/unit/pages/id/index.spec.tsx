@@ -84,8 +84,10 @@ describe('Testing the bounty id page', () => {
 			bounty: { _id: 'test' } as unknown as BountyCollection,
 		}));
 		const wrapper = shallow(<BountyPage />);
+		expect(wrapper.containsMatchingElement(<BountyLoader />)).toEqual(false);
+		expect(wrapper.containsMatchingElement(<BountyNotFound />)).toEqual(false);
 		expect(wrapper.containsMatchingElement(
-			<BountyCard bounty={{} as BountyCollection} />
+			<BountyCard bounty={{ _id: 'test' } as BountyCollection} />
 		)).toEqual(true);
 	});
 });

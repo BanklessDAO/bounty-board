@@ -107,7 +107,7 @@ const generatePreviewData = (
 
 const NewBountyForm = () => {
 	const router = useRouter();
-	const { user } = useUser();
+	const { user, error } = useUser();
 	const cachedBounty = useCachedForm();
 	const currencies = useCurrencies();
 	const { customer: { customer_id } } = useContext(CustomerContext);
@@ -122,6 +122,9 @@ const NewBountyForm = () => {
 	} = useForm({
 		defaultValues: cachedBounty,
 	});
+	if (error) {
+		console.warn('Could not fetch the user data from discord - this will cause issues trying to create bounties');
+	}
 	return (
 		<form onSubmit={handleSubmit(data => {
 			const preview = user && generatePreviewData(data, customer_id, user);

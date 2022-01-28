@@ -5,15 +5,18 @@ import useSWR from 'swr';
 
 export const useUser = (): {
   loading: boolean;
-  user?: APIUser
+  user?: APIUser,
+	error?: any
 } => {
-	const { data: session } = useSession({ required: false });
-	const { data: user, error } = useSWR<APIUser, unknown>(session
-		? ['https://discord.com/api/users/@me', session.accessToken]
-		: null
-	, axiosTokenFetcher);
+	const { data: session } = useSession({ required: true });
+	const { data: user, error } = useSWR<APIUser, unknown>(
+		session
+			? ['https://discord.com/api/users/@me', session.accessToken]
+			: null
+		, axiosTokenFetcher);
 	return {
 		loading: !error && !user,
 		user,
+		error,
 	};
 };

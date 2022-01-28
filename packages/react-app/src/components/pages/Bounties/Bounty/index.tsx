@@ -25,17 +25,28 @@ import { useRouter } from 'next/router';
 const BountyActions = ({ bounty }: { bounty: BountyCollection }) => {
 	const router = useRouter();
 	const upload = () => {
+		// update the status of the bounty from DRAFT to OPEN before posting
 		bounty.status = bountyStatus.OPEN;
+
+		// Add the bounty to the DB
 		axios.post<any, { data: { data: BountyCollection } }>('api/bounties', bounty)
+			
+			// on success, sent the user to the bounty/bountyId page of the newly created bounty 
 			.then(({ data: res }) => {
-				router.push(`/${res.data._id}`).then(() => {
-					localStorage.removeItem('cachedEdit');
-					localStorage.removeItem('previewBounty');
-				}
-				);
+				router.push(`/${res.data._id}`)
+
+					// once on the 'live' bounty page, remove all the prev bounty data
+					// from localstorage
+					.then(() => {
+						localStorage.removeItem('cachedEdit');
+						localStorage.removeItem('previewBounty');
+					}
+					);
 			})
+			// if there was a problem, log the error to the console
 			.catch(err => {
 				const errorData = err.response?.data;
+				// cannot assume shape of error but we prefer to get the response data
 				errorData ? console.debug({ errorData }) : console.debug({ err });
 			}
 			);
