@@ -40,7 +40,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 	/* This fixes the displayed value for rewardAmount to use the correct scale */
 	const defaults = {
 		...bountyForm,
-		rewardAmount: bountyForm.reward.amount / 10 ** bountyForm.reward.scale,
+		rewardAmount: bountyForm.reward.amount,
 	};
 	const {
 		handleSubmit,

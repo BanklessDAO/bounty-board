@@ -4,7 +4,7 @@ export const customers: CustomerProps[] = [
 	{
 		customer_id: '834499078434979890',
 		customerName: 'BanklessDAO',
-		bountyChannel: '',
+		bountyChannel: '850402063741091880',
 	},
 	{
 		customer_id: '402910780124561410',
