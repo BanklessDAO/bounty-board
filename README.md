@@ -56,7 +56,7 @@ The follow description is of Serendipity in the Bankless Bot Garage, but is inte
 
 1. **Edit**: Select 📝 to edit. DEGEN provides a link to the frontend to edit any field. DEGEN then re-shows a newly edited card (and automatically publishes to #🧀-bounty-board channel)
 1. **Publish/Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on website.
-1. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag 🏴 or `/bounty claim`, entering the `HashID` to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
+1. **Claim/In Progress**: Within #🧀-bounty-board Bounty _claimer_ click black flag 🏴 or `/bounty claim`, entering the `BountyId` to 'start', card changes color in Discord, Bounty creator receives message that bounty has been claimed; Bounty card on website now has _Claimed By_; card status is now "In Progress".
 1. **Submit/In Review**: Bounty claimer hits red mail box emoji 📮 in Discord, receives auto-generated message from DEGEN notifying the bounty is ready for review. They should reach out to the person who submitted the bounty. Alternatively, user can submit directly through a new bot command `/bounty submit`, entering `HashId`; card status is now "In Review".
 1. **Complete/Completed**: Bounty claimer can signal completion ✅ on the post in the #🧀-bounty-board channel or directly through a new bot command `/bounty complete true`; card status is now "Completed".
 

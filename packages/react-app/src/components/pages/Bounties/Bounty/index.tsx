@@ -152,7 +152,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 		<Grid gap={6}>
 			{ _id &&
 				<GridItem>
-					<Heading size="sm">HashID</Heading>
+					<Heading size="sm">Bounty ID</Heading>
 					<Text>{_id}</Text>
 				</GridItem>
 			}
