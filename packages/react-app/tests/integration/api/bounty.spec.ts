@@ -277,23 +277,24 @@ describe('Testing the bounty API', () => {
 			console.warn('Testing for cursors needs more specific test cases');
 		});
 
-		it('defaults to being sorted by reward in ascending order', async () => {
+		it('defaults to being sorted by createdAt in descending order', async () => {
 			req.method = 'GET';
 			await bountiesHandler(req, res);
 			const { data }: { data: BountyCollection[] } = res._getJSONData();
-			const sortedByRewardAsc = data.slice().sort((a, b) => {
-				if (a.reward && b.reward && a.reward.amount && b.reward.amount) {
-					return a.reward.amount - b.reward.amount;
+			const sortedByCreatedAtDesc = data.slice().sort((a, b) => {
+				if (a.createdAt && b.createdAt && a.createdAt && b.createdAt) {
+					return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 				}
 				return 1;
 			});
-			expect(data).toEqual(sortedByRewardAsc);
+			expect(data).toEqual(sortedByCreatedAtDesc);
 		});
 
 		it('Can be sorted by reward in descending order', async () => {
 			req.method = 'GET';
 			req.query = {
 				asc: 'false',
+				sortBy: 'reward',
 			};
 			await bountiesHandler(req, res);
 			const { data }: { data: BountyCollection[] } = res._getJSONData();

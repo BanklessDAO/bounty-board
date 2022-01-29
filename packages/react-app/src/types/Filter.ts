@@ -2,9 +2,8 @@ import { BountyCollection } from '../models/Bounty';
 
 type StringKeysBountyBoardReward = Extract<keyof BountyCollection['reward'], string>;
 
-export type AcceptedSortInputs = 'reward';
-export type AcceptedSortOutputs = `reward.${StringKeysBountyBoardReward}` | '_id';
-
+export type AcceptedSortInputs = 'reward' | 'createdAt';
+export type AcceptedSortOutputs = `reward.${StringKeysBountyBoardReward}` | '_id' | 'createdAt';
 export interface FilterParams {
 	customer_id?: string;
 	status?: string;

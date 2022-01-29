@@ -40,8 +40,8 @@ const Bounties = (): JSX.Element => {
 	const [gte, setGte] = useState(0);
 	// how to handle the lte === 0 case?
 	const [lte, setLte] = useState(Infinity);
-	const [sortBy, setSortBy] = useState('');
-	const [sortAscending, setSortAscending] = useState(true);
+	const [sortBy, setSortBy] = useState('createdAt');
+	const [sortAscending, setSortAscending] = useState(false);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const { customer } = useContext(CustomerContext);
