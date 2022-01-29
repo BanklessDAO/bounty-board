@@ -4,6 +4,12 @@ import * as service from '../../../services/customer.service';
 import { internalServerError, notFound } from '../../../errors';
 import { CustomerSchema } from '../../../models/Customer';
 import middlewares from '../../../middlewares';
+import { RoleRestrictions } from '@app/types/Role';
+
+const restrictions: RoleRestrictions = {
+	PUT: ['admin', 'edit-customer'],
+	DELETE: ['admin', 'delete-customer'],
+};
 
 export const handler = async (
 	req: NextApiRequest,
@@ -59,4 +65,4 @@ export const handler = async (
 	}
 };
 
-export default middlewares({ schema: CustomerSchema, handler });
+export default middlewares({ schema: CustomerSchema, handler, restrictions });
