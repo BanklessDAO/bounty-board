@@ -1,6 +1,9 @@
 import { internalServerError } from '@app/errors';
-import { RoleRestrictions } from '@app/types/Role';
+import { getPermissionsCached } from '@app/services/auth.service';
+import { RoleRestrictions, SupportedHTTPMethods } from '@app/types/Role';
+import { SessionWithToken } from '@app/types/SessionExtended';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/react';
 
 type RouteFunction = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
@@ -17,17 +20,22 @@ const isRestrictedMethod = (method: string, roleRestrictions: RoleRestrictions):
 	return restrictedMethods.includes(method);
 };
 
-const isAuthorized = async (req: NextApiRequest): Promise<boolean> => {
+const isAuthorized = async (
+	req: NextApiRequest,
+	roleRestrictions: RoleRestrictions,
+): Promise<boolean> => {
 	/**
 	 * The initial logic for this was in the comments below, however
 	 * we hit discord API rate limits, so for now we are just allowing POST Requests
 	 */
-	// , roleRestrictions: RoleRestrictions, res: NextApiResponse	
-	// const userRoles = await getRolesForUser(req, res) ?? []
-	// const whiteListedRolesForRoute = roleRestrictions[req.method as SupportedHTTPMethods] ?? [];
-	// return whiteListedRolesForRoute.some(r => userRoles.includes(r));
-	
-	return req.method === 'POST';
+	const session = await getSession({ req });
+	if (session && session.accessToken) {
+		const userRoles = await getPermissionsCached(session as SessionWithToken);
+		const whiteListedRolesForRoute = roleRestrictions[req.method as SupportedHTTPMethods] ?? [];
+		return whiteListedRolesForRoute.some(r => userRoles.includes(r));
+	} else {
+		return false;
+	}
 };
 
 /**
@@ -40,7 +48,7 @@ export default (handler: NextApiHandler, restrictions?: RoleRestrictions): Route
 		const method = req.method ?? 'GET';
 		if (!isTest && restrictions && isRestrictedMethod(method, restrictions)) {
 			try {
-				const authorized = await isAuthorized(req);
+				const authorized = await isAuthorized(req, restrictions);
 				if (authorized) {
 					await handler(req, res);
 				} else {

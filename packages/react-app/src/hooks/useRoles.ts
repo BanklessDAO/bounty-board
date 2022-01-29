@@ -1,6 +1,5 @@
 import { Role } from '@app/types/Role';
 import { axiosFetcher } from '@app/utils/AxiosUtils';
-import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 
 export const useRoles = (): Role[] => {
@@ -11,16 +10,13 @@ export const useRoles = (): Role[] => {
 	 * Note, we currently only support roles in bankless, and need to establish a more complete
 	 * Auth method for multitenancy
    */
-	const { data: session } = useSession({ required: false });
-	const { data: roles, error } = useSWR<Role[], unknown>(
-		session
-			? ['/api/auth/roles', session.accessToken]
-			: null,
+	const { data, error } = useSWR<{ roles: Role[] }, unknown>(
+		'/api/auth/roles',
 		axiosFetcher,
 	);
 	if (error) {
 		console.warn(error);
 		return [];
 	}
-	return roles ?? [];
+	return (data && data.roles) ?? [];
 };
