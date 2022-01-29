@@ -140,6 +140,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 		criteria,
 		createdBy,
 		claimedBy,
+		createdAt,
 		status,
 		discordMessageId,
 		dueAt,
@@ -156,6 +157,10 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					<Text>{_id}</Text>
 				</GridItem>
 			}
+			<GridItem>
+				<Heading size="sm">Created Date</Heading>
+				<Text>{createdAt.substring(0, 10)}</Text>
+			</GridItem>
 			<GridItem>
 				<Heading size="sm">Description</Heading>
 				<Text>{description}</Text>
