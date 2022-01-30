@@ -5,4 +5,5 @@ import { Session } from 'next-auth';
  */
 export type SessionWithToken = Session & {
   accessToken: string;
+  expires: string;
 }
