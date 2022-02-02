@@ -16,12 +16,12 @@ import { AcceptedSortInputs } from '@app/types/Filter';
 
 type SetState<T extends any> = (arg: T) => void;
 
-const sortOptions: { name: AcceptedSortInputs, value: string }[] = [
+const sortOptions: { name: string, value: AcceptedSortInputs }[] = [
 	{
-		name: 'createdAt', value: 'Created Date',
+		name: 'Created Date', value: 'createdAt',
 	},
 	{
-		name: 'reward', value: 'Reward',
+		name: 'Reward', value: 'reward',
 	},
 ];
 
@@ -113,7 +113,7 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 			<Select mb="4" onChange={updateSort} value={sortBy}>
 				{options.map((option: { name: string; value: string }) => (
 					<option key={option.name} value={option.value}>
-						{option.value}
+						{option.name}
 					</option>
 				))}
 			</Select>
