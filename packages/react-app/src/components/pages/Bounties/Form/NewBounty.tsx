@@ -7,12 +7,15 @@ import {
 	FormLabel,
 	FormControl,
 	Input,
+	Text,
 	Button,
 	FormErrorMessage,
 	Select,
 	Flex,
 	FormControlProps,
 	Textarea,
+	Alert,
+	AlertIcon,
 } from '@chakra-ui/react';
 import { BountyCollection } from '@app/models/Bounty';
 import bountyStatus from '@app/constants/bountyStatus';
@@ -21,6 +24,7 @@ import { APIUser } from 'discord-api-types';
 import { useUser } from '@app/hooks/useUser';
 import { useLocalStorage } from '@app/hooks/useLocalStorage';
 import { dateIsNotInPast, required, validNonNegativeDecimal } from '@app/utils/formUtils';
+import { WARNINGS } from '@app/errors';
 
 const PLACEHOLDERS = {
 	TITLE: 'Example: Create new Logo',
@@ -238,13 +242,19 @@ const NewBountyForm = () => {
 				</FormControl>
 			</Flex>
 			<Button
-				mt="5"
+				my="5"
 				w="full"
 				type="submit"
 				disabled={!user}
 			>
-    Preview
+    	Preview
 			</Button>
+			{
+				!user && <Alert status='warning'>
+					<AlertIcon />
+					<Text maxW="500px">{WARNINGS.ADBLOCKER}</Text>
+				</Alert>
+			}
 		</form>
 	);
 };
