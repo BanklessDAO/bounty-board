@@ -18,7 +18,7 @@ const maxPages = (bounties: BountyCollection | BountyCollection[] | undefined) =
 	return hasExtraPage ? numFullPages + 1 : numFullPages;
 };
 
-const NoResults = () => (
+const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element => (
 	<Stack
 		borderWidth={3}
 		borderRadius={10}
@@ -28,7 +28,7 @@ const NoResults = () => (
 		justify="center"
 		align="center"
 	>
-		<Text	fontSize="lg">Found <strong>0</strong> matching results</Text>
+		<Text	fontSize="lg">{ message }</Text>
 	</Stack>
 );
 
@@ -40,8 +40,8 @@ const Bounties = (): JSX.Element => {
 	const [gte, setGte] = useState(0);
 	// how to handle the lte === 0 case?
 	const [lte, setLte] = useState(Infinity);
-	const [sortBy, setSortBy] = useState('');
-	const [sortAscending, setSortAscending] = useState(true);
+	const [sortBy, setSortBy] = useState('createdAt');
+	const [sortAscending, setSortAscending] = useState(false);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const { customer } = useContext(CustomerContext);
@@ -66,8 +66,7 @@ const Bounties = (): JSX.Element => {
 		? bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)))
 		: [];
 
-	if (isError) return <p>Failed to load</p>;
-	if (isLoading) return <p>Loading</p>;
+	const noResults = ((search || status) && bounties && paginatedBounties.length === 0);
 	return (
 		<>
 			<Stack
@@ -85,9 +84,11 @@ const Bounties = (): JSX.Element => {
 					sortBy={sortBy} setSortBy={setSortBy}
 					sortAscending={sortAscending} setSortAscending={setSortAscending}
 				/>
-				{(search || status) && bounties && paginatedBounties.length === 0
-					? <NoResults />
-					: <BountyAccordion bounties={paginatedBounties} />
+				{isError || noResults
+					? <FilterResultPlaceholder message={'No Results'} />
+					: isLoading
+						? <FilterResultPlaceholder message={'Loading'} />
+						: <BountyAccordion bounties={paginatedBounties} />
 				}
 			</Stack>
 			<BountyPaginate

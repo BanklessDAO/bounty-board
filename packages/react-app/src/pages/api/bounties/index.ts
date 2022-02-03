@@ -3,6 +3,11 @@ import dbConnect from '../../../utils/dbConnect';
 import * as service from '../../../services/bounty.service';
 import { BountySchema } from '../../../models/Bounty';
 import middlewares from '../../../middlewares';
+import { RoleRestrictions } from '@app/types/Role';
+
+const restrictions: RoleRestrictions = {
+	POST: ['admin', 'create-bounty'],
+};
 
 const handler = async (
 	req: NextApiRequest,
@@ -48,5 +53,5 @@ const handler = async (
 	}
 };
 
-export default middlewares({ schema: BountySchema, handler });
+export default middlewares({ schema: BountySchema, handler, restrictions });
 

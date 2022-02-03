@@ -1,11 +1,22 @@
 import { Role } from '@app/types/Role';
-import { User } from 'next-auth';
+import { axiosFetcher } from '@app/utils/AxiosUtils';
+import useSWR from 'swr';
 
-export const useRoles = (user: User): Role[] => {
+export const useRoles = (): Role[] => {
 	/**
    * This hook is where we can call an API and return the user's roles
+	 * We will probably want to pass in the user at some stage, although currently
+	 * we only use discord roles, so can use the getSession method on the server side
+	 * Note, we currently only support roles in bankless, and need to establish a more complete
+	 * Auth method for multitenancy
    */
-	user;
-	console.warn('Calling a hook that has yet to be implemented');
-	return [];
+	const { data, error } = useSWR<{ roles: Role[] }, unknown>(
+		'/api/auth/roles',
+		axiosFetcher,
+	);
+	if (error) {
+		console.warn(error);
+		return [];
+	}
+	return (data && data.roles) ?? [];
 };

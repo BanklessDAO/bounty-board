@@ -31,11 +31,12 @@ export function useBounties(url: string): useBountiesResponse {
 }
 
 export function useBounty(id?: string | string[]): useBountyResponse {
-	/**
-   * Single bounty
-   */
-
-	const { data, error } = useSWR<BountyCollection, unknown>(`/api/bounties/${id}`, axiosFetcher);
+	const { data, error } = useSWR<BountyCollection, unknown>(
+		id
+			? `/api/bounties/${id}`
+			: null,
+		axiosFetcher
+	);
 	if (typeof id !== 'string') {
 		return {
 			bounty: undefined,

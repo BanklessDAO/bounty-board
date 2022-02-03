@@ -1,33 +1,65 @@
+import { internalServerError } from '@app/errors';
+import { getPermissionsCached } from '@app/services/auth.service';
+import { RoleRestrictions, SupportedHTTPMethods } from '@app/types/Role';
+import { SessionWithToken } from '@app/types/SessionExtended';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { Session } from 'next-auth';
 import { getSession } from 'next-auth/react';
 
 type RouteFunction = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
-export const WHITELISTED_DISCORD_HANDLES = [
-	// temporary api gating
-	'jordaniza',
-	'0xnshuman',
-	'behold',
-];
-
 const isTest = process.env.TESTING === 'true';
 
-const isRestrictedMethod = (req: NextApiRequest) => req.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
-const authorized = (session: Session | null): boolean => Boolean(session && session.user && isWhitelisted(session.user.name));
-const isWhitelisted = (name: string | null | undefined): boolean => WHITELISTED_DISCORD_HANDLES.includes((name ?? '').toLowerCase());
+const isRestrictedMethod = (method: string, roleRestrictions: RoleRestrictions): boolean => {
+	/**
+	 * Passing a roleRestrictions object allows us to, on a per-handler basis
+	 * Set restricted routes, and their corresponding roles.
+	 * This function checks if the handler has defined one of the supported HTTP methods
+	 * as 'restricted'
+	 */
+	const restrictedMethods = Object.keys(roleRestrictions);
+	return restrictedMethods.includes(method);
+};
 
-export default (handler: NextApiHandler): RouteFunction => {
+const isAuthorized = async (
+	req: NextApiRequest,
+	roleRestrictions: RoleRestrictions,
+): Promise<boolean> => {
+	/**
+	 * The initial logic for this was in the comments below, however
+	 * we hit discord API rate limits, so for now we are just allowing POST Requests
+	 */
+	const session = await getSession({ req });
+	if (session && session.accessToken) {
+		const userRoles = await getPermissionsCached(session as SessionWithToken);
+		const whiteListedRolesForRoute = roleRestrictions[req.method as SupportedHTTPMethods] ?? [];
+		return whiteListedRolesForRoute.some(r => userRoles.includes(r));
+	} else {
+		return false;
+	}
+};
+
+/**
+ * Restricts supported routes to those with the correct roles
+ * @param restrictions allows you to pass in a k/v mapping of method to [roles], for a given routet
+ * @returns 
+ */
+export default (handler: NextApiHandler, restrictions?: RoleRestrictions): RouteFunction => {
 	return async (req: NextApiRequest, res: NextApiResponse) => {
-		if (!isTest && isRestrictedMethod(req)) {
-			const session = await getSession({ req });
-			if (authorized(session)) {
-				await handler(req, res);
-			} else {
-				res.status(403).json({ success: false, error: 'This route is in preview mode and has restricted access, please sign in to access. If you want to be added, please contact the Bountyboard team.' });
+		const method = req.method ?? 'GET';
+		if (!isTest && restrictions && isRestrictedMethod(method, restrictions)) {
+			try {
+				const authorized = await isAuthorized(req, restrictions);
+				if (authorized) {
+					await handler(req, res);
+				} else {
+					res.status(403).json({ success: false, error: 'Unauthorized' });
+				}
+			} catch (error) {
+				internalServerError(res);
 			}
 		} else {
 			await handler(req, res);
 		}
 	};
 };
+

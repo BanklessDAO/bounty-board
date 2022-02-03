@@ -3,6 +3,11 @@ import dbConnect from '../../../utils/dbConnect';
 import * as service from '../../../services/customer.service';
 import { CustomerSchema } from '../../../models/Customer';
 import middlewares from '../../../middlewares';
+import { RoleRestrictions } from '@app/types/Role';
+
+const restrictions: RoleRestrictions = {
+	POST: ['admin', 'create-customer'],
+};
 
 export const handler = async (
 	req: NextApiRequest,
@@ -38,4 +43,4 @@ export const handler = async (
 	}
 };
 
-export default middlewares({ schema: CustomerSchema, handler });
+export default middlewares({ schema: CustomerSchema, handler, restrictions });

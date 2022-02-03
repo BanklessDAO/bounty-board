@@ -25,7 +25,7 @@ describe('Testing the resticted component', () => {
 			roles: ['create-bounty'],
 		}));
 		render(
-			<RestrictedTo roles={['edit-bounty']}>
+			<RestrictedTo roles={['edit-bounties']}>
 				<button aria-label="test-button2">Should Not Render</button>
 			</RestrictedTo>
 		);

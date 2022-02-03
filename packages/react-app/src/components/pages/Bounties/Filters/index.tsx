@@ -11,7 +11,19 @@ import {
 	Spacer,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
-import bountyStatus from '../../../../constants/bountyStatus';
+import bountyStatus from '@app/constants/bountyStatus';
+import { AcceptedSortInputs } from '@app/types/Filter';
+
+type SetState<T extends any> = (arg: T) => void;
+
+const sortOptions: { name: string, value: AcceptedSortInputs }[] = [
+	{
+		name: 'Created Date', value: 'createdAt',
+	},
+	{
+		name: 'Reward', value: 'reward',
+	},
+];
 
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
 	<FaSearch color={color} />
@@ -24,7 +36,7 @@ const SearchFilter = ({
 }: {
 	placeholder?: string
 	searchValue: string,
-	setSearch: any
+	setSearch: SetState<string>
 }): JSX.Element => {
 
 	const updateSearchValue = (event: any): void => {
@@ -45,7 +57,7 @@ const SelectFilters = ({ name, options, status, setStatus }: {
 	name?: string
 	options: { name: string; value: string }[],
 	status: string,
-	setStatus: ((str: string) => any),
+	setStatus: SetState<string>,
 }): JSX.Element => {
 
 	const updateStatus = (event: any): void => {
@@ -70,9 +82,9 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 	name?: string
 	options: { name: string; value: string }[],
 	sortBy: string,
-	setSortBy: ((str: string) => any),
+	setSortBy: SetState<string>,
 	sortAscending: boolean,
-	setSortAscending: ((bool: boolean) => any),
+	setSortAscending: SetState<boolean>,
 }): JSX.Element => {
 
 	const updateSort = (event: any): void => {
@@ -101,7 +113,7 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 			<Select mb="4" onChange={updateSort} value={sortBy}>
 				{options.map((option: { name: string; value: string }) => (
 					<option key={option.name} value={option.value}>
-						{option.value}
+						{option.name}
 					</option>
 				))}
 			</Select>
@@ -112,9 +124,9 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 const MinMaxFilter = ({ name, setLte, setGte }: {
 	name?: string,
 	lte: number,
-	setLte: any,
+	setLte: SetState<number>,
 	gte: number,
-	setGte: any
+	setGte: SetState<number>
 }): JSX.Element => {
 	const updateMin = (event: any): void => {
 		setGte(event.target.value);
@@ -136,17 +148,17 @@ const MinMaxFilter = ({ name, setLte, setGte }: {
 
 const Filters = (props: {
 	status: string,
-	setStatus: any,
+	setStatus: SetState<string>,
 	search: string,
-	setSearch: any
+	setSearch: SetState<string>
 	lte: number,
-	setLte: any,
+	setLte: SetState<number>,
 	gte: number,
-	setGte: any,
+	setGte: SetState<number>,
 	sortBy: string,
-	setSortBy: any,
+	setSortBy: SetState<string>,
 	sortAscending: boolean,
-	setSortAscending: any,
+	setSortAscending: SetState<boolean>,
 }): JSX.Element => {
 	const filterStatusList = [
 		{
@@ -187,7 +199,7 @@ const Filters = (props: {
 				/>
 				<SortBy
 					name="Sort By"
-					options={[{ name: 'reward', value: 'Reward' }]}
+					options={sortOptions}
 					sortBy={props.sortBy}
 					setSortBy={props.setSortBy}
 					sortAscending={props.sortAscending}
