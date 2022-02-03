@@ -12,5 +12,5 @@ const serverId = '834499078434979890';
 export const discordChannelUrl = `${discordInfo.baseUrl}/${discordInfo.server}/${discordInfo.channel}`;
 
 export const discordSupportChannelUrl = `${discordInfo.baseUrl}/${serverId}/${supportChannelId}`;
-export const feedbackUrl = 'https://forms.gle/NhTrynZ8pkkepHzN8';
+export const feedbackUrl = 'https://tally.so/r/n0GD0w';
 
