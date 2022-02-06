@@ -13,7 +13,7 @@ const CreateBounty = () => {
 				unauthorized
 					?	(
 						<Stack align="center" justify="center" h="400px">
-							<Heading size="4xl" align="center">
+							<Heading size="4xl" alignItems="center">
 								<strong>403</strong>
 							</Heading>
 							<Heading size="xl">Unauthorized - Sign In to Access</Heading>
