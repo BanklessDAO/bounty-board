@@ -5,7 +5,7 @@ import { Stack } from '@chakra-ui/react';
 const Page400 = (): JSX.Element => (
 	<Layout title="">
 		<Stack align="center" justify="center" h="400px">
-			<Heading size="4xl" align="center">
+			<Heading size="4xl" alignItems="center">
 				<strong>400</strong>
 			</Heading>
 			<Heading size="xl">Unauthorized</Heading>

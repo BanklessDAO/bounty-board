@@ -100,7 +100,7 @@ const BountySummary = ({
 			<Box
 				width={{ base: '100%', md: '60%' }}
 				pr={{ base: 7, md: 0 }}
-				align="left"
+				textAlign="left"
 				mt="4"
 			>
 				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
