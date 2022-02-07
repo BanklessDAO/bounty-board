@@ -5,13 +5,15 @@ export interface IRoleCache{
   sessionHash: string;
   createdAt: number;
   tte: number;
-  roles: Role[]
+  customerId: string;
+  roles: Role[];
 }
 
 export const RoleSchema = new Mongoose.Schema({
 	sessionHash: String,
 	createdAt: Number,
 	tte: Number,
+	customerId: String,
 	roles: Array,
 });
 
