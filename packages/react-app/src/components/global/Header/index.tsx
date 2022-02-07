@@ -1,6 +1,7 @@
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { Flex } from "@chakra-ui/react";
+import Logo from "/logo";
 import { MenuLinks, MenuToggle } from "./Menu";
 import { CustomerContext } from "../../../context/CustomerContext";
 
