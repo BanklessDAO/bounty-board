@@ -5,6 +5,6 @@ import { CustomerProps } from '../models/Customer';
 export const BANKLESS: CustomerProps = {
 	customerName: 'BanklessDAO',
 	customer_id: '834499078434979890',
-	customization: { logo: './logo.png' },
+	customization: { logo: '/logo.png' },
 	bountyChannel: '850402063741091880',
 };
