@@ -191,21 +191,23 @@ If you've made it this far, the application should run and should be showing a b
 ### Setting Up the Discord Webhook
 The `DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be fetched from a member of the bounty board development team. Add it to your `.env.local` file once you have it. 
 
-# Usage - Jest Test Suite:
+## Usage - Jest Test Suite:
 
-## What is Jest?
+### What is Jest?
 Jest is a JavaScript code test runner. 
 It's a JavaScript library for creating, running, and structuring tests. 
 
-## So why do we run tests?
+### So why do we run tests?
 We run tests to ensure that our app works as expected for our end users.
 
-## Test Commands:
+### Jest Test Suite Commands:
 * yarn jest 
     * This command runs with all required dependencies.
 * yarn test:cov
-    * This command tests your code only once and provides a full coverage reports.
+    * This command tests your code only once and provides a full coverage report.
 * yarn test:watch
     * This command watches tests code changes whenever a change occurs.
 * yarn test:unit
-    * This command runs all individual units of code (mainly functions) to ensure that our code works as intended
+    * This command runs all individual units of code (mainly functions) to ensure that our code works as intended (you do not need mongo running).
+* yarn test:integration
+    * This command tests individual units of the app and are tested as a group (you need mongo running).
