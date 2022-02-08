@@ -1,9 +1,8 @@
-import Image from "next/image";
-import React, { Fragment, useContext, useState } from "react";
-import { Flex } from "@chakra-ui/react";
-import Logo from "/logo";
-import { MenuLinks, MenuToggle } from "./Menu";
-import { CustomerContext } from "../../../context/CustomerContext";
+import Image from 'next/image';
+import React, { useContext, useState } from 'react';
+import { Flex } from '@chakra-ui/react';
+import { MenuLinks, MenuToggle } from './Menu';
+import { CustomerContext } from '../../../context/CustomerContext';
 
 const NavBarContainer: React.FC = (props): JSX.Element => (
   <Flex
@@ -27,10 +26,10 @@ const NavBar: React.FC = (props): JSX.Element => {
     <NavBarContainer {...props}>
       {!isOpen ? (
         <Image
-          src={customer?.customization?.logo ?? "/logo.png"}
+          src={customer?.customization?.logo ?? '/logo.png'}
           height={50}
           width={50}
-          alt={`${customer?.customerName ?? "DAO"} Logo`}
+          alt={`${customer?.customerName ?? 'DAO'} Logo`}
         />
       ) : null}
       <MenuToggle toggle={toggle} isOpen={isOpen} />
