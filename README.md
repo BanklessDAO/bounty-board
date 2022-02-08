@@ -43,7 +43,7 @@ For the MVP, we are focusing on the bare requirements for a Bounty Card to be cr
 - **Reward**: Bounty creator indicates `amount` (i.e., 10000) and `currency` (i.e., $BANK) to be paid for completing the work.
 - **HashId**: Auto-generated ID for each bounty.
 - **CreatedBy / RequestedBy**: Bot automatically enters bounty creator's `discordHandle`.
-- **ClaimedBy**: Bot automatially notes `discordHandle` claiming the bounty.
+- **ClaimedBy**: Bot automatically notes `discordHandle` claiming the bounty.
 - **SubmittedBy**: Bot automatically notes `discordHandle` submitting the bounty.
 
 #### User Experience Discord: Creating a Bounty with DEGEN
@@ -156,7 +156,7 @@ The seed data handles:
 
 *I want to make changes to the data*
 
-Just edit the `seed_customers.json` or `bboard_[version].json` file, alternatively edit the `seed.sh` script and change the JSON file to load from.
+Just edit the `seed_customers.json` or `board_[version].json` file, alternatively edit the `seed.sh` script and change the JSON file to load from.
 
 *mongo_seed exited with code 127*
 
@@ -178,7 +178,7 @@ If you're firing up a fresh instance of Mongo, you will need to seed the databas
 
 If you're adding from command line, you can use the mongoimport utility to import one of the JSON files in the `mongo/bounties` folder. 
 
-Note: As of MongoDB 4.4 mongoimport is now a part of the MongoDB Database Tools package and must be downloaded seperately. For installation see the [MongoDB Database Tools](https://docs.mongodb.com/database-tools/installation/installation/)
+Note: As of MongoDB 4.4 mongoimport is now a part of the MongoDB Database Tools package and must be downloaded separately. For installation see the [MongoDB Database Tools](https://docs.mongodb.com/database-tools/installation/installation/)
 
 ```bash
 $ mongoimport\
