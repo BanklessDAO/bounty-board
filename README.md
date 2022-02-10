@@ -193,13 +193,13 @@ The `DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be 
 
 ### Using Jest Test Suite:
 
-#### What is Jest?
+**What is Jest?**
 Jest it's a JavaScript library for creating, running, and structuring tests. 
 
-#### So why do we run tests?
+**So why do we run tests?**
 We run tests to ensure that our app works as expected for our end users.
 
-#### Jest Test Suite Commands:
+**Jest Test Suite Commands:**
 Jest's scripts are located in the `packages/react-app/package.json` file, please rei look at it so you can see how it works.
 
 * yarn test:cov OR yarn jest --coverage
@@ -215,7 +215,7 @@ Jest's scripts are located in the `packages/react-app/package.json` file, please
     * This command tests individual units of the app and are tested as a group (you need mongo running).
 
 ### Next.Js - Static File Serving
-#### Images and Logos
+**Images and Logos**
 * Images are located in the `packages/react-app/public` folder, it's the ONLY directory used to serve static assets.
 * This folder is also useful for robots.txt, favicon.ico, Google Site Verification, and any other static files (including .html)
 [Static File Serving - Documentation](https://nextjs.org/docs/basic-features/static-file-serving)
