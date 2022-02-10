@@ -16,7 +16,7 @@
     "bountyChannel": "123498",
     "applicableRoles" : [ ],
     "customization":{
-      "logo": "assets/logos/citydao.png",
+      "logo": "/citydao.png",
       "colors":{
         "background":{
           "light":"#0AA3D8",
@@ -36,7 +36,7 @@
     "bountyChannel": "12347",
     "applicableRoles" : [ ],
     "customization":{
-      "logo":"./demo/coordinape.png",
+      "logo":"/coordinape.png",
       "colors":{
         "background":{
           "light":"blue.200",
@@ -56,7 +56,7 @@
     "bountyChannel": "12345",
     "applicableRoles" : [ ],
     "customization":{
-      "logo":"demo/uma.png",
+      "logo":"/uma.png",
       "colors":{
         "background":{
           "light":"red.200",
@@ -84,6 +84,25 @@
         },
         "primary":"green",
         "Draft":"yellow"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "716f00ae05026959ede9a3a4"
+    },
+    "customer_id": "905250069463326740",
+    "customerName": "BanklessBounty",
+    "bountyChannel": "850402063741091880",
+    "customization": {
+      "logo": "/citydao.png",
+      "colors": {
+        "background": {
+          "light": "#0AA3D8",
+          "dark": "#0A16D8"
+        },
+        "primary": "green",
+        "Open": "yellow"
       }
     }
   }

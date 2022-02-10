@@ -50,9 +50,9 @@ For the MVP, we are focusing on the bare requirements for a Bounty Card to be cr
 
 The follow description is of Serendipity in the Bankless Bot Garage, but is intended to mirror how DEGEN works in production.
 
-1. **Create**: Bounty creator creates new bounty with `/bounty create`, inputing `title` and `reward`. DEGEN will dm you to input a description, requirements for completion and a due date (`yyyy-mm-dd`). DEGEN takes your input and returns a card with three options: 👍 publish, 📝 edit or ❌ delete
+1. **Create**: Bounty creator creates new bounty with `/bounty create`, inputting `title` and `reward`. DEGEN will dm you to input a description, requirements for completion and a due date (`yyyy-mm-dd`). DEGEN takes your input and returns a card with three options: 👍 publish, 📝 edit or ❌ delete
 
-1. **Create Multiple Bounties**: Bounty creator creates new bounty with `/bounty create`, inputing `title` and `reward`. Then, hit tab to see an optional `copies` feature to create multiple bounties at once.
+1. **Create Multiple Bounties**: Bounty creator creates new bounty with `/bounty create`, inputting `title` and `reward`. Then, hit tab to see an optional `copies` feature to create multiple bounties at once.
 
 1. **Edit**: Select 📝 to edit. DEGEN provides a link to the frontend to edit any field. DEGEN then re-shows a newly edited card (and automatically publishes to #🧀-bounty-board channel)
 1. **Publish/Open**: Bounty creator clicks thumbs up emoji 👍 or `/bounty publish` in Discord, bounty published to #🧀-bounty-board channel and website (url provided); status is now _Open_ on website.
@@ -137,14 +137,14 @@ The app expects a MongoDB db `bountyboard` with the collection `bounties`, as sp
 ### Using Docker
 Ensure you have docker and docker-compose installed (and running) on your desktop.
 
-All the revelant files are in the `mongo/` folder of the monorepo, to run the container:
+All the relevant files are in the `mongo/` folder of the monorepo, to run the container:
 
 ```sh
 cd mongo
 docker-compose up
 ```
 
-This should start the database on port 27017, and automatically seed with test data. The application will restart with fresh seed data everytime you run the docker compose command, so don't worry about messing it up.
+This should start the database on port 27017, and automatically seed with test data. The application will restart with fresh seed data every time you run the docker compose command, so don't worry about messing it up.
 
 The seed data handles:
 
@@ -191,23 +191,31 @@ If you've made it this far, the application should run and should be showing a b
 ### Setting Up the Discord Webhook
 The `DISCORD_BOUNTY_BOARD_WEBHOOK` is not required to start the app, but can be fetched from a member of the bounty board development team. Add it to your `.env.local` file once you have it. 
 
-## Usage - Jest Test Suite:
+### Using Jest Test Suite:
 
-### What is Jest?
-Jest is a JavaScript code test runner. 
-It's a JavaScript library for creating, running, and structuring tests. 
+#### What is Jest?
+Jest it's a JavaScript library for creating, running, and structuring tests. 
 
-### So why do we run tests?
+#### So why do we run tests?
 We run tests to ensure that our app works as expected for our end users.
 
-### Jest Test Suite Commands:
-* yarn jest 
-    * This command runs with all required dependencies.
-* yarn test:cov
+#### Jest Test Suite Commands:
+Jest's scripts are located in the `packages/react-app/package.json` file, please rei look at it so you can see how it works.
+
+* yarn test:cov OR yarn jest --coverage
     * This command tests your code only once and provides a full coverage report.
+    * It can collect code coverage information from entire projects, including untested files.
 * yarn test:watch
     * This command watches tests code changes whenever a change occurs.
 * yarn test:unit
-    * This command runs all individual units of code (mainly functions) to ensure that our code works as intended (you do not need mongo running).
-* yarn test:integration
+    * Unit for unit tests. 
+    * Runs all individual units of code (mainly functions) to ensure that our code works as intended (you do not need mongo running).
+* yarn test:integration OR yarn jest --detectOpenHandles
+    * Integration for integration tests. 
     * This command tests individual units of the app and are tested as a group (you need mongo running).
+
+### Next.Js - Static File Serving
+#### Images and Logos
+* Images are located in the `packages/react-app/public` folder, it's the ONLY directory used to serve static assets.
+* This folder is also useful for robots.txt, favicon.ico, Google Site Verification, and any other static files (including .html)
+[Static File Serving - Documentation](https://nextjs.org/docs/basic-features/static-file-serving)

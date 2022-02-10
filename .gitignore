@@ -132,3 +132,4 @@ contracts/build
 
 # Local Netlify folder
 .netlify
+mongo/customers/seed_customers-test.jsonc
