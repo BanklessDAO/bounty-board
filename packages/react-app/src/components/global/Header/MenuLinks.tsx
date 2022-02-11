@@ -86,7 +86,7 @@ export const MenuLinks = () => {
             onClick={() => toggleDiscordSignIn(session)}
             id="DiscordButton"
             w={{ base: "20em", md: "auto" }}
-            h={{ base: "5em", md: "auto" }}
+            h={{ base: "5em", md: "2.6em" }}
           >
             {session ? session.user?.name : "Join DAO"}
           </Button>
