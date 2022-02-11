@@ -2,6 +2,9 @@ import { SessionWithToken } from '@app/types/SessionExtended';
 import * as service from '@app/services/auth.service';
 import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import { Document } from 'mongoose';
+import { BANKLESS } from '@app/constants/Bankless';
+
+const customerId = BANKLESS.customer_id;
 
 describe('Role caching', () => {
 
@@ -26,6 +29,7 @@ describe('Role caching', () => {
   	tte: service.FIVE_MINUTES,
   	createdAt: new Date().getTime() - 6 * 60 * 1_000,
   	sessionHash: service.createSessionHash(mockBaseSession),
+  	customerId,
   	roles: ['create-bounty', 'create-customer'],
   };
 
@@ -36,8 +40,8 @@ describe('Role caching', () => {
   };
 
   it('Creates a hash of the session that changes when session changges', () => {
-  	const modifiedSession = JSON.parse(JSON.stringify(mockBaseSession));
-  	modifiedSession.expires = 'Different Date';
+  	const modifiedSession: SessionWithToken = JSON.parse(JSON.stringify(mockBaseSession));
+  	modifiedSession.accessToken = 'Token Changed';
 
   	const baseHash = service.createSessionHash(mockBaseSession);
   	const modifiedHash = service.createSessionHash(modifiedSession);
@@ -52,7 +56,11 @@ describe('Role caching', () => {
   });
 
   it('Expires the cache after 5 minutes', () => {
-  	const cachedSession = service.generateCacheObject(service.createSessionHash(mockBaseSession), ['admin']);
+  	const cachedSession = service.generateCacheObject(
+  		service.createSessionHash(mockBaseSession),
+  		['admin'],
+  		customerId
+  	);
   	expect(service.cacheExpired(cachedSession)).toEqual(false);
   	cachedSession.createdAt = new Date().getTime() - (4 * 60 * 1000);
   	expect(service.cacheExpired(cachedSession)).toEqual(false);
@@ -65,13 +73,14 @@ describe('Role caching', () => {
   		tte: service.FIVE_MINUTES,
   		createdAt: new Date().getTime() - 2 * 60 * 1_000,
   		sessionHash: service.createSessionHash(mockBaseSession),
+  		customerId,
   		roles: ['create-bounty', 'create-customer'],
   	};
   	// we don't care about mongoose methods for this test 
   	jest.spyOn(RoleCache, 'findOne')
   		.mockResolvedValue(mockCache as unknown as CoercedIRoleCache);
 
-  	expect(await service.getPermissionsCached(mockBaseSession, noFlush)).toEqual(mockCache.roles);
+  	expect(await service.getPermissionsCached(mockBaseSession, customerId, noFlush)).toEqual(mockCache.roles);
   });
 
   it('Calls the create method if the cache does not exist', async () => {
@@ -81,7 +90,7 @@ describe('Role caching', () => {
   	const spy = jest.spyOn(service, 'createCache')
   		.mockResolvedValue(mockCacheValid);
 
-  	await service.getPermissionsCached(mockBaseSession, noFlush);
+  	await service.getPermissionsCached(mockBaseSession, customerId, noFlush);
   	expect(spy).toHaveBeenCalled();
   });
 
@@ -93,7 +102,7 @@ describe('Role caching', () => {
   	const spy = jest.spyOn(service, 'createCache')
   		.mockResolvedValue(mockCacheValid);
 
-  	await service.getPermissionsCached(mockBaseSession, noFlush);
+  	await service.getPermissionsCached(mockBaseSession, customerId, noFlush);
   	expect(spy).toHaveBeenCalled();
   });
 });

@@ -20,21 +20,46 @@ const isRestrictedMethod = (method: string, roleRestrictions: RoleRestrictions):
 	return restrictedMethods.includes(method);
 };
 
+type AuthResponse = {
+	success: boolean,
+	error?: string;
+}
+
 const isAuthorized = async (
 	req: NextApiRequest,
 	roleRestrictions: RoleRestrictions,
-): Promise<boolean> => {
+	customerId: string | string[] | undefined,
+): Promise<AuthResponse> => {
 	/**
 	 * The initial logic for this was in the comments below, however
 	 * we hit discord API rate limits, so for now we are just allowing POST Requests
 	 */
 	const session = await getSession({ req });
+	if (typeof customerId !== 'string') {
+		return {
+			success: false,
+			error: 'Missing customer Id field or specified multiple',
+		};
+	}
 	if (session && session.accessToken) {
-		const userRoles = await getPermissionsCached(session as SessionWithToken);
+		const userRoles = await getPermissionsCached(session as SessionWithToken, customerId);
 		const whiteListedRolesForRoute = roleRestrictions[req.method as SupportedHTTPMethods] ?? [];
-		return whiteListedRolesForRoute.some(r => userRoles.includes(r));
+		const rolesIncluded = whiteListedRolesForRoute.some(r => userRoles.includes(r));
+		if (rolesIncluded) {
+			return {
+				success: true,
+			};
+		} else {
+			return {
+				success: false,
+				error: 'Unauthorized',
+			};
+		}
 	} else {
-		return false;
+		return {
+			success: false,
+			error: 'Missing session or access token',
+		};
 	}
 };
 
@@ -46,13 +71,14 @@ const isAuthorized = async (
 export default (handler: NextApiHandler, restrictions?: RoleRestrictions): RouteFunction => {
 	return async (req: NextApiRequest, res: NextApiResponse) => {
 		const method = req.method ?? 'GET';
+		const { query: { customerId } } = req;
 		if (!isTest && restrictions && isRestrictedMethod(method, restrictions)) {
 			try {
-				const authorized = await isAuthorized(req, restrictions);
-				if (authorized) {
+				const authorized = await isAuthorized(req, restrictions, customerId);
+				if (authorized.success) {
 					await handler(req, res);
 				} else {
-					res.status(403).json({ success: false, error: 'Unauthorized' });
+					res.status(403).json(authorized);
 				}
 			} catch (error) {
 				internalServerError(res);

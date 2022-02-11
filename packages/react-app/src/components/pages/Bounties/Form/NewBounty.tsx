@@ -85,6 +85,7 @@ const generatePreviewData = (
 		description: data.description,
 		criteria: data.criteria,
 		customer_id,
+		customerId: customer_id,
 		status: bountyStatus.DRAFT,
 		dueAt: new Date(data.dueAt).toISOString(),
 		reward: {

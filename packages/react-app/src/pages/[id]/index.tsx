@@ -10,7 +10,7 @@ import ColorModeButton from '../../components/parts/ColorModeButton';
 
 export const BountyNotFound = (): JSX.Element => (
 	<Stack align="center" justify="center" h="400px">
-		<Heading size="4xl" align="center">
+		<Heading size="4xl" justifyContent="center">
 			<strong>404</strong>
 		</Heading>
 		<Box>
