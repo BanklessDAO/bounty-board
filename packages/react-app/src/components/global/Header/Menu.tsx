@@ -3,6 +3,7 @@ import { RiMenuFill, RiCloseFill } from "react-icons/ri";
 import { Box, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { MenuLinks } from "./MenuLinks";
 import ThemeToggle from "@app/components/parts/ThemeToggle";
+import { MobileMenu } from "./MobileMenu";
 
 const CloseIcon = ({ color }: { color: string }) => (
   <RiCloseFill size="2.7em" color={color} />
@@ -36,7 +37,7 @@ export const Menu = (): JSX.Element => {
       {/* appears if size is under md */}
       <MenuToggle toggle={onOpen} isOpen={isOpen} />
       {isOpen ? (
-        <Box>Placeholder for mobile menu</Box>
+        <MobileMenu isOpen={isOpen} onClose={onClose} />
       ) : (
         <Box
           display={{
