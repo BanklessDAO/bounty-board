@@ -115,14 +115,12 @@ export const BountySchema = object({
 	status: Status.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
-	editKey: string().when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 	
 	statusHistory: array(StatusHistory).optional(),
 		
 	discordMessageId: string().optional(),
 	submissionNotes: string().optional(),
 	submissionUrl: string().optional(),
-	season: number().optional(),
 
 	createdAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	claimedAt: string().optional(),
@@ -136,8 +134,14 @@ export const BountySchema = object({
 })
 	.noUnknown(true);
 
+export const BountyClaimSchema = object({
+	submissionNotes: string().required(),
+	claimedBy: DiscordUser.required(),
+}).noUnknown(true);
+
 
 export type BountyCollection = SchemaToInterface<typeof BountySchema>;
+export type BountyClaimCollection = SchemaToInterface<typeof BountyClaimSchema>;
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 export const BountyBoardSchema = new mongoose.Schema({
@@ -153,15 +157,6 @@ export const BountyBoardSchema = new mongoose.Schema({
 	customer_id: {
 		/* legacy identifier for backward compatability */
 		type: String,
-	},
-	editKey: {
-		/* Prevents editing by unauthorized users */
-		type: String,
-	},
-	season: {
-		/* The season of this Bounty */
-
-		type: Number,
 	},
 	description: {
 		/* A short description of the Bounty */

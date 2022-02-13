@@ -24,8 +24,14 @@ export const getPermissions = async (accessToken: string, customerId: string): P
 	// note: only currently supports bankless
 	const banklessRolesForUser = await getRolesForUserInGuild(accessToken, customerId);
 	const permissions: Role[] = [];
-	if (banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_2)) permissions.push('create-bounty');
+	if (
+		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_2) ||
+		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_1)
+	) permissions.push('create-bounty', 'claim-bounties');
+
 	if (banklessRolesForUser.includes(BANKLESS_ROLES.BB_CORE)) permissions.push('admin');
+
+	
 	return permissions;
 };
 
@@ -35,7 +41,7 @@ export const getRolesForUserInGuild = async (
 ): Promise<string[]> => {
 	/**
     * Get discord roleIds (numeric) then filter to only roles that are supported
-		* By the application
+	* By the application
     */
 	// currently only supports bankless
 	if (customerId !== BANKLESS.customer_id) {

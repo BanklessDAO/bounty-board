@@ -5,6 +5,7 @@ export type Role =
   | 'edit-own-bounty'
   | 'delete-own-bounty'
   | 'edit-bounties'
+  | 'claim-bounties'
   | 'delete-bounties'
   | 'create-customer'
   | 'edit-customer'

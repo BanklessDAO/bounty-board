@@ -3,24 +3,39 @@ import {
 	AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
+	Alert,
+	AlertIcon,
 	Box,
 	Button,
 	Flex,
 	Grid,
 	GridItem,
 	Heading,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
 	Tag,
 	TagLabel,
 	Text,
+	Textarea,
+	useColorMode,
+	useDisclosure,
 } from '@chakra-ui/react';
 import AccessibleLink from '../../../parts/AccessibleLink';
-import { BountyCollection } from '../../../../models/Bounty';
-import { baseUrl } from '../../../../constants/discordInfo';
-import { CustomerContext } from '@app/context/CustomerContext';
-import { useContext } from 'react';
+import { BountyClaimCollection, BountyCollection } from '../../../../models/Bounty';
+import { useState } from 'react';
 import axios from '@app/utils/AxiosUtils';
 import bountyStatus from '@app/constants/bountyStatus';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
+import ColorModeButton from '@app/components/parts/ColorModeButton';
+import { useSession } from 'next-auth/react';
+import { useUser } from '@app/hooks/useUser';
+import RestrictedTo from '@app/components/global/Auth';
+import { APIUser } from 'discord-api-types';
 
 const BountyActions = ({ bounty }: { bounty: BountyCollection }) => {
 	const router = useRouter();
@@ -133,6 +148,95 @@ const BountySummary = ({
 	);
 };
 
+const ConfirmClaimBounty = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+	const { isOpen, onOpen, onClose,  } = useDisclosure();
+	const router = useRouter();
+	const { colorMode } = useColorMode();
+	const { user } = useUser();
+	const [message, setMessage] = useState<string>();
+	const [claiming, setClaiming] = useState(false);
+	const [claimed, setClaimed] = useState(false);
+
+	const claimedBy = (user: APIUser) => (
+		{
+			discordHandle: user?.username,
+			discordId: user?.id
+		}
+	)
+
+	const confirmBounty = async () => {
+		if (message && user) {
+			try {
+				setClaiming(true);
+				const res = await axios.patch<void, any, BountyClaimCollection>(
+					`api/bounties/${bounty._id}/claim?customerId=${bounty.customerId || bounty.customer_id}`
+					, {
+						claimedBy: claimedBy(user),
+						submissionNotes: message
+					}
+				)
+				if (res.status === 200)	{
+					setClaimed(true)
+					await new Promise(res => {
+						
+						setTimeout(res, 2000)
+					}).then(() => {		
+						router.reload()
+						setClaimed(false)				
+					})
+				}
+			}
+			finally {
+				setClaiming(false)
+			}
+		} else {
+			throw new Error('Missing Message');
+		}
+	}
+	return (
+	  <>
+		<RestrictedTo roles={['claim-bounties']}>
+			<ColorModeButton>
+				<Box onClick={onOpen}>Claim It</Box>
+			</ColorModeButton>
+		</RestrictedTo>
+  
+		<Modal onClose={onClose} isOpen={isOpen} isCentered>
+		  <ModalOverlay />
+		  <ModalContent>
+			<ModalHeader>Claim This Bounty</ModalHeader>
+			{claimed && <Alert status='success'>
+    			<AlertIcon />
+    			Bounty Claimed!
+  			</Alert>}
+			<ModalCloseButton />
+			<ModalBody
+				flexDirection="column"
+				justifyContent="space-evenly"
+			>
+				<Flex mb="5">
+					Add a message to the bounty creator, then hit 'confirm' to send and claim the bounty.
+				</Flex>
+				<Textarea placeholder='Send a message' onChange={e => setMessage(e.target.value)} />
+			</ModalBody>
+			<ModalFooter justifyContent="start">
+				<Button transition="background 100ms linear"
+					disabled={claimed || !message}
+					onClick={confirmBounty}
+					isLoading={claiming}
+					loadingText='Submitting'
+					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				>
+					Claim It
+				</Button>
+			  	<Button ml="3" onClick={onClose}>Close</Button>
+			</ModalFooter>
+		  </ModalContent>
+		</Modal>	
+	  </>
+	)
+}
+
 const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const {
 		_id,
@@ -142,13 +246,8 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 		claimedBy,
 		createdAt,
 		status,
-		discordMessageId,
 		dueAt,
 	} = bounty;
-	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
-	const url = discordMessageId
-		? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}`
-		: `${baseUrl}/${customer_id}/${bountyChannel}`;
 	return (
 		<Grid gap={6}>
 			{ _id &&
@@ -196,12 +295,20 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 							)
 							: (
 								<>
-									<Heading size="sm">Claimed By</Heading>
-									<AccessibleLink href={url}>
-										<Button my={2} size="sm" colorScheme="green">
+									{/* <AccessibleLink href={url}>
+										<Button
+											my={2}
+											size="sm"
+											colorScheme="green"
+											onClick={() => claimBounty()}	
+										>
 											Claim It
 										</Button>
-									</AccessibleLink>
+									
+									</AccessibleLink> */}
+									<ConfirmClaimBounty 
+										bounty={bounty}
+									/>
 								</>
 							)
 				}

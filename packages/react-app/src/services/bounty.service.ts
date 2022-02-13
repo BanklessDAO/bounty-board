@@ -186,17 +186,12 @@ export const getBounty = async (id: string): Promise<BountyCollection | null> =>
 	return id.length === 24 ? await Bounty.findById(id) : null;
 };
 
-export const canBeEdited = ({ bounty, key }: { bounty: BountyCollection, key: string | undefined }): boolean => {
+export const canBeEdited = ({ bounty }: { bounty: BountyCollection }): boolean => {
 	/**
-	 * We allow edits to the bounty only if the status is currently `draft` or `open`, and if a valid
-	 * edit key is passed.
-	 * 
-	 * @TODO the edit key is an external dependency from bounty bot, it would be better to wrap a more
-	 * complete user-based auth mechanism
+	 * We allow edits to the bounty only if the status is currently `draft` or `open`
 	 */
-	const validBountyEditKey = Boolean(key) && (bounty.editKey === key);
 	const bountyOpenForEdits = ['draft', 'open'].includes(bounty.status.toLowerCase());
-	return validBountyEditKey && bountyOpenForEdits;
+	return bountyOpenForEdits;
 };
 
 type EditBountyProps = { bounty: BountyCollection, body: Record<string, unknown> };
