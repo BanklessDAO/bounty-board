@@ -76,8 +76,7 @@ export const MenuLinks = () => {
   }, [session, guilds]);
   return (
     <>
-      <NewBounty />
-      {customers && session ? <DAOSelector customers={customers} /> : null}
+      {<DAOSelector customers={customers} />}
       <MenuItem newTab={false}>
         {status === "loading" ? (
           <span>Loading...</span>
@@ -86,12 +85,13 @@ export const MenuLinks = () => {
             onClick={() => toggleDiscordSignIn(session)}
             id="DiscordButton"
             w={{ base: "20em", md: "auto" }}
-            h={{ base: "5em", md: "2.6em" }}
+            h={{ base: "3em", md: "2.6em" }}
           >
             {session ? session.user?.name : "Join DAO"}
           </Button>
         )}
       </MenuItem>
+      <NewBounty />
     </>
   );
 };
