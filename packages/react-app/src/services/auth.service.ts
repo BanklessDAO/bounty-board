@@ -25,8 +25,10 @@ export const getPermissions = async (accessToken: string, customerId: string): P
 	const banklessRolesForUser = await getRolesForUserInGuild(accessToken, customerId);
 	const permissions: Role[] = [];
 	if (
+		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_4) ||
+		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_3) ||
 		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_2) ||
-		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_1)
+		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_1) 
 	) permissions.push('create-bounty', 'claim-bounties');
 
 	if (banklessRolesForUser.includes(BANKLESS_ROLES.BB_CORE)) permissions.push('admin');
