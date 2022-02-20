@@ -14,8 +14,8 @@ export const useRoles = (): Role[] => {
    */
 	const { customer } = useContext(CustomerContext);
 	const { data, error } = useSWR<{ roles: Role[] }, unknown>(
-		customer.customer_id
-			? `/api/auth/roles?customerId=${customer.customer_id}`
+		customer.customerId
+			? `/api/auth/roles?customerId=${customer.customerId}`
 			: null,
 		axiosFetcher,
 	);

@@ -38,7 +38,7 @@ export const getRolesForUserInGuild = async (
 		* By the application
     */
 	// currently only supports bankless
-	if (customerId !== BANKLESS.customer_id) {
+	if (customerId !== BANKLESS.customerId) {
 		return [];
 	}
 	const discordUserStats = await discordService.getDiscordUserInGuild(accessToken, customerId);

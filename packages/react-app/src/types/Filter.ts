@@ -5,7 +5,7 @@ type StringKeysBountyBoardReward = Extract<keyof BountyCollection['reward'], str
 export type AcceptedSortInputs = 'reward' | 'createdAt';
 export type AcceptedSortOutputs = `reward.${StringKeysBountyBoardReward}` | '_id' | 'createdAt';
 export interface FilterParams {
-	customer_id?: string;
+	customerId?: string;
 	status?: string;
 	search: string;
 	$lte?: number;

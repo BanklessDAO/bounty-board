@@ -2,12 +2,12 @@ import { CustomerProps } from '../../src/models/Customer';
 
 export const customers: CustomerProps[] = [
 	{
-		customer_id: '834499078434979890',
+		customerId: '834499078434979890',
 		customerName: 'BanklessDAO',
 		bountyChannel: '850402063741091880',
 	},
 	{
-		customer_id: '402910780124561410',
+		customerId: '402910780124561410',
 		customerName: 'Compound',
 		bountyChannel: '',
 		customization: {
@@ -23,7 +23,7 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		customer_id: '845400066532704256',
+		customerId: '845400066532704256',
 		customerName: 'Coordinape',
 		bountyChannel: '',
 		customization: {
@@ -39,7 +39,7 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		customer_id: '718590743446290492',
+		customerId: '718590743446290492',
 		bountyChannel: '',
 		customerName: 'UMA',
 		customization: {
@@ -55,7 +55,7 @@ export const customers: CustomerProps[] = [
 		},
 	},
 	{
-		customer_id: '402910780129999',
+		customerId: '402910780129999',
 		customerName: 'Should Not See',
 		bountyChannel: '',
 		customization: {

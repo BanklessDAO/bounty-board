@@ -145,10 +145,10 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 		discordMessageId,
 		dueAt,
 	} = bounty;
-	const { customer: { customer_id, bountyChannel } } = useContext(CustomerContext);
+	const { customer: { customerId, bountyChannel } } = useContext(CustomerContext);
 	const url = discordMessageId
-		? `${baseUrl}/${customer_id}/${bountyChannel}/${discordMessageId}`
-		: `${baseUrl}/${customer_id}/${bountyChannel}`;
+		? `${baseUrl}/${customerId}/${bountyChannel}/${discordMessageId}`
+		: `${baseUrl}/${customerId}/${bountyChannel}`;
 	return (
 		<Grid gap={6}>
 			{ _id &&

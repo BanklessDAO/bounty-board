@@ -72,22 +72,6 @@ describe('Testing the bounty API', () => {
 			expect(res.statusCode).toEqual(200);
 		});
 
-		it('Fetch bounty has both types of customer ids', async () => {
-			const _id = '61b1b528348333e470fd8c99';
-			const testGetBounty = { _id, ...testBounty };
-
-			await Bounty.create(testGetBounty);
-      
-			req.method = 'GET';
-			req.query = {
-				id: _id,
-			};
-
-			await bountyHandler(req, res);
-			const { customer_id, customerId } = res._getJSONData().data;
-			expect(customerId).toEqual(customer_id);
-			expect(customerId).toBeTruthy();
-		});
 
 		it('Can update a bounty with PATCH', async () => {
 			const _id = '61b1b528348333e470fd8c99';
@@ -259,7 +243,7 @@ describe('Testing the bounty API', () => {
 			req.method = 'GET';
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const customerIds = data.map((d: BountyCollection) => d.customer_id);
+			const customerIds = data.map((d: BountyCollection) => d.customerId);
 			const uniqueIds = new Set(customerIds);
 			expect(uniqueIds.size).toBeGreaterThan(1);
 		});

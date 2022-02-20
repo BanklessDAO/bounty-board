@@ -4,7 +4,7 @@ import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import { Document } from 'mongoose';
 import { BANKLESS } from '@app/constants/Bankless';
 
-const customerId = BANKLESS.customer_id;
+const customerId = BANKLESS.customerId;
 
 describe('Role caching', () => {
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { MenuLinks } from '@app/components/global/Header/Menu';
+import { MenuLinks } from '@app/components/global/Header/MenuLinks';
 import { useSession } from 'next-auth/react';
 import { BANKLESS } from '../../../../../src/constants/Bankless';
 import { guilds as guildsStub } from '@tests/stubs/guilds.stub';
@@ -25,7 +25,7 @@ describe('Testing the menu', () => {
 	it('Renders with a warning about the missing guilds', () => {
 		jest.spyOn(axios, 'get').mockImplementation(() => { throw new Error(); });
 		useSessionTest.mockImplementation(() => ({ status: '', data: [] }));
-		render(<MenuLinks isOpen={false}/>);
+		render(<MenuLinks />);
 		expect(spyWarn).toHaveBeenCalled();
 	});
 
@@ -37,7 +37,7 @@ describe('Testing the menu', () => {
 			.mockReturnValueOnce([[BANKLESS], () => console.log('setCustomers')])
 			.mockReturnValueOnce([guildsStub, () => console.log('setGuilds')]);
     
-		render(<MenuLinks isOpen={false}/>);
+		render(<MenuLinks />);
 		const input = screen.getByRole('combobox', { name: 'dao-selector' });
 		expect(input).toBeVisible();
 
@@ -49,7 +49,7 @@ describe('Testing the menu', () => {
 			.mockReturnValueOnce([[BANKLESS], () => console.log('setCustomers')])
 			.mockReturnValueOnce([guildsStub, () => console.log('setGuilds')]);
 
-		render(<MenuLinks isOpen={false}/>);
+		render(<MenuLinks />);
 		const input = screen.queryByRole('combobox', { name: 'dao-selector' });
 		expect(input).toBeNull();
 	});

@@ -7,7 +7,7 @@ describe('Testing the customer context', () => {
 		bountyChannel: '',
 		applicableRoles: [],
 		customization: {},
-		customer_id: '1',
+		customerId: '1',
 		customerName: 'Test Customer',
 	};
 

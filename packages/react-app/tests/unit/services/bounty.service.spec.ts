@@ -11,10 +11,10 @@ describe('Testing the bounty service', () => {
 			search: 'search',
 			lte: '1',
 			gte: '1',
-			customer_id: 'customer_id',
+			customerId: 'customerId',
 		};
     
-		it('Extracts status, search, lte, gte, customer_id from the query string', () => {
+		it('Extracts status, search, lte, gte, customerId from the query string', () => {
 			const filters = service.getFilters(query);
 			const { $lte, $gte, ...rest } = filters;
 			expect(Object.keys(filters))
@@ -142,13 +142,13 @@ describe('Testing the bounty service', () => {
 			const query: NextApiQuery = {
 				status: 'Open',
 				search: 'Test',
-				customer_id: 'testId',
+				customerId: 'testId',
 				lte: '100',
 				asc: 'true',
 			};
 			const expected: FilterQuery<BountyCollection> = {
 				status: 'Open',
-				customer_id: 'testId',
+				customerId: 'testId',
 				$text: {
 					$search: 'Test',
 				},

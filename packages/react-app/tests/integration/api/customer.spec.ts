@@ -140,7 +140,7 @@ describe('Testing the customer API', () => {
 			const _id = '61b1b528348333e470fd8c99';
 			const testPatchCustomer = { _id, ...testCustomer };
 			await Customer.create(testPatchCustomer);
-			req.body = { customer_id: 'change this' };
+			req.body = { customerId: 'change this' };
 			req.method = 'PUT';
 			req.query = {
 				id: _id,
