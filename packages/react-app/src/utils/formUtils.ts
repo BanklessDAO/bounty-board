@@ -1,3 +1,6 @@
+import { StatusHistoryItem } from '@app/models/Bounty';
+import { APIUser } from 'discord-api-types';
+
 export const dateIsNotInPast = (d: string): string | boolean => {
 	const dt = new Date(d).getTime();
 	const today = new Date();
@@ -13,6 +16,21 @@ export const validNonNegativeDecimal = (v: string): string | boolean => {
    */
 	if (!Number(v)) return 'Not a valid reward';
 	return Number(v) > 0 ? true : 'Must be > 0';
+};
+
+export const claimedBy = (user: APIUser) => (
+	{
+		discordHandle: user?.username,
+		discordId: user?.id,
+	}
+);
+
+export const newStatusHistory = (oldStatusHistory: StatusHistoryItem[]): StatusHistoryItem[] => {
+	const newStatus: StatusHistoryItem = {
+		modifiedAt: new Date().toISOString(),
+		status: 'In-Progress',
+	};
+	return [...oldStatusHistory, newStatus];
 };
 
 export const required = 'This field is required';

@@ -16,8 +16,8 @@ export const RoleSchema = new Mongoose.Schema({
 	customerId: String,
 	roles: Array,
 }, {
-  // Mongoose may not accept new fields for previously defined db  
-  strict: false
+	// Mongoose may not accept new fields for previously defined db  
+	strict: false,
 });
 
 export default Mongoose.models.RoleCache as Model<IRoleCache>

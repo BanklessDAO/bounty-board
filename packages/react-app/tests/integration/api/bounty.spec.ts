@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks, MockResponse, MockRequest } from 'node-mocks-http';
 import { Connection } from 'mongoose';
-import dbConnect from '../../../src/utils/dbConnect';
-import Bounty, { BountyCollection, BountyBoardSchema } from '../../../src/models/Bounty';
-import bountiesHandler from '../../../src/pages/api/bounties';
-import bountyHandler from '../../../src/pages/api/bounties/[id]';
-import { testBounty } from '../../stubs/bounty.stub';
-import bounties from '../../stubs/bounties.stub.json';
+import dbConnect from '@app/utils/dbConnect';
+import Bounty, { BountyCollection, BountyBoardSchema } from '@app/models/Bounty';
+import bountiesHandler from '@app/pages/api/bounties';
+import bountyHandler from '@app/pages/api/bounties/[id]';
+import { testBounty } from '@tests/stubs/bounty.stub';
+import bounties from '@tests/stubs/bounties.stub.json';
 
 describe('Testing the bounty API', () => {
 	let connection: Connection;
@@ -70,23 +70,6 @@ describe('Testing the bounty API', () => {
 				expect.objectContaining(testGetBounty)
 			);
 			expect(res.statusCode).toEqual(200);
-		});
-
-		it('Fetch bounty has both types of customer ids', async () => {
-			const _id = '61b1b528348333e470fd8c99';
-			const testGetBounty = { _id, ...testBounty };
-
-			await Bounty.create(testGetBounty);
-      
-			req.method = 'GET';
-			req.query = {
-				id: _id,
-			};
-
-			await bountyHandler(req, res);
-			const { customer_id, customerId } = res._getJSONData().data;
-			expect(customerId).toEqual(customer_id);
-			expect(customerId).toBeTruthy();
 		});
 
 		it('Can update a bounty with PATCH', async () => {
@@ -159,36 +142,14 @@ describe('Testing the bounty API', () => {
 			createdBy;
 		});
 
-		it('Rejects edit without an edit key or invalid edit key', async () => {
-			const _id = '61b1b528348333e470fd8c99';
-			const editKey = 'TESTK3Y';
-			const testPatchBounty = { _id, editKey, ...testBounty };
-			await Bounty.create(testPatchBounty);
-			req.body = { description: 'fail' };
-			req.method = 'PATCH';
-			req.query = {
-				id: _id,
-			};
-			await bountyHandler(req, res);
-			expect(res.statusCode).toEqual(400);
-			req.query = {
-				id: _id,
-				key: 'F41L',
-			};
-			await bountyHandler(req, res);
-			expect(res.statusCode).toEqual(400);
-		});
-
 		it('Rejects editing a nested property without specifying all fields for reward', async () => {
 			const _id = '61b1b528348333e470fd8c99';
-			const editKey = 'TESTK3Y';
-			const testPatchBounty = { _id, editKey, ...testBounty };
+			const testPatchBounty = { _id, ...testBounty };
 			await Bounty.create(testPatchBounty);
 			req.body = { reward: { amount: 200 } };
 			req.method = 'PATCH';
 			req.query = {
 				id: _id,
-				key: editKey,
 			};
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(400);
@@ -196,14 +157,12 @@ describe('Testing the bounty API', () => {
 
 		it('Rejects editing a nested property without specifying all fields for discord ids', async () => {
 			const _id = '61b1b528348333e470fd8c99';
-			const editKey = 'TESTK3Y';
-			const testPatchBounty = { _id, editKey, ...testBounty };
+			const testPatchBounty = { _id, ...testBounty };
 			await Bounty.create(testPatchBounty);
 			req.body = { createdBy: { discordHandle: 'Missing discord Id' } };
 			req.method = 'PATCH';
 			req.query = {
 				id: _id,
-				key: editKey,
 			};
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(400);
