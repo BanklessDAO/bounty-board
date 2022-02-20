@@ -4,7 +4,7 @@ import Layout from '@app/components/global/SiteLayout';
 import { useSession } from 'next-auth/react';
 import NewBountyForm from '@app/components/pages/Bounties/Form/NewBounty';
 
-const CreateBounty = () => {
+const CreateBounty = (): JSX.Element => {
 	const { status } = useSession({ required: false });
 	const unauthorized = (status !== 'loading' && status !== 'authenticated');
 	return (

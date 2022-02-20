@@ -94,7 +94,6 @@ const generatePreviewData = (
 			amountWithoutScale,
 			scale,
 		},
-		editKey: `edit-${user.id}`,
 		statusHistory: [
 			{
 				status: bountyStatus.DRAFT,
@@ -110,7 +109,7 @@ const generatePreviewData = (
 	};
 };
 
-const NewBountyForm = () => {
+const NewBountyForm = (): JSX.Element => {
 	const router = useRouter();
 	const { user, error } = useUser();
 	const cachedBounty = useCachedForm();

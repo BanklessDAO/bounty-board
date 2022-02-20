@@ -107,7 +107,6 @@ describe('Testing the bounty API', () => {
 			req.method = 'PATCH';
 			req.query = {
 				id: _id,
-				key: testBounty.editKey as string,
 			};
 
 			await bountyHandler(req, res);
@@ -226,7 +225,6 @@ describe('Testing the bounty API', () => {
 			expect(res.statusCode).toEqual(404);
 
 			req.method = 'PATCH';
-			req.query.key = testBounty.editKey as string;
 			req.body = { title: 'test' };
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(404);
