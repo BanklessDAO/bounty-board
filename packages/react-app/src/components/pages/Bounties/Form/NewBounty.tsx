@@ -68,7 +68,7 @@ const useCachedForm = () => {
 
 const generatePreviewData = (
 	data: typeof defaultValues,
-	customer_id: string,
+	customerId: string,
 	user: APIUser
 ): Omit<BountyCollection, typeof NotNeededFields[number]> => {
 	/**
@@ -84,8 +84,7 @@ const generatePreviewData = (
 		title: data.title,
 		description: data.description,
 		criteria: data.criteria,
-		customer_id,
-		customerId: customer_id,
+		customerId,
 		status: bountyStatus.DRAFT,
 		dueAt: new Date(data.dueAt).toISOString(),
 		reward: {
@@ -115,7 +114,7 @@ const NewBountyForm = () => {
 	const { user, error } = useUser();
 	const cachedBounty = useCachedForm();
 	const currencies = useCurrencies();
-	const { customer: { customer_id } } = useContext(CustomerContext);
+	const { customer: { customerId } } = useContext(CustomerContext);
 	const formControlProps: FormControlProps = { mt: '5' };
 	const {
 		register,
@@ -132,7 +131,7 @@ const NewBountyForm = () => {
 	}
 	return (
 		<form onSubmit={handleSubmit(data => {
-			const preview = user && generatePreviewData(data, customer_id, user);
+			const preview = user && generatePreviewData(data, customerId, user);
 			localStorage.setItem('cachedEdit', JSON.stringify(data));
 			localStorage.setItem('previewBounty', JSON.stringify(preview));
 			router.push('/preview-bounty');

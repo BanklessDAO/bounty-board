@@ -1,7 +1,7 @@
 [
    {
         "_id" : ObjectId("616f00ae05026959ede9a3a4"),
-        "customer_id" : 1,
+        "customerId" : 1,
         "customerName": "External DAO Name",
         "applicableRoles" : [ ],
         "customization": {

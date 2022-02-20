@@ -110,7 +110,6 @@ export const BountySchema = object({
 	title: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	description: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	customer_id: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	customerId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	status: Status.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
@@ -147,10 +146,6 @@ export const BountyBoardSchema = new mongoose.Schema({
 		type: String,
 	},
 	customerId: {
-		/* discord id representing the DAO under which this bounty belongs */
-		type: String,
-	},
-	customer_id: {
 		/* legacy identifier for backward compatability */
 		type: String,
 	},
