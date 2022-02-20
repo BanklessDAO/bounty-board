@@ -216,7 +216,7 @@ describe('Testing the bounty API', () => {
 			req.method = 'GET';
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const customerIds = data.map((d: BountyCollection) => d.customer_id);
+			const customerIds = data.map((d: BountyCollection) => d.customerId);
 			const uniqueIds = new Set(customerIds);
 			expect(uniqueIds.size).toBeGreaterThan(1);
 		});

@@ -15,7 +15,7 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	
 	if (typeof query.status === 'string') filters.status = query.status;
 	if (typeof query.search === 'string') filters.search = query.search;
-	if (typeof query.customer_id === 'string') filters.customer_id = query.customer_id;
+	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
 	
 	if(query.lte) filters.$lte = Number(query.lte);
 	if(query.gte) filters.$gte = Number(query.gte);
@@ -107,11 +107,11 @@ export const handleEmpty = (query: FilterQuery<BountyCollection>): FilterQuery<B
 	return isEmpty ? {} : query;
 };
 
-export const filterCustomerId = (query: FilterQuery<BountyCollection>, customer_id: string): FilterQuery<BountyCollection> => {
+export const filterCustomerId = (query: FilterQuery<BountyCollection>, customerId: string): FilterQuery<BountyCollection> => {
 	/**
 	 * Remove bounties not relating to the currently selected DAO
 	 */
-	query.customer_id = customer_id;
+	query.customerId = customerId;
 	return query;
 };
 
@@ -135,11 +135,11 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 
 	const filters = getFilters(query);
 	
-	const { status, search, $lte, $gte, customer_id } = filters;
+	const { status, search, $lte, $gte, customerId } = filters;
 	
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
-	if(customer_id) filterQuery = filterCustomerId(filterQuery, customer_id);
+	if(customerId) filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
 	filterQuery = handleEmpty(filterQuery);
 

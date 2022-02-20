@@ -1,7 +1,6 @@
 import { BountyCollection } from '../../src/models/Bounty';
 
 export const testBounty: Partial<BountyCollection> = {
-	customer_id: '834499078434979890',
 	customerId: '834499078434979890',
 	title: 'TEST TITLE',
 	description: 'TEST DESCRIPTION',

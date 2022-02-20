@@ -9,7 +9,7 @@ import * as nextAuth from 'next-auth/react';
 import { SessionWithToken } from '@app/types/SessionExtended';
 import { BANKLESS } from '@app/constants/Bankless';
 
-const customerId = BANKLESS.customer_id;
+const customerId = BANKLESS.customerId;
 
 describe('Testing the Role Caching', () => {
 	let connection: Connection;
@@ -50,7 +50,7 @@ describe('Testing the Role Caching', () => {
 		const output = createMocks();
 		req = output.req;
 		req.method = 'GET';
-		req.query.customerId = BANKLESS.customer_id;
+		req.query.customerId = BANKLESS.customerId;
 		res = output.res;
 	});
 

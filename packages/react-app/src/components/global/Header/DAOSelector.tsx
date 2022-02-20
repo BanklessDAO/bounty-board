@@ -41,7 +41,7 @@ export const DAOSelector = ({
 		>
       customers &&{' '}
 			{customers.map((option) => (
-				<option key={option.customer_id} value={option.customerName}>
+				<option key={option.customerId} value={option.customerName}>
 					{option.customerName}
 				</option>
 			))}

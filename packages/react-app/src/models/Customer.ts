@@ -24,7 +24,7 @@ export const CustomizationSchema = object({
 	.noUnknown(true);
 
 export const CustomerSchema = object({
-	customer_id: string().defined(),
+	customerId: string().defined(),
 	customerName: string().defined(),
 	bountyChannel: string().defined(),
 	customization: CustomizationSchema.optional().default(undefined),
@@ -32,8 +32,8 @@ export const CustomerSchema = object({
 })
 	.noUnknown(true);
 export interface CustomerProps {
-		_id?: string;
-    customer_id: string;
+	_id?: string;
+    customerId: string;
     customerName: string;
     customization?: Customization;
     applicableRoles?: [] | string[];
@@ -76,7 +76,7 @@ export const CustomerModel = new mongoose.Schema<CustomerProps>({
 	customerName: {
 		type: String,
 	},
-	customer_id: {
+	customerId: {
 		type: String,
 	},
 	applicableRoles: {
