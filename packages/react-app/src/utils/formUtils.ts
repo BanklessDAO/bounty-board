@@ -20,7 +20,7 @@ export const validNonNegativeDecimal = (v: string): string | boolean => {
 
 export const claimedBy = (user: APIUser) => (
 	{
-		discordHandle: user?.username,
+		discordHandle: `${user?.username}#${user.discriminator}`,
 		discordId: user?.id,
 	}
 );

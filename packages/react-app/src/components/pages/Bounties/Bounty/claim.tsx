@@ -7,6 +7,9 @@ import { useState } from 'react';
 import { AuthContext } from '@app/context/AuthContext';
 import { useContext } from 'react';
 import { claimedBy, newStatusHistory } from '@app/utils/formUtils';
+import AccessibleLink from '@app/components/parts/AccessibleLink';
+import { CustomerContext } from '@app/context/CustomerContext';
+import { baseUrl } from '@app/constants/discordInfo';
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,10 +50,16 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	
 	return (
 		<>
-	  	<ClaimPopupLauncher onOpen={onOpen} />
+	  		{
+				bounty.discordMessageId
+				// If we have discord message info for the bounty, the user is taken into discord to claim
+					? <ClaimDiscord discordMessageId={bounty.discordMessageId} />
+				// else, they must use the web form variant
+			 	: <ClaimWeb onOpen={onOpen} />
+			}
 			<Modal onClose={onClose} isOpen={isOpen} isCentered>
-		  <ModalOverlay />
-		  <ModalContent>
+		  		<ModalOverlay />
+		  		<ModalContent>
 					<ModalHeader>Claim This Bounty</ModalHeader>
 					{
 						claimed &&
@@ -86,14 +95,32 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	);
 };
 
+export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string }): JSX.Element => {
+	const { customer: { customerId, bountyChannel } } = useContext(CustomerContext);
+	const url = `${baseUrl}/${customerId}/${bountyChannel}/${discordMessageId}`;
+	const { colorMode } = useColorMode();
+	return (
+		<AccessibleLink href={url}>
+			<Button
+				transition="background 100ms linear"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				my={2} size="sm"
+			>
+				Claim It
+			</Button>
+		</AccessibleLink>
+	);
+
+};
+
 export const useCanClaim = (): boolean => {
 	const { roles: userRoles } = useContext(AuthContext);
 	return userRoles.includes('claim-bounties');
 };
 
-export const ClaimPopupLauncher = ({ onOpen }: { onOpen: () => void }): JSX.Element => {
+export const ClaimWeb = ({ onOpen }: { onOpen: () => void }): JSX.Element => {
 	const { colorMode } = useColorMode();
-	const notSignedInHelpMessage = 'Ensure you are signed in with Discord and have permissions in order to claim bounties';
+	const notSignedInHelpMessage = 'You need to sign in and have the correct permissions to claim this bounty';
 	const canClaim = useCanClaim();
 	return (
 		<Tooltip
@@ -103,7 +130,8 @@ export const ClaimPopupLauncher = ({ onOpen }: { onOpen: () => void }): JSX.Elem
 			mt='3'
 			display={canClaim ? 'hidden' : 'inline-block'}
 		>
-			<Button transition="background 100ms linear"
+			<Button
+				transition="background 100ms linear"
 				aria-label='claim-button'
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 				onClick={onOpen}

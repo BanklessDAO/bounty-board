@@ -2,7 +2,7 @@ import * as Claim from '@app/components/pages/Bounties/Bounty/claim';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-const { ClaimPopupLauncher } = Claim;
+const { ClaimWeb: ClaimPopupLauncher } = Claim;
 
 describe('Testing the bounty claim component', () => {
 	afterEach(() => {
@@ -28,6 +28,5 @@ describe('Testing the bounty claim component', () => {
 		const btn = screen.queryByRole('button', { name: 'claim-button' });
 		expect(btn).not.toBeNull();
 		expect(btn).not.toBeDisabled();
-
 	});
 });
