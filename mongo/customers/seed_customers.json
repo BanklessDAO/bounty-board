@@ -9,6 +9,14 @@
   },
   {
     "_id" : {
+      "$oid": "616f00ae05026959ede9a3a9"
+    },
+    "customerId":"905250069463326740",
+    "customerName":"BBBS",
+    "bountyChannel": "850402063741091880"
+  },  
+  {
+    "_id" : {
       "$oid": "616f00ae05026959ede9a3a5"
     },    
     "customerId":"402910780124561410",

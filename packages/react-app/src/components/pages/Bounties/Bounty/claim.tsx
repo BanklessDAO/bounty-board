@@ -4,12 +4,12 @@ import axios from '@app/utils/AxiosUtils';
 import { Alert, AlertIcon, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, Tooltip, useColorMode, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { AuthContext } from '@app/context/AuthContext';
 import { useContext } from 'react';
 import { claimedBy, newStatusHistory } from '@app/utils/formUtils';
 import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
+import { useRequiredRoles } from '@app/components/global/Auth';
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -113,15 +113,10 @@ export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string })
 
 };
 
-export const useCanClaim = (): boolean => {
-	const { roles: userRoles } = useContext(AuthContext);
-	return userRoles.includes('claim-bounties');
-};
-
 export const ClaimWeb = ({ onOpen }: { onOpen: () => void }): JSX.Element => {
 	const { colorMode } = useColorMode();
-	const notSignedInHelpMessage = 'You need to sign in and have the correct permissions to claim this bounty';
-	const canClaim = useCanClaim();
+	const canClaim = useRequiredRoles(['claim-bounties', 'admin']);
+	const notSignedInHelpMessage = canClaim ? 'Claim this bounty	' : 'You need to sign in and have the correct permissions to claim this bounty';
 	return (
 		<Tooltip
 			hasArrow

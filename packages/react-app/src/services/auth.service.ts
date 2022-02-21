@@ -5,7 +5,7 @@ import { SessionWithToken } from '@app/types/SessionExtended';
 import * as crypto from 'crypto';
 import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import { Document } from 'mongoose';
-import { BANKLESS } from '@app/constants/Bankless';
+import { BANKLESS, BBBS } from '@app/constants/Bankless';
 
 export const FIVE_MINUTES = 5 * 60 * 1_000;
 const ROLE_IDS = Object.values(BANKLESS_ROLES);
@@ -24,10 +24,13 @@ export const getRolesForUserInGuild = async (
     * Get discord roleIds (numeric) then filter to only roles that are supported
 	* By the application
     */
-	// currently only supports bankless
-	if (customerId !== BANKLESS.customerId) {
-		return [];
-	}
+
+	// BBBS users are all admins
+	if (customerId === BBBS.customerId) return [BANKLESS_ROLES.BB_CORE];
+	
+	// ignore all customers not bankless 
+	if (customerId !== BANKLESS.customerId) return [];
+
 	const discordUserStats = await discordService.getDiscordUserInGuild(accessToken, customerId);
 	return discordUserStats.data.roles.filter(role => ROLE_IDS.includes(role));
 };

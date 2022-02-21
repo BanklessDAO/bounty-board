@@ -1,8 +1,8 @@
-import * as Claim from '@app/components/pages/Bounties/Bounty/claim';
+import { ClaimWeb } from '@app/components/pages/Bounties/Bounty/claim';
+import * as auth from '@app/components/global/Auth/index';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-const { ClaimWeb: ClaimPopupLauncher } = Claim;
 
 describe('Testing the bounty claim component', () => {
 	afterEach(() => {
@@ -10,9 +10,9 @@ describe('Testing the bounty claim component', () => {
 	});
 
 	it('Disables the claim button if the user is not signed in', () => {
-		jest.spyOn(Claim, 'useCanClaim').mockReturnValue(false);
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(false);
 		render(
-			<ClaimPopupLauncher onOpen={() => false} />
+			<ClaimWeb onOpen={() => false} />
 		);
 		const btn = screen.queryByRole('button', { name: 'claim-button' });
 		expect(btn).not.toBeNull();
@@ -21,9 +21,9 @@ describe('Testing the bounty claim component', () => {
 	});
 
 	it('shows the claim button if the user has permissions', () => {
-		jest.spyOn(Claim, 'useCanClaim').mockReturnValue(true);
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(true);
 		render(
-			<ClaimPopupLauncher onOpen={() => false} />
+			<ClaimWeb onOpen={() => false} />
 		);
 		const btn = screen.queryByRole('button', { name: 'claim-button' });
 		expect(btn).not.toBeNull();

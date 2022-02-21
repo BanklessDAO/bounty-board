@@ -8,7 +8,7 @@ import RestrictedTo from '@app/components/global/Auth';
  */
 const NewBounty = (): JSX.Element => {
 	return (
-		<RestrictedTo roles={['create-bounty']}>
+		<RestrictedTo roles={['create-bounty', 'admin']}>
 			<Link
 				aria-label="create-bounty-btn"
 				href="/create-bounty"
