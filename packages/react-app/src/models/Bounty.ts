@@ -195,6 +195,9 @@ export const BountyBoardSchema = new mongoose.Schema({
 	statusHistory: {
 		type: Array,
 	},
+	activities: {
+		type: Array,
+	},
 	claimedBy: {
 		discordHandle: String,
 		discordId: Number,

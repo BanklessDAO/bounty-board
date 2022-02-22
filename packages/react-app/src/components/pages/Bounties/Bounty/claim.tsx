@@ -10,6 +10,7 @@ import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
 import { useRequiredRoles } from '@app/components/global/Auth';
+import { mutate } from 'swr';
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,33 +19,35 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { user } = useUser();
 	const [message, setMessage] = useState<string>();
 	const [claiming, setClaiming] = useState(false);
-	const [claimed, setClaimed] = useState(false);
+	const [error, setError] = useState(false);
 
 	const confirmBounty = async () => {
+
 		if (message && user) {
+			const claimData: BountyClaimCollection = {
+				claimedBy: claimedBy(user),
+				submissionNotes: message,
+				status: 'In-Progress',
+				statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[]),
+			};
 			try {
 				setClaiming(true);
 				const res = await axios.patch<void, any, BountyClaimCollection>(
-					`api/bounties/${bounty._id}/claim?customerId=${bounty.customerId}`
-					, {
-						claimedBy: claimedBy(user),
-						submissionNotes: message,
-						status: 'In-Progress',
-						statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[]),
-					}
+					`api/bounties/${bounty._id}/claim?customerId=${bounty.customerId}`, claimData
 				);
 				if (res.status === 200)	{
-					setClaimed(true);
-					await new Promise(resolve => setTimeout(resolve, 2000)).then(() => {
-						router.push('/' + bounty._id);
-						setClaimed(false);
-					});
+					const bountyPageRoute = '/' + bounty._id;
+					const updatedBounty = { ...bounty, ...claimData };
+					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
+					if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
 				}
+			} catch {
+				setError(true);
 			} finally {
 				setClaiming(false);
 			}
 		} else {
-			throw new Error('Missing Message');
+			setError(true);
 		}
 	};
 	
@@ -62,11 +65,19 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 		  		<ModalContent>
 					<ModalHeader>Claim This Bounty</ModalHeader>
 					{
-						claimed &&
-					<Alert status='success'>
-    					<AlertIcon />
-						Bounty Claimed!
-  					</Alert>}
+						claiming &&
+							<Alert status='success'>
+    							<AlertIcon />
+								Bounty Claimed!
+  							</Alert>
+					}
+					{
+						error &&
+						<Alert status='error'>
+							<AlertIcon />
+							There was a problem claiming the bounty
+					  	</Alert>
+					}
 					<ModalCloseButton />
 					<ModalBody
 						flexDirection="column"
@@ -79,7 +90,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 					</ModalBody>
 					<ModalFooter justifyContent="start">
 						<Button transition="background 100ms linear"
-							disabled={claimed || !message}
+							disabled={!message || bounty.status !== 'Open'}
 							onClick={confirmBounty}
 							isLoading={claiming}
 							loadingText='Submitting'

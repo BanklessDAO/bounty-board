@@ -399,7 +399,7 @@
         "$oid": "620532b751e87513cb4440f5"
       },
       "customerId": "834499078434979890",
-      "title": "Evergreen Test",
+      "title": "No discord",
       "description": "Example of an evergreen bounty",
       "criteria": "Nothing in particular",
       "reward": { "currency": "BANK", "amount": 100, "scale": 0 },
@@ -418,7 +418,7 @@
       "evergreen": true,
       "isParent": true,
       "claimLimit": 10,
-      "discordMessageId": "941358771018534993"
+      "discordMessageId": null
     },
     {
       "_id": {
