@@ -13,6 +13,8 @@ import {
 // up the declaration file, unless you change the name every deploy
 // @ts-ignore
 import mongoosePaginate from 'mongo-cursor-pagination';
+import BOUNTYSTATUS from '@app/constants/bountyStatus';
+import ACTIVITY, { CLIENT } from '@app/constants/activity';
 
 type RequiredForPostProps = { method: 'POST' | 'PATCH', schema: any, isObject?: boolean };
 const requiredForPost = ({ method, schema, isObject }: RequiredForPostProps) => {
@@ -84,17 +86,18 @@ export const Reward = object({
 	}
 );
 
-export const Status = mixed().oneOf([
-	'Draft',
-	'Open',
-	'In-Progress',
-	'In-Review',
-	'Completed',
-	'Deleted',
-]);
+export const status = mixed().oneOf(Object.values(BOUNTYSTATUS));
+export const activity = mixed().oneOf(Object.values(ACTIVITY));
+export const client = mixed().oneOf(Object.values(CLIENT));
 
 export const StatusHistory = object({
-	status: Status,
+	status,
+	modifiedAt: string(),
+});
+
+export const ActivityHistory = object({
+	activity,
+	client,
 	modifiedAt: string(),
 });
 
@@ -104,11 +107,12 @@ export const BountySchema = object({
 	description: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	customerId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	status: Status.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	status: status.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 	
 	statusHistory: array(StatusHistory).optional(),
+	activityHistory: array(ActivityHistory).optional(),
 		
 	discordMessageId: string().optional(),
 	submissionNotes: string().optional(),
@@ -128,14 +132,17 @@ export const BountySchema = object({
 export const BountyClaimSchema = object({
 	submissionNotes: string().required(),
 	claimedBy: DiscordUser.required(),
-	status: Status.required(),
+	status: status.required(),
 	statusHistory: array(StatusHistory).required(),
+	activityHistory: array(ActivityHistory).required(),
 }).noUnknown(true);
 
 
 export type BountyCollection = SchemaToInterface<typeof BountySchema>;
 export type BountyClaimCollection = SchemaToInterface<typeof BountyClaimSchema>;
 export type StatusHistoryItem = SchemaToInterface<typeof StatusHistory>;
+export type ActivityHistoryItem = SchemaToInterface<typeof ActivityHistory>;
+export type DiscordBoardUser = SchemaToInterface<typeof DiscordUser>;
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 export const BountyBoardSchema = new mongoose.Schema({
@@ -193,6 +200,9 @@ export const BountyBoardSchema = new mongoose.Schema({
 		type: String,
 	},
 	statusHistory: {
+		type: Array,
+	},
+	activityHistory: {
 		type: Array,
 	},
 	activities: {

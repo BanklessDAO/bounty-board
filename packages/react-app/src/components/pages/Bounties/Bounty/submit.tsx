@@ -5,6 +5,7 @@ import { Alert, AlertIcon, AlertTitle, Button, CloseButton } from '@chakra-ui/re
 import { useRouter } from 'next/router';
 import bountyStatus from '@app/constants/bountyStatus';
 import { useState } from 'react';
+import activity, { CLIENT } from '@app/constants/activity';
 
 const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const router = useRouter();
@@ -12,6 +13,15 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 	const upload = () => {
 		// update the status of the bounty from DRAFT to OPEN before posting
 		bounty.status = bountyStatus.OPEN;
+		bounty.statusHistory.push({
+			modifiedAt: new Date().toISOString(),
+			status: bountyStatus.OPEN,
+		});
+		bounty.activityHistory.push({
+			modifiedAt: new Date().toISOString(),
+			activity: activity.PUBLISH,
+			client: CLIENT.BOUNTYBOARD,
+		});
 
 		// Add the bounty to the DB
 		axios.post<any, { data: { data: BountyCollection } }>(`api/bounties?customerId=${bounty.customerId}`, bounty)

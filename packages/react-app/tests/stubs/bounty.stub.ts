@@ -29,4 +29,11 @@ export const testBounty: Partial<BountyCollection> = {
 			modifiedAt: '2021-07-20T07:00:31.166Z',
 		},
 	],
+	activityHistory: [
+		{
+			activity: 'create',
+			client: 'bountyboard',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+	],
 };

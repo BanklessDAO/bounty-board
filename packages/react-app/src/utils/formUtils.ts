@@ -1,4 +1,6 @@
-import { StatusHistoryItem } from '@app/models/Bounty';
+import activity, { CLIENT } from '@app/constants/activity';
+import bountyStatus from '@app/constants/bountyStatus';
+import { ActivityHistoryItem, DiscordBoardUser, StatusHistoryItem } from '@app/models/Bounty';
 import { APIUser } from 'discord-api-types';
 
 export const dateIsNotInPast = (d: string): string | boolean => {
@@ -18,17 +20,26 @@ export const validNonNegativeDecimal = (v: string): string | boolean => {
 	return Number(v) > 0 ? true : 'Must be > 0';
 };
 
-export const claimedBy = (user: APIUser) => (
+export const claimedBy = (user: APIUser): DiscordBoardUser => (
 	{
 		discordHandle: `${user?.username}#${user.discriminator}`,
 		discordId: user?.id,
 	}
 );
 
+export const newActivityHistory = (old: ActivityHistoryItem[]): ActivityHistoryItem[] => {
+	const newActivity: ActivityHistoryItem = {
+		modifiedAt: new Date().toISOString(),
+		client: CLIENT.BOUNTYBOARD,
+		activity: activity.CLAIM,
+	};
+	return [...old, newActivity];
+};
+
 export const newStatusHistory = (oldStatusHistory: StatusHistoryItem[]): StatusHistoryItem[] => {
 	const newStatus: StatusHistoryItem = {
 		modifiedAt: new Date().toISOString(),
-		status: 'In-Progress',
+		status: bountyStatus.IN_PROGRESS,
 	};
 	return [...oldStatusHistory, newStatus];
 };

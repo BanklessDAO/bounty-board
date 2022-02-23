@@ -1,11 +1,11 @@
 import { useUser } from '@app/hooks/useUser';
-import { BountyClaimCollection, BountyCollection, StatusHistoryItem } from '@app/models/Bounty';
+import { ActivityHistoryItem, BountyClaimCollection, BountyCollection, StatusHistoryItem } from '@app/models/Bounty';
 import axios from '@app/utils/AxiosUtils';
 import { Alert, AlertIcon, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, Tooltip, useColorMode, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useContext } from 'react';
-import { claimedBy, newStatusHistory } from '@app/utils/formUtils';
+import { claimedBy, newActivityHistory, newStatusHistory } from '@app/utils/formUtils';
 import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
@@ -28,6 +28,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				claimedBy: claimedBy(user),
 				submissionNotes: message,
 				status: 'In-Progress',
+				activityHistory: newActivityHistory(bounty.activityHistory as ActivityHistoryItem[]),
 				statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[]),
 			};
 			try {
