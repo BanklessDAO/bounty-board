@@ -85,7 +85,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 						justifyContent="space-evenly"
 					>
 						<Flex mb="5">
-					Add a message to the bounty creator, then hit 'confirm' to send and claim the bounty.
+					Add a message to the bounty creator, then hit 'Confirm' to send and claim the bounty.
 						</Flex>
 						<Textarea placeholder='Send a message' onChange={e => setMessage(e.target.value)} />
 					</ModalBody>
@@ -97,7 +97,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 							loadingText='Submitting'
 							bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 						>
-						Claim It
+						Confirm
 						</Button>
 			  		<Button ml="3" onClick={onClose}>Close</Button>
 					</ModalFooter>
@@ -112,7 +112,7 @@ export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string })
 	const url = `${baseUrl}/${customerId}/${bountyChannel}/${discordMessageId}`;
 	const { colorMode } = useColorMode();
 	return (
-		<AccessibleLink href={url}>
+		<AccessibleLink href={url} isExternal={true}>
 			<Button
 				transition="background 100ms linear"
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
