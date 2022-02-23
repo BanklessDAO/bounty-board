@@ -218,4 +218,4 @@ Jest's scripts are located in the `packages/react-app/package.json` file, please
 ### Images and Logos
 * Images are located in the `packages/react-app/public` folder, it's the ONLY directory used to serve static assets.
 * This folder is also useful for robots.txt, favicon.ico, Google Site Verification, and any other static files (including .html)
-* [Static File Serving - Documentation](https://nextjs.org/docs/basic-features/static-file-serving)
+* Please refer to [Next.Js Static File Serving - Documentation](https://nextjs.org/docs/basic-features/static-file-serving) for more information.
