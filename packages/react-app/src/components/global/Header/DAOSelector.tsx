@@ -34,10 +34,10 @@ export const DAOSelector = ({
 			aria-label="dao-selector"
 			onChange={onChange}
 			value={customer?.customerName ?? 'BanklessDAO'}
-			alignItems={'center'}
+			alignItems={{ base: 'center', md:'start' }}
 			w={{ base: '20em', md: 'auto' }}
 			h={{ base: '3em', md: '2.6em' }}
-			textAlign={'center'}
+			textAlign={{ base: 'center', md:'start' }}
 		>
       customers &&{' '}
 			{customers.map((option) => (

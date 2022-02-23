@@ -1,14 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '../../../utils/dbConnect';
-import { BountySchema } from '../../../models/Bounty';
-import { internalServerError, notFound } from '../../../errors';
-import * as service from '../../../services/bounty.service';
-import middlewares from '../../../middlewares';
+import dbConnect from '@app/utils/dbConnect';
+import { BountyClaimSchema } from '@app/models/Bounty';
+import { internalServerError, notFound } from '@app/errors';
+import * as service from '@app/services/bounty.service';
+import middlewares from '@app/middlewares';
 import { RoleRestrictions } from '@app/types/Role';
 
 const restrictions: RoleRestrictions = {
-	PATCH: ['admin', 'edit-bounties'],
-	DELETE: ['admin', 'delete-bounties'],
+	PATCH: ['admin', 'claim-bounties'],
 };
 
 export const handler = async (
@@ -32,10 +31,6 @@ export const handler = async (
 	}
 
 	switch (req.method) {
-	case 'GET':
-		/* Get a model by its ID */
-		res.status(200).json({ success: true, data: bounty });
-		break;
 
 	case 'PATCH' :
 		/* Edit a model by its ID */
@@ -54,19 +49,10 @@ export const handler = async (
 			internalServerError(res);
 		}
 		break;
-		
-	case 'DELETE':
-		try {
-			await service.deleteBounty(id as string);
-			res.status(204).end();
-		} catch (error) {
-			res.status(400).json({ success: false, error });
-		}
-		break;
 
 	default:
 		return internalServerError(res);
 	}
 };
 
-export default middlewares({ schema: BountySchema, handler, restrictions });
+export default middlewares({ schema: BountyClaimSchema, handler, restrictions });

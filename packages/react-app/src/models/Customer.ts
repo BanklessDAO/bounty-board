@@ -32,7 +32,7 @@ export const CustomerSchema = object({
 })
 	.noUnknown(true);
 export interface CustomerProps {
-		_id?: string;
+	_id?: string;
     customerId: string;
     customerName: string;
     customization?: Customization;

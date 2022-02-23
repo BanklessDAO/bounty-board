@@ -25,6 +25,7 @@ import { useUser } from '@app/hooks/useUser';
 import { useLocalStorage } from '@app/hooks/useLocalStorage';
 import { dateIsNotInPast, required, validNonNegativeDecimal } from '@app/utils/formUtils';
 import { WARNINGS } from '@app/errors';
+import activity, { CLIENT } from '@app/constants/activity';
 
 const PLACEHOLDERS = {
 	TITLE: 'Example: Create new Logo',
@@ -93,11 +94,17 @@ const generatePreviewData = (
 			amountWithoutScale,
 			scale,
 		},
-		editKey: `edit-${user.id}`,
 		statusHistory: [
 			{
 				status: bountyStatus.DRAFT,
 				modifiedAt: new Date().toISOString(),
+			},
+		],
+		activityHistory: [
+			{
+				activity: activity.CREATE,
+				modifiedAt: new Date().toISOString(),
+				client: CLIENT.BOUNTYBOARD,
 			},
 		],
 		discordMessageId: '',
@@ -109,7 +116,7 @@ const generatePreviewData = (
 	};
 };
 
-const NewBountyForm = () => {
+const NewBountyForm = (): JSX.Element => {
 	const router = useRouter();
 	const { user, error } = useUser();
 	const cachedBounty = useCachedForm();

@@ -8,3 +8,10 @@ export const BANKLESS: CustomerProps = {
 	customization: { logo: './logo.png' },
 	bountyChannel: '850402063741091880',
 };
+
+export const BBBS = {
+	customerName: 'BBBS',
+	customization: { logo: './logo.png' },
+	// bountyChannel: '850402063741091880',
+	customerId: '905250069463326740',
+};

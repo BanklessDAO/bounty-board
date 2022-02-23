@@ -4,7 +4,6 @@ import {
 	AccordionItem,
 	AccordionPanel,
 	Box,
-	Button,
 	Flex,
 	Grid,
 	GridItem,
@@ -13,63 +12,9 @@ import {
 	TagLabel,
 	Text,
 } from '@chakra-ui/react';
-import AccessibleLink from '../../../parts/AccessibleLink';
-import { BountyCollection } from '../../../../models/Bounty';
-import { baseUrl } from '../../../../constants/discordInfo';
-import { CustomerContext } from '@app/context/CustomerContext';
-import { useContext } from 'react';
-import axios from '@app/utils/AxiosUtils';
-import bountyStatus from '@app/constants/bountyStatus';
-import { useRouter } from 'next/router';
-
-const BountyActions = ({ bounty }: { bounty: BountyCollection }) => {
-	const router = useRouter();
-	const upload = () => {
-		// update the status of the bounty from DRAFT to OPEN before posting
-		bounty.status = bountyStatus.OPEN;
-
-		// Add the bounty to the DB
-		axios.post<any, { data: { data: BountyCollection } }>('api/bounties', bounty)
-			
-			// on success, sent the user to the bounty/bountyId page of the newly created bounty 
-			.then(({ data: res }) => {
-				router.push(`/${res.data._id}`)
-
-					// once on the 'live' bounty page, remove all the prev bounty data
-					// from localstorage
-					.then(() => {
-						localStorage.removeItem('cachedEdit');
-						localStorage.removeItem('previewBounty');
-					}
-					);
-			})
-			// if there was a problem, log the error to the console
-			.catch(err => {
-				const errorData = err.response?.data;
-				// cannot assume shape of error but we prefer to get the response data
-				errorData ? console.debug({ errorData }) : console.debug({ err });
-			}
-			);
-	};
-	return (
-		<>
-			<AccessibleLink href={'/create-bounty'}>
-				<Button my={2} size="sm">
-				Edit This Draft
-				</Button>
-			</AccessibleLink>
-			<Button
-				m={2}
-				size="sm"
-				colorScheme="primary"
-				onClick={() => upload()}
-			>
-			Confirm
-			</Button>
-		</>
-	);
-};
-
+import { BountyCollection } from '@app/models/Bounty';
+import BountyClaim from './claim';
+import BountySubmit from './submit';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -142,13 +87,8 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 		claimedBy,
 		createdAt,
 		status,
-		discordMessageId,
 		dueAt,
 	} = bounty;
-	const { customer: { customerId, bountyChannel } } = useContext(CustomerContext);
-	const url = discordMessageId
-		? `${baseUrl}/${customerId}/${bountyChannel}/${discordMessageId}`
-		: `${baseUrl}/${customerId}/${bountyChannel}`;
 	return (
 		<Grid gap={6}>
 			{ _id &&
@@ -186,7 +126,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			<GridItem>
 				{
 					status && status.toLowerCase() === 'draft'
-						? <BountyActions bounty={bounty} />
+						? <BountySubmit bounty={bounty} />
 						: claimedBy
 							? (
 								<>
@@ -194,16 +134,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 									<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
 								</>
 							)
-							: (
-								<>
-									<Heading size="sm">Claimed By</Heading>
-									<AccessibleLink href={url}>
-										<Button my={2} size="sm" colorScheme="green">
-											Claim It
-										</Button>
-									</AccessibleLink>
-								</>
-							)
+							: <BountyClaim bounty={bounty} />
 				}
 			</GridItem>
 		</Grid>

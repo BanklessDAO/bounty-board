@@ -2,9 +2,7 @@ import { BountyCollection } from '../../src/models/Bounty';
 
 export const testBountyPartial: Partial<BountyCollection> = {
 	customerId: '834499078434979890',
-	season: 1,
 	criteria: 'TEST CRITERIA',
-	editKey: '123',
 	reward: {
 		currency: 'BANK',
 		amount: 1000,
