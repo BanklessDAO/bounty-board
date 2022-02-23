@@ -32,7 +32,7 @@ export const testBounty: Partial<BountyCollection> = {
 	activityHistory: [
 		{
 			activity: 'create',
-			client: 'bountyboard',
+			client: 'bountyboardweb',
 			modifiedAt: '2021-07-20T07:00:31.166Z',
 		},
 	],

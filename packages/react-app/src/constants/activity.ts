@@ -13,5 +13,5 @@ export default {
 };
 
 export const CLIENT = {
-	BOUNTYBOARD: 'bountyboard',
+	BOUNTYBOARD: 'bountyboardweb',
 };
