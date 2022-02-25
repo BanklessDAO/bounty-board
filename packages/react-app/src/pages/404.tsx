@@ -5,7 +5,7 @@ import { Stack } from '@chakra-ui/react';
 const Page404 = (): JSX.Element => (
 	<Layout title="">
 		<Stack align="center" justify="center" h="400px">
-			<Heading size="4xl" align="center">
+			<Heading size="4xl" alignItems="center">
 				<strong>404</strong>
 			</Heading>
 			<Heading size="xl">Page not found</Heading>

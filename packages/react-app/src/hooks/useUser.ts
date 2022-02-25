@@ -8,7 +8,7 @@ export const useUser = (): {
   user?: APIUser,
 	error?: any
 } => {
-	const { data: session } = useSession({ required: true });
+	const { data: session } = useSession({ required: false });
 	const { data: user, error } = useSWR<APIUser, unknown>(
 		session
 			? ['https://discord.com/api/users/@me', session.accessToken]

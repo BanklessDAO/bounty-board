@@ -6,11 +6,11 @@ import { BANKLESS } from '../constants/Bankless';
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
 	 * @returns a single customer
-	 * @param id - either the id in the database or the customer_id number in the db
+	 * @param id - either the id in the database or the customerId number in the db
 	 * It's easy to forget that we need the discord id, so the string id is used as a fallback
 	 * @TODO decide if this approach is sensible long term
 	 */
-	const findWithCustomerId = await Customer.findOne({ customer_id: id });
+	const findWithCustomerId = await Customer.findOne({ customerId: id });
 	if (!findWithCustomerId) {
 		return Customer.findById(id);
 	}
@@ -31,7 +31,7 @@ export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersLis
    * @returns only the customers of BB where the user has joined the discord
    */
 	const guildIds = guildsList.map(({ id }) => id);
-	const filterGuilds = customersList.filter(({ customer_id }) => guildIds.includes(customer_id));
+	const filterGuilds = customersList.filter(({ customerId }) => guildIds.includes(customerId));
 	return filterGuilds;
 };
 

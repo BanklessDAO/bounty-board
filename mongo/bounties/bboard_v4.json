@@ -4,7 +4,8 @@
         "$oid": "10f6585b453e70eed340e8e3"
       }
       ,
-      "customer_id": "834499078434979890",
+      "customerId": "834499078434979890",
+      "customerId": "834499078434979890",
       "season": 1,
       "editKey": "EK2",
       "title": "Implement React Components for Filters",
@@ -61,7 +62,8 @@
       "_id": {
         "$oid": "20f6585b453e70eed340e8e3"
       },
-      "customer_id": "834499078434979890",
+      "customerId": "834499078434979890",
+      "customerId": "834499078434979890",
       "editKey": "EK3",      
       "season": 1,
       "title": "Implement Changes to the Bounty Board",
@@ -119,7 +121,8 @@
         "$oid": "30f6585b453e70eed340e8e3"
       },
       "discordMessageId": "123",
-      "customer_id": "718590743446290492",      
+      "customerId": "718590743446290492",
+      "customerId": "718590743446290492",      
       "season": 1,
       "editKey": "EK4",      
       "title": "Create Stunning NFT Artwork",
@@ -169,7 +172,8 @@
       "_id": {
         "$oid": "40f6585b453e70eed340e8e3"
       },
-      "customer_id": "845400066532704256",
+      "customerId": "845400066532704256",
+      "customerId": "845400066532704256",
       "editKey": "EK1",     
       "season": 1,
       "title": "Create new website landing page",
@@ -226,7 +230,8 @@
       "_id": {
         "$oid": "50f6585b453e70eed340e8e3"
       },
-      "customer_id": "834499078434979890",      
+      "customerId": "834499078434979890",
+      "customerId": "834499078434979890",      
       "season": 1,
       "editKey": "EK5",
       "title": "Create logic to add Pagination to search filters",
@@ -283,7 +288,8 @@
       "_id": {
         "$oid": "60f6585b453e70eed340e8e3"
       },
-      "customer_id": "834499078434979890",      
+      "customerId": "834499078434979890",
+      "customerId": "834499078434979890",      
       "season": 1,
       "editKey": "EK6",      
       "title": "Create notes for one meeting",
@@ -335,5 +341,108 @@
           "modifiedAt": "2021-07-20T07:00:31.166Z"
         }
       ]
-    }
+    },
+    {
+      "_id": {
+        "$oid": "620532a751e87513cb4440f5"
+      },
+      "customerId": "834499078434979890",
+      "title": "Evergreen Test",
+      "description": "Example of an evergreen bounty",
+      "criteria": "Nothing in particular",
+      "reward": { "currency": "BANK", "amount": 100, "scale": 0 },
+      "createdBy": {
+        "discordHandle": "chkaloon#6313",
+        "discordId": "703336960051118256",
+        "iconUrl": "https://cdn.discordapp.com/avatars/703336960051118256/a49e0459e86c7446194b54f6789f220a.webp"
+      },
+      "createdAt": "2022-02-10T15:43:35.646Z",
+      "statusHistory": [
+        { "status": "Draft", "setAt": "2022-02-10T15:43:35.646Z" },
+        { "status": "Open",  "setAt": "2022-02-10T15:43:40.666Z" }
+      ],
+      "status": "Open",
+      "dueAt": "2022-05-10T14:43:35.642Z",
+      "evergreen": true,
+      "isParent": true,
+      "claimLimit": 10,
+      "discordMessageId": "941358771018534993"
+    },
+    {
+      "_id": {
+        "$oid": "620832a751e87513cb4440f5"
+      },
+      "customerId": "834499078434979890",
+      "title": "Evergreen Test",
+      "description": "Example of an evergreen bounty",
+      "criteria": "Nothing in particular",
+      "reward": { "currency": "BANK", "amount": 100, "scale": 0 },
+      "createdBy": {
+        "discordHandle": "chkaloon#6313",
+        "discordId": "703336960051118256",
+        "iconUrl": "https://cdn.discordapp.com/avatars/703336960051118256/a49e0459e86c7446194b54f6789f220a.webp"
+      },
+      "createdAt": "2022-02-10T15:43:35.646Z",
+      "statusHistory": [
+        { "status": "Draft", "setAt": "2022-02-10T15:43:35.646Z" },
+        { "status": "Open",  "setAt": "2022-02-10T15:43:40.666Z" }
+      ],
+      "status": "Open",
+      "dueAt": "2022-05-10T14:43:35.642Z",
+      "evergreen": true,
+      "isParent": true,
+      "claimLimit": 10,
+      "discordMessageId": "941358771018534993"
+    },
+    {
+      "_id": {
+        "$oid": "620532b751e87513cb4440f5"
+      },
+      "customerId": "834499078434979890",
+      "title": "No discord",
+      "description": "Example of an evergreen bounty",
+      "criteria": "Nothing in particular",
+      "reward": { "currency": "BANK", "amount": 100, "scale": 0 },
+      "createdBy": {
+        "discordHandle": "chkaloon#6313",
+        "discordId": "703336960051118256",
+        "iconUrl": "https://cdn.discordapp.com/avatars/703336960051118256/a49e0459e86c7446194b54f6789f220a.webp"
+      },
+      "createdAt": "2022-02-10T15:43:35.646Z",
+      "statusHistory": [
+        { "status": "Draft", "setAt": "2022-02-10T15:43:35.646Z" },
+        { "status": "Open",  "setAt": "2022-02-10T15:43:40.666Z" }
+      ],
+      "status": "Open",
+      "dueAt": "2022-05-10T14:43:35.642Z",
+      "evergreen": true,
+      "isParent": true,
+      "claimLimit": 10,
+      "discordMessageId": null
+    },
+    {
+      "_id": {
+        "$oid": "620532c751e87513cb4440f5"
+      },
+      "customerId": "834499078434979890",
+      "title": "Created Without a discord id",
+      "description": "Example of an evergreen bounty",
+      "criteria": "Nothing in particular",
+      "reward": { "currency": "BANK", "amount": 100, "scale": 0 },
+      "createdBy": {
+        "discordHandle": "chkaloon#6313",
+        "discordId": "703336960051118256",
+        "iconUrl": "https://cdn.discordapp.com/avatars/703336960051118256/a49e0459e86c7446194b54f6789f220a.webp"
+      },
+      "createdAt": "2022-02-10T15:43:35.646Z",
+      "statusHistory": [
+        { "status": "Draft", "setAt": "2022-02-10T15:43:35.646Z" },
+        { "status": "Open",  "setAt": "2022-02-10T15:43:40.666Z" }
+      ],
+      "status": "Open",
+      "dueAt": "2022-05-10T14:43:35.642Z",
+      "evergreen": true,
+      "isParent": true,
+      "claimLimit": 10
+    }        
   ]

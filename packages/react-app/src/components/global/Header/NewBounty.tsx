@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link, Box } from '@chakra-ui/react';
-import ColorModeButton from '@app/components/parts/ColorModeButton';
+import { Link, Button } from '@chakra-ui/react';
 import RestrictedTo from '@app/components/global/Auth';
 
 /**
@@ -9,14 +8,19 @@ import RestrictedTo from '@app/components/global/Auth';
  */
 const NewBounty = (): JSX.Element => {
 	return (
-		<RestrictedTo roles={['create-bounty']}>
+		<RestrictedTo roles={['create-bounty', 'admin']}>
 			<Link
 				aria-label="create-bounty-btn"
-				href='/create-bounty'
+				href="/create-bounty"
+				w={{ base: '20em', md: 'auto' }}
+				h={{ base: '2em', md: '2.6em' }}
 			>
-				<Box my="5">
-					<ColorModeButton>New Bounty</ColorModeButton>
-				</Box>
+				<Button
+					w={{ base: '20em', md: 'auto' }}
+					h={{ base: '3em', md: '2.6em' }}
+				>
+          New Bounty
+				</Button>
 			</Link>
 		</RestrictedTo>
 	);

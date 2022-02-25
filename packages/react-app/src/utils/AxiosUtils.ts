@@ -10,7 +10,7 @@ const axios = $http.create({
 	},
 });
 
-export const axiosTokenFetcher = (url: string, token: string) => axios.get(
+export const axiosTokenFetcher = (url: string, token: string): any => axios.get(
 	// fetcher function with token
 	url,
 	{
@@ -21,7 +21,7 @@ export const axiosTokenFetcher = (url: string, token: string) => axios.get(
 ).then(res => res.data).catch(error => console.warn(error));
 
 
-export const axiosFetcher = (url: string,) => axios.get(
+export const axiosFetcher = (url: string): any => axios.get(
 	url,
 )
 // strips the messy data.data thing

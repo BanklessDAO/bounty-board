@@ -7,6 +7,9 @@ import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import * as service from '@app/services/auth.service';
 import * as nextAuth from 'next-auth/react';
 import { SessionWithToken } from '@app/types/SessionExtended';
+import { BANKLESS } from '@app/constants/Bankless';
+
+const customerId = BANKLESS.customerId;
 
 describe('Testing the Role Caching', () => {
 	let connection: Connection;
@@ -47,6 +50,7 @@ describe('Testing the Role Caching', () => {
 		const output = createMocks();
 		req = output.req;
 		req.method = 'GET';
+		req.query.customerId = BANKLESS.customerId;
 		res = output.res;
 	});
 
@@ -88,12 +92,25 @@ describe('Testing the Role Caching', () => {
 		expect(spy).toHaveBeenCalledTimes(2);
 	});
 
+	it('Creates a different cache record if the customer changes', async () => {
+		jest.spyOn(nextAuth, 'getSession').mockResolvedValueOnce(mockSession);
+		await roleHandler(req, res);
+
+		req.query.customerId = 'NEW ID';
+		await roleHandler(req, res);
+
+		const roleCache = await RoleCache.find();
+		expect(roleCache.length).toEqual(2);
+		expect(spy).toHaveBeenCalledTimes(2);
+	});
+
 	it('Invalidates the cache if the cache expires', async () => {
 		// create a cache record
 		const cacheExpired: IRoleCache = {
 			createdAt: new Date().getTime() - service.FIVE_MINUTES - 1,
 			roles: ['admin'],
 			sessionHash: service.createSessionHash(mockSession),
+			customerId,
 			tte: service.FIVE_MINUTES,
 		};
 		await RoleCache.create(cacheExpired);
@@ -111,6 +128,7 @@ describe('Testing the Role Caching', () => {
 		const cacheExpired: IRoleCache = {
 			createdAt: new Date().getTime() - service.FIVE_MINUTES - 1,
 			roles: ['admin'],
+			customerId,
 			sessionHash: service.createSessionHash(mockSession),
 			tte: service.FIVE_MINUTES,
 		};
@@ -129,5 +147,21 @@ describe('Testing the Role Caching', () => {
 
 		const roleCache = await RoleCache.find();
 		expect(roleCache.length).toEqual(2);
+	});
+
+	it('Throws an error if we are missing a customer id', async () => {
+		// @ts-expect-error
+		req.query.customerId = undefined;
+
+		await roleHandler(req, res);
+		expect(res.statusCode).toEqual(400);
+	});
+
+	it('Returns a 200 if the session object is empty', async () => {
+		jest.spyOn(nextAuth, 'getSession').mockResolvedValue(null);
+
+		await roleHandler(req, res);
+		expect(res.statusCode).toEqual(200);
+		expect(res._getJSONData().data.roles).toEqual([]);
 	});
 });

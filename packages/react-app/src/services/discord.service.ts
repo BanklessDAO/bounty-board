@@ -5,7 +5,6 @@ import axios from '../utils/AxiosUtils';
 import ServiceUtils from '../utils/ServiceUtils';
 import { APIGuildMember } from 'discord-api-types';
 import { AxiosResponse } from 'axios';
-import { BANKLESS } from '@app/constants/Bankless';
 import { SessionWithToken } from '@app/types/SessionExtended';
 import { Session } from 'next-auth';
 
@@ -14,7 +13,8 @@ const IN_PROGRESS_COLOR_YELLOW = 1998388;
 const END_OF_SEASON = process.env.NEXT_PUBLIC_DAO_CURRENT_SEASON_END_DATE as string;
 
 export const getDiscordUserInGuild = async (
-	accessToken?: string,
+	accessToken: string,
+	customerId: string
 ): Promise<AxiosResponse<APIGuildMember, any>> => {
 	/**
 	 * Fetches detailed information from discord about a user's guild stats
@@ -25,7 +25,7 @@ export const getDiscordUserInGuild = async (
 	 * rate limiting. This means that relying on it can make the application very brittle. We should
 	 * instead be looking to cache the response or find an alternative auth mechanism or endpoint
 	 */
-	return await axios.get<APIGuildMember>(`https://discord.com/api/users/@me/guilds/${BANKLESS.customer_id}/member`, 	{
+	return await axios.get<APIGuildMember>(`https://discord.com/api/users/@me/guilds/${customerId}/member`, 	{
 		headers: {
 			authorization: `Bearer ${accessToken}`,
 		},

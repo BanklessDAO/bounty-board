@@ -23,7 +23,7 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 		borderWidth={3}
 		borderRadius={10}
 		width={{ base: '95vw', lg: '700px' }}
-		textalign="center"
+		textAlign="center"
 		direction="row"
 		justify="center"
 		align="center"
@@ -45,7 +45,7 @@ const Bounties = (): JSX.Element => {
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const { customer } = useContext(CustomerContext);
-	const { customer_id } = customer;
+	const { customerId } = customer;
 
 	let dynamicUrl = '/api/bounties';
 	dynamicUrl += `?status=${status === '' ? 'All' : status}`;
@@ -54,7 +54,7 @@ const Bounties = (): JSX.Element => {
 	dynamicUrl += `&gte=${gte}`;
 	dynamicUrl += `&sortBy=${sortBy}`;
 	dynamicUrl += `&asc=${sortAscending}`;
-	dynamicUrl += `&customer_id=${customer_id ?? BANKLESS.customer_id}`;
+	dynamicUrl += `&customerId=${customerId ?? BANKLESS.customerId}`;
 
 	useEffect(() => {
 		setPage(0);

@@ -1,12 +1,10 @@
 import { BountyCollection } from '../../src/models/Bounty';
 
 export const testBounty: Partial<BountyCollection> = {
-	customer_id: '834499078434979890',
-	season: 1,
+	customerId: '834499078434979890',
 	title: 'TEST TITLE',
 	description: 'TEST DESCRIPTION',
 	criteria: 'TEST CRITERIA',
-	editKey: '123',
 	reward: {
 		currency: 'BANK',
 		amount: 1000,
@@ -28,6 +26,13 @@ export const testBounty: Partial<BountyCollection> = {
 	statusHistory: [
 		{
 			status: 'Open',
+			modifiedAt: '2021-07-20T07:00:31.166Z',
+		},
+	],
+	activityHistory: [
+		{
+			activity: 'create',
+			client: 'bountyboardweb',
 			modifiedAt: '2021-07-20T07:00:31.166Z',
 		},
 	],
