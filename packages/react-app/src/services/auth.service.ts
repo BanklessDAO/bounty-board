@@ -10,6 +10,22 @@ import { BANKLESS, BBBS } from '@app/constants/Bankless';
 export const FIVE_MINUTES = 5 * 60 * 1_000;
 const ROLE_IDS = Object.values(BANKLESS_ROLES);
 
+// base roles should apply to all these role ids
+export const whiteListedRoleIds = [
+	BANKLESS_ROLES.LEVEL_4,
+	BANKLESS_ROLES.LEVEL_3,
+	BANKLESS_ROLES.LEVEL_2,
+	BANKLESS_ROLES.LEVEL_1
+];
+
+// base allowances to all users
+export const baseRoles: Role[] = [
+	'claim-bounties',
+	'delete-own-bounty',
+	'edit-own-bounty',
+	'create-bounty'		
+]; 
+
 /**
  * The auth service is aiming to wrap several other identity provdiers and
  * return a list of roles associated with the current user.
@@ -88,24 +104,24 @@ export const getPermissions = async (accessToken: string, customerId: string): P
    * Returns a list of permissions for the current user
    * We currently only support the `bounty-create` role, for discord level 1 - 4s in bankless DAO
    */
-	// note: only currently supports bankless
+	// note: only currently supports bankless & BBBS
 	const banklessRolesForUser = await getRolesForUserInGuild(accessToken, customerId);
 	const permissions: Role[] = [];
-	if (
-		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_4) ||
-		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_3) ||
-		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_2) ||
-		banklessRolesForUser.includes(BANKLESS_ROLES.LEVEL_1)
-	) permissions.push('create-bounty', 'claim-bounties');
+
+	const isWhitelisted = banklessRolesForUser.some(role => whiteListedRoleIds.includes(role));
+
+	if (isWhitelisted) permissions.push(...baseRoles);
 
 	if (banklessRolesForUser.includes(BANKLESS_ROLES.BB_CORE)) permissions.push('admin');
 
-	
 	return permissions;
 };
 
 export const getPermissionsCached = async (session: SessionWithToken, customerId: string, flush = true): Promise<Role[]> => {
 	if (flush) flushCache();
+	if (customerId === 'undefined') {
+		throw Error('Passed a string of "undefined" as the customer ID');
+	};
 	const sessionHash = createSessionHash(session);
 	const cache = await RoleCache.findOne({ sessionHash, customerId });
 	if (cache && cacheValid(cache, sessionHash)) {

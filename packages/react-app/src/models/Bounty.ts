@@ -148,7 +148,6 @@ export type DiscordBoardUser = SchemaToInterface<typeof DiscordUser>;
 export const BountyBoardSchema = new mongoose.Schema({
 	title: {
 		/* The name of this Bounty */
-
 		type: String,
 	},
 	customerId: {
@@ -203,9 +202,6 @@ export const BountyBoardSchema = new mongoose.Schema({
 		type: Array,
 	},
 	activityHistory: {
-		type: Array,
-	},
-	activities: {
 		type: Array,
 	},
 	claimedBy: {

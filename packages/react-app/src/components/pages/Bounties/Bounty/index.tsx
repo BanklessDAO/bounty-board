@@ -15,6 +15,7 @@ import {
 import { BountyCollection } from '@app/models/Bounty';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
+import { BountyEditButton } from './edit';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -34,11 +35,7 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
-const BountySummary = ({
-	title,
-	reward,
-	status,
-}: Pick<BountyCollection, 'title' | 'reward' | 'status'>): JSX.Element => {
+const BountySummary = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
@@ -49,7 +46,7 @@ const BountySummary = ({
 				mt="4"
 			>
 				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
-					{title}
+					{bounty.title}
 				</Heading>
 			</Box>
 			<Box
@@ -59,21 +56,17 @@ const BountySummary = ({
 				ml="auto"
 				pr={7}
 			>
-				{reward && (
+				{bounty.reward && (
 					<Heading mt={1} size="md">
-						{calculateReward(reward)}
+						{calculateReward(bounty.reward)}
 					</Heading>
 				)}
 			</Box>
-			<Box mb={2} width="50%" textAlign={{ base: 'right', md: 'left' }}>
-				{status && <Status indication={status} />}
-			</Box>
-			<Box
-				width={{ base: '100%', md: '50%' }}
-				textAlign={{ base: 'left', md: 'right' }}
-				pr={7}
-			>
-			</Box>
+			<Flex width="full" justifyContent="space-between" alignItems="center">
+				<Box mb={2} >
+					{bounty.status && <Status indication={bounty.status} />}
+				</Box>
+			</Flex>
 		</Flex>
 	);
 };
@@ -124,7 +117,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					: null
 			}
 			<GridItem>
-				{
+				<Flex>{
 					status && status.toLowerCase() === 'draft'
 						? <BountySubmit bounty={bounty} />
 						: claimedBy
@@ -134,8 +127,12 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 									<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
 								</>
 							)
-							: <BountyClaim bounty={bounty} />
+							: status.toLowerCase() !== 'deleted' && <BountyClaim bounty={bounty} />
 				}
+				<Box ml="5">
+					<BountyEditButton bounty={bounty}/>
+				</Box>
+				</Flex>
 			</GridItem>
 		</Grid>
 	);
@@ -146,7 +143,7 @@ export const BountyCard = ({ bounty }: { bounty: BountyCollection }): JSX.Elemen
 		<Box width={{ base: '95vw', lg: '700px' }}>
 			<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
 				<Box pb={5}>
-					<BountySummary {...bounty} />
+					<BountySummary bounty={bounty} />
 				</Box>
 				<Box mx={2}>
 					<BountyDetails bounty={bounty} />
@@ -159,11 +156,7 @@ export const BountyCard = ({ bounty }: { bounty: BountyCollection }): JSX.Elemen
 export const AccordionBountyItem = ({ bounty }: { bounty: BountyCollection }): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
 		<AccordionButton pb={5}>
-			<BountySummary
-				title={bounty.title}
-				reward={bounty.reward}
-				status={bounty.status}
-			/>
+			<BountySummary bounty={bounty} />
 			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
 				<AccordionIcon />
 			</Box>
