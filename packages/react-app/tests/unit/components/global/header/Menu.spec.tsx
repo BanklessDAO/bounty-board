@@ -8,6 +8,7 @@ import { render, screen } from '@testing-library/react';
 
 jest.mock('next-auth/react', () => ({
 	useSession: jest.fn(),
+	signOut: jest.fn(),
 }));
 
 describe('Testing the menu', () => {
@@ -41,16 +42,5 @@ describe('Testing the menu', () => {
 		const input = screen.getByRole('combobox', { name: 'dao-selector' });
 		expect(input).toBeVisible();
 
-	});
-
-	it('Does not show the selector if we are not signed in', () => {
-		useSessionTest.mockImplementation(() => ({ status: undefined, data: undefined }));
-		jest.spyOn(React, 'useState')
-			.mockReturnValueOnce([[BANKLESS], () => console.log('setCustomers')])
-			.mockReturnValueOnce([guildsStub, () => console.log('setGuilds')]);
-
-		render(<MenuLinks />);
-		const input = screen.queryByRole('combobox', { name: 'dao-selector' });
-		expect(input).toBeNull();
 	});
 });

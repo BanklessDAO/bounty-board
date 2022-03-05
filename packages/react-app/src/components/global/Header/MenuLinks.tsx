@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
 import { Button, Text } from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
 import { DiscordGuild } from '../../../types/Discord';
@@ -52,9 +52,8 @@ export const MenuLinks = () => {
 	);
 
 	if (error) {
-		console.warn(
-			'Unable to fetch guilds for the current user, ensure the permissions are correctly set'
-		);
+		signOut();
+		console.warn('Problem fetching guilds in discord api - please sign in again');
 	}
 
 	useEffect(() => {
@@ -77,20 +76,20 @@ export const MenuLinks = () => {
 	}, [session, guilds]);
 	return (
 		<>
-			{<DAOSelector customers={customers} />}
+			<DAOSelector customers={customers} />
 			<MenuItem newTab={false}>
-				{status === 'loading' ? (
-					<span>Loading...</span>
-				) : (
-					<Button
-						onClick={() => toggleDiscordSignIn(session)}
-						id="DiscordButton"
-						w={{ base: '20em', md: 'auto' }}
-						h={{ base: '3em', md: '2.6em' }}
-					>
-						{session ? session.user?.name : 'Join DAO'}
-					</Button>
-				)}
+				{status === 'loading'
+					? (<span>Loading...</span>)
+					: (
+						<Button
+							onClick={() => toggleDiscordSignIn(session)}
+							id="DiscordButton"
+							w={{ base: '20em', md: 'auto' }}
+							h={{ base: '3em', md: '2.6em' }}
+						>
+							{session ? session.user?.name : 'Join DAO'}
+						</Button>
+					)}
 			</MenuItem>
 			<NewBounty />
 		</>
