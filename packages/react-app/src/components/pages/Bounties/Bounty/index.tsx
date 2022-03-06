@@ -122,10 +122,10 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 						? <BountySubmit bounty={bounty} />
 						: claimedBy
 							? (
-								<>
-									<Heading size="sm">Claimed By</Heading>
+								<Flex flexDirection={'column'} justifyContent="start">
+									<Heading size="sm" my='0'>Claimed By</Heading>
 									<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
-								</>
+								</Flex>
 							)
 							: status.toLowerCase() !== 'deleted' && <BountyClaim bounty={bounty} />
 				}

@@ -1,4 +1,4 @@
-import { Controller, FieldValues, UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import React from 'react';
 import DatePicker from '@app/components/parts/DatePicker';
 import {
@@ -34,8 +34,8 @@ export const bountyFormFieldValues = {
 };
 
 function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFieldValues> }) {
-    const currencies = useCurrencies();
-    const {
+	const currencies = useCurrencies();
+	const {
 		register,
 		control,
 		formState: {
@@ -43,11 +43,11 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 		},
 	} = props.formProps;
 	const sharedFormatting: FormControlProps = { mt: '5' };
-    return (
-    <>
-    <FormControl
-		isInvalid={!!errors.title}
-		{...sharedFormatting}
+	return (
+		<>
+			<FormControl
+				isInvalid={!!errors.title}
+				{...sharedFormatting}
 			>
 				<FormLabel htmlFor='title'>Bounty Title</FormLabel>
 				<Box
@@ -106,51 +106,52 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 					mr="0"
 				>
     Due At
-            </FormLabel>
-            <Controller
-                name="dueAt"
-                control={control}
-                rules={{
-                    required,
-                    validate: v => dateIsNotInPast(v),
-                }}
-                render={({ field }) =>
-                    <DatePicker
-                        selected={new Date(field.value)}
-                        onChange={d => field.onChange(d)}
-                        id="published-date"
-                        showPopperArrow={true}
-                    />
-                }
-            />
-            <FormErrorMessage>{errors.dueAt?.message}</FormErrorMessage>
-        </FormControl>
+				</FormLabel>
+				<Controller
+					name="dueAt"
+					control={control}
+					rules={{
+						required,
+						validate: v => dateIsNotInPast(v),
+					}}
+					render={({ field }) =>
+						<DatePicker
+							selected={new Date(field.value)}
+							onChange={d => field.onChange(d)}
+							id="published-date"
+							showPopperArrow={true}
+						/>
+					}
+				/>
+				<FormErrorMessage>{errors.dueAt?.message}</FormErrorMessage>
+			</FormControl>
 
-        <Flex>
-            <FormControl
-                {...sharedFormatting}
-                isInvalid={!!errors.reward}
-                mr="1"
-            >
-                <FormLabel htmlFor='reward'>Reward</FormLabel>
-                <Input id='reward' {...register('reward', {
-                    required, validate: (v: string) => validNonNegativeDecimal(v),
-                })} />
-                <FormErrorMessage>{errors.reward?.message}</FormErrorMessage>
-            </FormControl>
+			<Flex>
+				<FormControl
+					{...sharedFormatting}
+					isInvalid={!!errors.reward}
+					mr="1"
+				>
+					<FormLabel htmlFor='reward'>Reward</FormLabel>
+					<Input id='reward' {...register('reward', {
+						required, validate: (v: string) => validNonNegativeDecimal(v),
+					})} />
+					<FormErrorMessage>{errors.reward?.message}</FormErrorMessage>
+				</FormControl>
 
-            <FormControl
-                {...sharedFormatting}
-                isInvalid={!!errors.currency}
-            >
-                <FormLabel htmlFor='currency'>Currency</FormLabel>
-                <Select id='currency' {...register('currency', { required })}>
-                    {currencies.map(c => <option key={c}>{c.toUpperCase()}</option>)}
-                </Select>
-                <FormErrorMessage>{errors.currency?.message}</FormErrorMessage>
-            </FormControl>
-        </Flex>
-    </>
-)}
+				<FormControl
+					{...sharedFormatting}
+					isInvalid={!!errors.currency}
+				>
+					<FormLabel htmlFor='currency'>Currency</FormLabel>
+					<Select id='currency' {...register('currency', { required })}>
+						{currencies.map(c => <option key={c}>{c.toUpperCase()}</option>)}
+					</Select>
+					<FormErrorMessage>{errors.currency?.message}</FormErrorMessage>
+				</FormControl>
+			</Flex>
+		</>
+	);
+}
 
 export default BountyFormFields;

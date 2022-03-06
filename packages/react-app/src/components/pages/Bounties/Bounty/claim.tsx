@@ -41,7 +41,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				if (res.status === 200)	{
 					const bountyPageRoute = '/' + bounty._id;
 					const updatedBounty = { ...bounty, ...claimData };
-					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
+					mutate('/api/bounties${bountyPageRoute}', updatedBounty, false);
 					if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
 				}
 			} catch {
