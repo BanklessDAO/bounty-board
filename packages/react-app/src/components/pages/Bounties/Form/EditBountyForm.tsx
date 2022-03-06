@@ -2,6 +2,8 @@ import RestrictedTo from '@app/components/global/Auth';
 import ErrorAlert from '@app/components/parts/ErrorAlert';
 import ACTIVITY from '@app/constants/activity';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
+import { useRoles } from '@app/hooks/useRoles';
+import { useUser } from '@app/hooks/useUser';
 import { BountyCollection } from '@app/models/Bounty';
 import axios from '@app/utils/AxiosUtils';
 import { createRewardObject, newActivityHistory } from '@app/utils/formUtils';
@@ -47,14 +49,21 @@ const EditBountyForm = ({ bounty }: { bounty: BountyCollection }): JSX.Element =
 	const [loading, setLoading] = useState(false);
 	const disclosure = useDisclosure();
 	const router = useRouter();
+	const roles = useRoles();
+	const { user } = useUser();
 	const formProps = useForm({
 		defaultValues: editableValues(bounty),
 	});
 	const { handleSubmit } = formProps;
 
 	useEffect(() => {
-		if (bounty.status === BOUNTY_STATUS.DELETED) router.push(`/${bounty._id}`);
+		const deleted = bounty.status === BOUNTY_STATUS.DELETED;
+		const ownBounty = bounty.createdBy.discordId === user?.id;
+		const elevatedPrivs = roles.includes('admin') || roles.includes('edit-bounties') || roles.includes('delete-bounties');
+		const canEdit = elevatedPrivs || ownBounty;
+		if (deleted || !canEdit) router.push(`/${bounty._id}`);
 	}, [bounty, router]);
+
 
 	const editBounty = useCallback((editedBounty: Partial<BountyCollection>): void => {
 		/**

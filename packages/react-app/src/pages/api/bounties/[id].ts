@@ -7,8 +7,8 @@ import middlewares from '../../../middlewares';
 import { RoleRestrictions } from '@app/types/Role';
 
 const restrictions: RoleRestrictions = {
-	PATCH: ['admin', 'edit-bounties'],
-	DELETE: ['admin', 'delete-bounties'],
+	PATCH: ['admin', 'edit-bounties', 'edit-own-bounty'],
+	DELETE: ['admin', 'delete-bounties', 'delete-own-bounty'],
 };
 
 export const handler = async (
