@@ -1,4 +1,4 @@
-import { ObjectValues } from "@app/types";
+import { ObjectValues } from '@app/types';
 
 export const ACTIVITY = {
 	CREATE: 'create',
@@ -19,6 +19,6 @@ export const CLIENT = {
 	BOUNTYBOARD: 'bountyboardweb',
 };
 
-export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>	
+export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>
 
 export default ACTIVITY;

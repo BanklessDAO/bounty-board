@@ -15,7 +15,7 @@ export const whiteListedRoleIds = [
 	BANKLESS_ROLES.LEVEL_4,
 	BANKLESS_ROLES.LEVEL_3,
 	BANKLESS_ROLES.LEVEL_2,
-	BANKLESS_ROLES.LEVEL_1
+	BANKLESS_ROLES.LEVEL_1,
 ];
 
 // base allowances to all users
@@ -23,8 +23,8 @@ export const baseRoles: Role[] = [
 	'claim-bounties',
 	'delete-own-bounty',
 	'edit-own-bounty',
-	'create-bounty'		
-]; 
+	'create-bounty',
+];
 
 /**
  * The auth service is aiming to wrap several other identity provdiers and
@@ -121,7 +121,7 @@ export const getPermissionsCached = async (session: SessionWithToken, customerId
 	if (flush) flushCache();
 	if (customerId === 'undefined') {
 		throw Error('Passed a string of "undefined" as the customer ID');
-	};
+	}
 	const sessionHash = createSessionHash(session);
 	const cache = await RoleCache.findOne({ sessionHash, customerId });
 	if (cache && cacheValid(cache, sessionHash)) {

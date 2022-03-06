@@ -1,4 +1,4 @@
-import { ObjectValues } from "@app/types";
+import { ObjectValues } from '@app/types';
 
 export const BOUNTY_STATUS = {
 	DRAFT: 'Draft',

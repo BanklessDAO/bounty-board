@@ -60,5 +60,5 @@ export const createRewardObject = (reward: string, currency: string): BountyColl
 		currency: currency.toUpperCase(),
 		amountWithoutScale,
 		scale,
-	}
-}
+	};
+};

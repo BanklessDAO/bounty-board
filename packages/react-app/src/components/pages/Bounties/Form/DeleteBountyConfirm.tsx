@@ -12,10 +12,6 @@ import { mutate } from 'swr';
 
 
 const deleteBounty = async (bounty: BountyCollection): Promise<AxiosResponse<{ data: BountyCollection }>> => {
-	/**
-     * Edit bounty is not guaranteed to have all fields, so we can
-     * Instead use the passed bounty details for customerId and _id
-     */
 	const deleteData: Partial<BountyCollection> = {
 		activityHistory: newActivityHistory(bounty.activityHistory as [], ACTIVITY.DELETE),
 		statusHistory: newStatusHistory(bounty.statusHistory as [], BOUNTY_STATUS.DELETED),

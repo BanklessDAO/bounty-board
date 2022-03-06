@@ -18,11 +18,9 @@ const getEditData = (
 	exisitingBounty: BountyCollection,
 ): Partial<BountyCollection> => {
 	/**
-   * Transform form data to match shape of bounty collection, then
-   * cache to local storage so it can be picked up by the preview page
+   * Transform form data to match shape of bounty collection
    */
 	return {
-		// ...exisitingBounty,
 		title: updatedBountyFormData.title,
 		description: updatedBountyFormData.description,
 		criteria: updatedBountyFormData.criteria,
