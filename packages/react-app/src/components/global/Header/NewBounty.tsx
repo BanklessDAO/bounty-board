@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, Button } from '@chakra-ui/react';
+import { Link } from '@chakra-ui/react';
 import RestrictedTo from '@app/components/global/Auth';
+import ColorModeButton from '@app/components/parts/ColorModeButton';
 
 /**
  * Dev: rate limits in discord api mean this button can fail to render
@@ -15,12 +16,12 @@ const NewBounty = (): JSX.Element => {
 				w={{ base: '20em', md: 'auto' }}
 				h={{ base: '2em', md: '2.6em' }}
 			>
-				<Button
+				<ColorModeButton
 					w={{ base: '20em', md: 'auto' }}
 					h={{ base: '3em', md: '2.6em' }}
 				>
           New Bounty
-				</Button>
+				</ColorModeButton>
 			</Link>
 		</RestrictedTo>
 	);
