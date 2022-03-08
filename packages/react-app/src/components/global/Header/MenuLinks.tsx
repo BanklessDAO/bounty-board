@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
 import { Button, Text } from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
 import { DiscordGuild } from '../../../types/Discord';
@@ -29,6 +29,7 @@ const MenuItem = ({
 	</AccessibleLink>
 );
 
+
 export const tokenFetcher = (url: string, token: string): any =>
 	axios
 		.get(url, {
@@ -37,25 +38,28 @@ export const tokenFetcher = (url: string, token: string): any =>
 			},
 		})
 		.then((res) => res.data)
-		.catch((error) => console.warn(error));
+		.catch(handleError);
 
-export const MenuLinks = () => {
+const handleError = (error: any): void => {
+	if (error && error.response && error.response.status === 401) {
+		console.warn('401 Problem fetching guilds in discord api - signing out');
+		signOut();
+	} else {
+		throw error;
+	}
+};
+
+export const MenuLinks = (): JSX.Element => {
 	const { data: session, status } = useSession({ required: false });
 	const [customers, setCustomers] = useState<CustomerProps[]>([BANKLESS]);
 	const [guilds, setGuilds] = useState<DiscordGuild[]>();
 
-	const { data: guildApiResponse, error } = useSWR<DiscordGuild[], unknown>(
+	const { data: guildApiResponse } = useSWR<DiscordGuild[], unknown>(
 		session
 			? ['https://discord.com/api/users/@me/guilds', session.accessToken]
 			: null,
 		tokenFetcher
 	);
-
-	if (error) {
-		console.warn(
-			'Unable to fetch guilds for the current user, ensure the permissions are correctly set'
-		);
-	}
 
 	useEffect(() => {
 		const guildsExist = guildApiResponse && guildApiResponse.length > 0;
@@ -77,20 +81,20 @@ export const MenuLinks = () => {
 	}, [session, guilds]);
 	return (
 		<>
-			{<DAOSelector customers={customers} />}
+			<DAOSelector customers={customers} />
 			<MenuItem newTab={false}>
-				{status === 'loading' ? (
-					<span>Loading...</span>
-				) : (
-					<Button
-						onClick={() => toggleDiscordSignIn(session)}
-						id="DiscordButton"
-						w={{ base: '20em', md: 'auto' }}
-						h={{ base: '3em', md: '2.6em' }}
-					>
-						{session ? session.user?.name : 'Join DAO'}
-					</Button>
-				)}
+				{status === 'loading'
+					? (<span>Loading...</span>)
+					: (
+						<Button
+							onClick={() => toggleDiscordSignIn(session)}
+							id="DiscordButton"
+							w={{ base: '20em', md: 'auto' }}
+							h={{ base: '3em', md: '2.6em' }}
+						>
+							{session ? session.user?.name : 'Join DAO'}
+						</Button>
+					)}
 			</MenuItem>
 			<NewBounty />
 		</>
