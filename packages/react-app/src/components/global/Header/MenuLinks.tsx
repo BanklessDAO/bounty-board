@@ -51,6 +51,7 @@ const handleError = (error: any): void => {
 
 export const MenuLinks = (): JSX.Element => {
 	const { data: session, status } = useSession({ required: false });
+	console.debug({ session })
 	const [customers, setCustomers] = useState<CustomerProps[]>([BANKLESS]);
 	const [guilds, setGuilds] = useState<DiscordGuild[]>();
 

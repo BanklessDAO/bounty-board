@@ -3,7 +3,7 @@ import { DiscordEmbed } from '../types/Discord';
 import { BountyCollection } from '../models/Bounty';
 import axios from '../utils/AxiosUtils';
 import ServiceUtils from '../utils/ServiceUtils';
-import { APIGuildMember } from 'discord-api-types';
+import { APIGuildMember, APIUser } from 'discord-api-types';
 import { AxiosResponse } from 'axios';
 import { SessionWithToken } from '@app/types/SessionExtended';
 import { Session } from 'next-auth';
@@ -31,6 +31,15 @@ export const getDiscordUserInGuild = async (
 		},
 	});
 };
+
+export const getDiscordUserInfo = async (session: SessionWithToken): Promise<APIUser> => {
+	const res = await axios.get<APIUser>('https://discord.com/api/users/@me', {
+		headers: {
+			authorization: `Bearer ${session.accessToken}`,
+		},
+	});
+	return res.data;
+}
 
 export const toggleDiscordSignIn = (
 	session: SessionWithToken | Session | unknown,

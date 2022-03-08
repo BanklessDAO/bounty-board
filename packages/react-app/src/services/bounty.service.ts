@@ -4,6 +4,9 @@ import Bounty, { BountyCollection } from '../models/Bounty';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { NextApiQuery } from '../types/Queries';
 import * as discord from './discord.service';
+import * as auth from './auth.service';
+import { SessionWithToken } from '@app/types/SessionExtended';
+import { Role } from '@app/types/Role';
 
 export type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
 
@@ -186,12 +189,51 @@ export const getBounty = async (id: string): Promise<BountyCollection | null> =>
 	return id.length === 24 ? await Bounty.findById(id) : null;
 };
 
-export const canBeEdited = ({ bounty }: { bounty: BountyCollection }): boolean => {
+export const canBeEdited = async ({
+	bounty,
+	session,
+	del=false
+}: { 
+	bounty: BountyCollection,
+	session: SessionWithToken,
+	del: boolean
+}): Promise<boolean> => {
 	/**
-	 * We allow edits to the bounty only if the status is currently `draft` or `open`
+	 * Editing bounties is supported if the user is editing their own bounty and it is in a draft or open stage
+	 * Or if they have elevated privs (admin, edit-bounties, delete-bounties)
 	 */
+	if (!session) return false;
 	const bountyOpenForEdits = ['draft', 'open'].includes(bounty.status.toLowerCase());
-	return bountyOpenForEdits;
+	const ownBounty = await isOwnBounty(session, bounty); 
+	return (ownBounty && bountyOpenForEdits) ? true : await canAdminAlterThisBounty({ bounty, session, del });
+};
+
+export const isOwnBounty = async (session: SessionWithToken, bounty: BountyCollection): Promise<boolean> => {
+	const discordUser = await discord.getDiscordUserInfo(session);
+	return bounty.createdBy.discordId === discordUser.id;
+}
+
+export const canAdminAlterThisBounty = async ({ 
+	session,
+	bounty,
+	del
+}: { 
+	session: SessionWithToken, 
+	bounty: BountyCollection, 
+	del: boolean
+}): Promise<boolean> => {
+	/**
+	 * If the user has elevated roles, they can edit bounties not their own or ones which are
+	 * already in progress.
+	 */
+	const allowList: Role[] = ['admin', del ? 'delete-bounties' : 'edit-bounties']; 
+	try {
+		const roles = await auth.getPermissionsCached(session, bounty.customerId);
+		return roles.some(role => allowList.includes(role));
+	} catch (err) {
+		console.warn('Problem checking permissions', err);
+		return false;
+	}
 };
 
 type EditBountyProps = { bounty: BountyCollection, body: Record<string, unknown> };

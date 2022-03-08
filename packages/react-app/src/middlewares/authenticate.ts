@@ -30,10 +30,6 @@ const isAuthorized = async (
 	roleRestrictions: RoleRestrictions,
 	customerId: string | string[] | undefined,
 ): Promise<AuthResponse> => {
-	/**
-	 * The initial logic for this was in the comments below, however
-	 * we hit discord API rate limits, so for now we are just allowing POST Requests
-	 */
 	const session = await getSession({ req });
 	if (typeof customerId !== 'string') {
 		return {
