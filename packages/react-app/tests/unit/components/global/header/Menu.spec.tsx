@@ -2,55 +2,56 @@ import React from 'react';
 import axios from 'axios';
 import { MenuLinks } from '@app/components/global/Header/MenuLinks';
 import { useSession } from 'next-auth/react';
-import { BANKLESS } from '../../../../../src/constants/Bankless';
-import { guilds as guildsStub } from '@tests/stubs/guilds.stub';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 
 jest.mock('next-auth/react', () => ({
 	useSession: jest.fn(),
+	signOut: jest.fn(),
 }));
 
 describe('Testing the menu', () => {
-	jest.spyOn(console, 'error')
-		.mockImplementation(() => console.log('Supressed Console Error'));
-
+	let spyWarn: jest.SpyInstance;
 	beforeEach(() => {
-		jest.clearAllMocks();
+		jest.spyOn(axios, 'post').mockResolvedValue({ data: { data: [] } });
+		spyWarn = jest.spyOn(console, 'warn');
 	});
+
+	afterEach(() => jest.resetAllMocks());
 
 	const useSessionTest = useSession as typeof useSession & any;
-	// supress and monitor console warnings
-	const spyWarn = jest.spyOn(console, 'warn').mockImplementation(() => false);
-
-	it('Renders with a warning about the missing guilds', () => {
-		jest.spyOn(axios, 'get').mockImplementation(() => { throw new Error(); });
-		useSessionTest.mockImplementation(() => ({ status: '', data: [] }));
-		render(<MenuLinks />);
-		expect(spyWarn).toHaveBeenCalled();
-	});
-
-	it('Shows the selector if signed in and if there are customers', () => {
-		jest.spyOn(axios, 'get').mockReturnValue(Promise.resolve({ data: guildsStub }));
-    
+	
+	it('Shows the selector if signed in and if there are customers', async () => {
 		useSessionTest.mockImplementation(() => ({ status: 'Done', data: {} }));
-		jest.spyOn(React, 'useState')
-			.mockReturnValueOnce([[BANKLESS], () => console.log('setCustomers')])
-			.mockReturnValueOnce([guildsStub, () => console.log('setGuilds')]);
-    
-		render(<MenuLinks />);
+		
+		// async state updates require wrapping component in act then using waitFor to listen for promise resolution
+		act(() => {
+			render(<MenuLinks />);
+		});
+		
 		const input = screen.getByRole('combobox', { name: 'dao-selector' });
-		expect(input).toBeVisible();
+		await waitFor(() => expect(input).toBeVisible());
 
 	});
 
-	it('Does not show the selector if we are not signed in', () => {
-		useSessionTest.mockImplementation(() => ({ status: undefined, data: undefined }));
-		jest.spyOn(React, 'useState')
-			.mockReturnValueOnce([[BANKLESS], () => console.log('setCustomers')])
-			.mockReturnValueOnce([guildsStub, () => console.log('setGuilds')]);
+	it('Token fetcher signs the user out on 401', async () => {
+		jest.spyOn(axios, 'get').mockRejectedValue({ response: { status: 401 } });
+		useSessionTest.mockImplementation(() => ({ status: 'Done', data: {} }));
+		
+		act(() => {
+			render(<MenuLinks />);
+		});
+		
+		await waitFor(() => expect(spyWarn).toHaveBeenNthCalledWith(1, '401 Problem fetching guilds in discord api - signing out'));
+	});
 
-		render(<MenuLinks />);
-		const input = screen.queryByRole('combobox', { name: 'dao-selector' });
-		expect(input).toBeNull();
+	it('Token fetcher does not sign the user out on 400 or other errors', async () => {
+		jest.spyOn(axios, 'get').mockRejectedValue({ response: { status: 400 } });
+		useSessionTest.mockImplementation(() => ({ status: 'Done', data: {} }));
+		
+		act(() => {
+			render(<MenuLinks />);
+		});
+		
+		await waitFor(() => expect(spyWarn).not.toHaveBeenNthCalledWith(1, '401 Problem fetching guilds in discord api - signing out'));
 	});
 });
