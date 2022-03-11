@@ -3,6 +3,7 @@ import * as service from '@app/services/auth.service';
 import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import { Document } from 'mongoose';
 import { BANKLESS } from '@app/constants/Bankless';
+import { BANKLESS_ROLES } from '@app/constants/Roles';
 
 const customerId = BANKLESS.customerId;
 
@@ -106,3 +107,62 @@ describe('Role caching', () => {
   	expect(spy).toHaveBeenCalled();
   });
 });
+
+describe('Permissions', () => {
+
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+
+	it('Base permissions are returned for all bankless L1-4', async () => {
+		jest.spyOn(service,'getRolesForUserInGuild')
+			.mockResolvedValue([BANKLESS_ROLES.LEVEL_1]);
+
+		let permissions = await service.getPermissions('', '');
+
+		expect(permissions).toEqual(service.baseRoles);
+
+		jest.spyOn(service,'getRolesForUserInGuild')
+			.mockResolvedValue([BANKLESS_ROLES.LEVEL_2]);
+
+		permissions = await service.getPermissions('', '');
+		expect(permissions).toEqual(service.baseRoles);
+
+		jest.spyOn(service,'getRolesForUserInGuild')
+			.mockResolvedValue([
+				BANKLESS_ROLES.LEVEL_3,
+				BANKLESS_ROLES.LEVEL_4
+			]);
+		
+		permissions = await service.getPermissions('', '');
+		expect(permissions).toEqual(service.baseRoles);
+		
+		jest.spyOn(service,'getRolesForUserInGuild')
+			.mockResolvedValue([BANKLESS_ROLES.LEVEL_4]);
+
+		permissions = await service.getPermissions('', '');
+		expect(permissions).toEqual(service.baseRoles);
+	});
+
+	it('Admins are added for BB core', async () => {
+		jest.spyOn(service,'getRolesForUserInGuild')
+			.mockResolvedValue([BANKLESS_ROLES.BB_CORE]);
+		const permissions = await service.getPermissions('', '');
+		expect(permissions).toEqual(['admin']);			
+	});
+
+	it('No permission added otherwise', async () => {
+		jest.spyOn(service,'getRolesForUserInGuild')
+		.mockResolvedValue(['123344566']);
+
+		let permissions = await service.getPermissions('', '');
+
+		expect(permissions).toEqual([]);
+
+		jest.spyOn(service,'getRolesForUserInGuild')
+			.mockResolvedValue([]);
+
+		permissions = await service.getPermissions('', '');
+		expect(permissions).toEqual([]);
+	});
+})

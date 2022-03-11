@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
-import { Button, Text } from '@chakra-ui/react';
-import { signOut, useSession } from 'next-auth/react';
+import { Button, Stack, Text } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
 import { DiscordGuild } from '../../../types/Discord';
@@ -81,11 +81,13 @@ export const MenuLinks = (): JSX.Element => {
 	}, [session, guilds]);
 	return (
 		<>
-			<DAOSelector customers={customers} />
-			<MenuItem newTab={false}>
-				{status === 'loading'
-					? (<span>Loading...</span>)
-					: (
+			<Stack shouldWrapChildren spacing={{ base: 4, md: 3 }} direction={{ base: 'column', md: 'row' }}>
+				<NewBounty />
+				<DAOSelector customers={customers} />
+				<MenuItem newTab={false}>
+					{status === 'loading' ? (
+						<span>Loading...</span>
+					) : (
 						<Button
 							onClick={() => toggleDiscordSignIn(session)}
 							id="DiscordButton"
@@ -95,8 +97,8 @@ export const MenuLinks = (): JSX.Element => {
 							{session ? session.user?.name : 'Join DAO'}
 						</Button>
 					)}
-			</MenuItem>
-			<NewBounty />
+				</MenuItem>
+			</Stack>
 		</>
 	);
 };
