@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
 import { Button, Stack, Text } from '@chakra-ui/react';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
 import { DiscordGuild } from '../../../types/Discord';
@@ -12,9 +12,9 @@ import { DAOSelector } from './DAOSelector';
 import { toggleDiscordSignIn } from '../../../services/discord.service';
 
 interface MenuItemProps {
-  children?: React.ReactNode;
-  isLast?: boolean;
-  newTab?: boolean;
+	children?: React.ReactNode;
+	isLast?: boolean;
+	newTab?: boolean;
 }
 
 const MenuItem = ({
