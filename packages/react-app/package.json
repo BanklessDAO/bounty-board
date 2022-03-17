@@ -45,7 +45,7 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "axios": "^0.24.0",
     "env-cmd": "^10.1.0",
-    "follow-redirects": "^1.14.7",
+    "follow-redirects": "^1.14.8",
     "framer-motion": "^4.1.17",
     "lint-staged": "^11.0.0",
     "mongo-cursor-pagination": "^7.6.1",
