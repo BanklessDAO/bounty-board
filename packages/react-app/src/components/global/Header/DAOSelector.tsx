@@ -39,8 +39,8 @@ export const DAOSelector = ({
 			h={{ base: '3em', md: '2.6em' }}
 			textAlign={{ base: 'center', md:'start' }}
 		>
-      customers &&{' '}
-			{customers.map((option) => (
+      
+			{customers && customers.map((option) => (
 				<option key={option.customerId} value={option.customerName}>
 					{option.customerName}
 				</option>

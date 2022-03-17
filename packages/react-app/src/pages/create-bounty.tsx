@@ -2,7 +2,7 @@ import React from 'react';
 import { Heading, Stack } from '@chakra-ui/layout';
 import Layout from '@app/components/global/SiteLayout';
 import { useSession } from 'next-auth/react';
-import NewBountyForm from '@app/components/pages/Bounties/Form/NewBounty';
+import NewBountyForm from '@app/components/pages/Bounties/Form/NewBountyForm';
 
 const CreateBounty = (): JSX.Element => {
 	const { status } = useSession({ required: false });

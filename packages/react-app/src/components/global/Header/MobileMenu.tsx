@@ -9,7 +9,6 @@ import {
 	DrawerContent,
 	DrawerCloseButton,
 	Heading,
-	Stack,
 	Divider,
 	Flex,
 } from '@chakra-ui/react';
@@ -32,7 +31,7 @@ export const MobileMenu = ({ isOpen, onClose }: MobileProps): JSX.Element => {
 					<Flex>
 						<Logo
 							alt={`${customer?.customerName ?? 'DAO'} Logo`}
-							img={customer?.customization?.logo ?? './logo.png'}
+							img={customer?.customization?.logo ?? '/logo.png'}
 						/>
 						<DrawerCloseButton w={'4em'} h={'4em'} onClick={onClose} />
 					</Flex>
@@ -44,14 +43,7 @@ export const MobileMenu = ({ isOpen, onClose }: MobileProps): JSX.Element => {
 				</DrawerHeader>
 				<Divider display={{ md: 'none' }} variant={'solid'} />
 				<DrawerBody mt="1" p="0" display={'flex'} flexDirection={'column'}>
-					<Stack
-						spacing={2}
-						align="stretch"
-						direction={'column'}
-						flexGrow={'1'}
-					>
-						<MenuLinks />
-					</Stack>
+					<MenuLinks />
 				</DrawerBody>
 				<DrawerFooter>
 					<ThemeToggle />
