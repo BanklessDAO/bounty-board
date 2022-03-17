@@ -11,6 +11,8 @@ import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
 import { useRequiredRoles } from '@app/components/global/Auth';
 import { mutate } from 'swr';
+import BOUNTY_STATUS from '@app/constants/bountyStatus';
+import ACTIVITY from '@app/constants/activity';
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,8 +30,8 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				claimedBy: claimedBy(user),
 				submissionNotes: message,
 				status: 'In-Progress',
-				activityHistory: newActivityHistory(bounty.activityHistory as ActivityHistoryItem[]),
-				statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[]),
+				activityHistory: newActivityHistory(bounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
 			};
 			try {
 				setClaiming(true);
@@ -39,7 +41,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				if (res.status === 200)	{
 					const bountyPageRoute = '/' + bounty._id;
 					const updatedBounty = { ...bounty, ...claimData };
-					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
+					mutate('/api/bounties${bountyPageRoute}', updatedBounty, false);
 					if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
 				}
 			} catch {
@@ -122,7 +124,6 @@ export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string })
 			</Button>
 		</AccessibleLink>
 	);
-
 };
 
 export const ClaimWeb = ({ onOpen }: { onOpen: () => void }): JSX.Element => {

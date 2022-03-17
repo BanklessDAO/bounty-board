@@ -1,4 +1,6 @@
-export default {
+import { ObjectValues } from '@app/types';
+
+export const ACTIVITY = {
 	CREATE: 'create',
 	PUBLISH: 'publish',
 	ASSIGN: 'assign',
@@ -10,8 +12,13 @@ export default {
 	LIST: 'list',
 	HELP: 'help',
 	TAG: 'tag',
-};
+	EDIT: 'edit',
+} as const;
 
 export const CLIENT = {
 	BOUNTYBOARD: 'bountyboardweb',
 };
+
+export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>
+
+export default ACTIVITY;
