@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
-import { Avatar, Button, Stack, Text } from '@chakra-ui/react';
+import { Avatar, Stack, Text } from '@chakra-ui/react';
 import { signOut, useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import NewBounty from './NewBounty';
 import { DAOSelector } from './DAOSelector';
 import { toggleDiscordSignIn } from '../../../services/discord.service';
+import DiscordBttn from './DiscordBttn';
 
 interface MenuItemProps {
   children?: React.ReactNode;
@@ -104,14 +105,7 @@ export const MenuLinks = (): JSX.Element => {
 									onClick={() => toggleDiscordSignIn(session)}
 								/>
 							) : (
-								<Button
-									onClick={() => toggleDiscordSignIn(session)}
-									id="DiscordButton"
-									w={{ base: '20em', md: 'auto' }}
-									h={{ base: '3em', md: '2.6em' }}
-								>
-                  Join DAO
-								</Button>
+								<DiscordBttn session={session} />
 							)}
 						</>
 					)}
