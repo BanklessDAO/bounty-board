@@ -99,6 +99,9 @@ export const MenuLinks = (): JSX.Element => {
 									src={session?.user?.image ?? ''}
 									mr={'.25em'}
 									size={'md'}
+									// temp logout solution will be reaplced with button in dropdown.
+									// toggle always toggles logout
+									onClick={() => toggleDiscordSignIn(session)}
 								/>
 							) : (
 								<Button
