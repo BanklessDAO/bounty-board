@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
-import { Button, Stack, Text } from '@chakra-ui/react';
+import { Avatar, Button, Stack, Text } from '@chakra-ui/react';
 import { signOut, useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
@@ -12,9 +12,9 @@ import { DAOSelector } from './DAOSelector';
 import { toggleDiscordSignIn } from '../../../services/discord.service';
 
 interface MenuItemProps {
-	children?: React.ReactNode;
-	isLast?: boolean;
-	newTab?: boolean;
+  children?: React.ReactNode;
+  isLast?: boolean;
+  newTab?: boolean;
 }
 
 const MenuItem = ({
@@ -28,7 +28,6 @@ const MenuItem = ({
 		</Text>
 	</AccessibleLink>
 );
-
 
 export const tokenFetcher = (url: string, token: string): any =>
 	axios
@@ -81,21 +80,37 @@ export const MenuLinks = (): JSX.Element => {
 	}, [session, guilds]);
 	return (
 		<>
-			<Stack shouldWrapChildren spacing={{ base: 4, md: 3 }} direction={{ base: 'column', md: 'row' }}>
+			<Stack
+				shouldWrapChildren
+				spacing={{ base: 4, md: 3 }}
+				direction={{ base: 'column', md: 'row' }}
+				align="center"
+			>
 				<NewBounty />
 				<DAOSelector customers={customers} />
 				<MenuItem newTab={false}>
 					{status === 'loading' ? (
 						<span>Loading...</span>
 					) : (
-						<Button
-							onClick={() => toggleDiscordSignIn(session)}
-							id="DiscordButton"
-							w={{ base: '20em', md: 'auto' }}
-							h={{ base: '3em', md: '2.6em' }}
-						>
-							{session ? session.user?.name : 'Join DAO'}
-						</Button>
+						<>
+							{session ? (
+								<Avatar
+									// if there is no user image it loads a default
+									src={session?.user?.image ?? ''}
+									mr={'.25em'}
+									size={'md'}
+								/>
+							) : (
+								<Button
+									onClick={() => toggleDiscordSignIn(session)}
+									id="DiscordButton"
+									w={{ base: '20em', md: 'auto' }}
+									h={{ base: '3em', md: '2.6em' }}
+								>
+                  Join DAO
+								</Button>
+							)}
+						</>
 					)}
 				</MenuItem>
 			</Stack>
