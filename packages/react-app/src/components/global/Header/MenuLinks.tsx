@@ -83,7 +83,7 @@ export const MenuLinks = (): JSX.Element => {
 			<Stack
 				shouldWrapChildren
 				spacing={{ base: 4, md: 3 }}
-				direction={{ base: 'column', md: 'row' }}
+				direction={{ base: 'column-reverse', md: 'row' }}
 				align="center"
 			>
 				<NewBounty />
