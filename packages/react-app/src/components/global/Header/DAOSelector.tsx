@@ -22,6 +22,7 @@ export const DAOSelector = ({
 		);
 		if (_customer && setCustomer) {
 			setCustomer(_customer);
+			// this gets in the way of dynamic urls
 			router.push(`/dao/${_customer.customerKey}`);
 		} else {
 			console.error(

@@ -4,7 +4,7 @@ import * as service from '../../../src/services/bounty.service';
 import { FilterQuery } from 'mongoose';
 
 describe('Testing the bounty service', () => {
-  
+
 	describe('Getting filters', () => {
 		const query: NextApiQuery = {
 			status: 'status',
@@ -13,16 +13,16 @@ describe('Testing the bounty service', () => {
 			gte: '1',
 			customerId: 'customerId',
 		};
-    
+
 		it('Extracts status, search, lte, gte, customerId from the query string', () => {
 			const filters = service.getFilters(query);
-			const { $lte, $gte, ...rest } = filters;
+			const { lte, gte, ...rest } = filters;
 			expect(Object.keys(filters))
 				.toEqual([...Object.keys(rest), '$lte', '$gte']);
-      
+
 			expect(typeof Object.values(rest)[0]).toBe('string');
-			expect($lte).toEqual(1);
-			expect($gte).toEqual(1);
+			expect(lte).toEqual(1);
+			expect(gte).toEqual(1);
 		});
 
 		it('Handles missing values okay', () => {
@@ -61,8 +61,8 @@ describe('Testing the bounty service', () => {
 			const queryltgt = service.filterLessGreater({
 				by: 'reward.amount',
 				query: {},
-				$lte: 100,
-				$gte: 100,
+				lte: 100,
+				gte: 100,
 			});
 			expect(queryltgt['reward.amount']).toEqual({ $gte: 100, $lte: 100 });
 		});
@@ -114,12 +114,12 @@ describe('Testing the bounty service', () => {
 					.toBeInstanceOf(Array);
 			});
 		});
-  
+
 		it('Else it returns the status', () => {
 			const status = 'This could be anything';
 			expect(service.filterStatus({}, status).status).toEqual(status);
 		});
-  
+
 		it('returns the text search', () => {
 			const search = 'This could be anything';
 			expect(
