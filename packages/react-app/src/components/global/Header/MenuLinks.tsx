@@ -83,7 +83,7 @@ export const MenuLinks = (): JSX.Element => {
 		<>
 			<Stack shouldWrapChildren spacing={{ base: 4, md: 3 }} direction={{ base: 'column', md: 'row' }}>
 				<NewBounty />
-				<DAOSelector customers={customers} />
+				{session && <DAOSelector customers={customers} />}
 				<MenuItem newTab={false}>
 					{status === 'loading' ? (
 						<span>Loading...</span>

@@ -26,6 +26,7 @@ export const CustomizationSchema = object({
 export const CustomerSchema = object({
 	customerId: string().defined(),
 	customerName: string().defined(),
+	customerKey: string().defined(),
 	bountyChannel: string().defined(),
 	customization: CustomizationSchema.optional().default(undefined),
 	applicableRoles: array(string()).optional(),
@@ -33,30 +34,31 @@ export const CustomerSchema = object({
 	.noUnknown(true);
 export interface CustomerProps {
 	_id?: string;
-    customerId: string;
-    customerName: string;
-    customization?: Customization;
-    applicableRoles?: [] | string[];
-		bountyChannel: string;
+	customerId: string;
+	customerKey: string;
+	customerName: string;
+	customization?: Customization;
+	applicableRoles?: [] | string[];
+	bountyChannel: string;
 }
 export interface Customization {
-    logo?: string;
-    colors?: SupportedColorCustomizations;
+	logo?: string;
+	colors?: SupportedColorCustomizations;
 }
 export interface SupportedColorCustomizations {
-    background?: LightDark;
-    'In-Review'?: string;
-    'In-Progress'?: string;
-    Open?: string;
-    Completed?: string;
-    Done?: string;
-    Deleted?: string;
-    Draft?: string;
-    primary?: string;
+	background?: LightDark;
+	'In-Review'?: string;
+	'In-Progress'?: string;
+	Open?: string;
+	Completed?: string;
+	Done?: string;
+	Deleted?: string;
+	Draft?: string;
+	primary?: string;
 }
 export interface LightDark {
-    light: string;
-    dark: string;
+	light: string;
+	dark: string;
 }
 
 export const CustomizationModel = new mongoose.Schema<Customization>({
@@ -77,6 +79,9 @@ export const CustomerModel = new mongoose.Schema<CustomerProps>({
 		type: String,
 	},
 	customerId: {
+		type: String,
+	},
+	customerKey: {
 		type: String,
 	},
 	applicableRoles: {
