@@ -1,97 +1,103 @@
 [
   {
-    "_id" : {
+    "_id": {
       "$oid": "616f00ae05026959ede9a3a4"
     },
-    "customerId":"834499078434979890",
-    "customerName":"BanklessDAO",
+    "customerId": "834499078434979890",
+    "customerKey": "banklessdao",
+    "customerName": "BanklessDAO",
     "bountyChannel": "850402063741091880"
   },
   {
-    "_id" : {
+    "_id": {
       "$oid": "616f00ae05026959ede9a3a9"
     },
-    "customerId":"905250069463326740",
-    "customerName":"BBBS",
+    "customerId": "905250069463326740",
+    "customerKey": "bbbs",
+    "customerName": "BBBS",
     "bountyChannel": "850402063741091880"
-  },  
+  },
   {
-    "_id" : {
+    "_id": {
       "$oid": "616f00ae05026959ede9a3a5"
-    },    
-    "customerId":"402910780124561410",
-    "customerName":"CityDAO",
+    },
+    "customerId": "402910780124561410",
+    "customerKey": "citydao",
+    "customerName": "CityDAO",
     "bountyChannel": "123498",
-    "applicableRoles" : [ ],
-    "customization":{
+    "applicableRoles": [],
+    "customization": {
       "logo": "assets/logos/citydao.png",
-      "colors":{
-        "background":{
-          "light":"#0AA3D8",
-          "dark":"#0A16D8"
+      "colors": {
+        "background": {
+          "light": "#0AA3D8",
+          "dark": "#0A16D8"
         },
-        "primary":"green",
-        "Open":"yellow"
+        "primary": "green",
+        "Open": "yellow"
       }
     }
   },
   {
-    "_id" : {
+    "_id": {
       "$oid": "616f00ae05026959ede9a3a6"
     },
-    "customerId":"845400066532704256",
-    "customerName":"Coordinape",
+    "customerId": "845400066532704256",
+    "customerKey": "coordinape",
+    "customerName": "Coordinape",
     "bountyChannel": "12347",
-    "applicableRoles" : [ ],
-    "customization":{
-      "logo":"./demo/coordinape.png",
-      "colors":{
-        "background":{
-          "light":"blue.200",
-          "dark":"blue.800"
+    "applicableRoles": [],
+    "customization": {
+      "logo": "./demo/coordinape.png",
+      "colors": {
+        "background": {
+          "light": "blue.200",
+          "dark": "blue.800"
         },
-        "primary":"#0AA3D8",
-        "Open":"blue"
+        "primary": "#0AA3D8",
+        "Open": "blue"
       }
     }
   },
   {
-    "_id" : {
+    "_id": {
       "$oid": "616f00ae05026959ede9a3a7"
-    },    
-    "customerId":"718590743446290492",
-    "customerName":"UMA",
+    },
+    "customerId": "718590743446290492",
+    "customerKey": "uma",
+    "customerName": "UMA",
     "bountyChannel": "12345",
-    "applicableRoles" : [ ],
-    "customization":{
-      "logo":"demo/uma.png",
-      "colors":{
-        "background":{
-          "light":"red.200",
-          "dark":"red.800"
+    "applicableRoles": [],
+    "customization": {
+      "logo": "demo/uma.png",
+      "colors": {
+        "background": {
+          "light": "red.200",
+          "dark": "red.800"
         },
-        "primary":"#cb5c5c",
-        "Open":"blue"
+        "primary": "#cb5c5c",
+        "Open": "blue"
       }
     }
   },
   {
-    "_id" : {
+    "_id": {
       "$oid": "616f00ae05026959ede9a3a8"
-    },    
-    "customerId":"402910780129999",
-    "customerName":"Should Not See",
+    },
+    "customerId": "402910780129999",
+    "customerName": "customerKeyNot see",
+    "customerName": "Should Not See",
     "bountyChannel": "12346",
-    "applicableRoles" : [ ],
-    "customization":{
-      "logo":"",
-      "colors":{
-        "background":{
-          "light":"#0AA3D8",
-          "dark":"#0A16D8"
+    "applicableRoles": [],
+    "customization": {
+      "logo": "",
+      "colors": {
+        "background": {
+          "light": "#0AA3D8",
+          "dark": "#0A16D8"
         },
-        "primary":"green",
-        "Draft":"yellow"
+        "primary": "green",
+        "Draft": "yellow"
       }
     }
   }

@@ -5,6 +5,7 @@ describe('Testing the customer context', () => {
 	const setCustomer = jest.fn();
 	const customer: CustomerProps = {
 		bountyChannel: '',
+		customerKey: '',
 		applicableRoles: [],
 		customization: {},
 		customerId: '1',
@@ -26,8 +27,8 @@ describe('Testing the customer context', () => {
 		hooks.setCustomerFromLocalStorage(setCustomer);
 		expect(setCustomer).not.toHaveBeenCalled();
 	});
-  
-  
+
+
 	it('Only sets the customer if the window is defined', () => {
 		localStorage.setItem('customer', JSON.stringify(customer));
 		jest.spyOn(window, 'window', 'get').mockImplementation(undefined);

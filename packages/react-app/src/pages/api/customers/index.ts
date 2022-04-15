@@ -18,7 +18,7 @@ export const handler = async (
 	switch (req.method) {
 	case 'GET': {
 		try {
-			const data = await service.getCustomers();
+			const data = await service.getCustomers(req.query);
 			res.status(200).json({ success: true, data });
 		} catch (error) {
 			res.status(400).json({ success: false });
