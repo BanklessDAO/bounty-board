@@ -26,6 +26,7 @@ export const CustomizationSchema = object({
 export const CustomerSchema = object({
 	customerId: string().defined(),
 	customerName: string().defined(),
+	customerKey: string().defined(),
 	bountyChannel: string().defined(),
 	customization: CustomizationSchema.optional().default(undefined),
 	applicableRoles: array(string()).optional(),
