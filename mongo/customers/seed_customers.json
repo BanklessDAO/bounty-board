@@ -6,7 +6,11 @@
     "customerId": "834499078434979890",
     "customerKey": "banklessdao",
     "customerName": "BanklessDAO",
-    "bountyChannel": "850402063741091880"
+    "bountyChannel": "850402063741091880",
+    "externalRoleMap": {
+      "baseExternalRoles": ["840627393777762344","839005209611075614","839005084016312360","834560235704025108"],
+      "adminExternalRoles": ["911038195397967892"]
+    }
   },
   {
     "_id": {
@@ -15,7 +19,10 @@
     "customerId": "905250069463326740",
     "customerKey": "bbbs",
     "customerName": "BBBS",
-    "bountyChannel": "850402063741091880"
+    "bountyChannel": "850402063741091880",
+    "externalRoleMap": {
+      "adminExternalRoles": ["*"]
+    }
   },
   {
     "_id": {
@@ -25,7 +32,9 @@
     "customerKey": "citydao",
     "customerName": "CityDAO",
     "bountyChannel": "123498",
-    "applicableRoles": [],
+    "externalRoleMap": {
+      "customExternalRoleMap": ["create-bounty", "edit-own-bounty"]
+    },
     "customization": {
       "logo": "assets/logos/citydao.png",
       "colors": {
@@ -46,7 +55,6 @@
     "customerKey": "coordinape",
     "customerName": "Coordinape",
     "bountyChannel": "12347",
-    "applicableRoles": [],
     "customization": {
       "logo": "./demo/coordinape.png",
       "colors": {
@@ -67,7 +75,6 @@
     "customerKey": "uma",
     "customerName": "UMA",
     "bountyChannel": "12345",
-    "applicableRoles": [],
     "customization": {
       "logo": "demo/uma.png",
       "colors": {
@@ -88,7 +95,6 @@
     "customerName": "customerKeyNot see",
     "customerName": "Should Not See",
     "bountyChannel": "12346",
-    "applicableRoles": [],
     "customization": {
       "logo": "",
       "colors": {

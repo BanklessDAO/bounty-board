@@ -25,7 +25,7 @@
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
     "test:unit": "TESTING=true jest packages/react-app/tests/unit",
     "test:cov": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --coverage",
-    "test:integration": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --detectOpenHandles packages/react-app/tests/integration"
+    "test:integration": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --silent false --detectOpenHandles packages/react-app/tests/integration"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [

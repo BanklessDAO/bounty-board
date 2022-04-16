@@ -6,6 +6,22 @@ export const customers: CustomerProps[] = [
 		customerName: 'BanklessDAO',
 		customerKey: 'banklessdao',
 		bountyChannel: '850402063741091880',
+		externalRoleMap: {
+			baseExternalRoles: [
+			  '840627393777762344',
+			  '839005209611075614',
+			  '839005084016312360',
+			  '834560235704025108',
+			],
+			adminExternalRoles: [ '911038195397967892' ],
+		},
+	},
+	{
+		customerId: '905250069463326740',
+		customerKey: 'bbbs',
+		customerName: 'BBBS',
+		bountyChannel: '850402063741091880',
+		externalRoleMap: { adminExternalRoles: [ '*' ] },
 	},
 	{
 		customerId: '402910780124561410',
