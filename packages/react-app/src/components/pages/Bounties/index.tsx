@@ -8,6 +8,8 @@ import { BANKLESS } from '../../../constants/Bankless';
 import useBounties from '../../../hooks/useBounties';
 import { BountyCollection } from '../../../models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
+import { useUser } from '@app/hooks/useUser';
+
 
 export const PAGE_SIZE = 10;
 
@@ -44,6 +46,7 @@ const Bounties = (): JSX.Element => {
 	const [sortAscending, setSortAscending] = useState(false);
 	const [createdByMe, setCreatedByMe] = useState(false);
 	const [claimedByMe, setClaimedByMe] = useState(false);
+	const { user } = useUser();
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const { customer } = useContext(CustomerContext);
@@ -58,6 +61,7 @@ const Bounties = (): JSX.Element => {
 	dynamicUrl += `&asc=${sortAscending}`;
 	dynamicUrl += `&claimedByMe=${claimedByMe}`;
 	dynamicUrl += `&createdByMe=${createdByMe}`;
+	dynamicUrl += `&userId=${user?.id}`;
 	dynamicUrl += `&customerId=${customerId ?? BANKLESS.customerId}`;
 
 	useEffect(() => {

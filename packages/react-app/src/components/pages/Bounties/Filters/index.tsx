@@ -14,6 +14,8 @@ import {
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
 import { AcceptedSortInputs } from '@app/types/Filter';
+import { useUser } from '@app/hooks/useUser';
+
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -131,10 +133,12 @@ const MyBountiesFilter = ({ name, claimedByMe, createdByMe, setClaimedByMe, setC
 }): JSX.Element => {
 
 	const updateClaimedByMe = (event: any): void => {
-		setClaimedByMe(claimedByMe = event.target.checked);
+		claimedByMe = event.target.checked;
+		setClaimedByMe(claimedByMe);
 	};
 	const updateCreatedByMe = (event: any): void => {
-		setCreatedByMe(createdByMe = event.target.checked);
+		createdByMe = event.target.checked;
+		setCreatedByMe(createdByMe);
 	};
 	return (
 		<>
@@ -225,7 +229,7 @@ const Filters = (props: {
 			value: bountyStatus.COMPLETED,
 		},
 	];
-
+	const { user } = useUser();
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
@@ -239,12 +243,13 @@ const Filters = (props: {
 					status={props.status}
 					setStatus={props.setStatus}
 				/>
+				{ user &&
 				<MyBountiesFilter
 					claimedByMe={props.claimedByMe}
 					createdByMe={props.createdByMe}
 					setClaimedByMe={props.setClaimedByMe}
 					setCreatedByMe={props.setCreatedByMe}
-				/>
+				/> }
 				<MinMaxFilter
 					name="Filter Bounty Value"
 					lte={props.lte} setLte={props.setLte}

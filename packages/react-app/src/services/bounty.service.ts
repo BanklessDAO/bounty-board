@@ -12,6 +12,8 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	 * Retrieve implemented filters from the query string params
 	 */
 	const filters = {} as FilterParams;
+
+	console.log(`query: ${JSON.stringify(query)}`);
 	
 	if (typeof query.status === 'string') filters.status = query.status;
 	if (typeof query.search === 'string') filters.search = query.search;
@@ -19,6 +21,11 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	
 	if(query.lte) filters.$lte = Number(query.lte);
 	if(query.gte) filters.$gte = Number(query.gte);
+
+	if (query.createdByMe) filters.createdByMe = Boolean(JSON.parse(query.createdByMe as string));
+	if (query.claimedByMe) filters.claimedByMe = Boolean(JSON.parse(query.claimedByMe as string));
+	if (typeof query.userId === 'string') filters.userId = query.userId;
+	
 
 	return filters;
 };
@@ -115,6 +122,25 @@ export const filterCustomerId = (query: FilterQuery<BountyCollection>, customerI
 	return query;
 };
 
+export const filterMyBounties = (query: FilterQuery<BountyCollection>, userId: string | undefined, claimedByMe: boolean | undefined, createdByMe: boolean | undefined): FilterQuery<BountyCollection> => {
+	/**
+	 * Remove bounties based on user
+	 */
+	console.log(`User: ${userId}`);
+	console.log(`Claimed By Me: ${claimedByMe}`);
+	console.log(`Created By Me: ${createdByMe}`);
+	if (userId) {
+		if (typeof claimedByMe !== undefined && claimedByMe) {
+			query['claimedBy.discordId'] = userId;
+		}
+		if (typeof createdByMe !== undefined && createdByMe) {
+			query['createdBy.discordId'] = userId;
+		}
+	}
+	return query;
+};
+
+
 export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	/**
 	 * Extracts pagination variables from the request into a bountyQuery
@@ -135,12 +161,13 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 
 	const filters = getFilters(query);
 	
-	const { status, search, $lte, $gte, customerId } = filters;
+	const { status, search, $lte, $gte, customerId, claimedByMe, createdByMe, userId } = filters;
 	
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
 	if(customerId) filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
+	filterQuery = filterMyBounties(filterQuery, userId, claimedByMe, createdByMe);
 	filterQuery = handleEmpty(filterQuery);
 
 	return filterQuery;
