@@ -42,6 +42,8 @@ const Bounties = (): JSX.Element => {
 	const [lte, setLte] = useState(Infinity);
 	const [sortBy, setSortBy] = useState('createdAt');
 	const [sortAscending, setSortAscending] = useState(false);
+	const [createdByMe, setCreatedByMe] = useState(false);
+	const [claimedByMe, setClaimedByMe] = useState(false);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const { customer } = useContext(CustomerContext);
@@ -54,6 +56,8 @@ const Bounties = (): JSX.Element => {
 	dynamicUrl += `&gte=${gte}`;
 	dynamicUrl += `&sortBy=${sortBy}`;
 	dynamicUrl += `&asc=${sortAscending}`;
+	dynamicUrl += `&claimedByMe=${claimedByMe}`;
+	dynamicUrl += `&createdByMe=${createdByMe}`;
 	dynamicUrl += `&customerId=${customerId ?? BANKLESS.customerId}`;
 
 	useEffect(() => {
@@ -83,6 +87,9 @@ const Bounties = (): JSX.Element => {
 					gte={gte} setGte={setGte}
 					sortBy={sortBy} setSortBy={setSortBy}
 					sortAscending={sortAscending} setSortAscending={setSortAscending}
+					claimedByMe={claimedByMe} setClaimedByMe={setClaimedByMe}
+					createdByMe={createdByMe} setCreatedByMe={setCreatedByMe}
+					
 				/>
 				{isError || noResults
 					? <FilterResultPlaceholder message={'No Results'} />

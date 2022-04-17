@@ -1,4 +1,5 @@
 import {
+	Checkbox,
 	Heading,
 	HStack,
 	Input,
@@ -121,6 +122,48 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 	);
 };
 
+const MyBountiesFilter = ({ name, claimedByMe, createdByMe, setClaimedByMe, setCreatedByMe }: {
+	name?: string
+	claimedByMe: boolean,
+	setClaimedByMe: SetState<boolean>,
+	createdByMe: boolean,
+	setCreatedByMe: SetState<boolean>,
+}): JSX.Element => {
+
+	const updateClaimedByMe = (event: any): void => {
+		setClaimedByMe(claimedByMe = event.target.checked);
+	};
+	const updateCreatedByMe = (event: any): void => {
+		setCreatedByMe(createdByMe = event.target.checked);
+	};
+	return (
+		<>
+			<Flex className="composite-heading" alignItems="center">
+				{name && <Heading size="xs" mb="0">{name}</Heading>}
+				<Flex className="checkbox" w='100%' alignItems="center">
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateClaimedByMe}
+						isChecked={claimedByMe}
+					>
+							Claimed By Me
+					</Checkbox>
+					<Spacer />
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateCreatedByMe}
+						isChecked={createdByMe}
+					>
+							Created By Me
+					</Checkbox>
+				</Flex>
+			</Flex>
+		</>
+	);
+};
+
 const MinMaxFilter = ({ name, setLte, setGte }: {
 	name?: string,
 	lte: number,
@@ -159,6 +202,10 @@ const Filters = (props: {
 	setSortBy: SetState<string>,
 	sortAscending: boolean,
 	setSortAscending: SetState<boolean>,
+	claimedByMe: boolean,
+	setClaimedByMe: SetState<boolean>,
+	createdByMe: boolean,
+	setCreatedByMe: SetState<boolean>,
 }): JSX.Element => {
 	const filterStatusList = [
 		{
@@ -191,6 +238,12 @@ const Filters = (props: {
 					options={filterStatusList}
 					status={props.status}
 					setStatus={props.setStatus}
+				/>
+				<MyBountiesFilter
+					claimedByMe={props.claimedByMe}
+					createdByMe={props.createdByMe}
+					setClaimedByMe={props.setClaimedByMe}
+					setCreatedByMe={props.setCreatedByMe}
 				/>
 				<MinMaxFilter
 					name="Filter Bounty Value"
