@@ -12,22 +12,19 @@ describe('Testing the bounty service', () => {
 			lte: '1',
 			gte: '1',
 			customerId: 'customerId',
-			userId: '12345',
-			createdByMe: 'true',
-			claimedByMe: 'false',
+			createdBy: '1111',
+			claimedBy: '2222',
 		};
     
-		it('Extracts status, search, lte, gte, customerId, createdByMe, claimedByMe, userId from the query string', () => {
+		it('Extracts status, search, lte, gte, customerId, createdBy, claimedBy from the query string', () => {
 			const filters = service.getFilters(query);
-			const { $lte, $gte, claimedByMe, createdByMe, ...rest } = filters;
+			const { $lte, $gte, ...rest } = filters;
 			expect(Object.keys(filters))
-				.toEqual([...Object.keys(rest), '$lte', '$gte', 'createdByMe', 'claimedByMe']);
+				.toEqual([...Object.keys(rest), '$lte', '$gte']);
       
 			expect(typeof Object.values(rest)[0]).toBe('string');
 			expect($lte).toEqual(1);
 			expect($gte).toEqual(1);
-			expect(claimedByMe).toEqual(false);
-			expect(createdByMe).toEqual(true);
 		});
 
 		it('Handles missing values okay', () => {

@@ -16,15 +16,11 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	if (typeof query.status === 'string') filters.status = query.status;
 	if (typeof query.search === 'string') filters.search = query.search;
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
-	if (typeof query.userId === 'string') filters.userId = query.userId;
+	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
+	if (typeof query.claimedBy === 'string') filters.claimedBy = query.claimedBy;
 	
 	if(query.lte) filters.$lte = Number(query.lte);
 	if(query.gte) filters.$gte = Number(query.gte);
-
-	if (query.createdByMe) filters.createdByMe = Boolean(JSON.parse(query.createdByMe as string));
-	if (query.claimedByMe) filters.claimedByMe = Boolean(JSON.parse(query.claimedByMe as string));
-	
-
 	return filters;
 };
 
@@ -120,18 +116,17 @@ export const filterCustomerId = (query: FilterQuery<BountyCollection>, customerI
 	return query;
 };
 
-export const filterMyBounties = (query: FilterQuery<BountyCollection>, userId: string | undefined, claimedByMe: boolean | undefined, createdByMe: boolean | undefined): FilterQuery<BountyCollection> => {
+export const filterByUser = (query: FilterQuery<BountyCollection>, claimedBy: string | undefined, createdBy: string | undefined): FilterQuery<BountyCollection> => {
 	/**
 	 * Remove bounties based on user
 	 */
-	if (userId) {
-		if (typeof claimedByMe !== undefined && claimedByMe) {
-			query['claimedBy.discordId'] = userId;
-		}
-		if (typeof createdByMe !== undefined && createdByMe) {
-			query['createdBy.discordId'] = userId;
-		}
+	if (typeof claimedBy !== undefined && claimedBy) {
+		query['claimedBy.discordId'] = claimedBy;
 	}
+	if (typeof createdBy !== undefined && createdBy) {
+		query['createdBy.discordId'] = createdBy;
+	}
+
 	return query;
 };
 
@@ -156,13 +151,13 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 
 	const filters = getFilters(query);
 	
-	const { status, search, $lte, $gte, customerId, claimedByMe, createdByMe, userId } = filters;
+	const { status, search, $lte, $gte, customerId, claimedBy, createdBy } = filters;
 	
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
 	if(customerId) filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
-	filterQuery = filterMyBounties(filterQuery, userId, claimedByMe, createdByMe);
+	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
 	filterQuery = handleEmpty(filterQuery);
 
 	return filterQuery;

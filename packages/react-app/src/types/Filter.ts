@@ -11,9 +11,8 @@ export interface FilterParams {
 	$lte?: number;
 	$gte?: number;
 	sortBy?: string;
-	createdByMe?: boolean;
-	claimedByMe?: boolean;
-	userId?: string;
+	createdBy?: string;
+	claimedBy?: string;
 	asc: boolean;
 	next?: string;
 	previous?: string;

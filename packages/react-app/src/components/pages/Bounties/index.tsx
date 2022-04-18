@@ -59,9 +59,8 @@ const Bounties = (): JSX.Element => {
 	dynamicUrl += `&gte=${gte}`;
 	dynamicUrl += `&sortBy=${sortBy}`;
 	dynamicUrl += `&asc=${sortAscending}`;
-	dynamicUrl += `&claimedByMe=${claimedByMe}`;
-	dynamicUrl += `&createdByMe=${createdByMe}`;
-	dynamicUrl += `&userId=${user?.id}`;
+	if (claimedByMe && user) dynamicUrl += `&claimedBy=${user.id}`;
+	if (createdByMe && user) dynamicUrl += `&createdBy=${user.id}`;
 	dynamicUrl += `&customerId=${customerId ?? BANKLESS.customerId}`;
 
 	useEffect(() => {

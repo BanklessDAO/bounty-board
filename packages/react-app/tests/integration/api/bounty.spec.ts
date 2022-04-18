@@ -209,6 +209,7 @@ describe('Testing the bounty API', () => {
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
 			const allOpenStatuses = data.every((d: BountyCollection) => d.status === 'Open');
+			expect(data.length).toBeGreaterThan(0);
 			expect(allOpenStatuses).toEqual(true);
 		});
 
@@ -236,8 +237,7 @@ describe('Testing the bounty API', () => {
 			const userId = '703336960051118256';
 			req.method = 'GET';
 			req.query = {
-				claimedByMe: 'true',
-				userId: userId,
+				claimedBy: userId,
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
@@ -250,8 +250,7 @@ describe('Testing the bounty API', () => {
 			const userId = '703336960051118256';
 			req.method = 'GET';
 			req.query = {
-				createdByMe: 'true',
-				userId: userId,
+				createdBy: userId,
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
