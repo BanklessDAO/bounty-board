@@ -7,6 +7,7 @@ import Layout from '../../components/global/SiteLayout';
 import { BountyCard } from '../../components/pages/Bounties/Bounty';
 import { useBounty } from '../../hooks/useBounties';
 import ColorModeButton from '../../components/parts/ColorModeButton';
+import { useCustomerFromBountyIdAndKey } from '@app/hooks/useCustomer';
 
 export const BountyNotFound = (): JSX.Element => (
 	<Stack align="center" justify="center" h="400px">
@@ -33,13 +34,14 @@ export const BountyLoader = (): JSX.Element => (
 
 export const BountyPage = (): JSX.Element => {
 	const router = useRouter();
-	const { id } = router.query;
+	const { id, customerKey } = router.query;
 	const { bounty, isLoading, isError } = useBounty(id);
+	const customer = useCustomerFromBountyIdAndKey(id, customerKey);
 	return (
 		<>{
 			isLoading
 				? <BountyLoader />
-				: bounty ?
+				: bounty && customer ?
 					<Stack
 						direction={{ base: 'column', lg: 'row' }}
 						align="top"
@@ -49,13 +51,17 @@ export const BountyPage = (): JSX.Element => {
 					>
 						<BountyCard bounty={bounty} />
 					</Stack>
-					: (id && isError) && <BountyNotFound />
+
+					: ((id && !customer) || (id && isError))
+					&& <BountyNotFound />
+
 		}</>
 	);
 };
 
 const BountyPageLayout = (): JSX.Element => {
 	const { customer } = useContext(CustomerContext);
+
 	return (
 		<Layout title={`${customer.customerName ?? 'DAO'} Bounty Board`}>
 			<BountyPage />

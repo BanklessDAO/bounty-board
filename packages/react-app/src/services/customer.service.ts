@@ -2,6 +2,7 @@ import { CustomerProps } from '../models/Customer';
 import { DiscordGuild } from '../types/Discord';
 import Customer from '../models/Customer';
 import { BANKLESS } from '../constants/Bankless';
+import { NextApiQuery } from '@app/types/Queries';
 
 export const getCustomer = async (id: string): Promise<CustomerProps | null> => {
 	/**
@@ -17,11 +18,22 @@ export const getCustomer = async (id: string): Promise<CustomerProps | null> => 
 	return findWithCustomerId;
 };
 
-export const getCustomers = async (): Promise<CustomerProps[] | []> => {
+type CustomerFilterQuery = {
+	customerKey?: string;
+};
+const getCustomerFilters = (query?: NextApiQuery): CustomerFilterQuery => {
+	const customerKey = query?.customerKey;
+	if (customerKey && typeof customerKey === 'string') return { customerKey: customerKey.toLowerCase() };
+	else return {};
+};
+
+export const getCustomers = async (query?: NextApiQuery): Promise<CustomerProps[] | []> => {
 	/**
    * @returns a list of bountyboard customers from the DB 
    */
-	return Customer.find({}).sort({ 'customerName': 1 });
+	const filterQuery = query ? getCustomerFilters(query) : {};
+	const res = Customer.find(filterQuery).sort({ 'customerName': 1 });
+	return res;
 };
 
 export const filterGuildsToCustomers = (guildsList: DiscordGuild[], customersList: CustomerProps[]): CustomerProps[] | [] => {

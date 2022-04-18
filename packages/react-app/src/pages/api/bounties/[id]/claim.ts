@@ -32,7 +32,7 @@ export const handler = async (
 
 	switch (req.method) {
 
-	case 'PATCH' :
+	case 'PATCH':
 		/* Edit a model by its ID */
 		try {
 			const bountyIsEditable = service.canBeEdited({ bounty });

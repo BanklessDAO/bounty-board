@@ -30,14 +30,15 @@ describe('Testing the bounty API', () => {
 	beforeAll(async () => {
 		const connect = await dbConnect();
 		connection = connect.connections[0];
-		BountyBoardSchema.index({ title: 'text' });
+		await connection.db.collection('bounties').dropIndexes();
+		BountyBoardSchema.index({ '$**': 'text' });
 		await Bounty.createIndexes();
 	});
-  
+
 	afterAll(async () => {
 		await connection.close();
 	});
-  
+
 	beforeEach(async () => {
 		await Bounty.create(testOpenBounty);
 		const output = createMocks();

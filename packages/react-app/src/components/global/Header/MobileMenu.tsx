@@ -31,7 +31,7 @@ export const MobileMenu = ({ isOpen, onClose }: MobileProps): JSX.Element => {
 					<Flex>
 						<Logo
 							alt={`${customer?.customerName ?? 'DAO'} Logo`}
-							img={customer?.customization?.logo ?? '/logo.png'}
+							img={'/assets/logos/' + (customer?.customization?.logo ?? 'logo.png')}
 						/>
 						<DrawerCloseButton w={'4em'} h={'4em'} onClick={onClose} />
 					</Flex>

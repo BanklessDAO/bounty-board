@@ -16,14 +16,15 @@ describe('Testing the bounty API', () => {
 	beforeAll(async () => {
 		const connect = await dbConnect();
 		connection = connect.connections[0];
-		BountyBoardSchema.index({ title: 'text' });
+		await connection.db.collection('bounties').dropIndexes();
+		BountyBoardSchema.index({ '$**': 'text' });
 		await Bounty.createIndexes();
 	});
-  
+
 	afterAll(async () => {
 		await connection.close();
 	});
-  
+
 	beforeEach(() => {
 		const output = createMocks();
 		req = output.req;
@@ -59,7 +60,7 @@ describe('Testing the bounty API', () => {
 			const testGetBounty = { _id, ...testBounty };
 
 			await Bounty.create(testGetBounty);
-      
+
 			req.method = 'GET';
 			req.query = {
 				id: _id,
@@ -104,7 +105,7 @@ describe('Testing the bounty API', () => {
 			const testDeleteBounty = { _id, ...testBounty };
 
 			await Bounty.create(testDeleteBounty);
-      
+
 			req.method = 'DELETE';
 			req.query = {
 				id: _id,
@@ -192,11 +193,11 @@ describe('Testing the bounty API', () => {
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(404);
 		});
-		
+
 	});
-	
+
 	describe('Pagination, searching, sorting and filtering', () => {
-		
+
 		beforeEach(async () => {
 			await Bounty.insertMany(bounties);
 		});
@@ -221,7 +222,7 @@ describe('Testing the bounty API', () => {
 			expect(uniqueIds.size).toBeGreaterThan(1);
 		});
 
-		it('Can perform a text search', async () => {
+		it('Can perform a text search on title', async () => {
 			req.method = 'GET';
 			req.query = {
 				search: 'react',
@@ -229,6 +230,27 @@ describe('Testing the bounty API', () => {
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
 			const correctSearchTerm = data[0].title === 'Implement React Components for Filters';
+			expect(correctSearchTerm).toEqual(true);
+		});
+
+		it('Can perform a wildcard text search on name', async () => {
+			req.method = 'GET';
+			req.query = {
+				search: 'jordaniza',
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			expect(data.length).toEqual(2);
+		});
+
+		it('Can perform a wildcard text search on description', async () => {
+			req.method = 'GET';
+			req.query = {
+				search: 'dinosaurs',
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const correctSearchTerm = data[0].description === 'Penguins and dinosaurs';
 			expect(correctSearchTerm).toEqual(true);
 		});
 

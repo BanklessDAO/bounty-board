@@ -25,7 +25,7 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 
 		// Add the bounty to the DB
 		axios.post<any, { data: { data: BountyCollection } }>(`api/bounties?customerId=${bounty.customerId}`, bounty)
-			
+
 			// on success, sent the user to the bounty/bountyId page of the newly created bounty 
 			.then(({ data: res }) => {
 				router.push(`/${res.data._id}`)
@@ -39,10 +39,9 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 			})
 			// if there was a problem, log the error to the console
 			.catch(err => {
-				const errorData = err.response?.data;
 				setError('There was a problem submitting the bounty');
 				// cannot assume shape of error but we prefer to get the response data
-				errorData ? console.debug({ errorData }) : console.debug({ err });
+				console.warn(err.response?.data ?? err);
 			}
 			);
 	};
@@ -50,7 +49,7 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 		<>
 			<AccessibleLink href={'/create-bounty'}>
 				<Button my={2} size="sm">
-				Edit This Draft
+					Edit This Draft
 				</Button>
 			</AccessibleLink>
 			<Button
@@ -59,7 +58,7 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 				colorScheme="primary"
 				onClick={() => upload()}
 			>
-			Confirm
+				Confirm
 			</Button>
 			{
 				error &&

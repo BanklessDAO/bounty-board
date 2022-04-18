@@ -48,7 +48,7 @@ const SearchFilter = ({
 			<InputLeftElement pointerEvents="none">
 				<SearchIcon color="gray.300" />
 			</InputLeftElement>
-			<Input placeholder={placeholder} mb={4} value={searchValue} onChange={updateSearchValue} autoFocus/>
+			<Input placeholder={placeholder} mb={4} value={searchValue} onChange={updateSearchValue} autoFocus />
 		</InputGroup>
 	);
 };
@@ -134,13 +134,13 @@ const MinMaxFilter = ({ name, setLte, setGte }: {
 	const updateMax = (event: any): void => {
 		setLte(event.target.value);
 	};
-	
+
 	return (
 		<>
 			{name && <Heading size="xs">{name}</Heading>}
 			<HStack my="2">
-				<Input placeholder="Min" onChange={updateMin}/>
-				<Input placeholder="Max" onChange={updateMax}/>
+				<Input placeholder="Min" onChange={updateMin} />
+				<Input placeholder="Max" onChange={updateMax} />
 			</HStack>
 		</>
 	);
