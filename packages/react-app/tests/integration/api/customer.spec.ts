@@ -20,11 +20,11 @@ describe('Testing the customer API', () => {
 		const connect = await dbConnect();
 		connection = connect.connections[0];
 	});
-  
+
 	afterAll(async () => {
 		await connection.close();
 	});
-  
+
 	beforeEach(() => {
 		const output = createMocks();
 		req = output.req;
@@ -58,7 +58,7 @@ describe('Testing the customer API', () => {
 			const testGetCustomer = { _id, ...testCustomer };
 
 			await Customer.create(testGetCustomer);
-      
+
 			req.method = 'GET';
 			req.query = {
 				id: _id,
@@ -74,7 +74,7 @@ describe('Testing the customer API', () => {
 			const testPutCustomer = { _id, ...testCustomer };
 
 			await Customer.create(testPutCustomer);
-		
+
 			req.body = customers[0];
 			req.method = 'PUT';
 			req.query = {
@@ -90,7 +90,7 @@ describe('Testing the customer API', () => {
 			const testDeleteCustomer = { _id, ...testCustomer };
 
 			await Customer.create(testDeleteCustomer);
-      
+
 			req.method = 'DELETE';
 			req.query = {
 				id: _id,

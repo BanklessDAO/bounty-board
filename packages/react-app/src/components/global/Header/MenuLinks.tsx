@@ -87,7 +87,7 @@ export const MenuLinks = (): JSX.Element => {
 				align="center"
 			>
 				<NewBounty />
-				<DAOSelector customers={customers} />
+				{session && <DAOSelector customers={customers} />}
 				<MenuItem newTab={false}>
 					{status === 'loading' ? (
 						<span>Loading...</span>
