@@ -14,6 +14,9 @@ export const customers: CustomerProps[] = [
 			  '834560235704025108',
 			],
 			adminExternalRoles: [ '911038195397967892' ],
+			customExternalRoleMap: [
+				{ externalRole: '843924063591727195', roles: ['create-bounty', 'edit-bounties'] },
+			],
 		},
 	},
 	{

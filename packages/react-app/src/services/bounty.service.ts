@@ -13,18 +13,16 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	 */
 	const filters = {} as FilterParams;
 
-	console.log(`query: ${JSON.stringify(query)}`);
-	
 	if (typeof query.status === 'string') filters.status = query.status;
 	if (typeof query.search === 'string') filters.search = query.search;
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
+	if (typeof query.userId === 'string') filters.userId = query.userId;
 	
 	if(query.lte) filters.$lte = Number(query.lte);
 	if(query.gte) filters.$gte = Number(query.gte);
 
 	if (query.createdByMe) filters.createdByMe = Boolean(JSON.parse(query.createdByMe as string));
 	if (query.claimedByMe) filters.claimedByMe = Boolean(JSON.parse(query.claimedByMe as string));
-	if (typeof query.userId === 'string') filters.userId = query.userId;
 	
 
 	return filters;
@@ -126,9 +124,6 @@ export const filterMyBounties = (query: FilterQuery<BountyCollection>, userId: s
 	/**
 	 * Remove bounties based on user
 	 */
-	console.log(`User: ${userId}`);
-	console.log(`Claimed By Me: ${claimedByMe}`);
-	console.log(`Created By Me: ${createdByMe}`);
 	if (userId) {
 		if (typeof claimedByMe !== undefined && claimedByMe) {
 			query['claimedBy.discordId'] = userId;

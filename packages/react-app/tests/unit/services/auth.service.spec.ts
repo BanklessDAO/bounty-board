@@ -156,6 +156,14 @@ describe('Permissions', () => {
 		expect(permissions).toEqual(['admin']);
 	});
 
+	it('Custom roles for Dev Guild', async () => {
+		jest.spyOn(custService, 'getCustomer').mockResolvedValue(banklessCustomer);
+		jest.spyOn(service, 'getRolesForUserInGuild')
+			.mockResolvedValue([BANKLESS_ROLES.DEV_GUILD]);
+		const permissions = await service.getPermissions('', banklessCustomer.customerId);
+		expect(permissions).toEqual(['create-bounty', 'edit-bounties']);
+	});
+
 	it('All of BBBS are admins', async () => {
 		jest.spyOn(custService, 'getCustomer').mockResolvedValue(BBBSCustomer);
 		jest.spyOn(service, 'getRolesForUserInGuild')

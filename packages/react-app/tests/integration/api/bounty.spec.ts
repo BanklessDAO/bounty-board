@@ -232,6 +232,35 @@ describe('Testing the bounty API', () => {
 			expect(correctSearchTerm).toEqual(true);
 		});
 
+		it('Finds Claimed By Me', async () => {
+			const userId = '703336960051118256';
+			req.method = 'GET';
+			req.query = {
+				claimedByMe: 'true',
+				userId: userId,
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const foundBounty = data[0].title === 'Create logic to add Pagination to search filters';
+			expect(foundBounty).toEqual(true);
+			expect(data.length).toEqual(1);
+		});
+
+		it('Finds Created By Me', async () => {
+			const userId = '703336960051118256';
+			req.method = 'GET';
+			req.query = {
+				createdByMe: 'true',
+				userId: userId,
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const foundBounty = data[0].title === 'Create notes for one meeting';
+			expect(foundBounty).toEqual(true);
+			expect(data.length).toEqual(1);
+		});
+
+
 		it('Can paginate', async () => {
 			req.method = 'GET';
 			req.query = {
