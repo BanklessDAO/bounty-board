@@ -2,7 +2,6 @@ import React from 'react';
 import { RiMenuFill, RiCloseFill } from 'react-icons/ri';
 import { Box, Stack, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import { MenuLinks } from './MenuLinks';
-import ThemeToggle from '@app/components/parts/ThemeToggle';
 import { MobileMenu } from './MobileMenu';
 
 const CloseIcon = ({ color }: { color: string }) => (
@@ -53,7 +52,6 @@ export const Menu = (): JSX.Element => {
 						direction={{ base: 'column', md: 'row' }}
 					>
 						<MenuLinks />
-						<ThemeToggle />
 					</Stack>
 				</Box>
 			)}
