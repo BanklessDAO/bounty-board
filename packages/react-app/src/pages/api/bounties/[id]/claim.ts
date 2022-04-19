@@ -30,8 +30,6 @@ export const handler = async (
 		return notFound(res);
 	}
 
-	console.debug('In Claim handler');
-
 	switch (req.method) {
 
 	case 'PATCH':
