@@ -1,4 +1,5 @@
-import { Stack, Text } from '@chakra-ui/react';
+import { Stack, Text, VStack, Button } from '@chakra-ui/react';
+import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
 import React, { useContext, useEffect, useState } from 'react';
 import Filters from './Filters';
@@ -10,6 +11,8 @@ import { BountyCollection } from '../../../models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
 
 export const PAGE_SIZE = 10;
+
+type SetState<T extends any> = (arg: T) => void;
 
 const maxPages = (bounties: BountyCollection | BountyCollection[] | undefined) => {
 	if (!bounties || !Array.isArray(bounties)) return 0;
@@ -31,6 +34,57 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 		<Text	fontSize="lg">{ message }</Text>
 	</Stack>
 );
+
+const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
+	bounties: BountyCollection[] | undefined,
+	selectedBounties: string[],
+	setSelectedBounties: SetState<string[]>,
+	}): JSX.Element => {
+
+	const { colorMode } = useColorMode();
+
+	const handleSelectAll = (): void => {
+		if (bounties && selectedBounties.length < bounties.length) {
+			setSelectedBounties(bounties.map(({ _id }) => _id));
+		}
+	};
+
+	const handleClearAll = (): void => {
+		setSelectedBounties([]);
+	};
+
+	return (
+		<Stack justify="space-between" direction="row" mt={1}>
+			<Button
+				p={2}
+				disabled={!bounties || selectedBounties.length == bounties.length}
+				size="xs"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				onClick={handleSelectAll}
+			>
+				Select All
+			</Button>
+			<Button
+				p={2}
+				disabled={!bounties || selectedBounties.length == 0}
+				size="xs"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				onClick={handleClearAll}
+			>
+				Clear All
+			</Button>
+			<Button
+				p={2}
+				disabled={!bounties || selectedBounties.length == 0}
+				size="xs"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				onClick={handleClearAll}
+			>
+				Export
+			</Button>
+		</Stack>
+	);
+});
 
 const Bounties = (): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
@@ -77,14 +131,19 @@ const Bounties = (): JSX.Element => {
 				fontWeight="600"
 				gridGap="4"
 			>
-				<Filters
-					status={status} setStatus={setStatus}
-					search={search} setSearch={setSearch}
-					lte={lte} setLte={setLte}
-					gte={gte} setGte={setGte}
-					sortBy={sortBy} setSortBy={setSortBy}
-					sortAscending={sortAscending} setSortAscending={setSortAscending}
-				/>
+				<VStack
+				  gridGap="1px"
+				>
+					<Filters
+						status={status} setStatus={setStatus}
+						search={search} setSearch={setSearch}
+						lte={lte} setLte={setLte}
+						gte={gte} setGte={setGte}
+						sortBy={sortBy} setSortBy={setSortBy}
+						sortAscending={sortAscending} setSortAscending={setSortAscending}
+					/>
+					<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+				</VStack>
 				{isError || noResults
 					? <FilterResultPlaceholder message={'No Results'} />
 					: isLoading

@@ -32,32 +32,26 @@ const BountySelect = ({ selectedBounties, setSelectedBounties, bountyId }: {
 	bountyId: string,
 }): JSX.Element => {
 
-	const updateSelectedBounties = (event: any, bId: string): void => {
-		const selected = event.target.checked;
-		const index = selectedBounties.indexOf(bId);
-		console.log(`selected: ${selected} index: ${index}`);
-		if (selected && index === -1) {
-			selectedBounties.push(bId);
-			setSelectedBounties(selectedBounties);
-			console.log('added');
-			event.target.checked = false;
+	const updateSelectedBounties = (event: any): void => {
+		const bId = event.target.value;
+		if (!selectedBounties.includes(bId)) {
+			setSelectedBounties([...selectedBounties, bId]);
 		} else {
-			if (!selected && index !== -1) {
-				selectedBounties.splice(index, 1);
-				setSelectedBounties(selectedBounties);
-				console.log('deleted');
-				event.target.checked = true;
-			}
+			setSelectedBounties(selectedBounties.filter((selectedBountyId) => {
+				return selectedBountyId !== bId;
+			}));
 		}
-		console.log('In OnChange ' + JSON.stringify(selectedBounties));
 	};
 
 	return (
 		<Checkbox
 			size="sm"
-			p="2"
+			pt="2"
+			px="2"
+			value={bountyId}
 			colorScheme="primary"
-			onChange={e => updateSelectedBounties(e, bountyId)}
+			onChange={updateSelectedBounties}
+			isChecked={selectedBounties.includes(bountyId)}
 		/>
 	);
 };
@@ -195,7 +189,7 @@ export const BountyCard = ({ bounty }: { bounty: BountyCollection }): JSX.Elemen
 export const AccordionBountyItem = ({ bounty, selectedBounties, setSelectedBounties }: { bounty: BountyCollection, selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
 		<BountySelect bountyId={bounty._id} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties} />
-		<AccordionButton pb={5}>
+		<AccordionButton pb={5} pt={0}>
 			<BountySummary bounty={bounty} />
 			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
 				<AccordionIcon />
