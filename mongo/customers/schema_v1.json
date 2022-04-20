@@ -3,7 +3,6 @@
         "_id" : ObjectId("616f00ae05026959ede9a3a4"),
         "customerId" : 1,
         "customerName": "External DAO Name",
-        "applicableRoles" : [ ],
         "customization": {
             "logo": "https://pbs.twimg.com/profile_images/1389400052448247816/qsOU0pih_400x400.jpg",
             "colors": {

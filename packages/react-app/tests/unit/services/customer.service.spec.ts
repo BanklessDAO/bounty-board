@@ -9,7 +9,7 @@ describe('Testing the customer service', () => {
 			.mockReturnValue(Promise.resolve(customers));
 
 		const filteredCustomers = await service.getCustomersInUsersGuilds({ guilds });
-		expect(filteredCustomers.length).toEqual(customers.length - 1);
+		expect(filteredCustomers.length).toEqual(customers.length - 2);
 	});
 
 	it('Returns bankless if no guilds are found', async () => {

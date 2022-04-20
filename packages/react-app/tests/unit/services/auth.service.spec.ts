@@ -2,10 +2,13 @@ import { SessionWithToken } from '@app/types/SessionExtended';
 import * as service from '@app/services/auth.service';
 import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import { Document } from 'mongoose';
-import { BANKLESS } from '@app/constants/Bankless';
 import { BANKLESS_ROLES } from '@app/constants/Roles';
+import { customers } from '../../stubs/customers.stub';
+import * as custService from '@app/services/customer.service';
 
-const customerId = BANKLESS.customerId;
+const banklessCustomer = customers[0];
+const BBBSCustomer = customers[1];
+const customerId = banklessCustomer.customerId;
 
 describe('Role caching', () => {
 
@@ -115,17 +118,18 @@ describe('Permissions', () => {
 	});
 
 	it('Base permissions are returned for all bankless L1-4', async () => {
+		jest.spyOn(custService, 'getCustomer').mockResolvedValue(banklessCustomer);
 		jest.spyOn(service, 'getRolesForUserInGuild')
 			.mockResolvedValue([BANKLESS_ROLES.LEVEL_1]);
 
-		let permissions = await service.getPermissions('', '');
+		let permissions = await service.getPermissions('', banklessCustomer.customerId);
 
 		expect(permissions).toEqual(service.baseRoles);
 
 		jest.spyOn(service, 'getRolesForUserInGuild')
 			.mockResolvedValue([BANKLESS_ROLES.LEVEL_2]);
 
-		permissions = await service.getPermissions('', '');
+		permissions = await service.getPermissions('', banklessCustomer.customerId);
 		expect(permissions).toEqual(service.baseRoles);
 
 		jest.spyOn(service, 'getRolesForUserInGuild')
@@ -134,35 +138,64 @@ describe('Permissions', () => {
 				BANKLESS_ROLES.LEVEL_4,
 			]);
 		
-		permissions = await service.getPermissions('', '');
+		permissions = await service.getPermissions('', banklessCustomer.customerId);
 		expect(permissions).toEqual(service.baseRoles);
 		
 		jest.spyOn(service, 'getRolesForUserInGuild')
 			.mockResolvedValue([BANKLESS_ROLES.LEVEL_4]);
 
-		permissions = await service.getPermissions('', '');
+		permissions = await service.getPermissions('', banklessCustomer.customerId);
 		expect(permissions).toEqual(service.baseRoles);
 	});
 
 	it('Admins are added for BB core', async () => {
+		jest.spyOn(custService, 'getCustomer').mockResolvedValue(banklessCustomer);
 		jest.spyOn(service, 'getRolesForUserInGuild')
 			.mockResolvedValue([BANKLESS_ROLES.BB_CORE]);
-		const permissions = await service.getPermissions('', '');
+		const permissions = await service.getPermissions('', banklessCustomer.customerId);
 		expect(permissions).toEqual(['admin']);
 	});
 
-	it('No permission added otherwise', async () => {
+	it('Custom roles for Dev Guild', async () => {
+		jest.spyOn(custService, 'getCustomer').mockResolvedValue(banklessCustomer);
+		jest.spyOn(service, 'getRolesForUserInGuild')
+			.mockResolvedValue([BANKLESS_ROLES.DEV_GUILD]);
+		const permissions = await service.getPermissions('', banklessCustomer.customerId);
+		expect(permissions).toEqual(['create-bounty', 'edit-bounties']);
+	});
+
+	it('All of BBBS are admins', async () => {
+		jest.spyOn(custService, 'getCustomer').mockResolvedValue(BBBSCustomer);
+		jest.spyOn(service, 'getRolesForUserInGuild')
+			.mockResolvedValue(['anything']);
+		const permissions = await service.getPermissions('', BBBSCustomer.customerId);
+		expect(permissions).toEqual(['admin']);
+	});
+
+	it('No permission added for unknown role', async () => {
+		const getCustomerSpy = jest.spyOn(custService, 'getCustomer').mockResolvedValue(banklessCustomer);
 		jest.spyOn(service, 'getRolesForUserInGuild')
 			.mockResolvedValue(['123344566']);
-
-		let permissions = await service.getPermissions('', '');
-
+		const permissions = await service.getPermissions('', banklessCustomer.customerId);
 		expect(permissions).toEqual([]);
+		expect(getCustomerSpy).toBeCalled();
+	});
 
+	it('No permission added for empty customer ID', async () => {
+		jest.spyOn(custService, 'getCustomer').mockResolvedValue(null);
+		const getRolesSpy = jest.spyOn(service, 'getRolesForUserInGuild')
+			.mockResolvedValue(['123344566']);
+		const permissions = await service.getPermissions('', '');
+		expect(permissions).toEqual([]);
+		expect(getRolesSpy).not.toBeCalled();
+	});
+
+	it('No permission added for customer with no permissions defined', async () => {
+		const getCustomerSpy = jest.spyOn(custService, 'getCustomer').mockResolvedValue(customers[2]);
 		jest.spyOn(service, 'getRolesForUserInGuild')
-			.mockResolvedValue([]);
-
-		permissions = await service.getPermissions('', '');
+			.mockResolvedValue(['123344566']);
+		const permissions = await service.getPermissions('', customers[2].customerId);
 		expect(permissions).toEqual([]);
+		expect(getCustomerSpy).toBeCalled();
 	});
 });

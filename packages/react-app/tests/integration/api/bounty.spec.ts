@@ -210,6 +210,7 @@ describe('Testing the bounty API', () => {
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
 			const allOpenStatuses = data.every((d: BountyCollection) => d.status === 'Open');
+			expect(data.length).toBeGreaterThan(0);
 			expect(allOpenStatuses).toEqual(true);
 		});
 
@@ -233,6 +234,32 @@ describe('Testing the bounty API', () => {
 			expect(correctSearchTerm).toEqual(true);
 		});
 
+		it('Finds Claimed By Me', async () => {
+			const userId = '703336960051118256';
+			req.method = 'GET';
+			req.query = {
+				claimedBy: userId,
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const foundBounty = data[0].title === 'Create logic to add Pagination to search filters';
+			expect(foundBounty).toEqual(true);
+			expect(data.length).toEqual(1);
+		});
+
+		it('Finds Created By Me', async () => {
+			const userId = '703336960051118256';
+			req.method = 'GET';
+			req.query = {
+				createdBy: userId,
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const foundBounty = data[0].title === 'Create notes for one meeting';
+			expect(foundBounty).toEqual(true);
+			expect(data.length).toEqual(1);
+		});
+
 		it('Can perform a wildcard text search on name', async () => {
 			req.method = 'GET';
 			req.query = {
@@ -240,7 +267,7 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			expect(data.length).toEqual(2);
+			expect(data.length).toEqual(1);
 		});
 
 		it('Can perform a wildcard text search on description', async () => {
