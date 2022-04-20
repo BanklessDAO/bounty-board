@@ -42,6 +42,7 @@ const Bounties = (): JSX.Element => {
 	const [lte, setLte] = useState(Infinity);
 	const [sortBy, setSortBy] = useState('createdAt');
 	const [sortAscending, setSortAscending] = useState(false);
+	const [selectedBounties, setSelectedBounties] = useState<string[]>([]);
 	const debounceSearch = useDebounce(search, 500, true);
 
 	const { customer } = useContext(CustomerContext);
@@ -88,7 +89,7 @@ const Bounties = (): JSX.Element => {
 					? <FilterResultPlaceholder message={'No Results'} />
 					: isLoading
 						? <FilterResultPlaceholder message={'Loading'} />
-						: <BountyAccordion bounties={paginatedBounties} />
+						: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
 				}
 			</Stack>
 			<BountyPaginate

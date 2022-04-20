@@ -4,6 +4,7 @@ import {
 	AccordionItem,
 	AccordionPanel,
 	Box,
+	Checkbox,
 	Flex,
 	Grid,
 	GridItem,
@@ -17,11 +18,49 @@ import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
 
+type SetState<T extends any> = (arg: T) => void;
+
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
 		<TagLabel>{indication.replace('-', ' ')}</TagLabel>
 	</Tag>
 );
+
+const BountySelect = ({ selectedBounties, setSelectedBounties, bountyId }: {
+	selectedBounties: string[],
+	setSelectedBounties: SetState<string[]>,
+	bountyId: string,
+}): JSX.Element => {
+
+	const updateSelectedBounties = (event: any, bId: string): void => {
+		const selected = event.target.checked;
+		const index = selectedBounties.indexOf(bId);
+		console.log(`selected: ${selected} index: ${index}`);
+		if (selected && index === -1) {
+			selectedBounties.push(bId);
+			setSelectedBounties(selectedBounties);
+			console.log('added');
+			event.target.checked = false;
+		} else {
+			if (!selected && index !== -1) {
+				selectedBounties.splice(index, 1);
+				setSelectedBounties(selectedBounties);
+				console.log('deleted');
+				event.target.checked = true;
+			}
+		}
+		console.log('In OnChange ' + JSON.stringify(selectedBounties));
+	};
+
+	return (
+		<Checkbox
+			size="sm"
+			p="2"
+			colorScheme="primary"
+			onChange={e => updateSelectedBounties(e, bountyId)}
+		/>
+	);
+};
 
 const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
@@ -35,7 +74,7 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
-const BountySummary = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
@@ -153,8 +192,9 @@ export const BountyCard = ({ bounty }: { bounty: BountyCollection }): JSX.Elemen
 	);
 };
 
-export const AccordionBountyItem = ({ bounty }: { bounty: BountyCollection }): JSX.Element => (
+export const AccordionBountyItem = ({ bounty, selectedBounties, setSelectedBounties }: { bounty: BountyCollection, selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
+		<BountySelect bountyId={bounty._id} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties} />
 		<AccordionButton pb={5}>
 			<BountySummary bounty={bounty} />
 			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
