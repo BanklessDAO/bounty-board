@@ -13,6 +13,7 @@ export interface FilterParams {
 	sortBy?: string;
 	createdBy?: string;
 	claimedBy?: string;
+	customerKey?: string;
 	asc: boolean | string;
 	next?: string;
 	previous?: string;

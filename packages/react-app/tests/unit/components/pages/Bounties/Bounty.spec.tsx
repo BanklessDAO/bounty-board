@@ -5,6 +5,9 @@ import * as auth from '@app/components/global/Auth/index';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
+jest.mock('next/router', () => ({
+	useRouter: () => ({ router: { isReady: true } }),
+}));
 
 describe('Testing the bounty claim component', () => {
 	afterEach(() => {

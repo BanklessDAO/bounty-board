@@ -1,16 +1,13 @@
 import { Stack, Text } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Filters from './Filters';
-import useDebounce from '../../../hooks/useDebounce';
-import { CustomerContext } from '../../../context/CustomerContext';
-import { BANKLESS } from '../../../constants/Bankless';
-import useBounties from '../../../hooks/useBounties';
-import { BountyCollection } from '../../../models/Bounty';
+import useBounties from '@app/hooks/useBounties';
+import { BountyCollection } from '@app/models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
 import { useRouter } from 'next/router';
 import { FilterParams } from '@app/types/Filter';
-import { ParsedUrlQuery } from 'querystring';
+import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
 
 export const PAGE_SIZE = 10;
 
@@ -35,62 +32,18 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 	</Stack>
 );
 
-const baseFilters: FilterParams = {
-	search: '',
-	status: 'Open',
-	gte: 0,
-	lte: Infinity,
-	sortBy: 'reward',
-	asc: false,
-	customerId: BANKLESS.customerId,
-	// no created or claimed
-};
-
-const useDynamicUrl = (filters: FilterParams): string => {
-	const { customer } = useContext(CustomerContext);
-	const debounceSearch = useDebounce(filters.search, 500, true);
-
-	return useMemo(() => {
-		const { status, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
-
-		let urlQuery = `?status=${status === '' ? 'All' : status}`;
-		if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
-		if (lte) urlQuery += `&lte=${lte}`;
-		if (gte) urlQuery += `&gte=${gte}`;
-		if (sortBy) urlQuery += `&sortBy=${sortBy}`;
-		if (sortAscending) urlQuery += `&asc=${sortAscending}`;
-		if (customer) urlQuery += `&customerId=${customer.customerId ?? BANKLESS.customerId}`;
-		if (customer) urlQuery += `&customerKey=${customer.customerKey ?? BANKLESS.customerKey}`;
-		if (claimedBy) urlQuery += `&claimedBy=${claimedBy}`;
-		if (createdBy) urlQuery += `&createdBy=${createdBy}`;
-
-		return urlQuery;
-
-	}, [filters, BANKLESS, customer, debounceSearch]);
-};
-
-const usePaginatedBounties = (bounties: BountyCollection[] | undefined, page: number) => {
+type UsePaginatedBountiesResult = { paginatedBounties: BountyCollection[], noResults: boolean }
+const usePaginatedBounties = (bounties: BountyCollection[] | undefined, page: number, filters: FilterParams): UsePaginatedBountiesResult => {
 	// splits bounties according to the maximum page size
-	return useMemo(() => bounties
-		? bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)))
-		: []
-	, [bounties, page, PAGE_SIZE]);
+	return useMemo(() => {
+		const paginatedBounties = bounties
+			? bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)))
+			: [];
+
+		const noResults = Boolean(((filters.search || filters.status) && bounties && paginatedBounties.length === 0));
+		return { paginatedBounties, noResults };
+	}, [bounties, page, PAGE_SIZE, filters.status, filters.search]);
 };
-
-const getFiltersFromUrl = (query: ParsedUrlQuery): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {
-	/**
-	 * Grab filters from the url, using fallback values if we see 'undefined'
-	 */
-	const isValid = (val && val !== 'undefined');
-	const existing = baseFilters[key as keyof FilterParams];
-	const adjVal = isValid ? val : existing;
-	return {
-		...prev,
-		...{ [key]: adjVal },
-	};
-}, {} as FilterParams);
-
-const filtersDefined = (query: ParsedUrlQuery): boolean => !Object.values(query).some(item => item === 'undefined');
 
 const Bounties = (): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
@@ -108,9 +61,9 @@ const Bounties = (): JSX.Element => {
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}
-	}, [router, firstLoad]);
+	}, [router.isReady, router.query, firstLoad]);
 
-	const urlQuery = useDynamicUrl(filters);
+	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -118,14 +71,12 @@ const Bounties = (): JSX.Element => {
 		}
 	}, [urlQuery, router.isReady]);
 
-	const { bounties, isLoading, isError } = useBounties('/api/bounties' + urlQuery);
-	const paginatedBounties = usePaginatedBounties(bounties, page);
-	const noResults = ((filters.search || filters.status) && bounties && paginatedBounties.length === 0);
-
+	const { bounties, isLoading, isError } = useBounties('/api/bounties' + urlQuery, router.isReady);
+	const { paginatedBounties, noResults } = usePaginatedBounties(bounties, page, filters);
 
 	useEffect(() => {
 		setPage(0);
-	}, [filters.search, filters.gte, filters.lte, filters.sortBy]);
+	}, [filters.search, filters.gte, filters.lte, filters.sortBy, filters?.claimedBy, filters?.createdBy]);
 
 	return (
 		<>

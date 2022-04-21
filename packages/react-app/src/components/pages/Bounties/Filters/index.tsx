@@ -53,7 +53,7 @@ const SearchFilter = ({
 			<InputLeftElement pointerEvents="none">
 				<SearchIcon color="gray.300" />
 			</InputLeftElement>
-			<Input placeholder={placeholder} mb={4} value={filters.search} onChange={updateSearchValue} autoFocus />
+			<Input placeholder={placeholder} mb={4} value={filters.search ?? ''} onChange={updateSearchValue} autoFocus />
 		</InputGroup>
 	);
 };
@@ -151,8 +151,8 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 	type CheckEvent = React.ChangeEvent<HTMLInputElement>;
 
 	const updateClaimedByMe = (event: CheckEvent): void => {
-		setClaimedByMe(event.target.checked);
-		if (claimedByMe && user) {
+		const { checked } = event.target;
+		if (checked && user) {
 			setFilters({
 				...filters,
 				claimedBy: user.id,
@@ -161,10 +161,11 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 			const { claimedBy, ...filtersNoClaimedBy } = filters; claimedBy;
 			setFilters(filtersNoClaimedBy);
 		}
+		setClaimedByMe(checked);
 	};
 	const updateCreatedByMe = (event: CheckEvent): void => {
-		setCreatedByMe(event.target.checked);
-		if (claimedByMe && user) {
+		const { checked } = event.target;
+		if (checked && user) {
 			setFilters({
 				...filters,
 				createdBy: user.id,
@@ -173,7 +174,9 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 			const { createdBy, ...filtersNoCreatedBy } = filters; createdBy;
 			setFilters(filtersNoCreatedBy);
 		}
+		setCreatedByMe(checked);
 	};
+
 	return (
 		<>
 			{user && <Flex className="composite-heading" alignItems="center">

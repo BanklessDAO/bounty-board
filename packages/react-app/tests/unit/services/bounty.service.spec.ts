@@ -20,7 +20,7 @@ describe('Testing the bounty service', () => {
 			const filters = service.getFilters(query);
 			const { lte, gte, ...rest } = filters;
 			expect(Object.keys(filters))
-				.toEqual([...Object.keys(rest), '$lte', '$gte']);
+				.toEqual([...Object.keys(rest), 'lte', 'gte']);
 
 			expect(typeof Object.values(rest)[0]).toBe('string');
 			expect(lte).toEqual(1);

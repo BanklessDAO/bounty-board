@@ -26,7 +26,7 @@ const Status = ({ indication }: { indication: string }): JSX.Element => (
 const DiscordStub = ({ name }: { name: string }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
 		<Text fontSize="md" color="steelblue">
-      @{name}
+			@{name}
 		</Text>
 	</Flex>
 );
@@ -36,7 +36,7 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 };
 
 const BountySummary = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
-	
+
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
 			<Box
@@ -50,7 +50,7 @@ const BountySummary = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 				</Heading>
 			</Box>
 			<Box
-				width={{ base: '50%', md: '30%' }}
+				width={{ base: '100%', md: '30%' }}
 				textAlign={{ base: 'left', md: 'right' }}
 				mt={{ base: 0, md: 4 }}
 				ml="auto"
@@ -84,7 +84,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 	} = bounty;
 	return (
 		<Grid gap={6}>
-			{ _id &&
+			{_id &&
 				<GridItem>
 					<Heading size="sm">Bounty ID</Heading>
 					<Text>{_id}</Text>
@@ -102,7 +102,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 				<Heading size="sm">Done Criteria</Heading>
 				<Text>{criteria}</Text>
 			</GridItem>
-			{ dueAt &&
+			{dueAt &&
 				<GridItem>
 					<Heading size="sm">Deadline</Heading>
 					<Text>{new Date(dueAt).toDateString()}</Text>
@@ -130,7 +130,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 							: status.toLowerCase() !== 'deleted' && <BountyClaim bounty={bounty} />
 				}
 				<Box ml="5">
-					<BountyEditButton bounty={bounty}/>
+					<BountyEditButton bounty={bounty} />
 				</Box>
 				</Flex>
 			</GridItem>
@@ -157,7 +157,7 @@ export const AccordionBountyItem = ({ bounty }: { bounty: BountyCollection }): J
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
 		<AccordionButton pb={5}>
 			<BountySummary bounty={bounty} />
-			<Box pos="relative" textAlign="right" w={0} left={-4} top={-7}>
+			<Box pos="relative" textAlign="right" w={0} left={-4} top={{ base: -10, md: -5 }}>
 				<AccordionIcon />
 			</Box>
 		</AccordionButton>
