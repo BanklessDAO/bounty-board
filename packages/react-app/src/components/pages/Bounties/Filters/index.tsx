@@ -1,4 +1,5 @@
 import {
+	Checkbox,
 	Heading,
 	HStack,
 	Input,
@@ -13,7 +14,9 @@ import {
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
 import { AcceptedSortInputs, FilterParams, UseFilterState } from '@app/types/Filter';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useUser } from '@app/hooks/useUser';
+
 
 type SetState<T extends any> = (arg: T) => void;
 type Event = React.ChangeEvent<HTMLInputElement>
@@ -68,7 +71,6 @@ const SelectFilters = ({ name, options,
 			status: event.target.value,
 		});
 	};
-
 	return (
 		<>
 			{name && <Heading size="xs">{name}</Heading>}
@@ -102,9 +104,11 @@ const SortBy = ({ name, options, filters, setFilters }: {
 	};
 
 	const booleanAsc = useMemo((): boolean => {
+		// string queries will return `'false'` as `true`
 		if (filters.asc === 'false') return false;
-		if (filters.asc === 'true') return true;
-		return filters.asc as boolean;
+		// technically do not need this line
+		else if (filters.asc === 'true') return true;
+		else return Boolean(filters.asc);
 	}, [filters.asc]);
 
 	return (
@@ -131,6 +135,69 @@ const SortBy = ({ name, options, filters, setFilters }: {
 					</option>
 				))}
 			</Select>
+		</>
+	);
+};
+
+const MyBountiesFilter = ({ name, filters, setFilters }: {
+	name?: string
+} & UseFilterState): JSX.Element => {
+
+	const { user } = useUser();
+
+	const [claimedByMe, setClaimedByMe] = useState(false);
+	const [createdByMe, setCreatedByMe] = useState(false);
+
+	type CheckEvent = React.ChangeEvent<HTMLInputElement>;
+
+	const updateClaimedByMe = (event: CheckEvent): void => {
+		setClaimedByMe(event.target.checked);
+		if (claimedByMe && user) {
+			setFilters({
+				...filters,
+				claimedBy: user.id,
+			});
+		} else {
+			const { claimedBy, ...filtersNoClaimedBy } = filters; claimedBy;
+			setFilters(filtersNoClaimedBy);
+		}
+	};
+	const updateCreatedByMe = (event: CheckEvent): void => {
+		setCreatedByMe(event.target.checked);
+		if (claimedByMe && user) {
+			setFilters({
+				...filters,
+				createdBy: user.id,
+			});
+		} else {
+			const { createdBy, ...filtersNoCreatedBy } = filters; createdBy;
+			setFilters(filtersNoCreatedBy);
+		}
+	};
+	return (
+		<>
+			{user && <Flex className="composite-heading" alignItems="center">
+				{name && <Heading size="xs" mb="0">{name}</Heading>}
+				<Flex className="checkbox" w='100%' alignItems="center">
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateClaimedByMe}
+						isChecked={claimedByMe}
+					>
+						Claimed By Me
+					</Checkbox>
+					<Spacer />
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateCreatedByMe}
+						isChecked={createdByMe}
+					>
+						Created By Me
+					</Checkbox>
+				</Flex>
+			</Flex>}
 		</>
 	);
 };
@@ -184,7 +251,6 @@ const Filters = (props: {
 			value: bountyStatus.COMPLETED,
 		},
 	];
-
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
@@ -195,6 +261,10 @@ const Filters = (props: {
 				<SelectFilters
 					name="Filter Status"
 					options={filterStatusList}
+					filters={props.filters}
+					setFilters={props.setFilters}
+				/>
+				<MyBountiesFilter
 					filters={props.filters}
 					setFilters={props.setFilters}
 				/>

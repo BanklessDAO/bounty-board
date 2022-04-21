@@ -16,10 +16,11 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	if (typeof query.status === 'string') filters.status = query.status;
 	if (typeof query.search === 'string') filters.search = query.search;
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
+	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
+	if (typeof query.claimedBy === 'string') filters.claimedBy = query.claimedBy;
 
 	if (query.lte) filters.lte = Number(query.lte);
 	if (query.gte) filters.gte = Number(query.gte);
-
 	return filters;
 };
 
@@ -115,6 +116,21 @@ export const filterCustomerId = (query: FilterQuery<BountyCollection>, customerI
 	return query;
 };
 
+export const filterByUser = (query: FilterQuery<BountyCollection>, claimedBy: string | undefined, createdBy: string | undefined): FilterQuery<BountyCollection> => {
+	/**
+	 * Remove bounties based on user
+	 */
+	if (typeof claimedBy !== undefined && claimedBy) {
+		query['claimedBy.discordId'] = claimedBy;
+	}
+	if (typeof createdBy !== undefined && createdBy) {
+		query['createdBy.discordId'] = createdBy;
+	}
+
+	return query;
+};
+
+
 export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	/**
 	 * Extracts pagination variables from the request into a bountyQuery
@@ -135,12 +151,13 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 
 	const filters = getFilters(query);
 
-	const { status, search, lte, gte, customerId } = filters;
+	const { status, search, lte, gte, customerId, claimedBy, createdBy } = filters;
 
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
 	if (customerId) filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', lte, gte });
+	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
 	filterQuery = handleEmpty(filterQuery);
 
 	return filterQuery;

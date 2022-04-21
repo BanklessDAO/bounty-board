@@ -1,16 +1,10 @@
 const discordInfo = {
 	baseUrl: 'https://discord.com/channels',
-	server: process.env.NEXT_PUBLIC_DISCORD_SERVER_ID,
-	channel: process.env.NEXT_PUBLIC_DISCORD_CHANNEL_BOUNTY_BOARD_ID,
 };
 export const baseUrl = 'https://discord.com/channels';
-const supportChannelId = '834499078434979893';
-const serverId = '834499078434979890';
-// separation of concerns: discordInfo.server (bountyboard) vs serverId (support)
-// discordInfo.server will likely never change. ServerId may change
+const supportChannelId = process.env.BOUNTY_BOARD_DISCORD_SUPPORT_CHANNEL || '834499078434979893';
+const supportServerId = process.env.BOUNTY_BOARD_DISCORD_SUPPORT_SERVER || '834499078434979890';
 
-export const discordChannelUrl = `${discordInfo.baseUrl}/${discordInfo.server}/${discordInfo.channel}`;
-
-export const discordSupportChannelUrl = `${discordInfo.baseUrl}/${serverId}/${supportChannelId}`;
-export const feedbackUrl = 'https://tally.so/r/n0GD0w';
+export const discordSupportChannelUrl = `${discordInfo.baseUrl}/${supportServerId}/${supportChannelId}`;
+export const feedbackUrl = process.env.FEEDBACK_URL || 'https://tally.so/r/n0GD0w';
 

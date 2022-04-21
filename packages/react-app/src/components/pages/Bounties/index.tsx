@@ -43,6 +43,7 @@ const baseFilters: FilterParams = {
 	sortBy: 'reward',
 	asc: false,
 	customerId: BANKLESS.customerId,
+	// no created or claimed
 };
 
 const useDynamicUrl = (filters: FilterParams): string => {
@@ -50,16 +51,18 @@ const useDynamicUrl = (filters: FilterParams): string => {
 	const debounceSearch = useDebounce(filters.search, 500, true);
 
 	return useMemo(() => {
-		const { status, lte, gte, sortBy, asc: sortAscending } = filters;
+		const { status, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
 
 		let urlQuery = `?status=${status === '' ? 'All' : status}`;
-		urlQuery += `&search=${debounceSearch}`;
-		urlQuery += `&lte=${lte}`;
-		urlQuery += `&gte=${gte}`;
-		urlQuery += `&sortBy=${sortBy}`;
-		urlQuery += `&asc=${sortAscending}`;
-		urlQuery += `&customerId=${customer.customerId ?? BANKLESS.customerId}`;
-		urlQuery += `&customerKey=${customer.customerKey ?? BANKLESS.customerKey}`;
+		if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
+		if (lte) urlQuery += `&lte=${lte}`;
+		if (gte) urlQuery += `&gte=${gte}`;
+		if (sortBy) urlQuery += `&sortBy=${sortBy}`;
+		if (sortAscending) urlQuery += `&asc=${sortAscending}`;
+		if (customer) urlQuery += `&customerId=${customer.customerId ?? BANKLESS.customerId}`;
+		if (customer) urlQuery += `&customerKey=${customer.customerKey ?? BANKLESS.customerKey}`;
+		if (claimedBy) urlQuery += `&claimedBy=${claimedBy}`;
+		if (createdBy) urlQuery += `&createdBy=${createdBy}`;
 
 		return urlQuery;
 
@@ -81,7 +84,6 @@ const getFiltersFromUrl = (query: ParsedUrlQuery): FilterParams => Object.entrie
 	const isValid = (val && val !== 'undefined');
 	const existing = baseFilters[key as keyof FilterParams];
 	const adjVal = isValid ? val : existing;
-	console.debug({ key, val, existing, adjVal, isValid });
 	return {
 		...prev,
 		...{ [key]: adjVal },
@@ -119,6 +121,7 @@ const Bounties = (): JSX.Element => {
 	const { bounties, isLoading, isError } = useBounties('/api/bounties' + urlQuery);
 	const paginatedBounties = usePaginatedBounties(bounties, page);
 	const noResults = ((filters.search || filters.status) && bounties && paginatedBounties.length === 0);
+
 
 	useEffect(() => {
 		setPage(0);

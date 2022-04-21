@@ -12,9 +12,11 @@ describe('Testing the bounty service', () => {
 			lte: '1',
 			gte: '1',
 			customerId: 'customerId',
+			createdBy: '1111',
+			claimedBy: '2222',
 		};
 
-		it('Extracts status, search, lte, gte, customerId from the query string', () => {
+		it('Extracts status, search, lte, gte, customerId, createdBy, claimedBy from the query string', () => {
 			const filters = service.getFilters(query);
 			const { lte, gte, ...rest } = filters;
 			expect(Object.keys(filters))

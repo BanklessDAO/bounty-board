@@ -11,6 +11,8 @@ export interface FilterParams {
 	lte?: number;
 	gte?: number;
 	sortBy?: string;
+	createdBy?: string;
+	claimedBy?: string;
 	asc: boolean | string;
 	next?: string;
 	previous?: string;

@@ -1,326 +1,326 @@
 [
-    {
-      "_id": "10f6585b453e70eed340e8e3",
-      "customerId": "834499078434979890",
-      "season": 1,
-      "editKey": "EK2",
-      "title": "Implement React Components for Filters",
-      "description": "Description for new website landing page with specs",
-      "criteria": "A completed bounty has the following deliverables...",
-      "reward": {
-        "currency": "BANK",
-        "amount": 1000,
-        "scale": 2,
-        "amountWithoutScale": 10
-      },
-      "createdBy": {
-        "discordHandle": "paul#8888",
-        "discordId": "324439902343239764"
-      },
-      "createdAt": "2021-07-20T06:40:56.112Z",
-      "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": {
-          "isDaoMember": false,
-          "guildName": null,
-          "discordHandle": "rick#5555",
-          "discordId": "324423432343239764"
-        },
-      "claimedAt": "2021-07-20T07:00:31.166Z",
-      "status": "Open",
-      "statusHistory": [
-        {
-          "status": "Open",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Draft",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Review",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Completed",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Deleted",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        }
-      ]
+  {
+    "_id": "10f6585b453e70eed340e8e3",
+    "customerId": "834499078434979890",
+    "season": 1,
+    "editKey": "EK2",
+    "title": "Implement React Components for Filters",
+    "description": "Description for new website landing page with specs",
+    "criteria": "A completed bounty has the following deliverables...",
+    "reward": {
+      "currency": "BANK",
+      "amount": 1000,
+      "scale": 2,
+      "amountWithoutScale": 10
     },
-    {
-      "_id": "20f6585b453e70eed340e8e3",
-      "customerId": "834499078434979890",
-      "editKey": "EK3",      
-      "season": 1,
-      "title": "Implement Changes to the Bounty Board",
-      "description": "Description for new website landing page with specs",
-      "criteria": "A completed bounty has the following deliverables...",
-      "reward": {
-        "currency": "BANK",
-        "amount": 1034567,
-        "scale": 3,
-        "amountWithoutScale": 1034.567
-      },
-      "createdBy": {
-        "discordHandle": "paul#8888",
-        "discordId": "324439902343239764"
-      },
-      "createdAt": "2021-07-20T06:40:56.112Z",
-      "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": {
-          "isDaoMember": false,
-          "guildName": null,
-          "discordHandle": "rick#5555",
-          "discordId": "324423432343239764"
-        },
-      "claimedAt": "2021-07-20T07:00:31.166Z",
-      "status": "Completed",
-      "statusHistory": [
-        {
-          "status": "Open",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Draft",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Review",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Completed",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Deleted",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        }
-      ]
+    "createdBy": {
+      "discordHandle": "paul#8888",
+      "discordId": "324439902343239764"
     },
-    {
-      "_id": "30f6585b453e70eed340e8e3",
-      "discordMessageId": "123",
-      "customerId": "718590743446290492",      
-      "season": 1,
-      "editKey": "EK4",      
-      "title": "Create Stunning NFT Artwork",
-      "description": "Description for new website landing page with specs",
-      "criteria": "A completed bounty has the following deliverables...",
-      "reward": {
-        "currency": "BANK",
-        "amount": 4000,
-        "scale": 0,
-        "amountWithoutScale": 4000
-      },
-      "createdBy": {
-        "discordHandle": "paul#8888",
-        "discordId": "324439902343239764"
-      },
-      "createdAt": "2021-07-20T06:40:56.112Z",
-      "dueAt": "2021-07-20T06:42:28.853Z",
-      "status": "Open",
-      "statusHistory": [
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Draft",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Review",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Completed",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Deleted",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        }
-      ]
+    "createdAt": "2021-07-20T06:40:56.112Z",
+    "dueAt": "2021-07-20T06:42:28.853Z",
+    "claimedBy": {
+      "isDaoMember": false,
+      "guildName": null,
+      "discordHandle": "rick#5555",
+      "discordId": "324423432343239764"
     },
-    {
-      "_id": "40f6585b453e70eed340e8e3",
-      "customerId": "845400066532704256",
-      "editKey": "EK1",     
-      "season": 1,
-      "title": "Create new website landing page",
-      "description": "Description for new website landing page with specs",
-      "criteria": "A completed bounty has the following deliverables...",
-      "reward": {
-        "currency": "BANK",
-        "amount": 3000,
-        "scale": 0,
-        "amountWithoutScale": 3000
+    "claimedAt": "2021-07-20T07:00:31.166Z",
+    "status": "Open",
+    "statusHistory": [
+      {
+        "status": "Open",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
       },
-      "createdBy": {
-        "discordHandle": "paul#8888",
-        "discordId": "324439902343239764"
+      {
+        "status": "Draft",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
       },
-      "createdAt": "2021-07-20T06:40:56.112Z",
-      "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": {
-          "isDaoMember": false,
-          "guildName": null,
-          "discordHandle": "rick#5555",
-          "discordId": "324423432343239764"
-        },
-      "claimedAt": "2021-07-20T07:00:31.166Z",
-      "status": "In-Progress",
-      "statusHistory": [
-        {
-          "status": "Open",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Draft",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Review",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Completed",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Deleted",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        }
-      ]
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Review",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Completed",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Deleted",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      }
+    ]
+  },
+  {
+    "_id": "20f6585b453e70eed340e8e3",
+    "customerId": "834499078434979890",
+    "editKey": "EK3",
+    "season": 1,
+    "title": "Implement Changes to the Bounty Board",
+    "description": "Description for new website landing page with specs",
+    "criteria": "A completed bounty has the following deliverables...",
+    "reward": {
+      "currency": "BANK",
+      "amount": 1034567,
+      "scale": 3,
+      "amountWithoutScale": 1034.567
     },
-    {
-      "_id": "50f6585b453e70eed340e8e3",
-      "customerId": "834499078434979890",      
-      "season": 1,
-      "editKey": "EK5",
-      "title": "Create logic to add Pagination to search filters",
-      "description": "Description for new website landing page with specs",
-      "criteria": "A completed bounty has the following deliverables...",
-      "reward": {
-        "currency": "BANK",
-        "amount": 10000,
-        "scale": 0,
-        "amountWithoutScale": 10000
-      },
-      "createdBy": {
-        "discordHandle": "paul#8888",
-        "discordId": "324439902343239764"
-      },
-      "createdAt": "2021-07-20T06:40:56.112Z",
-      "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": {
-          "isDaoMember": false,
-          "guildName": null,
-          "discordHandle": "rick#5555",
-          "discordId": "324423432343239764"
-        },
-      "claimedAt": "2021-07-20T07:00:31.166Z",
-      "status": "In-Progress",
-      "statusHistory": [
-        {
-          "status": "Open",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Draft",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Review",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Completed",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Deleted",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        }
-      ]
+    "createdBy": {
+      "discordHandle": "paul#8888",
+      "discordId": "324439902343239764"
     },
-    {
-      "_id": "60f6585b453e70eed340e8e3",
-      "customerId": "834499078434979890",      
-      "season": 1,
-      "editKey": "EK6",      
-      "title": "Create notes for one meeting",
-      "description": "Description for new website landing page with specs",
-      "criteria": "A completed bounty has the following deliverables...",
-      "reward": {
-        "currency": "BANK",
-        "amount": 1500,
-        "scale": 0,
-        "amountWithoutScale": 1500
+    "createdAt": "2021-07-20T06:40:56.112Z",
+    "dueAt": "2021-07-20T06:42:28.853Z",
+    "claimedBy": {
+      "isDaoMember": false,
+      "guildName": null,
+      "discordHandle": "rick#5555",
+      "discordId": "324423432343239764"
+    },
+    "claimedAt": "2021-07-20T07:00:31.166Z",
+    "status": "Completed",
+    "statusHistory": [
+      {
+        "status": "Open",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
       },
-      "createdBy": {
-        "discordHandle": "paul#8888",
-        "discordId": "324439902343239764"
+      {
+        "status": "Draft",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
       },
-      "createdAt": "2021-07-20T06:40:56.112Z",
-      "dueAt": "2021-07-20T06:42:28.853Z",
-      "claimedBy": {
-          "isDaoMember": false,
-          "guildName": null,
-          "discordHandle": "rick#5555",
-          "discordId": "324423432343239764"
-        },
-      "claimedAt": "2021-07-20T07:00:31.166Z",
-      "status": "In-Progress",
-      "statusHistory": [
-        {
-          "status": "Open",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Draft",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Progress",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "In-Review",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Completed",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        },
-        {
-          "status": "Deleted",
-          "modifiedAt": "2021-07-20T07:00:31.166Z"
-        }
-      ]
-    }
-  ]
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Review",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Completed",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Deleted",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      }
+    ]
+  },
+  {
+    "_id": "30f6585b453e70eed340e8e3",
+    "discordMessageId": "123",
+    "customerId": "718590743446290492",
+    "season": 1,
+    "editKey": "EK4",
+    "title": "Create Stunning NFT Artwork",
+    "description": "Penguins and dinosaurs",
+    "criteria": "A completed bounty has the following deliverables...",
+    "reward": {
+      "currency": "BANK",
+      "amount": 4000,
+      "scale": 0,
+      "amountWithoutScale": 4000
+    },
+    "createdBy": {
+      "discordHandle": "paul#8888",
+      "discordId": "324439902343239764"
+    },
+    "createdAt": "2021-07-20T06:40:56.112Z",
+    "dueAt": "2021-07-20T06:42:28.853Z",
+    "status": "Open",
+    "statusHistory": [
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Draft",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Review",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Completed",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Deleted",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      }
+    ]
+  },
+  {
+    "_id": "40f6585b453e70eed340e8e3",
+    "customerId": "845400066532704256",
+    "editKey": "EK1",
+    "season": 1,
+    "title": "Create new website landing page",
+    "description": "Description for new website landing page with specs",
+    "criteria": "A completed bounty has the following deliverables...",
+    "reward": {
+      "currency": "BANK",
+      "amount": 3000,
+      "scale": 0,
+      "amountWithoutScale": 3000
+    },
+    "createdBy": {
+      "discordHandle": "paul#8888",
+      "discordId": "324439902343239764"
+    },
+    "createdAt": "2021-07-20T06:40:56.112Z",
+    "dueAt": "2021-07-20T06:42:28.853Z",
+    "claimedBy": {
+      "isDaoMember": false,
+      "guildName": null,
+      "discordHandle": "rick#5555",
+      "discordId": "324423432343239764"
+    },
+    "claimedAt": "2021-07-20T07:00:31.166Z",
+    "status": "In-Progress",
+    "statusHistory": [
+      {
+        "status": "Open",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Draft",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Review",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Completed",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Deleted",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      }
+    ]
+  },
+  {
+    "_id": "50f6585b453e70eed340e8e3",
+    "customerId": "834499078434979890",
+    "season": 1,
+    "editKey": "EK5",
+    "title": "Create logic to add Pagination to search filters",
+    "description": "Description for new website landing page with specs",
+    "criteria": "A completed bounty has the following deliverables...",
+    "reward": {
+      "currency": "BANK",
+      "amount": 10000,
+      "scale": 0,
+      "amountWithoutScale": 10000
+    },
+    "createdBy": {
+      "discordHandle": "jordaniza#9868",
+      "discordId": "324439902343239764"
+    },
+    "createdAt": "2021-07-20T06:40:56.112Z",
+    "dueAt": "2021-07-20T06:42:28.853Z",
+    "claimedBy": {
+        "isDaoMember": false,
+        "guildName": null,
+        "discordHandle": "chkaloon#6313",
+        "discordId": "703336960051118256"
+      },
+    "claimedAt": "2021-07-20T07:00:31.166Z",
+    "status": "In-Progress",
+    "statusHistory": [
+      {
+        "status": "Open",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Draft",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Review",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Completed",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Deleted",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      }
+    ]
+  },
+  {
+    "_id": "60f6585b453e70eed340e8e3",
+    "customerId": "834499078434979890",
+    "season": 1,
+    "editKey": "EK6",
+    "title": "Create notes for one meeting",
+    "description": "Description for new website landing page with specs",
+    "criteria": "A completed bounty has the following deliverables...",
+    "reward": {
+      "currency": "BANK",
+      "amount": 1500,
+      "scale": 0,
+      "amountWithoutScale": 1500
+    },
+    "createdBy": {
+      "discordHandle": "chkaloon#6313",
+      "discordId": "703336960051118256"
+    },
+    "createdAt": "2021-07-20T06:40:56.112Z",
+    "dueAt": "2021-07-20T06:42:28.853Z",
+    "claimedBy": {
+      "isDaoMember": false,
+      "guildName": null,
+      "discordHandle": "rick#5555",
+      "discordId": "324423432343239764"
+    },
+    "claimedAt": "2021-07-20T07:00:31.166Z",
+    "status": "In-Progress",
+    "statusHistory": [
+      {
+        "status": "Open",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Draft",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Progress",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "In-Review",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Completed",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      },
+      {
+        "status": "Deleted",
+        "modifiedAt": "2021-07-20T07:00:31.166Z"
+      }
+    ]
+  }
+]
