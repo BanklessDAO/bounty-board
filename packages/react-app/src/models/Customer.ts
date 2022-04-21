@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { array, object, string } from 'yup';
+import { Role } from '@app/types/Role';
 
 export const ColorSchema = object({
 	background: object({
@@ -23,24 +24,48 @@ export const CustomizationSchema = object({
 })
 	.noUnknown(true);
 
+export const CustomExternalRoleMapSchema = object({
+	externalRole: string().defined(),
+	roles: array().of(string()).defined(),
+})
+	.noUnknown(true);
+	
+export const ExternalRoleMapSchema = object({
+	baseExternalRoles: array().of(string()).optional(),
+	adminExternalRoles: array().of(string()).optional(),
+	customExternalRoleMap: array().of(CustomExternalRoleMapSchema).optional(),
+})
+	.noUnknown(true);
+	
 export const CustomerSchema = object({
 	customerId: string().defined(),
 	customerName: string().defined(),
 	customerKey: string().defined(),
 	bountyChannel: string().defined(),
 	customization: CustomizationSchema.optional().default(undefined),
-	applicableRoles: array(string()).optional(),
+	externalRoleMap: ExternalRoleMapSchema.optional().default(undefined),
 })
 	.noUnknown(true);
+
 export interface CustomerProps {
 	_id?: string;
 	customerId: string;
 	customerKey: string;
 	customerName: string;
 	customization?: Customization;
-	applicableRoles?: [] | string[];
 	bountyChannel: string;
+	externalRoleMap?: ExternalRoleMap;
 }
+export interface ExternalRoleMap {
+	baseExternalRoles?: string[];
+	adminExternalRoles?: string[];
+	customExternalRoleMap?: CustomExternalRoleMap[];
+}
+export interface CustomExternalRoleMap {
+	externalRole: string;
+	roles: Role[];
+}
+
 export interface Customization {
 	logo?: string;
 	colors?: SupportedColorCustomizations;
@@ -74,6 +99,20 @@ export const CustomizationModel = new mongoose.Schema<Customization>({
 	},
 }, { strict: false });
 
+export const ExternalRoleMapModel = new mongoose.Schema<ExternalRoleMap>({
+	baseExternalRoles: {
+		type: [String],
+		required: false,
+	},
+	adminExternalRoles: {
+		type: [String],
+	},
+	customExternalRoleMap: [{
+		externalRole: String,
+		roles: [String],
+	}],
+});
+
 export const CustomerModel = new mongoose.Schema<CustomerProps>({
 	customerName: {
 		type: String,
@@ -84,13 +123,11 @@ export const CustomerModel = new mongoose.Schema<CustomerProps>({
 	customerKey: {
 		type: String,
 	},
-	applicableRoles: {
-		type: [String],
-	},
 	customization: CustomizationModel,
 	bountyChannel: {
 		type: String,
 	},
+	externalRoleMap: ExternalRoleMapModel,
 });
 
 export default mongoose.models.Customer as mongoose.Model<CustomerProps>

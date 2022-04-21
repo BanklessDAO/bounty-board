@@ -1,4 +1,5 @@
 import {
+	Checkbox,
 	Heading,
 	HStack,
 	Input,
@@ -13,6 +14,8 @@ import {
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
 import { AcceptedSortInputs } from '@app/types/Filter';
+import { useUser } from '@app/hooks/useUser';
+
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -121,6 +124,50 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 	);
 };
 
+const MyBountiesFilter = ({ name, claimedByMe, createdByMe, setClaimedByMe, setCreatedByMe }: {
+	name?: string
+	claimedByMe: boolean,
+	setClaimedByMe: SetState<boolean>,
+	createdByMe: boolean,
+	setCreatedByMe: SetState<boolean>,
+}): JSX.Element => {
+
+	const updateClaimedByMe = (event: any): void => {
+		claimedByMe = event.target.checked;
+		setClaimedByMe(claimedByMe);
+	};
+	const updateCreatedByMe = (event: any): void => {
+		createdByMe = event.target.checked;
+		setCreatedByMe(createdByMe);
+	};
+	return (
+		<>
+			<Flex className="composite-heading" alignItems="center">
+				{name && <Heading size="xs" mb="0">{name}</Heading>}
+				<Flex className="checkbox" w='100%' alignItems="center">
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateClaimedByMe}
+						isChecked={claimedByMe}
+					>
+							Claimed By Me
+					</Checkbox>
+					<Spacer />
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateCreatedByMe}
+						isChecked={createdByMe}
+					>
+							Created By Me
+					</Checkbox>
+				</Flex>
+			</Flex>
+		</>
+	);
+};
+
 const MinMaxFilter = ({ name, setLte, setGte }: {
 	name?: string,
 	lte: number,
@@ -159,6 +206,10 @@ const Filters = (props: {
 	setSortBy: SetState<string>,
 	sortAscending: boolean,
 	setSortAscending: SetState<boolean>,
+	claimedByMe: boolean,
+	setClaimedByMe: SetState<boolean>,
+	createdByMe: boolean,
+	setCreatedByMe: SetState<boolean>,
 }): JSX.Element => {
 	const filterStatusList = [
 		{
@@ -178,7 +229,7 @@ const Filters = (props: {
 			value: bountyStatus.COMPLETED,
 		},
 	];
-
+	const { user } = useUser();
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
@@ -192,6 +243,13 @@ const Filters = (props: {
 					status={props.status}
 					setStatus={props.setStatus}
 				/>
+				{ user &&
+				<MyBountiesFilter
+					claimedByMe={props.claimedByMe}
+					createdByMe={props.createdByMe}
+					setClaimedByMe={props.setClaimedByMe}
+					setCreatedByMe={props.setCreatedByMe}
+				/> }
 				<MinMaxFilter
 					name="Filter Bounty Value"
 					lte={props.lte} setLte={props.setLte}
