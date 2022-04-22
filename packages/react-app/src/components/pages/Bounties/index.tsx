@@ -10,6 +10,7 @@ import useBounties from '../../../hooks/useBounties';
 import { BountyCollection } from '../../../models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
 import { CSVLink } from 'react-csv';
+import { BOUNTY_EXPORT_ITEMS } from '../../../constants/bountyExportItems';
 
 export const PAGE_SIZE = 10;
 
@@ -45,13 +46,6 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 	const { colorMode } = useColorMode();
 	const [csvData, setCsvData] = useState<BountyCollection[]>([]);
 	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
-	const csvHeaders = [
-		{ label: 'ID', key: '_id' },
-		{ label: 'Title', key: 'title' },
-		{ label: 'Reward Amount', key: 'reward.amount' },
-		{ label: 'Reward Currency', key: 'reward.currency' },
-	  ];
-	  
 
 	const handleSelectAll = (): void => {
 		if (bounties && selectedBounties.length < bounties.length) {
@@ -105,7 +99,7 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 			</Button>
 			<CSVLink
 			  	data={csvData}
-				headers={csvHeaders}
+				headers={BOUNTY_EXPORT_ITEMS}
 				filename='bounties.csv'
 				className='hidden'
 				ref={csvLink}
