@@ -67,7 +67,6 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 		if (bounties && csvLink.current) {
 			const getCsvData = bounties.filter(item => selectedBounties.includes(item._id));
 			setCsvData(getCsvData);
-			console.log(getCsvData.length);
 			// Force state to update before invoking the download
 			setTimeout(() => {
 				csvLink?.current?.link.click();
