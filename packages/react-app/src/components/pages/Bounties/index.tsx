@@ -1,7 +1,7 @@
 import { Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import Filters from './Filters';
 import useDebounce from '../../../hooks/useDebounce';
 import { CustomerContext } from '../../../context/CustomerContext';
@@ -9,6 +9,7 @@ import { BANKLESS } from '../../../constants/Bankless';
 import useBounties from '../../../hooks/useBounties';
 import { BountyCollection } from '../../../models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
+import { CSVLink } from 'react-csv';
 
 export const PAGE_SIZE = 10;
 
@@ -42,6 +43,15 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 	}): JSX.Element => {
 
 	const { colorMode } = useColorMode();
+	const [csvData, setCsvData] = useState<BountyCollection[]>([]);
+	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
+	const csvHeaders = [
+		{ label: 'ID', key: '_id' },
+		{ label: 'Title', key: 'title' },
+		{ label: 'Reward Amount', key: 'reward.amount' },
+		{ label: 'Reward Currency', key: 'reward.currency' },
+	  ];
+	  
 
 	const handleSelectAll = (): void => {
 		if (bounties && selectedBounties.length < bounties.length) {
@@ -51,6 +61,18 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 
 	const handleClearAll = (): void => {
 		setSelectedBounties([]);
+	};
+
+	const handleCSV = (): void => {
+		if (bounties && csvLink.current) {
+			const getCsvData = bounties.filter(item => selectedBounties.includes(item._id));
+			setCsvData(getCsvData);
+			console.log(getCsvData.length);
+			// Force state to update before invoking the download
+			setTimeout(() => {
+				csvLink?.current?.link.click();
+			});
+		}
 	};
 
 	return (
@@ -78,10 +100,18 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 				disabled={!bounties || selectedBounties.length == 0}
 				size="xs"
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				onClick={handleClearAll}
+				onClick={handleCSV}
 			>
 				Export
 			</Button>
+			<CSVLink
+			  	data={csvData}
+				headers={csvHeaders}
+				filename='bounties.csv'
+				className='hidden'
+				ref={csvLink}
+				target='_blank'
+			/>
 		</Stack>
 	);
 });
