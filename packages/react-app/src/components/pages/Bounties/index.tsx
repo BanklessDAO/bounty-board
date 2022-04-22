@@ -11,6 +11,7 @@ import { BountyCollection } from '../../../models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
 import { CSVLink } from 'react-csv';
 import { BOUNTY_EXPORT_ITEMS } from '../../../constants/bountyExportItems';
+import MiscUtils from '../../../utils/miscUtils';
 
 export const PAGE_SIZE = 10;
 
@@ -59,7 +60,7 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 
 	const handleCSV = (): void => {
 		if (bounties && csvLink.current) {
-			const getCsvData = bounties.filter(item => selectedBounties.includes(item._id));
+			const getCsvData = bounties.filter(item => selectedBounties.includes(item._id)).map(b => MiscUtils.csvEncode(b) as BountyCollection);
 			setCsvData(getCsvData);
 			// Force state to update before invoking the download
 			setTimeout(() => {
