@@ -1,15 +1,13 @@
 import { Stack, Text } from '@chakra-ui/react';
 import BountyAccordion from './BountyAccordion';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Filters from './Filters';
-import useDebounce from '../../../hooks/useDebounce';
-import { CustomerContext } from '../../../context/CustomerContext';
-import { BANKLESS } from '../../../constants/Bankless';
-import useBounties from '../../../hooks/useBounties';
-import { BountyCollection } from '../../../models/Bounty';
+import useBounties from '@app/hooks/useBounties';
+import { BountyCollection } from '@app/models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
-import { useUser } from '@app/hooks/useUser';
-
+import { useRouter } from 'next/router';
+import { FilterParams } from '@app/types/Filter';
+import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
 
 export const PAGE_SIZE = 10;
 
@@ -30,50 +28,56 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 		justify="center"
 		align="center"
 	>
-		<Text	fontSize="lg">{ message }</Text>
+		<Text fontSize="lg">{message}</Text>
 	</Stack>
 );
 
+type UsePaginatedBountiesResult = { paginatedBounties: BountyCollection[], noResults: boolean }
+const usePaginatedBounties = (bounties: BountyCollection[] | undefined, page: number, filters: FilterParams): UsePaginatedBountiesResult => {
+	// splits bounties according to the maximum page size
+	return useMemo(() => {
+		const paginatedBounties = bounties
+			? bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)))
+			: [];
+
+		const noResults = Boolean(((filters.search || filters.status) && bounties && paginatedBounties.length === 0));
+		return { paginatedBounties, noResults };
+	}, [bounties, page, PAGE_SIZE, filters.status, filters.search]);
+};
+
 const Bounties = (): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
+	const router = useRouter();
 	const [page, setPage] = useState(0);
-	const [status, setStatus] = useState('Open');
-	const [search, setSearch] = useState('');
-	const [gte, setGte] = useState(0);
-	// how to handle the lte === 0 case?
-	const [lte, setLte] = useState(Infinity);
-	const [sortBy, setSortBy] = useState('createdAt');
-	const [sortAscending, setSortAscending] = useState(false);
-	const [createdByMe, setCreatedByMe] = useState(false);
-	const [claimedByMe, setClaimedByMe] = useState(false);
-	const { user } = useUser();
-	const debounceSearch = useDebounce(search, 500, true);
+	const [filters, setFilters] = useState<FilterParams>(baseFilters);
 
-	const { customer } = useContext(CustomerContext);
-	const { customerId } = customer;
+	// Watch this only runs on page load once the params are instantiated
+	// otherwise you will lose filers and/or create inf loop
+	// only render the saved search the first time, to prevent loops
+	const firstLoad = useRef(true);
+	useEffect(() => {
+		if (router.isReady && firstLoad.current && filtersDefined(router.query)) {
+			const newFilters = getFiltersFromUrl(router.query);
+			setFilters(newFilters);
+			firstLoad.current = false;
+		}
+	}, [router.isReady, router.query, firstLoad]);
 
-	let dynamicUrl = '/api/bounties';
-	dynamicUrl += `?status=${status === '' ? 'All' : status}`;
-	dynamicUrl += `&search=${debounceSearch}`;
-	dynamicUrl += `&lte=${lte}`;
-	dynamicUrl += `&gte=${gte}`;
-	dynamicUrl += `&sortBy=${sortBy}`;
-	dynamicUrl += `&asc=${sortAscending}`;
-	if (claimedByMe && user) dynamicUrl += `&claimedBy=${user.id}`;
-	if (createdByMe && user) dynamicUrl += `&createdBy=${user.id}`;
-	dynamicUrl += `&customerId=${customerId ?? BANKLESS.customerId}`;
+	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
+
+	useEffect(() => {
+		if (router.isReady) {
+			router.push(urlQuery, undefined, { shallow: true });
+		}
+	}, [urlQuery, router.isReady]);
+
+	const { bounties, isLoading, isError } = useBounties('/api/bounties' + urlQuery, router.isReady);
+	const { paginatedBounties, noResults } = usePaginatedBounties(bounties, page, filters);
 
 	useEffect(() => {
 		setPage(0);
-	}, [search, gte, lte, sortBy]);
+	}, [filters.search, filters.gte, filters.lte, filters.sortBy, filters?.claimedBy, filters?.createdBy]);
 
-	const { bounties, isLoading, isError } = useBounties(dynamicUrl);
-
-	const paginatedBounties = bounties
-		? bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)))
-		: [];
-
-	const noResults = ((search || status) && bounties && paginatedBounties.length === 0);
 	return (
 		<>
 			<Stack
@@ -84,15 +88,8 @@ const Bounties = (): JSX.Element => {
 				gridGap="4"
 			>
 				<Filters
-					status={status} setStatus={setStatus}
-					search={search} setSearch={setSearch}
-					lte={lte} setLte={setLte}
-					gte={gte} setGte={setGte}
-					sortBy={sortBy} setSortBy={setSortBy}
-					sortAscending={sortAscending} setSortAscending={setSortAscending}
-					claimedByMe={claimedByMe} setClaimedByMe={setClaimedByMe}
-					createdByMe={createdByMe} setCreatedByMe={setCreatedByMe}
-					
+					filters={filters}
+					setFilters={setFilters}
 				/>
 				{isError || noResults
 					? <FilterResultPlaceholder message={'No Results'} />
