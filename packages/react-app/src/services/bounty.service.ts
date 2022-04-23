@@ -18,9 +18,9 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
 	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
 	if (typeof query.claimedBy === 'string') filters.claimedBy = query.claimedBy;
-	
-	if(query.lte) filters.$lte = Number(query.lte);
-	if(query.gte) filters.$gte = Number(query.gte);
+
+	if (query.lte) filters.lte = Number(query.lte);
+	if (query.gte) filters.gte = Number(query.gte);
 	return filters;
 };
 
@@ -78,11 +78,11 @@ export const filterSearch = (query: FilterQuery<BountyCollection>, search: strin
 	return query;
 };
 
-export const filterLessGreater = ({ by, query, $lte, $gte }: {
+export const filterLessGreater = ({ by, query, lte, gte }: {
 	by: AcceptedSortOutputs;
 	query: FilterQuery<BountyCollection>;
-	$lte?: number;
-	$gte?: number;
+	lte?: number;
+	gte?: number;
 }): FilterQuery<BountyCollection> => {
 	/**
 	 * Filters the passed @param by according to a standardised filter query:
@@ -93,11 +93,11 @@ export const filterLessGreater = ({ by, query, $lte, $gte }: {
 	 * @returns a mongoose formatted query
 	 */
 	const queryBy = { $gte: 0 } as Record<string, number>;
-	if ($gte) {
-		queryBy.$gte = $gte;
+	if (gte) {
+		queryBy.$gte = gte;
 	}
-	if ($lte) {
-		queryBy.$lte = $lte;
+	if (lte) {
+		queryBy.$lte = lte;
 	}
 	query[by] = queryBy;
 	return query;
@@ -150,13 +150,13 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	let filterQuery = {} as FilterQuery<BountyCollection>;
 
 	const filters = getFilters(query);
-	
-	const { status, search, $lte, $gte, customerId, claimedBy, createdBy } = filters;
-	
+
+	const { status, search, lte, gte, customerId, claimedBy, createdBy } = filters;
+
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterSearch(filterQuery, search);
-	if(customerId) filterQuery = filterCustomerId(filterQuery, customerId);
-	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', $lte, $gte });
+	if (customerId) filterQuery = filterCustomerId(filterQuery, customerId);
+	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', lte, gte });
 	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
 	filterQuery = handleEmpty(filterQuery);
 
@@ -183,7 +183,7 @@ export const getBounties = async (req: NextApiRequest): Promise<PaginateResult<B
 	const filterQuery = getFilterQuery(req.query);
 	const sortQuery = getSort(req.query);
 	const paginationOptions = getPagination(req.query);
-	
+
 	const bountyQuery: BountyQuery = {
 		query: {
 			...filterQuery,

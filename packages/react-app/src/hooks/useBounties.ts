@@ -20,11 +20,12 @@ interface useBountyResponse extends BountySWRResponse {
 	bounty?: BountyCollection
 }
 
-export function useBounties(url: string): useBountiesResponse {
+export function useBounties(url: string, ready = true): useBountiesResponse {
 	/**
    * Wraps the SWR hook with additional loading state for spinners
+   * Optioanlly pass a `ready` param to delay execution.
    */
-	const { data, error } = useSWR<BountyCollection[], unknown>(url, axiosFetcher);
+	const { data, error } = useSWR<BountyCollection[], unknown>(ready ? url : null, axiosFetcher);
 	return {
 		bounties: data,
 		isLoading: !error && !data,
