@@ -47,7 +47,7 @@ const HelperBox = (props: { children?: React.ReactNode, text?: string } & BoxPro
 	</Box>
 );
 
-function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFieldValues> }) {
+function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFieldValues> }): JSX.Element {
 	const currencies = useCurrencies();
 	const {
 		register,
