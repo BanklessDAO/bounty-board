@@ -1,25 +1,32 @@
 import { BountyCollection } from '@app/models/Bounty';
 
-type bountyKeys = keyof BountyCollection;
-type rewardKeys = keyof BountyCollection['reward'];
-type createdByKeys = keyof BountyCollection['createdBy'];
-type claimedByKeys = keyof BountyCollection['claimedBy'];
+type NestedDotNotationKeys<T, K extends keyof T & string> = `${K}.${Extract<keyof T[K], string>}`;
 
-export const BOUNTY_EXPORT_ITEMS = [
-	{ label: 'ID', key: ('_id' as bountyKeys) },
-	{ label: 'Title', key: ('title' as bountyKeys) },
-	{ label: 'Description', key: ('description' as bountyKeys) },
-	{ label: 'Criteria', key: ('criteria' as bountyKeys) },
-	{ label: 'Status', key: ('status' as bountyKeys) },
-	{ label: 'Due', key: ('dueAt' as bountyKeys) },
-	{ label: 'Reward Amount', key: ('reward' as bountyKeys) + '.' + ('amount' as rewardKeys) },
-	{ label: 'Reward Currency', key: ('reward' as bountyKeys) + '.' + ('currency' as rewardKeys) },
-	{ label: 'Created', key: ('createdAt' as bountyKeys) },
-	{ label: 'Created By', key: ('createdBy' as bountyKeys) + '.' + ('discordHandle' as createdByKeys) },
-	{ label: 'Claimed By', key: ('claimedBy' as bountyKeys) + '.' + ('discordHandle' as claimedByKeys) },
-	{ label: 'Submission Notes', key: ('submissionNotes' as bountyKeys) },
-	{ label: 'Submission URL', key: ('submissionUrl' as bountyKeys) },
-	// { label: 'Paid Status', key: ('paidStatus' as bountyKeys).toString() },
+type RewardKeys = NestedDotNotationKeys<BountyCollection, 'reward'>;
+type CreatedByKeys = NestedDotNotationKeys<BountyCollection, 'createdBy'>;
+type ClaimedByKeys = NestedDotNotationKeys<BountyCollection, 'claimedBy'>;
+
+type BountyExportKeys = keyof Omit<BountyCollection, 'reward' | 'createdBy' | 'claimedBy'> | RewardKeys | CreatedByKeys | ClaimedByKeys;
+
+type BountyExportItems = Array<{
+	label: string;
+	key: BountyExportKeys
+}>
+
+export const BOUNTY_EXPORT_ITEMS: BountyExportItems = [
+	{ label: 'ID', key: '_id' },
+	{ label: 'Title', key: 'title' },
+	{ label: 'Description', key: 'description' },
+	{ label: 'Criteria', key: 'criteria' },
+	{ label: 'Status', key: 'status' },
+	{ label: 'Due', key: 'dueAt' },
+	{ label: 'Reward Amount', key: 'reward.amount' },
+	{ label: 'Reward Currency', key: 'reward.currency' },
+	{ label: 'Created', key: 'createdAt' },
+	{ label: 'Created By', key: 'createdBy.discordHandle' },
+	{ label: 'Claimed By', key: 'claimedBy.discordHandle' },
+	{ label: 'Submission Notes', key: 'submissionNotes' },
+	{ label: 'Submission URL', key: 'submissionUrl' },
 ];
 
 export default BOUNTY_EXPORT_ITEMS;

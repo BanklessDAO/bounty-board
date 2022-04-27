@@ -1,7 +1,7 @@
 import { Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef, useCallback } from 'react';
 import Filters from './Filters';
 import useDebounce from '../../../hooks/useDebounce';
 import { CustomerContext } from '../../../context/CustomerContext';
@@ -38,6 +38,35 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 	</Stack>
 );
 
+/**
+Define a set state function that runs a callback on setting of the state
+**/
+
+function useStateCallback<T, C extends CallableFunction =(...args: any) => void>(initialState: T): [T, (state: T, cb: C) => void] {
+	const [state, setState] = useState<T>(initialState);
+	// init mutable ref container for callbacks
+	const cbRef = useRef<C | null>(null);
+
+	const setStateCallback = useCallback((s: T, cb: C) => {
+		// store current, passed callback in ref
+		cbRef.current = cb;
+		// keep object reference stable, exactly like `useState`
+		setState(s);
+	}, []);
+
+	useEffect(() => {
+		// cb.current is `null` on initial render, 
+		// so we only invoke callback on state *updates*
+		if (cbRef.current) {
+			cbRef.current(state);
+			// reset callback after execution
+			cbRef.current = null;
+		}
+	}, [state]);
+
+	return [state, setStateCallback];
+}
+
 const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 	bounties: BountyCollection[] | undefined,
 	selectedBounties: string[],
@@ -45,7 +74,7 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 	}): JSX.Element => {
 
 	const { colorMode } = useColorMode();
-	const [csvData, setCsvData] = useState<BountyCollection[]>([]);
+	const [csvData, setCsvData] = useStateCallback<Record<string, unknown>[]>([]);
 	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
 
 	const handleSelectAll = (): void => {
@@ -60,10 +89,11 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 
 	const handleCSV = (): void => {
 		if (bounties && csvLink.current) {
-			const getCsvData = bounties.filter(item => selectedBounties.includes(item._id)).map(b => MiscUtils.csvEncode(b) as BountyCollection);
-			setCsvData(getCsvData);
-			// Force state to update before invoking the download
-			setTimeout(() => {
+			const getCsvData = bounties
+				.filter(({ _id }) => selectedBounties.includes(_id))
+				.map(MiscUtils.csvEncode);
+				
+			setCsvData(getCsvData, () => {
 				csvLink?.current?.link.click();
 			});
 		}
