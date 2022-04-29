@@ -17,8 +17,8 @@ import ThemeToggle from '@app/components/parts/ThemeToggle';
 import { MenuLinks } from './MenuLinks';
 
 interface MobileProps {
-  isOpen: boolean;
-  onClose: VoidFunction;
+	isOpen: boolean;
+	onClose: VoidFunction;
 }
 
 export const MobileMenu = ({ isOpen, onClose }: MobileProps): JSX.Element => {

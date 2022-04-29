@@ -41,6 +41,7 @@
     "@fontsource/lexend": "^4.5.0",
     "@hookform/resolvers": "^2.7.1",
     "@netlify/plugin-nextjs": "^3.8.0",
+    "@testing-library/react-hooks": "^8.0.0",
     "@types/mongoose-paginate-v2": "^1.4.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "axios": "^0.24.0",

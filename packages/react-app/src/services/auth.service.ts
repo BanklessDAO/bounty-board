@@ -27,8 +27,8 @@ export const getRolesForUserInGuild = async (
 	customerId: string
 ): Promise<string[]> => {
 	/**
-    * Get discord roleIds (numeric) for this user (accessToken) in this guild (customerId)
-    */
+	* Get discord roleIds (numeric) for this user (accessToken) in this guild (customerId)
+	*/
 
 	const discordUserStats = await discordService.getDiscordUserInGuild(accessToken, customerId);
 	return discordUserStats.data.roles;
@@ -87,7 +87,7 @@ export const getPermissions = async (accessToken: string, customerId: string): P
    * Returns a list of permissions (aka roles) for the current user's external roles.
    * Uses the external roles => permissions (roles) mapping in the customer record.
    */
-		
+
 	const customer = await getCustomer(customerId);
 
 	// Customer doesn't exist

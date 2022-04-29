@@ -103,7 +103,7 @@ const NewBountyForm = (): JSX.Element => {
 				type="submit"
 				disabled={!user}
 			>
-    	Preview
+				Preview
 			</Button>
 			{
 				!user && <Alert status='warning'>

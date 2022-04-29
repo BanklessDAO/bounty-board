@@ -2,7 +2,7 @@ import { Button, ButtonProps, useColorMode } from '@chakra-ui/react';
 
 const ColorModeButton = (props: ButtonProps & {
   children?: React.ReactNode
-}): JSX.Element => {
+}) => {
 	const { colorMode } = useColorMode();
 	return (
 		<Button

@@ -30,7 +30,11 @@ describe('Testing the bounty API', () => {
 	beforeAll(async () => {
 		const connect = await dbConnect();
 		connection = connect.connections[0];
-		await connection.db.collection('bounties').dropIndexes();
+		try {
+			await connection.db.collection('bounties').dropIndexes();
+		} catch {
+			console.log('Attempted to drop a non-existant index, moving on...');
+		}
 		BountyBoardSchema.index({ '$**': 'text' });
 		await Bounty.createIndexes();
 	});

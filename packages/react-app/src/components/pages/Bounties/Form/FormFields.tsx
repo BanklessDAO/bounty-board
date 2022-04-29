@@ -43,7 +43,7 @@ const HelperBox = (props: { children?: React.ReactNode, text?: string } & BoxPro
 		my="2"
 		textColor="gray.700"
 		{...props}
-	>{ props.children ? props.children : props.text }
+	>{props.children ? props.children : props.text}
 	</Box>
 );
 
@@ -72,7 +72,7 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 					id='title'
 					borderColor={inputBorderColor}
 					placeholder={PLACEHOLDERS.TITLE}
-					{...register('title', { required }) }
+					{...register('title', { required })}
 				/>
 				<FormErrorMessage>{errors.title?.message}</FormErrorMessage>
 			</FormControl>
@@ -89,7 +89,7 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 					id='description'
 					borderColor={inputBorderColor}
 					placeholder={PLACEHOLDERS.DESCRIPTION}
-					{...register('description', { required }) }/>
+					{...register('description', { required })} />
 				<FormErrorMessage>{errors.description?.message}</FormErrorMessage>
 			</FormControl>
 
@@ -105,7 +105,7 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 					id='criteria'
 					borderColor={inputBorderColor}
 					placeholder={PLACEHOLDERS.CRITERIA}
-					{...register('criteria', { required }) }
+					{...register('criteria', { required })}
 				/>
 				<FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
 			</FormControl>
@@ -117,7 +117,7 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 				<FormLabel htmlFor="dueAt"
 					mr="0"
 				>
-    Due At
+					Due At
 				</FormLabel>
 				<Controller
 					name="dueAt"
