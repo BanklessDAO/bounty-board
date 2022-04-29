@@ -23,8 +23,8 @@ const NavBar: React.FC = (props): JSX.Element => {
 	return (
 		<NavBarContainer {...props}>
 			<Logo
-				alt={`${customer?.customerName ?? 'DAO'} Logo`}
-				img={customer?.customization?.logo ?? '/logo.png'}
+				alt={customer?.customerName}
+				img={customer?.customization?.logo}
 			/>
 			<Menu />
 		</NavBarContainer>

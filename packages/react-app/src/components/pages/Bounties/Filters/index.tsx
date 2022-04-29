@@ -1,4 +1,5 @@
 import {
+	Checkbox,
 	Heading,
 	HStack,
 	Input,
@@ -12,9 +13,13 @@ import {
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
-import { AcceptedSortInputs } from '@app/types/Filter';
+import { AcceptedSortInputs, FilterParams, UseFilterState } from '@app/types/Filter';
+import React, { useMemo, useState } from 'react';
+import { useUser } from '@app/hooks/useUser';
+
 
 type SetState<T extends any> = (arg: T) => void;
+type Event = React.ChangeEvent<HTMLInputElement>
 
 const sortOptions: { name: string, value: AcceptedSortInputs }[] = [
 	{
@@ -31,16 +36,16 @@ const SearchIcon = ({ color }: { color: string }): JSX.Element => (
 
 const SearchFilter = ({
 	placeholder = 'Search',
-	searchValue,
-	setSearch,
+	filters, setFilters,
 }: {
 	placeholder?: string
-	searchValue: string,
-	setSearch: SetState<string>
-}): JSX.Element => {
+} & UseFilterState): JSX.Element => {
 
-	const updateSearchValue = (event: any): void => {
-		setSearch(event.target.value);
+	const updateSearchValue = (event: Event): void => {
+		setFilters({
+			...filters,
+			search: event.target.value,
+		});
 	};
 
 	return (
@@ -48,26 +53,28 @@ const SearchFilter = ({
 			<InputLeftElement pointerEvents="none">
 				<SearchIcon color="gray.300" />
 			</InputLeftElement>
-			<Input placeholder={placeholder} mb={4} value={searchValue} onChange={updateSearchValue} autoFocus/>
+			<Input placeholder={placeholder} mb={4} value={filters.search ?? ''} onChange={updateSearchValue} autoFocus />
 		</InputGroup>
 	);
 };
 
-const SelectFilters = ({ name, options, status, setStatus }: {
+const SelectFilters = ({ name, options,
+	filters, setFilters,
+}: {
 	name?: string
 	options: { name: string; value: string }[],
-	status: string,
-	setStatus: SetState<string>,
-}): JSX.Element => {
+} & UseFilterState): JSX.Element => {
 
-	const updateStatus = (event: any): void => {
-		setStatus(event.target.value);
+	const updateStatus = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+		setFilters({
+			...filters,
+			status: event.target.value,
+		});
 	};
-
 	return (
 		<>
 			{name && <Heading size="xs">{name}</Heading>}
-			<Select placeholder="All" mb="4" onChange={updateStatus} value={status}>
+			<Select placeholder="All" mb="4" onChange={updateStatus} value={filters.status}>
 				{options.map((option: { name: string; value: string }) => (
 					<option key={option.name} value={option.value}>
 						{option.value}
@@ -78,21 +85,32 @@ const SelectFilters = ({ name, options, status, setStatus }: {
 	);
 };
 
-const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscending }: {
+const SortBy = ({ name, options, filters, setFilters }: {
 	name?: string
 	options: { name: string; value: string }[],
-	sortBy: string,
-	setSortBy: SetState<string>,
-	sortAscending: boolean,
-	setSortAscending: SetState<boolean>,
-}): JSX.Element => {
+} & UseFilterState): JSX.Element => {
 
-	const updateSort = (event: any): void => {
-		setSortBy(event.target.value);
+	const updateSort = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+		setFilters({
+			...filters,
+			sortBy: event.target.value,
+		});
 	};
-	const toggleSortAscending = (_: any): void => {
-		setSortAscending(sortAscending = !sortAscending);
+	const toggleSortAscending = (): void => {
+		setFilters({
+			...filters,
+			asc: !booleanAsc,
+		});
 	};
+
+	const booleanAsc = useMemo((): boolean => {
+		// string queries will return `'false'` as `true`
+		if (filters.asc === 'false') return false;
+		// technically do not need this line
+		else if (filters.asc === 'true') return true;
+		else return Boolean(filters.asc);
+	}, [filters.asc]);
+
 	return (
 		<>
 			<Flex className="composite-heading" alignItems="center">
@@ -100,17 +118,17 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 				<Spacer />
 				<Flex className="switch" alignItems="center">
 					<Heading size="xs" mr="3" mb="0">
-						{sortAscending ? 'Ascending' : 'Descending'}
+						{filters.asc ? 'Ascending' : 'Descending'}
 					</Heading>
 					<Switch
 						colorScheme="primary"
 						onChange={toggleSortAscending}
 						defaultChecked
-						isChecked={sortAscending}
+						isChecked={booleanAsc}
 					/>
 				</Flex>
 			</Flex>
-			<Select mb="4" onChange={updateSort} value={sortBy}>
+			<Select mb="4" onChange={updateSort} value={filters.sortBy}>
 				{options.map((option: { name: string; value: string }) => (
 					<option key={option.name} value={option.value}>
 						{option.name}
@@ -121,44 +139,102 @@ const SortBy = ({ name, options, sortBy, sortAscending, setSortBy, setSortAscend
 	);
 };
 
-const MinMaxFilter = ({ name, setLte, setGte }: {
+const MyBountiesFilter = ({ name, filters, setFilters }: {
+	name?: string
+} & UseFilterState): JSX.Element => {
+
+	const { user } = useUser();
+
+	const [claimedByMe, setClaimedByMe] = useState(false);
+	const [createdByMe, setCreatedByMe] = useState(false);
+
+	type CheckEvent = React.ChangeEvent<HTMLInputElement>;
+
+	const updateClaimedByMe = (event: CheckEvent): void => {
+		const { checked } = event.target;
+		if (checked && user) {
+			setFilters({
+				...filters,
+				claimedBy: user.id,
+			});
+		} else {
+			const { claimedBy, ...filtersNoClaimedBy } = filters; claimedBy;
+			setFilters(filtersNoClaimedBy);
+		}
+		setClaimedByMe(checked);
+	};
+	const updateCreatedByMe = (event: CheckEvent): void => {
+		const { checked } = event.target;
+		if (checked && user) {
+			setFilters({
+				...filters,
+				createdBy: user.id,
+			});
+		} else {
+			const { createdBy, ...filtersNoCreatedBy } = filters; createdBy;
+			setFilters(filtersNoCreatedBy);
+		}
+		setCreatedByMe(checked);
+	};
+
+	return (
+		<>
+			{user && <Flex className="composite-heading" alignItems="center">
+				{name && <Heading size="xs" mb="0">{name}</Heading>}
+				<Flex className="checkbox" w='100%' alignItems="center">
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateClaimedByMe}
+						isChecked={claimedByMe}
+					>
+						Claimed By Me
+					</Checkbox>
+					<Spacer />
+					<Checkbox
+						size="sm"
+						colorScheme="primary"
+						onChange={updateCreatedByMe}
+						isChecked={createdByMe}
+					>
+						Created By Me
+					</Checkbox>
+				</Flex>
+			</Flex>}
+		</>
+	);
+};
+
+const MinMaxFilter = ({ name, filters, setFilters }: {
 	name?: string,
-	lte: number,
-	setLte: SetState<number>,
-	gte: number,
-	setGte: SetState<number>
-}): JSX.Element => {
-	const updateMin = (event: any): void => {
-		setGte(event.target.value);
+} & UseFilterState): JSX.Element => {
+	const updateMin = (event: Event): void => {
+		setFilters({
+			...filters,
+			gte: Number(event.target.value),
+		});
 	};
-	const updateMax = (event: any): void => {
-		setLte(event.target.value);
+	const updateMax = (event: Event): void => {
+		setFilters({
+			...filters,
+			lte: Number(event.target.value),
+		});
 	};
-	
+
 	return (
 		<>
 			{name && <Heading size="xs">{name}</Heading>}
 			<HStack my="2">
-				<Input placeholder="Min" onChange={updateMin}/>
-				<Input placeholder="Max" onChange={updateMax}/>
+				<Input placeholder="Min" onChange={updateMin} />
+				<Input placeholder="Max" onChange={updateMax} />
 			</HStack>
 		</>
 	);
 };
 
 const Filters = (props: {
-	status: string,
-	setStatus: SetState<string>,
-	search: string,
-	setSearch: SetState<string>
-	lte: number,
-	setLte: SetState<number>,
-	gte: number,
-	setGte: SetState<number>,
-	sortBy: string,
-	setSortBy: SetState<string>,
-	sortAscending: boolean,
-	setSortAscending: SetState<boolean>,
+	filters: FilterParams,
+	setFilters: SetState<FilterParams>
 }): JSX.Element => {
 	const filterStatusList = [
 		{
@@ -178,32 +254,33 @@ const Filters = (props: {
 			value: bountyStatus.COMPLETED,
 		},
 	];
-
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
 				<SearchFilter
-					searchValue={props.search}
-					setSearch={props.setSearch}
+					filters={props.filters}
+					setFilters={props.setFilters}
 				/>
 				<SelectFilters
 					name="Filter Status"
 					options={filterStatusList}
-					status={props.status}
-					setStatus={props.setStatus}
+					filters={props.filters}
+					setFilters={props.setFilters}
+				/>
+				<MyBountiesFilter
+					filters={props.filters}
+					setFilters={props.setFilters}
 				/>
 				<MinMaxFilter
 					name="Filter Bounty Value"
-					lte={props.lte} setLte={props.setLte}
-					gte={props.gte} setGte={props.setGte}
+					filters={props.filters}
+					setFilters={props.setFilters}
 				/>
 				<SortBy
 					name="Sort By"
 					options={sortOptions}
-					sortBy={props.sortBy}
-					setSortBy={props.setSortBy}
-					sortAscending={props.sortAscending}
-					setSortAscending={props.setSortAscending}
+					filters={props.filters}
+					setFilters={props.setFilters}
 				/>
 			</Stack>
 		</Stack>

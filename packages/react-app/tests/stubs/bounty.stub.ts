@@ -15,6 +15,7 @@ export const testBounty: Partial<BountyCollection> = {
 	submissionNotes: '',
 	submissionUrl: '',
 	submittedAt: '',
+	paidStatus: 'Unpaid',
 	createdBy: {
 		discordHandle: 'TESTHANDLE#1234',
 		discordId: '324439902343239764',

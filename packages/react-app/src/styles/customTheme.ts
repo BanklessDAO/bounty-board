@@ -43,6 +43,8 @@ export const baseTheme = extendTheme({
 		Deleted: theme.colors.red,
 		Draft: theme.colors.gray,
 		primary: theme.colors.teal,
+		Paid: theme.colors.green,
+		Unpaid: theme.colors.gray,
 	},
 	components: {
 		Heading: {

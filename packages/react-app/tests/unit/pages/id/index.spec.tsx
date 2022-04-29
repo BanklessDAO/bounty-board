@@ -1,12 +1,14 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import * as router from 'next/router';
-import * as hooks from '../../../../src/hooks/useBounties';
+import * as bountyHooks from '@app/hooks/useBounties';
+import * as customerHooks from '@app/hooks/useCustomer';
 import { NextRouter } from 'next/router';
 import BountyPageLayout, { BountyLoader, BountyNotFound, BountyPage } from '@app/pages/[id]';
-import Layout from '../../../../src/components/global/SiteLayout';
-import { BountyCollection } from '../../../../src/models/Bounty';
-import { BountyCard } from '../../../../src/components/pages/Bounties/Bounty';
+import Layout from '@app/components/global/SiteLayout';
+import { BountyCollection } from '@app/models/Bounty';
+import { BountyCard } from '@app/components/pages/Bounties/Bounty';
+import { customers } from '@tests/stubs/customers.stub';
 
 const CUSTOMERNAME = 'Test';
 
@@ -20,6 +22,8 @@ jest.mock('@app/components/global/SiteLayout', () => {
 
 describe('Testing the bounty id page', () => {
 	beforeEach(() => {
+		jest.spyOn(customerHooks, 'useCustomerFromBountyIdAndKey').mockReturnValue(customers[0]);
+
 		jest.spyOn(router, 'useRouter').mockImplementation(() => ({
 			query: {
 				id: '1',
@@ -43,7 +47,7 @@ describe('Testing the bounty id page', () => {
 	});
 
 	it('Shows the loading page if loading', () => {
-		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+		jest.spyOn(bountyHooks, 'useBounty').mockImplementation(() => ({
 			isLoading: true,
 			isError: false,
 			bounty: undefined,
@@ -53,7 +57,7 @@ describe('Testing the bounty id page', () => {
 	});
 
 	it('Shows the error page if error', () => {
-		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+		jest.spyOn(bountyHooks, 'useBounty').mockImplementation(() => ({
 			isLoading: false,
 			isError: true,
 			bounty: undefined,
@@ -68,7 +72,7 @@ describe('Testing the bounty id page', () => {
 				id: undefined,
 			},
 		}) as unknown as NextRouter);
-		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+		jest.spyOn(bountyHooks, 'useBounty').mockImplementation(() => ({
 			isLoading: false,
 			isError: true,
 			bounty: undefined,
@@ -78,11 +82,12 @@ describe('Testing the bounty id page', () => {
 	});
 
 	it('Otherwise renders the bounty', () => {
-		jest.spyOn(hooks, 'useBounty').mockImplementation(() => ({
+		jest.spyOn(bountyHooks, 'useBounty').mockImplementation(() => ({
 			isLoading: false,
 			isError: false,
 			bounty: { _id: 'test' } as unknown as BountyCollection,
 		}));
+
 		const wrapper = shallow(<BountyPage />);
 		expect(wrapper.containsMatchingElement(<BountyLoader />)).toEqual(false);
 		expect(wrapper.containsMatchingElement(<BountyNotFound />)).toEqual(false);
