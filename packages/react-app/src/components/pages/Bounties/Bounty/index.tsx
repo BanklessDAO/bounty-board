@@ -16,6 +16,7 @@ import { BountyCollection } from '@app/models/Bounty';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
+import PAID_STATUS from '@app/constants/paidStatus';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -63,8 +64,13 @@ const BountySummary = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 				)}
 			</Box>
 			<Flex width="full" justifyContent="space-between" alignItems="center">
-				<Box mb={2} >
+				<Box mb={2}>
 					{bounty.status && <Status indication={bounty.status} />}
+				</Box>
+			</Flex>
+			<Flex width="full" justifyContent="space-between" alignItems="center">
+				<Box mb={2}>
+					{<Status indication={bounty.paidStatus ? bounty.paidStatus : PAID_STATUS.UNPAID} />}
 				</Box>
 			</Flex>
 		</Flex>

@@ -7,7 +7,7 @@ export default function DiscordBttn({
 	session,
 }: {
   session: Session | unknown;
-}) {
+}): JSX.Element {
 	return (
 		<Button
 			onClick={() => toggleDiscordSignIn(session)}

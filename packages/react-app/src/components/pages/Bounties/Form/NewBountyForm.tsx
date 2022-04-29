@@ -30,6 +30,7 @@ const NotNeededFields = [
 	'reviewedAt',
 	'reviewedBy',
 	'submittedBy',
+	'paidStatus',
 ] as const;
 
 const useCachedForm = () => {

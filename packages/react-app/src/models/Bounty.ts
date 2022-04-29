@@ -14,6 +14,7 @@ import {
 // @ts-ignore
 import mongoosePaginate from 'mongo-cursor-pagination';
 import BOUNTYSTATUS from '@app/constants/bountyStatus';
+import PAIDSTATUS from '@app/constants/paidStatus';
 import ACTIVITY, { CLIENT } from '@app/constants/activity';
 
 type RequiredForPostProps = { method: 'POST' | 'PATCH', schema: any, isObject?: boolean };
@@ -87,6 +88,7 @@ export const Reward = object({
 );
 
 export const status = mixed().oneOf(Object.values(BOUNTYSTATUS));
+export const paidStatus = mixed().oneOf(Object.values(PAIDSTATUS));
 export const activity = mixed().oneOf(Object.values(ACTIVITY));
 export const client = mixed().oneOf(Object.values(CLIENT));
 
@@ -108,6 +110,7 @@ export const BountySchema = object({
 	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	customerId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	status: status.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	paidStatus: paidStatus.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 	
@@ -200,6 +203,11 @@ export const BountyBoardSchema = new mongoose.Schema({
 	},
 	statusHistory: {
 		type: Array,
+	},
+	paidStatus: {
+		/* Bounty Paid Status */
+		/* "Unpaid", "Paid" */
+		type: String,
 	},
 	activityHistory: {
 		type: Array,
