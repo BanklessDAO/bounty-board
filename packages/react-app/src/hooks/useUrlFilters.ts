@@ -7,7 +7,7 @@ import useDebounce from './useDebounce';
 
 export const baseFilters: FilterParams = {
 	search: '',
-	status: 'Open',
+	status: 'All',
 	gte: 0,
 	lte: Infinity,
 	sortBy: 'reward',
@@ -48,8 +48,8 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 
 export const getFiltersFromUrl = (query: ParsedUrlQuery): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {
 	/**
-     * Grab filters from the url, using fallback values if we see 'undefined'
-     */
+	 * Grab filters from the url, using fallback values if we see 'undefined'
+	 */
 	const isValid = (val && val !== 'undefined');
 	const existing = baseFilters[key as keyof FilterParams];
 	const adjVal = isValid ? val : existing;
