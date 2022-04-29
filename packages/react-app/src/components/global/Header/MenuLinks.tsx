@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AccessibleLink from '../../parts/AccessibleLink';
-import { Avatar, Stack, Text } from '@chakra-ui/react';
+import { Stack, Text } from '@chakra-ui/react';
 import { signOut, useSession } from 'next-auth/react';
 import { CustomerProps } from '../../../models/Customer';
 import { BANKLESS } from '../../../constants/Bankless';
@@ -9,8 +9,8 @@ import axios from 'axios';
 import useSWR from 'swr';
 import NewBounty from './NewBounty';
 import { DAOSelector } from './DAOSelector';
-import { toggleDiscordSignIn } from '../../../services/discord.service';
 import DiscordBttn from './DiscordBttn';
+import UserMenu from './UserMenu';
 
 interface MenuItemProps {
   children?: React.ReactNode;
@@ -93,21 +93,7 @@ export const MenuLinks = (): JSX.Element => {
 					{status === 'loading' ? (
 						<span>Loading...</span>
 					) : (
-						<>
-							{session ? (
-								<Avatar
-									// if there is no user image it loads a default
-									src={session?.user?.image ?? ''}
-									mr={'.25em'}
-									size={'md'}
-									// temp logout solution will be reaplced with button in dropdown.
-									// toggle always toggles logout
-									onClick={() => toggleDiscordSignIn(session)}
-								/>
-							) : (
-								<DiscordBttn session={session} />
-							)}
-						</>
+						<>{session ? <UserMenu /> : <DiscordBttn session={session} />}</>
 					)}
 				</MenuItem>
 			</Stack>
