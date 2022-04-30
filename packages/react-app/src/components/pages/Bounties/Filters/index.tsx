@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
+import paidStatus from '@app/constants/paidStatus';
 import { AcceptedSortInputs, FilterParams, UseFilterState } from '@app/types/Filter';
 import React, { useMemo, useState } from 'react';
 import { useUser } from '@app/hooks/useUser';
@@ -205,6 +206,34 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 	);
 };
 
+const PaidFilter = ({ name, options, filters, setFilters }: {
+	name?: string,
+	options: { name: string; value: string }[],
+} & UseFilterState): JSX.Element => {
+	const updatePaidStatus = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+		setFilters({
+			...filters,
+			paidStatus: event.target.value,
+		});
+	};
+
+	return (
+		<>
+			{name && <Heading size="xs">{name}</Heading>}
+			<Select placeholder='All' mb="4" onChange={updatePaidStatus} value={filters.paidStatus}>
+				{options.map((option: { name: string; value: string }) => {
+					return (
+						<option key={option.name} value={option.value}>
+							{option.value}
+						</option>
+					);
+				})}
+			</Select>
+		</>
+	);
+
+};
+
 const MinMaxFilter = ({ name, filters, setFilters }: {
 	name?: string,
 } & UseFilterState): JSX.Element => {
@@ -254,6 +283,17 @@ const Filters = (props: {
 			value: bountyStatus.COMPLETED,
 		},
 	];
+
+	const filterPaidStatusList = [
+		{
+			name: paidStatus.PAID,
+			value: paidStatus.PAID,
+		},
+		{
+			name: paidStatus.UNPAID,
+			value: paidStatus.UNPAID,
+		},
+	];
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
@@ -268,6 +308,12 @@ const Filters = (props: {
 					setFilters={props.setFilters}
 				/>
 				<MyBountiesFilter
+					filters={props.filters}
+					setFilters={props.setFilters}
+				/>
+				<PaidFilter
+					name="Filter by Paid"
+					options={filterPaidStatusList}
 					filters={props.filters}
 					setFilters={props.setFilters}
 				/>
