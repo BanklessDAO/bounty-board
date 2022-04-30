@@ -54,8 +54,12 @@ export const useCustomerFromBountyIdAndKey = (bountyId: RouterKey, customerKey: 
 	if (!bountyId) return customerFromKey;
 
 	// bounties found BUT mistmatch customer name
-	if (customerFromBounty?.customerId !== customerFromKey?.customerId) {
-		console.warn('Mismatched customer name and bounties');
+	if (customerFromKey && customerFromBounty?.customerId !== customerFromKey?.customerId) {
+		console.log(
+			'%cWARNING: Mismatched customer ID and bounty ID',
+			'color:red;font-weight:bold;'
+
+		);
 		return;
 	}
 

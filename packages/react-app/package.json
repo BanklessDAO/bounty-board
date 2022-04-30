@@ -25,7 +25,7 @@
     "format": "eslint src --ext js,jsx,ts,tsx --fix",
     "test:unit": "TESTING=true jest packages/react-app/tests/unit",
     "test:cov": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --coverage",
-    "test:integration": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --detectOpenHandles packages/react-app/tests/integration"
+    "test:integration": "TESTING=true MONGODB_URI=mongodb://localhost:27017/test_bountyboard jest --silent false --detectOpenHandles packages/react-app/tests/integration"
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
@@ -41,6 +41,7 @@
     "@fontsource/lexend": "^4.5.0",
     "@hookform/resolvers": "^2.7.1",
     "@netlify/plugin-nextjs": "^3.8.0",
+    "@testing-library/react-hooks": "^8.0.0",
     "@types/mongoose-paginate-v2": "^1.4.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "axios": "^0.24.0",
@@ -72,6 +73,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^8.0.0",
     "@types/enzyme": "^3.10.10",
     "@types/jest": "^27.0.2",
     "@types/next-auth": "^3.15.0",

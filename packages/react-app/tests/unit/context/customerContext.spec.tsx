@@ -6,7 +6,6 @@ describe('Testing the customer context', () => {
 	const customer: CustomerProps = {
 		bountyChannel: '',
 		customerKey: '',
-		applicableRoles: [],
 		customization: {},
 		customerId: '1',
 		customerName: 'Test Customer',

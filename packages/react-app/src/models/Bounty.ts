@@ -14,6 +14,7 @@ import {
 // @ts-ignore
 import mongoosePaginate from 'mongo-cursor-pagination';
 import BOUNTYSTATUS from '@app/constants/bountyStatus';
+import PAIDSTATUS from '@app/constants/paidStatus';
 import ACTIVITY, { CLIENT } from '@app/constants/activity';
 
 type RequiredForPostProps = { method: 'POST' | 'PATCH', schema: any, isObject?: boolean };
@@ -77,9 +78,9 @@ export const Reward = object({
 		if (params) {
 			const { amount, currency, scale, amountWithoutScale } = params;
 			const allDefined = (!!amount || amount === 0)
-			&& (!!scale || scale === 0)
-			&& (!!amountWithoutScale || amountWithoutScale === 0)
-			&& !!currency;
+				&& (!!scale || scale === 0)
+				&& (!!amountWithoutScale || amountWithoutScale === 0)
+				&& !!currency;
 			return allDefined;
 		}
 		return true;
@@ -87,6 +88,7 @@ export const Reward = object({
 );
 
 export const status = mixed().oneOf(Object.values(BOUNTYSTATUS));
+export const paidStatus = mixed().oneOf(Object.values(PAIDSTATUS));
 export const activity = mixed().oneOf(Object.values(ACTIVITY));
 export const client = mixed().oneOf(Object.values(CLIENT));
 
@@ -108,12 +110,13 @@ export const BountySchema = object({
 	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	customerId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	status: status.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	paidStatus: paidStatus.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
-	
+
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
-		
+
 	discordMessageId: string().optional(),
 	submissionNotes: string().optional(),
 	submissionUrl: string().optional(),
@@ -122,7 +125,7 @@ export const BountySchema = object({
 	claimedAt: string().optional(),
 	submittedAt: string().optional(),
 	reviewedAt: string().optional(),
-	
+
 	createdBy: RequiredDiscordUser.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 	claimedBy: DiscordUser.optional().default(undefined),
 	submittedBy: DiscordUser.optional().default(undefined),
@@ -201,6 +204,11 @@ export const BountyBoardSchema = new mongoose.Schema({
 	statusHistory: {
 		type: Array,
 	},
+	paidStatus: {
+		/* Bounty Paid Status */
+		/* "Unpaid", "Paid" */
+		type: String,
+	},
 	activityHistory: {
 		type: Array,
 	},
@@ -239,4 +247,4 @@ export const BountyBoardSchema = new mongoose.Schema({
 BountyBoardSchema.plugin(mongoosePaginate.mongoosePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
-  mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);
+	mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);

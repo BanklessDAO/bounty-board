@@ -234,11 +234,11 @@
     "createdAt": "2021-07-20T06:40:56.112Z",
     "dueAt": "2021-07-20T06:42:28.853Z",
     "claimedBy": {
-      "isDaoMember": false,
-      "guildName": null,
-      "discordHandle": "rick#5555",
-      "discordId": "324423432343239764"
-    },
+        "isDaoMember": false,
+        "guildName": null,
+        "discordHandle": "chkaloon#6313",
+        "discordId": "703336960051118256"
+      },
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "In-Progress",
     "statusHistory": [
@@ -283,8 +283,8 @@
       "amountWithoutScale": 1500
     },
     "createdBy": {
-      "discordHandle": "jordaniza#9868",
-      "discordId": "324439902343239764"
+      "discordHandle": "chkaloon#6313",
+      "discordId": "703336960051118256"
     },
     "createdAt": "2021-07-20T06:40:56.112Z",
     "dueAt": "2021-07-20T06:42:28.853Z",

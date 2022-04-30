@@ -1,22 +1,12 @@
-import { BANKLESS_ROLES } from '@app/constants/Roles';
 import { Role } from '@app/types/Role';
 import * as discordService from './discord.service';
 import { SessionWithToken } from '@app/types/SessionExtended';
 import * as crypto from 'crypto';
 import RoleCache, { IRoleCache } from '@app/models/RoleCache';
 import { Document } from 'mongoose';
-import { BANKLESS, BBBS } from '@app/constants/Bankless';
+import { getCustomer } from '@app/services/customer.service';
 
 export const FIVE_MINUTES = 5 * 60 * 1_000;
-const ROLE_IDS = Object.values(BANKLESS_ROLES);
-
-// base roles should apply to all these role ids
-export const whiteListedRoleIds = [
-	BANKLESS_ROLES.LEVEL_4,
-	BANKLESS_ROLES.LEVEL_3,
-	BANKLESS_ROLES.LEVEL_2,
-	BANKLESS_ROLES.LEVEL_1,
-];
 
 // base allowances to all users
 export const baseRoles: Role[] = [
@@ -37,18 +27,11 @@ export const getRolesForUserInGuild = async (
 	customerId: string
 ): Promise<string[]> => {
 	/**
-    * Get discord roleIds (numeric) then filter to only roles that are supported
-	* By the application
-    */
-
-	// BBBS users are all admins
-	if (customerId === BBBS.customerId) return [BANKLESS_ROLES.BB_CORE];
-	
-	// ignore all customers not bankless 
-	if (customerId !== BANKLESS.customerId) return [];
+	* Get discord roleIds (numeric) for this user (accessToken) in this guild (customerId)
+	*/
 
 	const discordUserStats = await discordService.getDiscordUserInGuild(accessToken, customerId);
-	return discordUserStats.data.roles.filter(role => ROLE_IDS.includes(role));
+	return discordUserStats.data.roles;
 };
 
 export const createSessionHash = (session: SessionWithToken): string => {
@@ -101,20 +84,54 @@ export const createCache = async ({
 
 export const getPermissions = async (accessToken: string, customerId: string): Promise<Role[]> => {
 	/**
-   * Returns a list of permissions for the current user
-   * We currently only support the `bounty-create` role, for discord level 1 - 4s in bankless DAO
+   * Returns a list of permissions (aka roles) for the current user's external roles.
+   * Uses the external roles => permissions (roles) mapping in the customer record.
    */
-	// note: only currently supports bankless & BBBS
-	const banklessRolesForUser = await getRolesForUserInGuild(accessToken, customerId);
-	const permissions: Role[] = [];
 
-	const isWhitelisted = banklessRolesForUser.some(role => whiteListedRoleIds.includes(role));
+	const customer = await getCustomer(customerId);
 
-	if (isWhitelisted) permissions.push(...baseRoles);
+	// Customer doesn't exist
+	if (!customer) {
+		return [];
+	}
 
-	if (banklessRolesForUser.includes(BANKLESS_ROLES.BB_CORE)) permissions.push('admin');
+	// Customer has no roles defined
+	if (!customer.externalRoleMap) {
+		return [];
+	}
 
-	return permissions;
+	const externalRolesForUser = await getRolesForUserInGuild(accessToken, customerId);
+
+	if (customer.externalRoleMap.adminExternalRoles) {
+		// All roles for this customer are admin
+		if (customer.externalRoleMap.adminExternalRoles[0] == '*') {
+			return ['admin'];
+		}
+		// User has an external role listed in our admin group
+		if (externalRolesForUser.filter(exRole => customer.externalRoleMap?.adminExternalRoles?.includes(exRole)).length > 0) {
+			return ['admin'];
+		}
+	}
+
+	const roles: Role[] = [];
+
+	if (customer.externalRoleMap.baseExternalRoles) {
+		// User has an external role that covers the base roles
+		if (externalRolesForUser.filter(exRole => customer.externalRoleMap?.baseExternalRoles?.includes(exRole)).length > 0) {
+			roles.push(...baseRoles);
+		}
+	}
+
+	if (customer.externalRoleMap.customExternalRoleMap) {
+		// Get the list of roles from the custom map
+		customer.externalRoleMap.customExternalRoleMap.forEach(map => {
+			if (externalRolesForUser.includes(map.externalRole)) {
+				roles.push(...map.roles);
+			}
+		});
+	}
+
+	return roles;
 };
 
 export const getPermissionsCached = async (session: SessionWithToken, customerId: string, flush = true): Promise<Role[]> => {

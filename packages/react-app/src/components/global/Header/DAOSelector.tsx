@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Select } from '@chakra-ui/react';
 import { CustomerProps } from '../../../models/Customer';
 import { CustomerContext } from '../../../context/CustomerContext';
-import router from 'next/router';
 
 export const DAOSelector = ({
 	customers,
@@ -22,7 +21,6 @@ export const DAOSelector = ({
 		);
 		if (_customer && setCustomer) {
 			setCustomer(_customer);
-			router.push(`/dao/${_customer.customerKey}`);
 		} else {
 			console.error(
 				'Attempted to change without initialising customer or setCustomer'
