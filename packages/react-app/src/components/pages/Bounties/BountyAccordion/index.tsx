@@ -2,11 +2,9 @@ import { Accordion } from '@chakra-ui/react';
 import { BountyCollection } from '../../../../models/Bounty';
 import { AccordionBountyItem } from '../Bounty';
 
-type BountyListProps = {
-  bounties: BountyCollection[]
-}
+type SetState<T extends any> = (arg: T) => void;
 
-const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
+const BountyList = ({ bounties, selectedBounties, setSelectedBounties }: { bounties: BountyCollection[], selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => {
 	return (
 		<Accordion allowToggle allowMultiple width={{ base: '95vw', lg: '700px' }}>
 			{bounties && bounties.map(
@@ -14,6 +12,8 @@ const BountyList = ({ bounties }: BountyListProps): JSX.Element => {
 					<AccordionBountyItem
 						key={idx}
 						bounty={bounty}
+						selectedBounties={selectedBounties}
+						setSelectedBounties={setSelectedBounties}
 					/>
 				)
 			)}

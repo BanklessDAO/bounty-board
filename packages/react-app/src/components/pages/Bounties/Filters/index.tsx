@@ -256,7 +256,7 @@ const Filters = (props: {
 	];
 	return (
 		<Stack width={{ base: '100%', lg: 300 }}>
-			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={8}>
+			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={3}>
 				<SearchFilter
 					filters={props.filters}
 					setFilters={props.setFilters}
