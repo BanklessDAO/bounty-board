@@ -1,7 +1,7 @@
 import { Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
-import React, { useContext, useEffect, useState, useRef, useCallback } from 'react';
+import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
 import Filters from './Filters';
 import useBounties from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
@@ -159,6 +159,7 @@ const Bounties = (): JSX.Element => {
 	const router = useRouter();
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState<FilterParams>(baseFilters);
+	const [selectedBounties, setSelectedBounties] = useState<string[]>([]);
 
 	// Watch this only runs on page load once the params are instantiated
 	// otherwise you will lose filers and/or create inf loop
@@ -200,7 +201,7 @@ const Bounties = (): JSX.Element => {
 				  gridGap="1px"
 				>
 					<Filters
-            filters={filters}
+						filters={filters}
 					  setFilters={setFilters}
 					/>
 					<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
