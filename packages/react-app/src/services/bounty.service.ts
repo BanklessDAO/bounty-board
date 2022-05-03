@@ -4,6 +4,7 @@ import Bounty, { BountyCollection } from '../models/Bounty';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { NextApiQuery } from '../types/Queries';
 import * as discord from './discord.service';
+import PAID_STATUS from '@app/constants/paidStatus';
 
 export type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
 
@@ -14,6 +15,7 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	const filters = {} as FilterParams;
 
 	if (typeof query.status === 'string') filters.status = query.status;
+	if (typeof query.paidStatus === 'string') filters.paidStatus = query.paidStatus;
 	if (typeof query.search === 'string') filters.search = query.search;
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
 	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
@@ -64,6 +66,26 @@ export const filterStatus = (query: FilterQuery<BountyCollection>, status?: stri
 		query.status = { $in: ['Open', 'In-Progress', 'In-Review', 'Completed'] };
 	} else {
 		query.status = status;
+	}
+	return query;
+};
+
+export const filterPaidStatus = (query: FilterQuery<BountyCollection>, paidStatus?: string): FilterQuery<BountyCollection> => {
+	/**
+	 * Pass paid status and append the corresponding status query to the query object
+	 */
+	if (paidStatus == null || paidStatus == '' || paidStatus == 'All' || paidStatus == undefined) {
+		query.$or = [
+			{ paidStatus: { $in: [PAID_STATUS.PAID, PAID_STATUS.UNPAID] } },
+			{ paidStatus: { $exists: false } },
+		];
+	} else if (paidStatus === PAID_STATUS.UNPAID) {
+		query.$or = [
+			{ paidStatus: PAID_STATUS.UNPAID },
+			{ paidStatus: { $exists: false } },
+		];
+	} else {
+		query.paidStatus = paidStatus;
 	}
 	return query;
 };
@@ -151,9 +173,10 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 
 	const filters = getFilters(query);
 
-	const { status, search, lte, gte, customerId, claimedBy, createdBy } = filters;
+	const { status, paidStatus, search, lte, gte, customerId, claimedBy, createdBy } = filters;
 
 	filterQuery = filterStatus(filterQuery, status);
+	filterQuery = filterPaidStatus(filterQuery, paidStatus);
 	filterQuery = filterSearch(filterQuery, search);
 	if (customerId) filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', lte, gte });

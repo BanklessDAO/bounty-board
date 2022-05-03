@@ -8,6 +8,7 @@ import useDebounce from './useDebounce';
 export const baseFilters: FilterParams = {
 	search: '',
 	status: 'All',
+	paidStatus: undefined,
 	gte: 0,
 	lte: Infinity,
 	sortBy: 'reward',
@@ -25,9 +26,10 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 		let urlQuery = '';
 
 		if (ready) {
-			const { status, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
+			const { status, paidStatus, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
 
 			if (status) urlQuery += `&status=${status === '' ? 'All' : status}`;
+			if (paidStatus) urlQuery += `&paidStatus=${status === '' ? 'Unpaid' : paidStatus}`;
 			if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;

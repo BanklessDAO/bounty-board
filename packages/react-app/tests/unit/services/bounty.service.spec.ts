@@ -2,6 +2,7 @@ import { BountyCollection } from '../../../src/models/Bounty';
 import { NextApiQuery } from '../../../src/types/Queries';
 import * as service from '../../../src/services/bounty.service';
 import { FilterQuery } from 'mongoose';
+import PAID_STATUS from '@app/constants/paidStatus';
 
 describe('Testing the bounty service', () => {
 
@@ -158,11 +159,52 @@ describe('Testing the bounty service', () => {
 					$lte: 100,
 					$gte: 0,
 				},
+				$or: [
+					{ paidStatus: { $in: [PAID_STATUS.PAID, PAID_STATUS.UNPAID] } },
+					{ paidStatus: { $exists: false } },
+				],
 			};
 			const actual = service.getFilterQuery(query);
 			expect(actual).toEqual(expected);
 		});
 	});
+
+	it('Returns the paid status filters as expected', async () => {
+		const query: NextApiQuery = {
+			status: 'Open',
+			search: 'Test',
+			customerId: 'testId',
+			lte: '100',
+			asc: 'true',
+			paidStatus: PAID_STATUS.UNPAID,
+		};
+		const expected: FilterQuery<BountyCollection> = {
+			status: 'Open',
+			customerId: 'testId',
+			$text: {
+				$search: 'Test',
+			},
+			'reward.amount': {
+				$lte: 100,
+				$gte: 0,
+			},
+			$or: [
+				{ paidStatus: PAID_STATUS.UNPAID },
+				{ paidStatus: { $exists: false } },
+			],
+		};
+		let actual = service.getFilterQuery(query);
+		expect(actual).toEqual(expected);
+
+		query.paidStatus = PAID_STATUS.PAID;
+		delete expected.$or;
+		expected.paidStatus = PAID_STATUS.PAID;
+		
+		actual = service.getFilterQuery(query);
+		expect(actual).toEqual(expected);
+		
+	});
+
 
 	describe('Testing pagination logic', () => {
 		it('Creates a pagination object as expected', () => {
