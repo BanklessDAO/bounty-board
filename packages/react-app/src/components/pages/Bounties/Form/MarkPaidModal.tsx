@@ -61,7 +61,7 @@ const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid } :
 
 
 	return (
-		<Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+		<Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered >
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>Mark Paid?</ModalHeader>
