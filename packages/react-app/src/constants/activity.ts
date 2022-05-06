@@ -17,6 +17,7 @@ export const ACTIVITY = {
 
 export const CLIENT = {
 	BOUNTYBOARD: 'bountyboardweb',
+	BOUNTYBOT: 'bountybot',
 };
 
 export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>

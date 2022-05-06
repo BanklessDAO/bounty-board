@@ -24,6 +24,7 @@ export const claimedBy = (user: APIUser): DiscordBoardUser => (
 	{
 		discordHandle: `${user?.username}#${user.discriminator}`,
 		discordId: user?.id,
+		iconUrl: '',
 	}
 );
 

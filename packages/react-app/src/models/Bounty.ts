@@ -7,6 +7,7 @@ import {
 	object,
 	array,
 	mixed,
+	boolean,
 } from 'yup';
 
 // Have to use ignore here due to some strange error with typescript not picking
@@ -46,11 +47,12 @@ const bothRequiredIfOneRequired = (params: ParamsType): boolean => {
 export const DiscordUser = object({
 	discordHandle: string().optional(),
 	discordId: string().optional(),
+	iconUrl: string().optional().nullable(),
 })
 	.test(
 		'is-optional',
 		'${path}.discordId or ${path}.discordHandle is required',
-		(params) => bothRequiredIfOneRequired(params),
+		(params) => bothRequiredIfOneRequired(params ? { discordId: params.discordHandle, discordHandle: params.discordId } : undefined),
 	);
 
 /**
@@ -66,6 +68,18 @@ export const RequiredDiscordUser = object({
 	(params) => bothRequiredIfOneRequired(params),
 );
 
+export const Applicant = object({
+	discordId: string().optional(),
+	discordHandle: string().optional(),
+	pitch: string().optional(),
+})
+	.test(
+		'is-optional',
+		'${path}.discordId or ${path}.discordHandle is required',
+		(params) => bothRequiredIfOneRequired(params ? { discordId: params.discordHandle, discordHandle: params.discordId } : undefined),
+	);
+
+
 export const Reward = object({
 	amount: number().min(0).when('$method', (method, schema) => requiredForPost({ method, schema })),
 	currency: string().default('BANK').when('$method', (method, schema) => requiredForPost({ method, schema })),
@@ -76,11 +90,12 @@ export const Reward = object({
 	'Missing one of [amount, currency, scale, amountWithoutScale] in ${path}.',
 	(params): boolean => {
 		if (params) {
-			const { amount, currency, scale, amountWithoutScale } = params;
+			const { amount, currency, scale } = params;
 			const allDefined = (!!amount || amount === 0)
 				&& (!!scale || scale === 0)
-				&& (!!amountWithoutScale || amountWithoutScale === 0)
 				&& !!currency;
+				// && (!!amountWithoutScale || amountWithoutScale === 0) // Removed for bot compatibility
+
 			return allDefined;
 		}
 		return true;
@@ -103,6 +118,11 @@ export const ActivityHistory = object({
 	modifiedAt: string(),
 });
 
+export const MessageInfo = object({
+	messageId: string(),
+	channelId: string(),
+});
+
 export const BountySchema = object({
 	_id: string().optional(),
 	title: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
@@ -113,13 +133,33 @@ export const BountySchema = object({
 	paidStatus: paidStatus.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	season: string().optional(),
 
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
 
-	discordMessageId: string().optional(),
-	submissionNotes: string().optional(),
-	submissionUrl: string().optional(),
+	discordMessageId: string().optional().nullable(),
+	submissionNotes: string().optional().nullable(),
+	submissionUrl: string().optional().nullable(),
+	createdInChannel: string().optional().nullable(),
+
+	canonicalCard: MessageInfo.optional(),
+	creatorMessage: MessageInfo.optional(),
+	claimantMessage: MessageInfo.optional(),
+
+	evergreen: boolean().optional(),
+	claimLimit: number().min(0).max(100).optional(),
+	isParent: boolean().optional(),
+	parentId: string().optional().nullable(),
+	childrenIds: array(string()).optional(),
+	assign: string().optional().nullable(),
+	assignedName: string().optional().nullable(),
+	requireApplication: boolean().optional(),
+	applicants: array(Applicant).optional(),
+	isIOU: boolean().optional(),
+	resolutionNote: string().optional().nullable(),
+	owedTo: DiscordUser.optional().default(undefined),
+
 
 	createdAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	claimedAt: string().optional(),
@@ -139,7 +179,6 @@ export const BountyClaimSchema = object({
 	statusHistory: array(StatusHistory).required(),
 	activityHistory: array(ActivityHistory).required(),
 }).noUnknown(true);
-
 
 export type BountyCollection = SchemaToInterface<typeof BountySchema>;
 export type BountyClaimCollection = SchemaToInterface<typeof BountyClaimSchema>;
@@ -240,6 +279,64 @@ export const BountyBoardSchema = new mongoose.Schema({
 	reviewedBy: {
 		discordHandle: String,
 		discordId: Number,
+		type: Object,
+	},
+	createdInChannel: {
+		type: String,
+	},
+	canonicalCard: {
+		messageId: String,
+		channelId: String,
+		type: Object,
+	},
+	creatorMessage: {
+		messageId: String,
+		channelId: String,
+		type: Object,
+	},
+	claimantMessage: {
+		messageId: String,
+		channelId: String,
+		type: Object,
+	},
+
+	evergreen: {
+		type: Boolean,
+	},
+	claimLimit: {
+		type: Number,
+	},
+	isParent: {
+		type: Boolean,
+	},
+	parentId: {
+		type: String,
+	},
+	childrenIds: {
+		type: Array,
+	},
+	assign: {
+		type: String,
+	},
+	assignedName: {
+		type: String,
+	},
+	requireApplication: {
+		type: Boolean,
+	},
+	applicants: {
+		type: Array,
+	},
+	isIOU: {
+		type: Boolean,
+	},
+	resolutionNote: {
+		type: String,
+	},
+	owedTo: {
+		discordHandle: String,
+		discordId: Number,
+		iconUrl: String,
 		type: Object,
 	},
 });

@@ -5,6 +5,7 @@ import { internalServerError, notFound } from '../../../errors';
 import * as service from '../../../services/bounty.service';
 import middlewares from '../../../middlewares';
 import { RoleRestrictions } from '@app/types/Role';
+import MiscUtils from '../../../utils/miscUtils';
 
 const restrictions: RoleRestrictions = {
 	PATCH: ['admin', 'edit-bounties', 'edit-own-bounty'],
@@ -17,6 +18,9 @@ export const handler = async (
 ): Promise<void> => {
 
 	const { query: { id } } = req;
+
+	const forceUpdate = MiscUtils.boolFromReq(req, 'force');
+
 	if (typeof id !== 'string') {
 		return res.status(400).json({
 			success: false,
@@ -40,13 +44,15 @@ export const handler = async (
 	case 'PATCH' :
 		/* Edit a model by its ID */
 		try {
-			const bountyIsEditable = service.canBeEdited({ bounty });
-			if (!bountyIsEditable) {
-				return res.status(400).json({
-					success: false,
-					message: 'Unable to edit bounty, as is not in an editable status',
-					bountyStatus: bounty.status,
-				});
+			if (!forceUpdate) {
+				const bountyIsEditable = service.canBeEdited({ bounty });
+				if (!bountyIsEditable) {
+					return res.status(400).json({
+						success: false,
+						message: 'Unable to edit bounty, as is not in an editable status',
+						bountyStatus: bounty.status,
+					});
+				}
 			}
 			const updateBounty = await service.editBounty({ bounty, body: req.body });
 			res.status(200).json({ success: true, data: updateBounty });

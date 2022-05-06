@@ -1,6 +1,7 @@
 import { RoleRestrictions } from '@app/types/Role';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { OptionalObjectSchema, ObjectShape } from 'yup/lib/object';
+import MiscUtils from '../utils/miscUtils';
 
 type ValidatorFunction = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 export type ValidatorProps = {
@@ -31,27 +32,35 @@ const handleErrResponse = (err: unknown): Record<string, unknown> => {
  * These must be defined as a yup schema object. You can then wrap routes
  * in the exported function below.
  * 
+ * "force=true" in the req query string will bypass validation
+ * *
  * @param schema is the yup schema object to validate against 
  * @param handler is the next route handler
  */
 const validate = ({ schema, handler }: ValidatorProps): ValidatorFunction => {
 	return async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-		try {
-			if (req.method && ['POST', 'PATCH', 'PUT'].includes(req.method)) {
-				if (checkIsEmpty(req)) {
-					return res
-						.status(400)
-						.json({ error: 'Request cannot have an empty body' });
+		if (!MiscUtils.boolFromReq(req, 'force')) {
+			try {
+				if (req.method && ['POST', 'PATCH', 'PUT'].includes(req.method)) {
+					if (checkIsEmpty(req)) {
+						return res
+							.status(400)
+							.json({ error: 'Request cannot have an empty body' });
+					}
+					req.body = await schema.validate(req.body, {
+						strict: true,
+						abortEarly: false,
+						context: { method: req.method },
+					});
 				}
-				req.body = await schema.validate(req.body, {
-					strict: true,
-					abortEarly: false,
-					context: { method: req.method },
+			} catch (err: any) {
+				console.log(`err: ${err}`);
+				err.errors.forEach((element: any) => {
+					console.log(element);
 				});
+				const _json = handleErrResponse(err);
+				return res.status(400).json(_json);
 			}
-		} catch (err: unknown) {
-			const _json = handleErrResponse(err);
-			return res.status(400).json(_json);
 		}
 		await handler(req, res);
 	};
