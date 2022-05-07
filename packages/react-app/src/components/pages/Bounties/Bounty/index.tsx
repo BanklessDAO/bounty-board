@@ -17,6 +17,7 @@ import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
 import PAID_STATUS from '@app/constants/paidStatus';
+import ReactMarkdown from 'react-markdown';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -101,7 +102,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Description</Heading>
-				<Text>{description}</Text>
+				<Text><ReactMarkdown className='md-desc'>{description}</ReactMarkdown></Text>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Done Criteria</Heading>
