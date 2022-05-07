@@ -17,7 +17,7 @@ export const baseFilters: FilterParams = {
 	// no created or claimed
 };
 
-export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => {
+export const useDynamicUrl = (filters: FilterParams, bountiesChanged: boolean, ready: boolean): string => {
 	const { customer } = useContext(CustomerContext);
 	const debounceSearch = useDebounce(filters.search, 500, true);
 
@@ -43,7 +43,7 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 		}
 		return urlQuery;
 
-	}, [filters, customer, debounceSearch, ready]);
+	}, [filters, bountiesChanged, customer, debounceSearch, ready]);
 };
 
 export const getFiltersFromUrl = (query: ParsedUrlQuery): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {

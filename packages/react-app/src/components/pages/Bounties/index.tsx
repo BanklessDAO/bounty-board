@@ -82,6 +82,7 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMar
 	const { user } = useUser();
 	const [getCsvData, setCsvData] = useStateCallback<Record<string, unknown>[]>([]);
 	const [getBountiesToMark, setBountiesToMark] = useState<string[]>([]);
+	const [getMarkPaidMessage, setMarkPaidMessage] = useState<string>('');
 	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
 	const { isOpen: isMarkPaidOpen, onOpen: onMarkPaidOpen, onClose: onMarkPaidClose } = useDisclosure();
 
@@ -110,11 +111,13 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMar
 				// If Admin, allow all to be marked, otherwise only own bouties and if correct permissions
 				if (roles.some((r: string) => ['admin'].includes(r))) {
 					bountiesToMark = selectedBounties;
+					setMarkPaidMessage('Mark exported bounties as paid?');
 				} else if (roles.some((r: string) => ['edit-bounties', 'edit-own-bounty'].includes(r))) {
 					bountiesToMark = selectedBounties.filter(_id => {
 						const bounty = bounties?.find(b => b._id == _id);
 						return bounty?.createdBy.discordId == user.id;
 					});
+					setMarkPaidMessage('Mark exported bounties you created as paid?');
 				}
 				if (bountiesToMark.length > 0) {
 					setBountiesToMark(bountiesToMark);
@@ -161,8 +164,12 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMar
 				ref={csvLink}
 				target='_blank'
 			/>
-			<MarkPaidModal isOpen={isMarkPaidOpen} onClose={onMarkPaidClose} bounties={bounties ? bounties
-				.filter(({ _id }) => getBountiesToMark.includes(_id)) : undefined } setMarkedSomePaid={setMarkedSomePaid} />
+			<MarkPaidModal
+				isOpen={isMarkPaidOpen}
+				onClose={onMarkPaidClose}
+				bounties={bounties ? bounties.filter(({ _id }) => getBountiesToMark.includes(_id)) : undefined }
+				setMarkedSomePaid={setMarkedSomePaid}
+				markPaidMessage={getMarkPaidMessage} />
 		</Stack>
 	);
 });
@@ -201,7 +208,7 @@ const Bounties = (): JSX.Element => {
 		}
 	}, [router.isReady, router.query, firstLoad]);
 
-	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
+	const urlQuery = useDynamicUrl(filters, markedSomePaid, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -214,6 +221,7 @@ const Bounties = (): JSX.Element => {
 
 	useEffect(() => {
 		setPage(0);
+		console.log('SetPage');
 	}, [filters.search, filters.gte, filters.lte, filters.sortBy, filters?.claimedBy, filters?.createdBy, markedSomePaid]);
 
 	return (

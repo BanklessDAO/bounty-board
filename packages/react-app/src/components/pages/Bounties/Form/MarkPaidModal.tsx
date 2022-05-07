@@ -22,8 +22,8 @@ const asyncSome = async (arr: Array<any>, predicate: (arg0: any) => any) => {
 	return false;
 };
 
-const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid } :
-	{ isOpen: boolean, onClose: () => void, bounties: BountyCollection[] | undefined, setMarkedSomePaid : SetState<boolean>,
+const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid, markPaidMessage } :
+	{ isOpen: boolean, onClose: () => void, bounties: BountyCollection[] | undefined, setMarkedSomePaid : SetState<boolean>, markPaidMessage: string
 }) => {
 
 	const [error, setError] = useState(false);
@@ -74,7 +74,7 @@ const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid } :
 				}
 				<ModalCloseButton />
 				<ModalBody>
-				Export completed. Mark exported bounties as paid?
+				Export completed. {markPaidMessage}
 				</ModalBody>
 
 				<ModalFooter>
