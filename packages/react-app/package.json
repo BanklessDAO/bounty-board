@@ -45,6 +45,8 @@
     "@types/mongoose-paginate-v2": "^1.4.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "axios": "^0.24.0",
+    "discord-markdown": "^2.5.1",
+    "dompurify": "^2.3.6",
     "env-cmd": "^10.1.0",
     "follow-redirects": "^1.14.8",
     "framer-motion": "^4.1.17",
@@ -73,6 +75,7 @@
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^8.0.0",
+    "@types/dompurify": "^2.3.3",
     "@types/enzyme": "^3.10.10",
     "@types/jest": "^27.0.2",
     "@types/next-auth": "^3.15.0",
@@ -93,5 +96,9 @@
     "react-test-utils": "^0.0.1",
     "ts-jest": "^27.0.7",
     "typescript": "^4.3.5"
+  },
+  "resolutions": {
+    "@types/react": "17.0.14",
+    "@types/react-dom": "17.0.2"
   }
 }

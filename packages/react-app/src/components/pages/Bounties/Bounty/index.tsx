@@ -17,6 +17,8 @@ import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
 import PAID_STATUS from '@app/constants/paidStatus';
+import { toHTML } from 'discord-markdown';
+import DOMPurify from 'dompurify';
 
 const Status = ({ indication }: { indication: string }): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
@@ -101,7 +103,11 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Description</Heading>
-				<Text>{description}</Text>
+				<Text className='md-desc'
+					dangerouslySetInnerHTML={{
+						__html : DOMPurify.sanitize(toHTML(description), { USE_PROFILES: { html: true } }),
+					}}
+				/>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Done Criteria</Heading>

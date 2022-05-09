@@ -64,7 +64,7 @@
         "editKey": "EK3",
         "season": 1,
         "title": "Implement Changes to the Bounty Board",
-        "description": "Description for new website landing page with specs",
+        "description": "# Heading level 1 \n #### Heading level https://google.com 4 \n Heading level 1  \n  =============== \n \n Description for __new__ *website* _landing_ **page** with specs. This text is ***really important***. \n \n > This is a blockquote >> This is a blockquote.  \n \n 1. First item \n 2. Second item \n 3. Third item \n 1. Indented item \n 2. Indented item \n 4. Fourth item \n \n - First item \n - Second item \n - Third item \n - Fourth item * This is the first list item. \n * Here's the second list item. \n > A blockquote would look great below the second list item. \n * And here's the third list item. ![Tux, the Linux mascot](/assets/images/tux.png)  \n    At the command prompt, type `nano`. \n ``Use `code` in your Markdown file.`` \n *** \n --- \n ___ . \n My favorite search engine is [Duck Duck Go](https://duckduckgo.com). \n My favorite search engine is [Duck Duck Go](https://duckduckgo.com \"The best search engine for privacy\").  [link](https://www.example.com/my%20great%20page)  http://www.example.com        ",
         "criteria": "A completed bounty has the following deliverables...",
         "reward": {
             "currency": "BANK",
