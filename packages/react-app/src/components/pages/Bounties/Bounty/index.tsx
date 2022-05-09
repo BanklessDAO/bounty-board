@@ -139,7 +139,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Description</Heading>
-				<Text>{ ReactHtmlParser(DOMPurify.sanitize(toHTML(description || ''))) }</Text>
+				<Text className='md-desc'>{ ReactHtmlParser(DOMPurify.sanitize(toHTML(description || ''))) }</Text>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Done Criteria</Heading>
@@ -148,7 +148,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			{dueAt &&
 				<GridItem>
 					<Heading size="sm">Deadline</Heading>
-					<Text>{new Date(dueAt).toDateString()}</Text>
+					<Text className='md-desc'>{new Date(dueAt).toDateString()}</Text>
 				</GridItem>
 			}
 			{
