@@ -18,6 +18,9 @@ import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
 import PAID_STATUS from '@app/constants/paidStatus';
+import DOMPurify from 'dompurify';
+import { toHTML } from 'discord-markdown';
+import ReactHtmlParser from 'react-html-parser';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -136,7 +139,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Description</Heading>
-				<Text>{description}</Text>
+				<Text>{ ReactHtmlParser(DOMPurify.sanitize(toHTML(description))) }</Text>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Done Criteria</Heading>
