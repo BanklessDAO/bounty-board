@@ -143,7 +143,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			</GridItem>
 			<GridItem>
 				<Heading size="sm">Done Criteria</Heading>
-				<Text>{criteria}</Text>
+				<Text>{ ReactHtmlParser(DOMPurify.sanitize(toHTML(criteria))) }</Text>
 			</GridItem>
 			{dueAt &&
 				<GridItem>
