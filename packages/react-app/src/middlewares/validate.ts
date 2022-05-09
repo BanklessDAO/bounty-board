@@ -54,7 +54,6 @@ const validate = ({ schema, handler }: ValidatorProps): ValidatorFunction => {
 					});
 				}
 			} catch (err: any) {
-				console.log(`err: ${err}`);
 				err.errors.forEach((element: any) => {
 					console.log(element);
 				});

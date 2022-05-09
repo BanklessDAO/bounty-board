@@ -31,7 +31,6 @@ describe('Testing POST bounty validation', () => {
 	it('Accepts a complete bounty', async () => {
 		req.body = testBounty;
 		await mockBountyValidator(req, res);
-		console.log(JSON.stringify(res));
 		// expect(res._getJSONData()).toEqual('');
 		expect(res.statusCode).toEqual(200);
 	});

@@ -34,18 +34,15 @@ const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid, markPaidM
 	};
 
 	const markBountiesPaid = async () => {
-		console.log(bounties);
 		let markedSome = false;
 		bounties && await asyncSome(bounties, async (bounty: BountyCollection) => {
 			bounty.paidStatus = PAID_STATUS.PAID;
-			console.log(bounty);
 			try {
 				const res = await axios.patch<void, any, BountyCollection>(
 					`api/bounties/${bounty._id}?customerId=${bounty.customerId}&force=true`, bounty
 				);
 				if (res.status !== 200)	{
 					setError(true);
-					console.log(`res.status: ${res.status}`);
 					return true;
 				}
 				markedSome = true;
