@@ -186,7 +186,7 @@ export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	 */
 	next: (query.next && typeof query.next === 'string') ? query.next : undefined,
 	previous: (query.previous && typeof query.previous === 'string') ? query.previous : undefined,
-	limit: (Number(query.limit)) ? Number(query.limit) : 10000,
+	limit: (Number(query.limit)) ? Number(query.limit) : 1000,
 });
 
 
