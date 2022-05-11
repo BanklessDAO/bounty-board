@@ -34,7 +34,7 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;
 			if (sortBy) urlQuery += `&sortBy=${sortBy}`;
-			if (sortAscending) urlQuery += `&asc=${sortAscending}`;
+			if (sortBy) urlQuery += `&asc=${sortAscending}`;
 			if (customer) urlQuery += `&customerId=${customer.customerId ?? BANKLESS.customerId}`;
 			if (customer) urlQuery += `&customerKey=${customer.customerKey ?? BANKLESS.customerKey}`;
 			if (claimedBy) urlQuery += `&claimedBy=${claimedBy}`;
