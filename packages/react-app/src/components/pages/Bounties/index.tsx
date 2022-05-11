@@ -28,19 +28,21 @@ const maxPages = (bounties: BountyCollection | BountyCollection[] | undefined) =
 	return hasExtraPage ? numFullPages + 1 : numFullPages;
 };
 
-export const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element => (
-	<Stack
-		borderWidth={3}
-		borderRadius={10}
-		width={{ base: '95vw', lg: '700px' }}
-		textAlign="center"
-		direction="row"
-		justify="center"
-		align="center"
-	>
-		<Text fontSize="lg">{message}</Text>
-	</Stack>
-);
+export const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element => {
+	return(
+		<Stack
+			borderWidth={3}
+			borderRadius={10}
+			width={{ base: '95vw', lg: '700px' }}
+			textAlign="center"
+			direction="row"
+			justify="center"
+			align="center"
+		>
+			<Text fontSize="lg">{message}</Text>
+		</Stack>
+	);
+};
 
 /**
 Define a set state function that runs a callback on setting of the state
