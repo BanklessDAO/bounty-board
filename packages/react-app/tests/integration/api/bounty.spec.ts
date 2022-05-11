@@ -8,6 +8,7 @@ import bountyHandler from '@app/pages/api/bounties/[id]';
 import { testBounty } from '@tests/stubs/bounty.stub';
 import bounties from '@tests/stubs/bounties.stub.json';
 
+
 describe('Testing the bounty API', () => {
 	let connection: Connection;
 	let req: MockRequest<NextApiRequest>;

@@ -45,7 +45,7 @@ describe('Testing the bounty API handler', () => {
 		expect(res.statusCode).toEqual(404);
 	});
 
-	it('Throws an error if thepatch request cannot be edited', async () => {
+	it('Throws an error if the patch request cannot be edited', async () => {
 		jest.spyOn(service, 'canBeEdited')
 			.mockReturnValue(false);
     
@@ -55,7 +55,7 @@ describe('Testing the bounty API handler', () => {
 		expect(res.statusCode).toEqual(400);
 	});
 
-	it('Edits if thepatch request can be edited', async () => {
+	it('Edits if the patch request can be edited', async () => {
 		jest.spyOn(service, 'canBeEdited')
 			.mockReturnValue(true);
 		jest.spyOn(service, 'editBounty')
@@ -65,6 +65,19 @@ describe('Testing the bounty API handler', () => {
 		await handler(req, res);
 		expect(res.statusCode).toEqual(200);
 	});
+
+	it('Edits if the patch request includes a FORCE option', async () => {
+		jest.spyOn(service, 'canBeEdited')
+			.mockReturnValue(false);
+		jest.spyOn(service, 'editBounty')
+			.mockReturnValue(Promise.resolve({} as BountyCollection));
+    
+		req.method = 'PATCH';
+		req.query.force = 'true';
+		await handler(req, res);
+		expect(res.statusCode).toEqual(200);
+	});
+
 });
 
 describe('Testing validations for single bounties', () => {

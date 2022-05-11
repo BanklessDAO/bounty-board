@@ -28,7 +28,7 @@ const maxPages = (bounties: BountyCollection | BountyCollection[] | undefined) =
 	return hasExtraPage ? numFullPages + 1 : numFullPages;
 };
 
-const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element => (
+export const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element => (
 	<Stack
 		borderWidth={3}
 		borderRadius={10}
