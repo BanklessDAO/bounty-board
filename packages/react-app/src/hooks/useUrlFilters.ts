@@ -24,12 +24,12 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 
 	return useMemo(() => {
 		let urlQuery = '';
-
+		
 		if (ready) {
 			const { status, paidStatus, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
 
 			if (status) urlQuery += `&status=${status === '' ? 'All' : status}`;
-			if (paidStatus) urlQuery += `&paidStatus=${status === '' ? 'Unpaid' : paidStatus}`;
+			if (paidStatus) urlQuery += `&paidStatus=${paidStatus === '' ? 'Unpaid' : paidStatus}`;
 			if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;

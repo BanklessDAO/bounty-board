@@ -186,7 +186,7 @@ const Bounties = (): JSX.Element => {
 
 	useEffect(() => {
 		setPage(0);
-	}, [filters.search, filters.gte, filters.lte, filters.sortBy, filters?.claimedBy, filters?.createdBy]);
+	}, [filters]);
 
 	return (
 		<>
