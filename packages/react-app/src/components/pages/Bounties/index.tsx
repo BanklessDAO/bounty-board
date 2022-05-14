@@ -160,14 +160,14 @@ const Bounties = (): JSX.Element => {
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState<FilterParams>(baseFilters);
 	const [selectedBounties, setSelectedBounties] = useState<string[]>([]);
-
+	
 	// Watch this only runs on page load once the params are instantiated
 	// otherwise you will lose filers and/or create inf loop
 	// only render the saved search the first time, to prevent loops
 	const firstLoad = useRef(true);
 	useEffect(() => {
 		if (router.isReady && firstLoad.current && filtersDefined(router.query)) {
-			const newFilters = getFiltersFromUrl(router.query);
+			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}

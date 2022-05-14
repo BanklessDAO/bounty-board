@@ -48,7 +48,7 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 	}, [filters, customer, debounceSearch, ready]);
 };
 
-export const getFiltersFromUrl = (query: ParsedUrlQuery): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {
+export const getFiltersFromUrl = (query: ParsedUrlQuery | FilterParams): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {
 	/**
 	 * Grab filters from the url, using fallback values if we see 'undefined'
 	 */
