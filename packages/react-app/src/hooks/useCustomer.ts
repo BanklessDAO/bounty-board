@@ -9,49 +9,49 @@ const fetcher = (url: string) => fetch(url)
 	.then(res => res.json())
 	.then(json => json.data);
 
-const useCustomerFromBounty = (bountyId: RouterKey): CustomerProps | undefined => {
+const useCustomerFromBounty = (bountyId: RouterKey): { customer: CustomerProps | undefined, isLoading: boolean } => {
 
-	const { data: bounty } = useSWR<BountyCollection>(
+	const { data: bounty, error: bountyError } = useSWR<BountyCollection>(
 		typeof bountyId === 'string' ? `/api/bounties/${bountyId}` : null,
 		fetcher
 	);
 
-	const { data: customer } = useSWR<CustomerProps>(
+	const { data: customer, error: customerError } = useSWR<CustomerProps>(
 		bounty ? `/api/customers/${bounty.customerId}` : null,
 		fetcher
 	);
-	return customer;
+	return { customer, isLoading: Boolean(bountyId) && ((!bounty && !bountyError) || (!customer && !customerError)) };
 };
 
-const useCustomerFromKey = (customerKey: RouterKey): CustomerProps | undefined => {
-	const { data: customerFromKey } = useSWR<CustomerProps[]>(
+const useCustomerFromKey = (customerKey: RouterKey): { customer: CustomerProps | undefined, isLoading: boolean } => {
+	const { data: customerFromKey, error } = useSWR<CustomerProps[]>(
 		customerKey ? `/api/customers?customerKey=${customerKey}` : null,
 		fetcher
 	);
-
+	const isLoading = Boolean(customerKey) && !customerFromKey && !error ;
 	// key passed but no customer
-	if (!customerFromKey) return;
+	if (!customerFromKey) return { customer: undefined, isLoading };
 
 	// should only be 1 result 
-	if (customerFromKey.length === 0) return;
+	if (customerFromKey.length === 0) return { customer: undefined, isLoading };
 
-	return customerFromKey[0];
+	return { customer: customerFromKey[0], isLoading };
 };
 
-export const useCustomerFromBountyIdAndKey = (bountyId: RouterKey, customerKey: RouterKey): CustomerProps | undefined => {
+export const useCustomerFromBountyIdAndKey = (bountyId: RouterKey, customerKey: RouterKey): { customer: CustomerProps | undefined, isLoading: boolean } => {
 	/**
 		 * Chain useSWR hooks into a single function to fetch the customer, corresponding to the passed bounty id.
 		 * @param bountyId will have an associated customerId, which is then used to fetch the customer.
 		 * @returns the fetched customer, or undefined if either the bountyId is undefined or the customer is undefined.  
 		 */
-	const customerFromKey = useCustomerFromKey(customerKey);
-	const customerFromBounty = useCustomerFromBounty(bountyId);
+	const { customer: customerFromKey, isLoading: customerFromKeyLoading } = useCustomerFromKey(customerKey);
+	const { customer: customerFromBounty, isLoading: customerFromBountyLoading } = useCustomerFromBounty(bountyId);
 
 	// customer name passed but matches no customer on file
-	if (customerKey && !customerFromKey) return;
+	if (customerKey && !customerFromKey) return { customer: undefined, isLoading: customerFromKeyLoading || customerFromBountyLoading };
 
 	// no bounty id passed so just return the customer
-	if (!bountyId) return customerFromKey;
+	if (!bountyId) return { customer: customerFromKey, isLoading: customerFromKeyLoading || customerFromBountyLoading };
 
 	// bounties found BUT mistmatch customer name
 	if (customerFromKey && customerFromBounty?.customerId !== customerFromKey?.customerId) {
@@ -60,10 +60,10 @@ export const useCustomerFromBountyIdAndKey = (bountyId: RouterKey, customerKey: 
 			'color:red;font-weight:bold;'
 
 		);
-		return;
+		return { customer: undefined, isLoading: customerFromKeyLoading || customerFromBountyLoading };
 	}
 
-	return customerFromBounty;
+	return { customer: customerFromBounty, isLoading: customerFromKeyLoading || customerFromBountyLoading };
 };
 
 export const setCustomerFromLocalStorage = (setCustomer: SetCustomerType): void => {
@@ -86,7 +86,7 @@ export const useCustomer = (id: RouterKey, customerKey: RouterKey): {
 	error: boolean
 } => {
 	const [customer, setCustomer] = useState<CustomerProps>(BANKLESS);
-	const customerFromIdAndKey = useCustomerFromBountyIdAndKey(id, customerKey);
+	const { customer: customerFromIdAndKey } = useCustomerFromBountyIdAndKey(id, customerKey);
 	const [error, setError] = useState(false);
 
 	useEffect(() => {
