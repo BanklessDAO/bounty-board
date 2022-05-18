@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/usr/tmp/mongo
+
+  mongo-seed:
+    build: './mongo'
+    volumes:
+      - ./mongo:/usr/tmp/mongo      
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  react-app:
+    build: "."
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./packages:/bountyboard/packages
+    depends_on:
+      - mongo-seed
+      - mongo
+
