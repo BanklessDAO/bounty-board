@@ -108,7 +108,7 @@ Refer to the [Bounty Board Commands and Workflow](https://bankless.notion.site/T
 
 To run the project, copy the local `.env.local` file by copying the `.env.qa` for most variabled. Update the MONGODB_URI with the following URI
 ```
-MONGODB_URI=mongodb://localhost:27017/bountyboard
+MONGODB_URI=mongodb://mongo:27017/bountyboard
 ```
 
 To start the instance, you can run the following command
