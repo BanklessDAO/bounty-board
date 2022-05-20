@@ -3,7 +3,6 @@ import {
 	AccordionIcon,
 	AccordionItem,
 	AccordionPanel,
-	Spacer,
 	Box,
 	Checkbox,
 	Flex,
@@ -13,22 +12,18 @@ import {
 	Tag,
 	TagLabel,
 	Text,
-	HStack,
 } from '@chakra-ui/react';
 import { BountyCollection } from '@app/models/Bounty';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
-import UserAvatar from '@app/components/parts/UserAvatar';
+import PAID_STATUS from '@app/constants/paidStatus';
 
 type SetState<T extends any> = (arg: T) => void;
 
-const Status = ({ bounty }: { bounty: BountyCollection }): JSX.Element => (
-	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={bounty.status}>
-		<Box ml={-1} mr={2} >
-			<UserAvatar userId={bounty.claimedBy?.discordId} size='xs' />
-		</Box>
-		<TagLabel>{bounty.status.replace('-', ' ')}</TagLabel>
+const Status = ({ indication }: { indication: string }): JSX.Element => (
+	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={indication}>
+		<TagLabel>{indication.replace('-', ' ')}</TagLabel>
 	</Tag>
 );
 
@@ -74,15 +69,16 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
+
 const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 	
 	return (
-		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" pl="2" pr="2" >
+		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
 			<Box
 				width={{ base: '100%', md: '60%' }}
 				pr={{ base: 7, md: 0 }}
 				textAlign="left"
-				mt="2"
+				mt="4"
 			>
 				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
 					{bounty.title}
@@ -91,19 +87,24 @@ const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 			<Box
 				width={{ base: '100%', md: '30%' }}
 				textAlign={{ base: 'left', md: 'right' }}
-				mt={{ base: 0, md: 2 }}
+				mt={{ base: 0, md: 4 }}
 				ml="auto"
+				pr={7}
 			>
 				{bounty.reward && (
-					<Heading mb={4} size="md">
+					<Heading mt={1} size="md">
 						{calculateReward(bounty.reward)}
 					</Heading>
 				)}
 			</Box>
-			<Flex width="100%" justifyContent="space-between" alignItems="center">
-				<Spacer />
+			<Flex width="full" justifyContent="space-between" alignItems="center">
 				<Box mb={2}>
-					{bounty.status && <Status bounty={bounty} />}
+					{bounty.status && <Status indication={bounty.status} />}
+				</Box>
+			</Flex>
+			<Flex width="full" justifyContent="space-between" alignItems="center">
+				<Box mb={2}>
+					{<Status indication={bounty.paidStatus ? bounty.paidStatus : PAID_STATUS.UNPAID} />}
 				</Box>
 			</Flex>
 		</Flex>
@@ -205,15 +206,4 @@ export const AccordionBountyItem = ({ bounty, selectedBounties, setSelectedBount
 			<BountyDetails bounty={bounty} />
 		</AccordionPanel>
 	</AccordionItem>
-);
-
-export const BountyItem = ({ bounty, selectedBounties, setSelectedBounties }: { bounty: BountyCollection, selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => (
-	<Box w='100%' borderWidth={3} borderRadius={10} mb={1}>
-		<HStack>
-			<BountySelect bountyId={bounty._id} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties} />
-			<Box w='100%' pb={2} pt={0}>
-				<BountySummary bounty={bounty} />
-			</Box>
-		</HStack>
-	</Box>
 );

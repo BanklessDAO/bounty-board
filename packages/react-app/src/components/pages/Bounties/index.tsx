@@ -1,6 +1,6 @@
 import { Stack, Text, VStack, Button } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
-import BountyList from './BountyList';
+import BountyAccordion from './BountyAccordion';
 import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
 import Filters from './Filters';
 import useBounties from '@app/hooks/useBounties';
@@ -211,7 +211,7 @@ const Bounties = (): JSX.Element => {
 					? <FilterResultPlaceholder message={'No Results'} />
 					: isLoading
 						? <FilterResultPlaceholder message={'Loading'} />
-						: <BountyList bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+						: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
 				}
 			</Stack>
 			<BountyPaginate
