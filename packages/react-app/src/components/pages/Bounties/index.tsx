@@ -191,7 +191,7 @@ const Bounties = (): JSX.Element => {
 	return (
 		<>
 			<Stack
-				direction={{ base: 'column', lg: 'row' }}
+				direction={{ base: 'column' }}
 				align="top"
 				fontSize="sm"
 				fontWeight="600"

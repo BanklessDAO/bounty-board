@@ -10,6 +10,7 @@ import {
 	Switch,
 	Flex,
 	Spacer,
+	useCheckboxGroup,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
@@ -17,6 +18,7 @@ import paidStatus from '@app/constants/paidStatus';
 import { AcceptedSortInputs, FilterParams, UseFilterState } from '@app/types/Filter';
 import React, { useMemo, useState } from 'react';
 import { useUser } from '@app/hooks/useUser';
+import { CheckboxCard } from '@app/components/parts/SelectButton';
 
 
 type SetState<T extends any> = (arg: T) => void;
@@ -72,22 +74,26 @@ const SelectFilters = ({ name, options,
 	options: { name: string; value: string }[],
 } & UseFilterState): JSX.Element => {
 
-	const updateStatus = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+	const updateStatus = (value: string[]): void => {
 		setFilters({
 			...filters,
-			status: event.target.value,
+			status: value,
 		});
 	};
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { getCheckboxProps } = useCheckboxGroup({
+		defaultValue: filters.status || [],
+		onChange: updateStatus,
+	});
+	
 	return (
 		<>
 			{name && <Heading size="xs">{name}</Heading>}
-			<Select placeholder="All" mb="4" onChange={updateStatus} value={filters.status}>
+			<Flex wrap={'wrap'}>
 				{options.map((option: { name: string; value: string }) => (
-					<option key={option.name} value={option.value}>
-						{option.value}
-					</option>
+					<CheckboxCard key={option.value} {...getCheckboxProps({ value: option.value })} />
 				))}
-			</Select>
+			</Flex>
 		</>
 	);
 };
@@ -216,25 +222,26 @@ const PaidFilter = ({ name, options, filters, setFilters }: {
 	name?: string,
 	options: { name: string; value: string }[],
 } & UseFilterState): JSX.Element => {
-	const updatePaidStatus = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+	const updatePaidStatus = (value: string[]): void => {
 		setFilters({
 			...filters,
-			paidStatus: event.target.value,
+			paidStatus: value,
 		});
 	};
+
+	const { getCheckboxProps } = useCheckboxGroup({
+		defaultValue: filters.status || [],
+		onChange: updatePaidStatus,
+	});
 
 	return (
 		<>
 			{name && <Heading size="xs">{name}</Heading>}
-			<Select placeholder='All' mb="4" onChange={updatePaidStatus} value={filters.paidStatus}>
-				{options.map((option: { name: string; value: string }) => {
-					return (
-						<option key={option.name} value={option.value}>
-							{option.value}
-						</option>
-					);
-				})}
-			</Select>
+			<Flex>
+				{options.map((option: { name: string; value: string }) => (
+					<CheckboxCard key={option.value} {...getCheckboxProps({ value: option.value })} />
+				))}
+			</Flex>
 		</>
 	);
 
@@ -301,7 +308,7 @@ const Filters = (props: {
 		},
 	];
 	return (
-		<Stack width={{ base: '100%', lg: 300 }}>
+		<Stack width={{ base: '100%' }}>
 			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={3}>
 				<SearchFilter
 					filters={props.filters}
