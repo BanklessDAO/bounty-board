@@ -7,6 +7,7 @@ import bountiesHandler from '@app/pages/api/bounties';
 import bountyHandler from '@app/pages/api/bounties/[id]';
 import { testBounty } from '@tests/stubs/bounty.stub';
 import bounties from '@tests/stubs/bounties.stub.json';
+import PAID_STATUS from '@app/constants/paidStatus';
 
 
 describe('Testing the bounty API', () => {
@@ -226,6 +227,30 @@ describe('Testing the bounty API', () => {
 			const customerIds = data.map((d: BountyCollection) => d.customerId);
 			const uniqueIds = new Set(customerIds);
 			expect(uniqueIds.size).toBeGreaterThan(1);
+		});
+
+		it('Filters results by paid status', async () => {
+			req.method = 'GET';
+			req.query = {
+				paidStatus: PAID_STATUS.PAID,
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const paidStatuses = data.every((d: BountyCollection) => d.paidStatus === PAID_STATUS.PAID);
+			expect(data.length).toBeGreaterThan(0);
+			expect(paidStatuses).toEqual(true);
+		});
+
+		it('Filters results by unpaid status', async () => {
+			req.method = 'GET';
+			req.query = {
+				paidStatus: PAID_STATUS.UNPAID,
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			const paidStatuses = data.every((d: BountyCollection) => d.paidStatus === PAID_STATUS.UNPAID || !d.paidStatus);
+			expect(data.length).toBeGreaterThan(0);
+			expect(paidStatuses).toEqual(true);
 		});
 
 		it('Can perform a text search on title', async () => {

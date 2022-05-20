@@ -6,7 +6,8 @@ export type AcceptedSortInputs = 'reward' | 'createdAt';
 export type AcceptedSortOutputs = `reward.${StringKeysBountyBoardReward}` | '_id' | 'createdAt';
 export interface FilterParams {
 	customerId?: string;
-	status?: string
+	status?: string;
+	paidStatus?: string;
 	search: string;
 	lte?: number;
 	gte?: number;
