@@ -3,7 +3,7 @@ import { DiscordEmbed } from '../types/Discord';
 import { BountyCollection } from '../models/Bounty';
 import axios from '../utils/AxiosUtils';
 import ServiceUtils from '../utils/ServiceUtils';
-import { APIGuildMember } from 'discord-api-types';
+import { APIGuildMember, APIUser } from 'discord-api-types';
 import { AxiosResponse } from 'axios';
 import { SessionWithToken } from '@app/types/SessionExtended';
 import { Session } from 'next-auth';
@@ -30,6 +30,28 @@ export const getDiscordUserInGuild = async (
 			authorization: `Bearer ${accessToken}`,
 		},
 	});
+};
+
+export const getAnyDiscordUser = async (
+	accessToken: string,
+	userId: string,
+): Promise<AxiosResponse<APIUser, any>> => {
+	/**
+	 * Fetches detailed information from discord about a user's guild stats
+	 * @param session is the next auth session
+	 * At the moment, we currently only support the bankless DAO for role gating
+	 * 
+	 * This function reaches out to the discord API and unfortunately seems to have an aggressive
+	 * rate limiting. This means that relying on it can make the application very brittle. We should
+	 * instead be looking to cache the response or find an alternative auth mechanism or endpoint
+	 */
+	const res = await axios.get<APIUser>(`https://discord.com/api/users/${userId}`, 	{
+		headers: {
+			authorization: `Bearer ${accessToken}`,
+		},
+	});
+	console.log(res);
+	return res;
 };
 
 export const toggleDiscordSignIn = (
