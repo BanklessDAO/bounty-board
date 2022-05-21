@@ -38,6 +38,7 @@ const NotNeededFields = [
 	'childrenIds',
 	'assign',
 	'assignedName',
+	'gate',
 	'requireApplication',
 	'applicants',
 	'isIOU',

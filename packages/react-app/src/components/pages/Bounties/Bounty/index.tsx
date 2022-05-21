@@ -79,16 +79,16 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" pl="2" pr="2" >
-			<Box
-				width={{ base: '100%', md: '60%' }}
-				pr={{ base: 7, md: 0 }}
-				textAlign="left"
-				mt="2"
-			>
-				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
-					{bounty.title}
-				</Heading>
-			</Box>
+			<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }} mt="2" >
+				<Box >
+					<UserAvatar userId={bounty.createdBy?.discordId} size='sm' />
+				</Box>
+				<Box pl='2' width="100%">
+					<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
+						{bounty.title}
+					</Heading>
+				</Box>
+			</Flex>
 			<Box
 				width={{ base: '100%', md: '30%' }}
 				textAlign={{ base: 'left', md: 'right' }}
@@ -102,6 +102,10 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 				)}
 			</Box>
 			<Flex width="100%" justifyContent="space-between" alignItems="center">
+				<Box mb={2}>
+					for: {bounty.assign ? '@' + bounty.assignedName :
+						  bounty.gate ? '@' + bounty.gate[0] : 'anyone'}
+				</Box>
 				<Spacer />
 				<Box mb={2}>
 					{bounty.status && <Status bounty={bounty} />}

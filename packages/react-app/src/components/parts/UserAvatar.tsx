@@ -17,7 +17,7 @@ const UserAvatar = (props: { userId: any; size?: any; }): JSX.Element => {
 	}, []);
 
 	const getAvatarSrc = async () => {
-		const avatarSource = '/assets/logos/discordWhite.png';
+		const avatarSource = '';
 		// TODO: Put this behind the API and tie to the user model
 		// console.log(session);
 		// if (userId && session && session.accessToken)  {

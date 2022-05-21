@@ -154,6 +154,7 @@ export const BountySchema = object({
 	childrenIds: array(string()).optional(),
 	assign: string().optional().nullable(),
 	assignedName: string().optional().nullable(),
+	gate: array(string()).optional(),
 	requireApplication: boolean().optional(),
 	applicants: array(Applicant).optional(),
 	isIOU: boolean().optional(),
@@ -320,6 +321,9 @@ export const BountyBoardSchema = new mongoose.Schema({
 	},
 	assignedName: {
 		type: String,
+	},
+	gate: {
+		type: Array,
 	},
 	requireApplication: {
 		type: Boolean,
