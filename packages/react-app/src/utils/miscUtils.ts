@@ -21,4 +21,8 @@ export default {
 		}
 		return false;
 	},
+
+	shortDate(date: Date): string {
+		return date.toLocaleString('en-us', { month: 'short' }) + ' ' + date.getDay() + ', ' + date.getFullYear();
+	},
 };

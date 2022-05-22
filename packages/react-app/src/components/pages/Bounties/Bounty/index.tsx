@@ -5,10 +5,12 @@ import {
 	AccordionPanel,
 	Spacer,
 	Box,
+	Button,
 	Checkbox,
 	Flex,
 	Tag,
 	TagLabel,
+	Text,
 	HStack,
 	Heading,
 	useDisclosure,
@@ -16,15 +18,19 @@ import {
 	ModalOverlay,
 	ModalContent,
 	ModalHeader,
+	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
+	useColorModeValue,
 } from '@chakra-ui/react';
 import { BountyCollection } from '@app/models/Bounty';
-// import BountyClaim from './claim';
-// import BountySubmit from './submit';
-// import { BountyEditButton } from './edit';
+import BountyClaim from './claim';
+import BountySubmit from './submit';
+import { BountyEditButton } from './edit';
 import UserAvatar from '@app/components/parts/UserAvatar';
 import PAID_STATUS from '@app/constants/paidStatus';
+import BOUNTY_STATUS from '@app/constants/bountyStatus';
+import MiscUtils from '../../../../utils/miscUtils';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -132,15 +138,44 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 };
 
 const BountyModal = ({ bounty, isOpen, onClose }: { bounty: BountyCollection, isOpen: boolean, onClose: () => void }): JSX.Element => {
+	// TODO Need a Delete action if Draft or Open
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} >
 		  <ModalOverlay />
-		  <ModalContent maxW={'700px'} >
-				<ModalHeader>Modal Title</ModalHeader>
+		  <ModalContent maxW={'700px'} borderWidth={3} >
+				<ModalHeader bg={useColorModeValue('gray.200', 'gray.600')} roundedTop="md">
+					<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }} >
+						<Box >
+							<UserAvatar userId={bounty.createdBy?.discordId} size='sm' />
+						</Box>
+						<Box pl='2' width="100%">
+							<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
+								{bounty.title}
+							</Heading>
+						</Box>
+					</Flex>
+				</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-			  <BountyDetails bounty={bounty} />
+			  		<BountyDetails bounty={bounty} />
 				</ModalBody>
+				<ModalFooter>
+					<Flex>
+						{bounty.status && bounty.status == BOUNTY_STATUS.DRAFT ?
+							<BountySubmit bounty={bounty} />
+							: bounty.status == BOUNTY_STATUS.OPEN ?
+								<BountyClaim bounty={bounty} />
+								: <Button onClick={onClose}>Close</Button>
+						}
+						{bounty.status && (bounty.status == BOUNTY_STATUS.DRAFT || bounty.status == BOUNTY_STATUS.OPEN) &&
+					<Box ml="5">
+						<BountyEditButton bounty={bounty} />
+					</Box>
+						}
+	 			</Flex>
+
+
+				</ModalFooter>
 		  </ModalContent>
 		</Modal>
 	);
@@ -148,11 +183,18 @@ const BountyModal = ({ bounty, isOpen, onClose }: { bounty: BountyCollection, is
 
 const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 
+	const claimant = bounty.claimedBy ? bounty.claimedBy.discordHandle : 'no one';
+	const dueAt = bounty.dueAt ? MiscUtils.shortDate(new Date(bounty.dueAt)) : 'unspecified';
+
+	// TODO: Fix for mobile, clean up quotes, handle markdown in description and criteria (from other PR)
+
 	return (
-		<Flex flexWrap="nowrap" width="100%" pl="2" pr="2" >
-			<Flex flexWrap="wrap" alignItems="center" width="100%">
-				<Box width="100px" display="flex" justifyContent="flex-end" pr="2">
-					status
+		<Flex flexWrap="wrap" width="100%" pl="2" pr="2" >
+			<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
+				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
+					<Heading size="sm" m={0}>
+						status
+					</Heading>
 				</Box>
 				<Box pr="2">
 					<Status bounty={bounty} />
@@ -161,14 +203,82 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					<PaidStatus bounty={bounty} />
 				</Box>
 				<Spacer />
-				<Box justifyContent="right">
+				<Box>
 					{bounty.reward && (
-						<Heading size="md" mb={0}>
+						<Heading size="md" m={0}>
 							{calculateReward(bounty.reward)}
 						</Heading>
 					)}
 				</Box>
 			</Flex>
+			<Flex flexWrap="wrap" alignItems="center" width="80%" pb="3">
+				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
+					<Heading size="sm" m={0}>
+						created by
+					</Heading>
+				</Box>
+				<Box pr="2">
+					<UserAvatar userId={bounty.createdBy?.discordId} size="xs" />
+				</Box>
+				<Box width="120px" pr="2">
+					<Text isTruncated={true} as="span" fontSize="sm">{bounty.createdBy?.discordHandle}</Text>
+				</Box>
+				<Spacer />
+				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
+					<Heading size="sm" m={0}>
+						created date
+					</Heading>
+				</Box>
+				<Box width="80px">
+					<Text as="span" fontSize="sm">{MiscUtils.shortDate(new Date(bounty.createdAt))}</Text>
+				</Box>
+			</Flex>
+			<Flex flexWrap="wrap" alignItems="center" width="80%" pb="3">
+				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
+					<Heading size="sm" m={0}>
+						claimed by
+					</Heading>
+				</Box>
+				<Box pr="2">
+					<UserAvatar userId={bounty.claimedBy?.discordId} size="xs" />
+				</Box>
+				<Box pr="2" width="120px">
+					<Text isTruncated={true} as="span" fontSize="sm">{claimant}</Text>
+				</Box>
+				<Spacer />
+				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
+					<Heading size="sm" m={0}>
+						due date
+					</Heading>
+				</Box>
+				<Box width="80px">
+					<Text as="span" fontSize="sm">{dueAt}</Text>
+				</Box>
+			</Flex>
+			<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
+				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
+					<Heading size="sm" m={0}>
+						claimable by
+					</Heading>
+				</Box>
+				<Box pr="2" >
+					<Text isTruncated={true} as="span" fontSize="sm">
+						{bounty.assignedName ||	bounty.gate || 'anyone'}
+					</Text>
+				</Box>
+			</Flex>
+			<Heading width='100%' size='md' >
+				Description
+			</Heading>
+			<Text fontSize="sm" ml='2'>
+				{bounty.description || 'none'}
+			</Text>
+			<Heading width='100%' size='md' pt='2' mb='0'>
+				Success Criteria
+			</Heading>
+			<Text fontSize="sm" ml='2'>
+				{bounty.criteria || 'none'}
+			</Text>
 		</Flex>
 	);
 	// const {
