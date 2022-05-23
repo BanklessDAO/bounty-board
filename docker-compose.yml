@@ -24,7 +24,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./packages:/bountyboard/packages
+      - ./packages/react-app:/bountyboard/packages/react-app
     depends_on:
       - mongo-seed
       - mongo
