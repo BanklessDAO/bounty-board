@@ -36,10 +36,10 @@ export const BountyPage = (): JSX.Element => {
 	const router = useRouter();
 	const { id, customerKey } = router.query;
 	const { bounty, isLoading, isError } = useBounty(id);
-	const customer = useCustomerFromBountyIdAndKey(id, customerKey);
+	const { customer, isLoading: isCustomerLoading } = useCustomerFromBountyIdAndKey(id, customerKey);
 	return (
 		<>{
-			isLoading
+			isLoading || isCustomerLoading
 				? <BountyLoader />
 				: bounty && customer ?
 					<Stack
