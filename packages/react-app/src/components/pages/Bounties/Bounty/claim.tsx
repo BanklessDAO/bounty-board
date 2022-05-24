@@ -13,6 +13,7 @@ import { useRequiredRoles } from '@app/components/global/Auth';
 import { mutate } from 'swr';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
+import miscUtils from '@app/utils/miscUtils';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -22,7 +23,7 @@ const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBount
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
 	const [message, setMessage] = useState<string>();
-	const [claiming, setClaiming] = useState(false);
+	const [claiming, setClaiming] = miscUtils.useStateCallback<boolean>(false);
 	const [error, setError] = useState(false);
 
 	const confirmBounty = async () => {
@@ -36,7 +37,7 @@ const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBount
 				statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
 			};
 			try {
-				setClaiming(true);
+				setClaiming(true, () => undefined);
 				const res = await axios.patch<void, any, BountyClaimCollection>(
 					`api/bounties/${bounty._id}/claim?customerId=${bounty.customerId}`, claimData
 				);
@@ -46,12 +47,11 @@ const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBount
 					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
 					// if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
 					setBounty(updatedBounty);
-					setClaiming(false);
-					onClose();
+					setClaiming(false, onClose);
 				}
 			} catch {
 				setError(true);
-				setClaiming(false);
+				setClaiming(false, () => undefined);
 			}
 		} else {
 			setError(true);

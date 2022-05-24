@@ -1,7 +1,7 @@
 import { Stack, Text, VStack, Button, useDisclosure } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import BountyList from './BountyList';
-import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
+import React, { useMemo, useEffect, useState, useRef } from 'react';
 import MarkPaidModal from './Form/MarkPaidModal';
 import Filters from './Filters';
 import useBounties from '@app/hooks/useBounties';
@@ -9,7 +9,7 @@ import { BountyCollection } from '@app/models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
 import { CSVLink } from 'react-csv';
 import { BOUNTY_EXPORT_ITEMS } from '../../../constants/bountyExportItems';
-import MiscUtils from '../../../utils/miscUtils';
+import miscUtils from '../../../utils/miscUtils';
 import { useRouter } from 'next/router';
 import { FilterParams } from '@app/types/Filter';
 import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
@@ -42,34 +42,7 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 	</Stack>
 );
 
-/**
-Define a set state function that runs a callback on setting of the state
-**/
 
-function useStateCallback<T, C extends CallableFunction =(...args: any) => void>(initialState: T): [T, (state: T, cb: C) => void] {
-	const [state, setState] = useState<T>(initialState);
-	// init mutable ref container for callbacks
-	const cbRef = useRef<C | null>(null);
-
-	const setStateCallback = useCallback((s: T, cb: C) => {
-		// store current, passed callback in ref
-		cbRef.current = cb;
-		// keep object reference stable, exactly like `useState`
-		setState(s);
-	}, []);
-
-	useEffect(() => {
-		// cb.current is `null` on initial render, 
-		// so we only invoke callback on state *updates*
-		if (cbRef.current) {
-			cbRef.current(state);
-			// reset callback after execution
-			cbRef.current = null;
-		}
-	}, [state]);
-
-	return [state, setStateCallback];
-}
 const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMarkedSomePaid }: {
 	bounties: BountyCollection[] | undefined,
 	selectedBounties: string[],
@@ -80,7 +53,7 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMar
 	const { colorMode } = useColorMode();
 	const roles = useRoles();
 	const { user } = useUser();
-	const [getCsvData, setCsvData] = useStateCallback<Record<string, unknown>[]>([]);
+	const [getCsvData, setCsvData] = miscUtils.useStateCallback<Record<string, unknown>[]>([]);
 	const [getBountiesToMark, setBountiesToMark] = useState<string[]>([]);
 	const [getMarkPaidMessage, setMarkPaidMessage] = useState<string>('');
 	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
@@ -101,7 +74,7 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMar
 		if (bounties && csvLink.current) {
 			const csvData = bounties
 				.filter(({ _id }) => selectedBounties.includes(_id))
-				.map(MiscUtils.csvEncode);
+				.map(miscUtils.csvEncode);
 				
 			setCsvData(csvData, () => {
 				csvLink?.current?.link.click();
