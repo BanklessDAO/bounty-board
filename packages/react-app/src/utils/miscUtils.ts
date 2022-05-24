@@ -23,6 +23,6 @@ export default {
 	},
 
 	shortDate(date: Date): string {
-		return date.toLocaleString('en-us', { month: 'short' }) + ' ' + date.getDay() + ', ' + date.getFullYear();
+		return date.toLocaleString('en-us', { month: 'short' }) + ' ' + date.getDate() + ', ' + date.getFullYear();
 	},
 };

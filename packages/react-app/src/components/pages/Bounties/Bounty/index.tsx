@@ -23,6 +23,7 @@ import {
 	ModalCloseButton,
 	useColorModeValue,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { BountyCollection } from '@app/models/Bounty';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
@@ -137,8 +138,9 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 	);
 };
 
-const BountyModal = ({ bounty, isOpen, onClose }: { bounty: BountyCollection, isOpen: boolean, onClose: () => void }): JSX.Element => {
+const BountyModal = ({ bounty, setBounty, isOpen, onClose }: { bounty: BountyCollection, setBounty: SetState<BountyCollection>, isOpen: boolean, onClose: () => void }): JSX.Element => {
 	// TODO Need a Delete action if Draft or Open
+
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} >
 		  <ModalOverlay />
@@ -164,7 +166,7 @@ const BountyModal = ({ bounty, isOpen, onClose }: { bounty: BountyCollection, is
 						{bounty.status && bounty.status == BOUNTY_STATUS.DRAFT ?
 							<BountySubmit bounty={bounty} />
 							: bounty.status == BOUNTY_STATUS.OPEN ?
-								<BountyClaim bounty={bounty} />
+								<BountyClaim bounty={bounty} setBounty={setBounty}/>
 								: <Button onClick={onClose}>Close</Button>
 						}
 						{bounty.status && (bounty.status == BOUNTY_STATUS.DRAFT || bounty.status == BOUNTY_STATUS.OPEN) &&
@@ -229,7 +231,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 						created date
 					</Heading>
 				</Box>
-				<Box width="80px">
+				<Box width="100px">
 					<Text as="span" fontSize="sm">{MiscUtils.shortDate(new Date(bounty.createdAt))}</Text>
 				</Box>
 			</Flex>
@@ -251,7 +253,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 						due date
 					</Heading>
 				</Box>
-				<Box width="80px">
+				<Box width="100px">
 					<Text as="span" fontSize="sm">{dueAt}</Text>
 				</Box>
 			</Flex>
@@ -267,7 +269,7 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					</Text>
 				</Box>
 			</Flex>
-			<Heading width='100%' size='md' >
+			<Heading width='100%' size='md' mb='0'>
 				Description
 			</Heading>
 			<Text fontSize="sm" ml='2'>
@@ -394,8 +396,9 @@ export const AccordionBountyItem = ({ bounty, selectedBounties, setSelectedBount
 	</AccordionItem>
 );
 
-export const BountyItem = ({ bounty, selectedBounties, setSelectedBounties }: { bounty: BountyCollection, selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => {
+export const BountyItem = ({ initialBounty, selectedBounties, setSelectedBounties }: { initialBounty: BountyCollection, selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => {
 	const { isOpen: isBountyModalOpen, onOpen: onBountyModalOpen, onClose: onBountyModalClose } = useDisclosure();
+	const [bounty, setBounty] = useState(initialBounty);
 
 	return(
 		<Box w='100%' borderWidth={3} borderRadius={10} mb={1}>
@@ -408,6 +411,7 @@ export const BountyItem = ({ bounty, selectedBounties, setSelectedBounties }: { 
 					isOpen={isBountyModalOpen}
 					onClose={onBountyModalClose}
 					bounty={bounty}
+					setBounty={setBounty}
 				/>
 			</HStack>
 		</Box>

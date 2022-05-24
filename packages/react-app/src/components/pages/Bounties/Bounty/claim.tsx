@@ -2,7 +2,7 @@ import { useUser } from '@app/hooks/useUser';
 import { ActivityHistoryItem, BountyClaimCollection, BountyCollection, StatusHistoryItem } from '@app/models/Bounty';
 import axios from '@app/utils/AxiosUtils';
 import { Alert, AlertIcon, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, Tooltip, useColorMode, useDisclosure } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useContext } from 'react';
 import { claimedBy, newActivityHistory, newStatusHistory } from '@app/utils/formUtils';
@@ -14,9 +14,11 @@ import { mutate } from 'swr';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
 
-const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+type SetState<T extends any> = (arg: T) => void;
+
+const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBounty: SetState<BountyCollection> }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const router = useRouter();
+	// const router = useRouter();
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
 	const [message, setMessage] = useState<string>();
@@ -41,12 +43,14 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				if (res.status === 200)	{
 					const bountyPageRoute = '/' + bounty._id;
 					const updatedBounty = { ...bounty, ...claimData };
-					mutate('/api/bounties${bountyPageRoute}', updatedBounty, false);
-					if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
+					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
+					// if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
+					setBounty(updatedBounty);
+					setClaiming(false);
+					onClose();
 				}
 			} catch {
 				setError(true);
-			} finally {
 				setClaiming(false);
 			}
 		} else {
@@ -57,6 +61,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	return (
 		<>
 	  		{
+				  // TODO This is obsolete...
 				bounty.discordMessageId
 				// If we have discord message info for the bounty, the user is taken into discord to claim
 					? <ClaimDiscord discordMessageId={bounty.discordMessageId} />

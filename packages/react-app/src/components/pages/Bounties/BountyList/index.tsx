@@ -11,7 +11,7 @@ const BountyList = ({ bounties, selectedBounties, setSelectedBounties }: { bount
 				(bounty, idx) => (
 					<BountyItem
 						key={idx}
-						bounty={bounty}
+						initialBounty={bounty}
 						selectedBounties={selectedBounties}
 						setSelectedBounties={setSelectedBounties}
 					/>
