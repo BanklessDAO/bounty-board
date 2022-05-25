@@ -27,6 +27,7 @@
     },
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "Open",
+    "paidStatus": "Paid",
     "statusHistory": [
       {
         "status": "Open",

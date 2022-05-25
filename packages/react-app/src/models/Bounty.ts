@@ -12,7 +12,7 @@ import {
 // Have to use ignore here due to some strange error with typescript not picking
 // up the declaration file, unless you change the name every deploy
 // @ts-ignore
-import mongoosePaginate from 'mongo-cursor-pagination';
+import { aggregate } from 'mongo-cursor-pagination';
 import BOUNTYSTATUS from '@app/constants/bountyStatus';
 import PAIDSTATUS from '@app/constants/paidStatus';
 import ACTIVITY, { CLIENT } from '@app/constants/activity';
@@ -27,6 +27,23 @@ const requiredForPost = ({ method, schema, isObject }: RequiredForPostProps) => 
 		return schema.optional().default(undefined);
 	} else {
 		return schema.optional();
+	}
+};
+
+const aggregatePlugin = (schema: any, options: any) => {
+
+	const aggregateFn = function(this: any, params: any) {
+		if (!this.collection) {
+			throw new Error('collection property not found');
+		}
+
+		return aggregate(this.collection, { ...params });
+	};
+
+	if (options && options.name) {
+		schema.statics[options.name] = aggregate;
+	} else {
+		schema.statics.aggregateFn = aggregateFn;
 	}
 };
 
@@ -244,7 +261,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	},
 });
 
-BountyBoardSchema.plugin(mongoosePaginate.mongoosePlugin);
+BountyBoardSchema.plugin(aggregatePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
 	mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);
