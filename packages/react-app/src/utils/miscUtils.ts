@@ -1,3 +1,5 @@
+import { NextApiRequest } from 'next';
+
 export default {
 	csvEncode(jObj: Record<string, unknown>): Record<string, unknown> {
 		if (jObj) {
@@ -10,5 +12,13 @@ export default {
 			return JSON.parse(jStr);
 		}
 		return jObj;
+	},
+
+	boolFromReq(req: NextApiRequest, key: string): boolean {
+		if (req.query) {
+			const value = req.query[key];
+			return value === undefined ? false : value.toString().toLowerCase() == 'true' || value.toString() == '1';
+		}
+		return false;
 	},
 };

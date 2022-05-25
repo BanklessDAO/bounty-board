@@ -73,7 +73,7 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 };
 
 
-const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
+export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">

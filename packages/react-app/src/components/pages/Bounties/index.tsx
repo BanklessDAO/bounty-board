@@ -1,7 +1,8 @@
-import { Stack, Text, VStack, Button } from '@chakra-ui/react';
+import { Stack, Text, VStack, Button, useDisclosure } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
 import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
+import MarkPaidModal from './Form/MarkPaidModal';
 import Filters from './Filters';
 import useBounties from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
@@ -12,6 +13,9 @@ import MiscUtils from '../../../utils/miscUtils';
 import { useRouter } from 'next/router';
 import { FilterParams } from '@app/types/Filter';
 import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
+import { useUser } from '@app/hooks/useUser';
+import { useRoles } from '@app/hooks/useRoles';
+
 
 export const PAGE_SIZE = 10;
 
@@ -66,16 +70,22 @@ function useStateCallback<T, C extends CallableFunction =(...args: any) => void>
 
 	return [state, setStateCallback];
 }
-
-const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
+const SelectExport = (({ bounties, selectedBounties, setSelectedBounties, setMarkedSomePaid }: {
 	bounties: BountyCollection[] | undefined,
 	selectedBounties: string[],
 	setSelectedBounties: SetState<string[]>,
+	setMarkedSomePaid: SetState<boolean>,
 	}): JSX.Element => {
 
 	const { colorMode } = useColorMode();
-	const [csvData, setCsvData] = useStateCallback<Record<string, unknown>[]>([]);
+	const roles = useRoles();
+	const { user } = useUser();
+	const [getCsvData, setCsvData] = useStateCallback<Record<string, unknown>[]>([]);
+	const [getBountiesToMark, setBountiesToMark] = useState<string[]>([]);
+	const [getMarkPaidMessage, setMarkPaidMessage] = useState<string>('');
 	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
+	const { isOpen: isMarkPaidOpen, onOpen: onMarkPaidOpen, onClose: onMarkPaidClose } = useDisclosure();
+
 
 	const handleSelectAll = (): void => {
 		if (bounties && selectedBounties.length < bounties.length) {
@@ -89,13 +99,31 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 
 	const handleCSV = (): void => {
 		if (bounties && csvLink.current) {
-			const getCsvData = bounties
+			const csvData = bounties
 				.filter(({ _id }) => selectedBounties.includes(_id))
 				.map(MiscUtils.csvEncode);
 				
-			setCsvData(getCsvData, () => {
+			setCsvData(csvData, () => {
 				csvLink?.current?.link.click();
 			});
+			if (user && roles) {
+				let bountiesToMark: string[] = [];
+				// If Admin, allow all to be marked, otherwise only own bouties and if correct permissions
+				if (roles.some((r: string) => ['admin'].includes(r))) {
+					bountiesToMark = selectedBounties;
+					setMarkPaidMessage('Mark exported bounties as paid?');
+				} else if (roles.some((r: string) => ['edit-bounties', 'edit-own-bounty'].includes(r))) {
+					bountiesToMark = selectedBounties.filter(_id => {
+						const bounty = bounties?.find(b => b._id == _id);
+						return bounty?.createdBy.discordId == user.id;
+					});
+					setMarkPaidMessage('Mark exported bounties you created as paid?');
+				}
+				if (bountiesToMark.length > 0) {
+					setBountiesToMark(bountiesToMark);
+					onMarkPaidOpen();
+				}
+			}
 		}
 	};
 
@@ -129,13 +157,19 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 				Export
 			</Button>
 			<CSVLink
-			  	data={csvData}
+			  	data={getCsvData}
 				headers={BOUNTY_EXPORT_ITEMS}
 				filename='bounties.csv'
 				className='hidden'
 				ref={csvLink}
 				target='_blank'
 			/>
+			<MarkPaidModal
+				isOpen={isMarkPaidOpen}
+				onClose={onMarkPaidClose}
+				bounties={bounties ? bounties.filter(({ _id }) => getBountiesToMark.includes(_id)) : undefined }
+				setMarkedSomePaid={setMarkedSomePaid}
+				markPaidMessage={getMarkPaidMessage} />
 		</Stack>
 	);
 });
@@ -160,7 +194,8 @@ const Bounties = (): JSX.Element => {
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState<FilterParams>(baseFilters);
 	const [selectedBounties, setSelectedBounties] = useState<string[]>([]);
-	
+	const [markedSomePaid, setMarkedSomePaid] = useState(false);
+
 	// Watch this only runs on page load once the params are instantiated
 	// otherwise you will lose filers and/or create inf loop
 	// only render the saved search the first time, to prevent loops
@@ -173,7 +208,7 @@ const Bounties = (): JSX.Element => {
 		}
 	}, [router.isReady, router.query, firstLoad]);
 
-	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
+	const urlQuery = useDynamicUrl(filters, markedSomePaid, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -204,7 +239,11 @@ const Bounties = (): JSX.Element => {
 						filters={filters}
 					  setFilters={setFilters}
 					/>
-					<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					<SelectExport
+					  bounties={bounties}
+					  selectedBounties={selectedBounties}
+					  setSelectedBounties={setSelectedBounties}
+					  setMarkedSomePaid={setMarkedSomePaid}/>
 				</VStack>
 
 				{isError || noResults

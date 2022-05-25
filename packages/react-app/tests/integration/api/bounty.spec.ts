@@ -9,6 +9,7 @@ import { testBounty } from '@tests/stubs/bounty.stub';
 import bounties from '@tests/stubs/bounties.stub.json';
 import PAID_STATUS from '@app/constants/paidStatus';
 
+
 describe('Testing the bounty API', () => {
 	let connection: Connection;
 	let req: MockRequest<NextApiRequest>;

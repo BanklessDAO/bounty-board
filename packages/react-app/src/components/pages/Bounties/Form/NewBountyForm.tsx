@@ -31,6 +31,22 @@ const NotNeededFields = [
 	'reviewedBy',
 	'submittedBy',
 	'paidStatus',
+	'evergreen',
+	'claimLimit',
+	'isParent',
+	'parentId',
+	'childrenIds',
+	'assign',
+	'assignedName',
+	'requireApplication',
+	'applicants',
+	'isIOU',
+	'resolutionNote',
+	'owedTo',
+	'canonicalCard',
+	'creatorMessage',
+	'claimantMessage',
+	'createdInChannel',
 ] as const;
 
 const useCachedForm = () => {

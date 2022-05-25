@@ -2,8 +2,8 @@ import { ClaimWeb } from '@app/components/pages/Bounties/Bounty/claim';
 import Bounties from '@app/components/pages/Bounties/index';
 import * as useUser from '@app/hooks/useUser';
 import * as auth from '@app/components/global/Auth/index';
-import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { render, screen } from '@testing-library/react';
 
 jest.mock('next/router', () => ({
 	useRouter: () => ({ router: { isReady: true } }),
@@ -33,6 +33,14 @@ describe('Testing the bounty claim component', () => {
 		const btn = screen.queryByRole('button', { name: 'claim-button' });
 		expect(btn).not.toBeNull();
 		expect(btn).not.toBeDisabled();
+	});
+
+});
+
+describe('Testing the bounty listing page', () => {
+
+	afterEach(async () => {
+		jest.resetAllMocks();
 	});
 
 	it('Shows the Claimed/Created By Me checkboxes if the user is signed in', () => {
