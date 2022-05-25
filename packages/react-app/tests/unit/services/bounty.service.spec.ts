@@ -81,8 +81,7 @@ describe('Testing the bounty service', () => {
 
 		it('Sorts ascending truthy strings', () => {
 			const expected: service.BountyQuery = {
-				paginatedField: 'reward.amount',
-				sortAscending: true,
+				$sort: { 'reward.amount': 1 },
 			};
 			sortQueries.forEach(query => {
 				expect(service.getSort(query)).toEqual(expected);
@@ -94,8 +93,8 @@ describe('Testing the bounty service', () => {
 				asc: '0',
 				sortBy: 'reward',
 			};
-			expect(service.getSort(query).paginatedField).toEqual('reward.amount');
-			expect(service.getSort(query).sortAscending).toEqual(false);
+
+			expect(service.getSort(query)['$sort']['reward.amount']).toEqual(-1);
 		});
 
 		it('Sorted by created Date if passed', () => {
@@ -103,8 +102,7 @@ describe('Testing the bounty service', () => {
 				sortBy: 'createdAt',
 				asc: 'false',
 			};
-			expect(service.getSort(query).paginatedField).toEqual('createdAt');
-			expect(service.getSort(query).sortAscending).toEqual(false);
+			expect(service.getSort(query)['$sort']['createdAt']).toEqual(-1);
 		});
 	});
 
@@ -150,19 +148,21 @@ describe('Testing the bounty service', () => {
 				asc: 'true',
 			};
 			const expected: FilterQuery<BountyCollection> = {
-				status: 'Open',
-				customerId: 'testId',
-				$text: {
-					$search: 'Test',
+				$match: {
+					status: 'Open',
+					customerId: 'testId',
+					$text: {
+						$search: 'Test',
+					},
+					'reward.amount': {
+						$lte: 100,
+						$gte: 0,
+					},
+					$or: [
+						{ paidStatus: { $in: [PAID_STATUS.PAID, PAID_STATUS.UNPAID] } },
+						{ paidStatus: { $exists: false } },
+					],
 				},
-				'reward.amount': {
-					$lte: 100,
-					$gte: 0,
-				},
-				$or: [
-					{ paidStatus: { $in: [PAID_STATUS.PAID, PAID_STATUS.UNPAID] } },
-					{ paidStatus: { $exists: false } },
-				],
 			};
 			const actual = service.getFilterQuery(query);
 			expect(actual).toEqual(expected);
@@ -178,31 +178,34 @@ describe('Testing the bounty service', () => {
 			asc: 'true',
 			paidStatus: PAID_STATUS.UNPAID,
 		};
-		const expected: FilterQuery<BountyCollection> = {
-			status: 'Open',
-			customerId: 'testId',
-			$text: {
-				$search: 'Test',
+		const expected: FilterQuery<BountyCollection> =
+		{
+			$match: {
+				status: 'Open',
+				customerId: 'testId',
+				$text: {
+					$search: 'Test',
+				},
+				'reward.amount': {
+					$lte: 100,
+					$gte: 0,
+				},
+				$or: [
+					{ paidStatus: PAID_STATUS.UNPAID },
+					{ paidStatus: { $exists: false } },
+				],
 			},
-			'reward.amount': {
-				$lte: 100,
-				$gte: 0,
-			},
-			$or: [
-				{ paidStatus: PAID_STATUS.UNPAID },
-				{ paidStatus: { $exists: false } },
-			],
 		};
 		let actual = service.getFilterQuery(query);
 		expect(actual).toEqual(expected);
 
 		query.paidStatus = PAID_STATUS.PAID;
-		delete expected.$or;
-		expected.paidStatus = PAID_STATUS.PAID;
-		
+		delete expected.$match.$or;
+		expected.$match.paidStatus = PAID_STATUS.PAID;
+
 		actual = service.getFilterQuery(query);
 		expect(actual).toEqual(expected);
-		
+
 	});
 
 
@@ -221,7 +224,7 @@ describe('Testing the bounty service', () => {
 				next: '123',
 				limit: 'fkekafk',
 			};
-			const expected = { next: query.next, limit: undefined, previous: undefined };
+			const expected = { next: query.next, limit: 1000, previous: undefined };
 			const actual = service.getPagination(query);
 			expect(actual).toEqual(expected);
 		});

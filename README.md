@@ -103,6 +103,24 @@ Refer to the [Bounty Board Commands and Workflow](https://bankless.notion.site/T
 
 
 # Getting Started
+
+## With Docker
+
+To run the project, copy the local `.env.local` file by copying the `.env.qa` for most variabled. Update the MONGODB_URI with the following URI
+```
+MONGODB_URI=mongodb://mongo:27017/bountyboard
+```
+
+To start the instance, you can run the following command
+```
+$ docker-compose up
+```
+
+Docker containerizes all the commands given below and helps you get started with the project without any hassle
+
+
+## Without Docker
+
 In order to run a local instance of the application you will need to configure a few things.
 ### Install Packages
 You can either run the application from this top-level monorepo, or change into the `packages/react-app` directory. You will need the yarn package manager installed then run
