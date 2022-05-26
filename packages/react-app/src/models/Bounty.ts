@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { SchemaToInterface } from '../types/Models';
+import { SchemaToInterface, ToInterface } from '../types/Models';
 import { PaginateModel } from '../types/Paginate';
 import {
 	string,
@@ -13,7 +13,7 @@ import {
 // Have to use ignore here due to some strange error with typescript not picking
 // up the declaration file, unless you change the name every deploy
 // @ts-ignore
-import mongoosePaginate from 'mongo-cursor-pagination';
+import { aggregate } from 'mongo-cursor-pagination';
 import BOUNTYSTATUS from '@app/constants/bountyStatus';
 import PAIDSTATUS from '@app/constants/paidStatus';
 import ACTIVITY, { CLIENT } from '@app/constants/activity';
@@ -31,6 +31,23 @@ const requiredForPost = ({ method, schema, isObject }: RequiredForPostProps) => 
 	}
 };
 
+const aggregatePlugin = (schema: any, options: any) => {
+
+	const aggregateFn = function(this: any, params: any) {
+		if (!this.collection) {
+			throw new Error('collection property not found');
+		}
+
+		return aggregate(this.collection, { ...params });
+	};
+
+	if (options && options.name) {
+		schema.statics[options.name] = aggregate;
+	} else {
+		schema.statics.aggregateFn = aggregateFn;
+	}
+};
+
 
 type ParamsType = { discordId: string | undefined, discordHandle: string | undefined } | undefined;
 const bothRequiredIfOneRequired = (params: ParamsType): boolean => {
@@ -45,8 +62,8 @@ const bothRequiredIfOneRequired = (params: ParamsType): boolean => {
 };
 
 export const DiscordUser = object({
-	discordHandle: string().optional(),
 	discordId: string().optional(),
+	discordHandle: string().optional(),
 	iconUrl: string().optional().nullable(),
 })
 	.test(
@@ -60,8 +77,9 @@ export const DiscordUser = object({
  * object to conditionally require the fields inside of it 
  */
 export const RequiredDiscordUser = object({
-	discordId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	discordHandle: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	discordId: string().optional().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	discordHandle: string().optional().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	iconUrl: string().optional().nullable(),
 }).test(
 	'is-optional',
 	'Missing one of [discordId, discordHandle] in ${path}',
@@ -185,7 +203,7 @@ export type BountyCollection = SchemaToInterface<typeof BountySchema>;
 export type BountyClaimCollection = SchemaToInterface<typeof BountyClaimSchema>;
 export type StatusHistoryItem = SchemaToInterface<typeof StatusHistory>;
 export type ActivityHistoryItem = SchemaToInterface<typeof ActivityHistory>;
-export type DiscordBoardUser = SchemaToInterface<typeof DiscordUser>;
+export type DiscordBoardUser = ToInterface<typeof DiscordUser>;
 
 /* BountyBoardSchema will correspond to a collection in your MongoDB database. */
 export const BountyBoardSchema = new mongoose.Schema({
@@ -221,6 +239,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 
 		discordHandle: String,
 		discordId: Number,
+		iconUrl: String,
 		type: Object,
 	},
 	createdAt: {
@@ -255,6 +274,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	claimedBy: {
 		discordHandle: String,
 		discordId: Number,
+		iconUrl: String,
 		type: Object,
 	},
 	claimedAt: {
@@ -272,6 +292,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	submittedBy: {
 		discordHandle: String,
 		discordId: Number,
+		iconUrl: String,
 		type: Object,
 	},
 	reviewedAt: {
@@ -280,6 +301,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	reviewedBy: {
 		discordHandle: String,
 		discordId: Number,
+		iconUrl: String,
 		type: Object,
 	},
 	createdInChannel: {
@@ -345,7 +367,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	},
 });
 
-BountyBoardSchema.plugin(mongoosePaginate.mongoosePlugin);
+BountyBoardSchema.plugin(aggregatePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
 	mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);

@@ -24,17 +24,17 @@ export const useDynamicUrl = (filters: FilterParams, bountiesChanged: boolean, r
 
 	return useMemo(() => {
 		let urlQuery = '';
-
+		
 		if (ready) {
 			const { status, paidStatus, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
 
 			if (status) urlQuery += `&status=${status === '' ? 'All' : status}`;
-			if (paidStatus) urlQuery += `&paidStatus=${status === '' ? 'Unpaid' : paidStatus}`;
+			if (paidStatus) urlQuery += `&paidStatus=${paidStatus === '' ? 'Unpaid' : paidStatus}`;
 			if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;
 			if (sortBy) urlQuery += `&sortBy=${sortBy}`;
-			if (sortAscending) urlQuery += `&asc=${sortAscending}`;
+			if (sortAscending || typeof sortAscending === 'boolean') urlQuery += `&asc=${sortAscending}`;
 			if (customer) urlQuery += `&customerId=${customer.customerId ?? BANKLESS.customerId}`;
 			if (customer) urlQuery += `&customerKey=${customer.customerKey ?? BANKLESS.customerKey}`;
 			if (claimedBy) urlQuery += `&claimedBy=${claimedBy}`;
@@ -48,7 +48,7 @@ export const useDynamicUrl = (filters: FilterParams, bountiesChanged: boolean, r
 	}, [filters, bountiesChanged, customer, debounceSearch, ready]);
 };
 
-export const getFiltersFromUrl = (query: ParsedUrlQuery): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {
+export const getFiltersFromUrl = (query: ParsedUrlQuery | FilterParams): FilterParams => Object.entries(query).reduce((prev, [key, val]) => {
 	/**
 	 * Grab filters from the url, using fallback values if we see 'undefined'
 	 */

@@ -7,6 +7,7 @@ import * as discord from './discord.service';
 import PAID_STATUS from '@app/constants/paidStatus';
 
 export type BountyQuery = FilterQuery<BountyCollection> & { next?: string, prev?: string };
+export type AddFieldsQuery = { '$addFields': { [key: string]: any } };
 
 export const getFilters = (query: NextApiQuery): FilterParams => {
 	/**
@@ -26,14 +27,32 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	return filters;
 };
 
+export const getAdditionalFields = ():AddFieldsQuery => {
+
+	/**
+	 * Add additional fields to sort by paidStatus
+	 */
+	const paidOrder = ['Unpaid', 'Paid'];
+	const paidQuery = { 'paidStatusIdx': { '$indexOfArray': [paidOrder, '$paidStatus'] } };
+
+	/**
+	 * Add additional fields to sort by bounty status
+	 */
+	const statusOrder = ['Draft', 'Open', 'In-Progress', 'In-Review', 'Completed', 'Rejected', 'Deleted'];
+	const statusQuery = { 'statusIdx': { '$indexOfArray': [statusOrder, '$status'] } };
+
+	return { '$addFields': { ...paidQuery, ...statusQuery } };
+};
+
 export const getSort = (query: NextApiQuery): BountyQuery => (
 	/**
 	 * Retrieve implemented sort filters from query string params
 	 * Sort defaults to ascending order
 	 */
 	({
-		sortAscending: !['false', '0', 'desc', 'no'].includes(query.asc as string),
-		paginatedField: getSortByValue(query.sortBy as string),
+		$sort : {
+			[getSortByValue(query.sortBy as string)]: ['false', '0', 'desc', 'no'].includes(query.asc as string) ? -1 : 1,
+		},
 	})
 );
 
@@ -51,6 +70,12 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 		break;
 	case 'createdAt':
 		output = 'createdAt';
+		break;
+	case 'paidStatus':
+		output = 'paidStatusIdx';
+		break;
+	case 'status':
+		output = 'statusIdx';
 		break;
 	default:
 		output = 'createdAt';
@@ -161,7 +186,7 @@ export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	 */
 	next: (query.next && typeof query.next === 'string') ? query.next : undefined,
 	previous: (query.previous && typeof query.previous === 'string') ? query.previous : undefined,
-	limit: (Number(query.limit)) ? Number(query.limit) : undefined,
+	limit: (Number(query.limit)) ? Number(query.limit) : 1000,
 });
 
 
@@ -183,7 +208,7 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
 	filterQuery = handleEmpty(filterQuery);
 
-	return filterQuery;
+	return { '$match' : filterQuery };
 };
 
 export const handleSort = (sort: SortParams): BountyQuery => {
@@ -203,19 +228,17 @@ export const getBounties = async (req: NextApiRequest): Promise<PaginateResult<B
 	 * Object that can be passed to the Bounty.paginate function.
 	 * @returns a list of bounties
 	 */
+	const addFieldsQuery = getAdditionalFields();
 	const filterQuery = getFilterQuery(req.query);
 	const sortQuery = getSort(req.query);
 	const paginationOptions = getPagination(req.query);
 
 	const bountyQuery: BountyQuery = {
-		query: {
-			...filterQuery,
-		},
+		aggregation: [filterQuery, addFieldsQuery, sortQuery],
 		...paginationOptions,
-		...sortQuery,
 	};
 
-	return await Bounty.paginate(bountyQuery);
+	return await Bounty.aggregateFn(bountyQuery);
 };
 
 export const getBounty = async (id: string): Promise<BountyCollection | null> => {

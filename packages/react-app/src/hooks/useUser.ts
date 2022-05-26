@@ -4,8 +4,8 @@ import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 
 export const useUser = (): {
-  loading: boolean;
-  user?: APIUser,
+	loading: boolean;
+	user?: APIUser,
 	error?: any
 } => {
 	const { data: session } = useSession({ required: false });

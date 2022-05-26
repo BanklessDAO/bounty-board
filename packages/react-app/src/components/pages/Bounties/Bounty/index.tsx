@@ -32,6 +32,10 @@ import UserAvatar from '@app/components/parts/UserAvatar';
 import PAID_STATUS from '@app/constants/paidStatus';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import MiscUtils from '../../../../utils/miscUtils';
+import DOMPurify from 'dompurify';
+import { toHTML } from 'discord-markdown';
+import ReactHtmlParser from 'react-html-parser';
+
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -43,7 +47,7 @@ const Status = ({ bounty, withAvatar }: StatusProps): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={bounty.status}>
 		{ withAvatar &&
 		<Box ml={-1} mr={2} >
-			<UserAvatar userId={bounty.claimedBy?.discordId} size='xs' />
+			<UserAvatar user={bounty.claimedBy} size='xs' />
 		</Box> }
 		<TagLabel>{bounty.status.replace('-', ' ')}</TagLabel>
 	</Tag>
@@ -85,13 +89,16 @@ const BountySelect = ({ selectedBounties, setSelectedBounties, bountyId }: {
 	);
 };
 
-// const DiscordStub = ({ name }: { name: string }): JSX.Element => (
-// 	<Flex my={2} align="center" gridGap={3}>
-// 		<Text fontSize="md" color="steelblue">
-// 			@{name}
-// 		</Text>
-// 	</Flex>
-// );
+const DiscordStub = ({ name }: { name: string | undefined }): JSX.Element => (
+
+	<Flex my={2} align="center" gridGap={3}>
+		{name ?
+			<Text fontSize="md" color="steelblue">
+				@{name}
+			</Text> : 'no one'
+		}
+	</Flex>
+);
 
 const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
@@ -104,7 +111,7 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" pl="2" pr="2" >
 			<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }} mt="2" >
 				<Box >
-					<UserAvatar userId={bounty.createdBy?.discordId} size='sm' />
+					<UserAvatar user={bounty.createdBy} size='sm' />
 				</Box>
 				<Box pl='2' width="100%">
 					<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
@@ -148,7 +155,7 @@ const BountyModal = ({ bounty, setBounty, isOpen, onClose }: { bounty: BountyCol
 				<ModalHeader bg={useColorModeValue('gray.200', 'gray.600')} roundedTop="md">
 					<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }} >
 						<Box >
-							<UserAvatar userId={bounty.createdBy?.discordId} size='sm' />
+							<UserAvatar user={bounty.createdBy} size='sm' />
 						</Box>
 						<Box pl='2' width="100%">
 							<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
@@ -185,7 +192,6 @@ const BountyModal = ({ bounty, setBounty, isOpen, onClose }: { bounty: BountyCol
 
 const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 
-	const claimant = bounty.claimedBy ? bounty.claimedBy.discordHandle : 'no one';
 	const dueAt = bounty.dueAt ? MiscUtils.shortDate(new Date(bounty.dueAt)) : 'unspecified';
 
 	// TODO: Fix for mobile, clean up quotes, handle markdown in description and criteria (from other PR)
@@ -220,10 +226,10 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					</Heading>
 				</Box>
 				<Box pr="2">
-					<UserAvatar userId={bounty.createdBy?.discordId} size="xs" />
+					<UserAvatar user={bounty.createdBy} size="xs" />
 				</Box>
 				<Box width="120px" pr="2">
-					<Text isTruncated={true} as="span" fontSize="sm">{bounty.createdBy?.discordHandle}</Text>
+					<DiscordStub name={bounty.createdBy?.discordHandle} />
 				</Box>
 				<Spacer />
 				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
@@ -242,10 +248,10 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 					</Heading>
 				</Box>
 				<Box pr="2">
-					<UserAvatar userId={bounty.claimedBy?.discordId} size="xs" />
+					<UserAvatar user={bounty.claimedBy} size="xs" />
 				</Box>
 				<Box pr="2" width="120px">
-					<Text isTruncated={true} as="span" fontSize="sm">{claimant}</Text>
+					<DiscordStub name={bounty.claimedBy?.discordHandle} />
 				</Box>
 				<Spacer />
 				<Box width="120px" display="flex" justifyContent="flex-end" alignItems="center" pr="2">
@@ -273,13 +279,13 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 				Description
 			</Heading>
 			<Text fontSize="sm" ml='2'>
-				{bounty.description || 'none'}
+				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.description || 'none')))}
 			</Text>
 			<Heading width='100%' size='md' pt='2' mb='0'>
 				Success Criteria
 			</Heading>
 			<Text fontSize="sm" ml='2'>
-				{bounty.criteria || 'none'}
+				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
 		</Flex>
 	);

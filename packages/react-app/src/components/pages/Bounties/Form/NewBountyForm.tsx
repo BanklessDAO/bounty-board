@@ -90,6 +90,7 @@ const generatePreviewData = (
 		createdBy: {
 			discordHandle: `${user.username}#${user.discriminator}`,
 			discordId: user.id,
+			iconUrl: '',
 		},
 	};
 };

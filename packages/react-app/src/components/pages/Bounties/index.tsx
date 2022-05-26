@@ -175,7 +175,7 @@ const Bounties = (): JSX.Element => {
 	const firstLoad = useRef(true);
 	useEffect(() => {
 		if (router.isReady && firstLoad.current && filtersDefined(router.query)) {
-			const newFilters = getFiltersFromUrl(router.query);
+			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}
@@ -194,7 +194,7 @@ const Bounties = (): JSX.Element => {
 
 	useEffect(() => {
 		setPage(0);
-	}, [filters.search, filters.status, filters.gte, filters.lte, filters.sortBy, filters?.claimedBy, filters?.createdBy, markedSomePaid]);
+	}, [filters]);
 
 	return (
 		<>
