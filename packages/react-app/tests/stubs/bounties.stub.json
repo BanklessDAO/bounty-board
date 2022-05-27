@@ -297,6 +297,7 @@
     },
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "In-Progress",
+    "paidStatus": "Paid",
     "statusHistory": [
       {
         "status": "Open",
