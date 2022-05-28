@@ -11,6 +11,8 @@ import {
 	Flex,
 	Spacer,
 	useCheckboxGroup,
+	Button,
+	useColorMode,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
@@ -19,6 +21,7 @@ import { AcceptedSortInputs, FilterParams, UseFilterState } from '@app/types/Fil
 import React, { useMemo, useState } from 'react';
 import { useUser } from '@app/hooks/useUser';
 import { CheckboxCard } from '@app/components/parts/SelectButton';
+import SaveSearchModal from './SaveSearchModal';
 
 
 type SetState<T extends any> = (arg: T) => void;
@@ -62,12 +65,12 @@ const SearchFilter = ({
 			<InputLeftElement pointerEvents="none">
 				<SearchIcon color="gray.300" />
 			</InputLeftElement>
-			<Input placeholder={placeholder} mb={4} value={filters.search ?? ''} onChange={updateSearchValue} autoFocus />
+			<Input placeholder={placeholder} value={filters.search ?? ''} onChange={updateSearchValue} autoFocus />
 		</InputGroup>
 	);
 };
 
-const SelectFilters = ({ name, options,
+const SelectFilters = ({ options,
 	filters, setFilters,
 }: {
 	name?: string
@@ -82,19 +85,16 @@ const SelectFilters = ({ name, options,
 	};
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { getCheckboxProps } = useCheckboxGroup({
-		defaultValue: filters.status || [],
+		value: filters.status || [],
 		onChange: updateStatus,
 	});
 	
 	return (
-		<>
-			{name && <Heading size="xs">{name}</Heading>}
-			<Flex wrap={'wrap'}>
-				{options.map((option: { name: string; value: string }) => (
-					<CheckboxCard key={option.value} {...getCheckboxProps({ value: option.value })} />
-				))}
-			</Flex>
-		</>
+		<Flex wrap={'wrap'}>
+			{options.map((option: { name: string; value: string }) => (
+				<CheckboxCard key={option.value} {...getCheckboxProps({ value: option.value })} />
+			))}
+		</Flex>
 	);
 };
 
@@ -125,30 +125,37 @@ const SortBy = ({ name, options, filters, setFilters }: {
 	}, [filters.asc]);
 
 	return (
-		<>
-			<Flex className="composite-heading" alignItems="center">
-				{name && <Heading size="xs" mb="0">{name}</Heading>}
+		<Flex className="composite-heading" >
+			<Flex className="sort-by" alignItems={'baseline'}>
+				{name && <Heading size="xs" mb="0" width={'80px'}>{name}</Heading>}
 				<Spacer />
-				<Flex className="switch" alignItems="center">
-					<Heading size="xs" mr="3" mb="0">
-						{filters.asc ? 'Ascending' : 'Descending'}
-					</Heading>
-					<Switch
-						colorScheme="primary"
-						onChange={toggleSortAscending}
-						defaultChecked
-						isChecked={booleanAsc}
-					/>
-				</Flex>
+				<Select onChange={updateSort} value={filters.sortBy}>
+					{options.map((option: { name: string; value: string }) => (
+						<option key={option.name} value={option.value}>
+							{option.name}
+						</option>
+					))}
+				</Select>
 			</Flex>
-			<Select mb="4" onChange={updateSort} value={filters.sortBy}>
-				{options.map((option: { name: string; value: string }) => (
-					<option key={option.name} value={option.value}>
-						{option.name}
-					</option>
-				))}
-			</Select>
-		</>
+			<Spacer minWidth={3} />
+			<Flex className="switch" alignItems="center">
+				<Heading className="single-head" size="xs" mr="3" mb="0">
+					{ filters.asc ? 'Ascending' : 'Descending' }
+				</Heading>
+				<Heading size="xs" mr="3" mb="0" className="multi-head">
+					Ascending
+				</Heading>
+				<Switch
+					colorScheme="primary"
+					onChange={toggleSortAscending}
+					defaultChecked
+					isChecked={!booleanAsc}
+				/>
+				<Heading size="xs" ml="3" mb="0" className="multi-head">
+					Descending
+				</Heading>
+			</Flex>
+		</Flex>
 	);
 };
 
@@ -194,7 +201,7 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 		<>
 			{user && <Flex className="composite-heading" alignItems="center">
 				{name && <Heading size="xs" mb="0">{name}</Heading>}
-				<Flex className="checkbox" w='100%' alignItems="center">
+				<Flex className="checkbox" w='100%' alignItems="center" justifyContent={'space-around'} h={'40px'}>
 					<Checkbox
 						size="sm"
 						colorScheme="primary"
@@ -203,7 +210,6 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 					>
 						Claimed By Me
 					</Checkbox>
-					<Spacer />
 					<Checkbox
 						size="sm"
 						colorScheme="primary"
@@ -218,7 +224,7 @@ const MyBountiesFilter = ({ name, filters, setFilters }: {
 	);
 };
 
-const PaidFilter = ({ name, options, filters, setFilters }: {
+const PaidFilter = ({ options, filters, setFilters }: {
 	name?: string,
 	options: { name: string; value: string }[],
 } & UseFilterState): JSX.Element => {
@@ -230,13 +236,12 @@ const PaidFilter = ({ name, options, filters, setFilters }: {
 	};
 
 	const { getCheckboxProps } = useCheckboxGroup({
-		defaultValue: filters.status || [],
+		value: filters.paidStatus || [],
 		onChange: updatePaidStatus,
 	});
 
 	return (
 		<>
-			{name && <Heading size="xs">{name}</Heading>}
 			<Flex>
 				{options.map((option: { name: string; value: string }) => (
 					<CheckboxCard key={option.value} {...getCheckboxProps({ value: option.value })} />
@@ -247,7 +252,7 @@ const PaidFilter = ({ name, options, filters, setFilters }: {
 
 };
 
-const MinMaxFilter = ({ name, filters, setFilters }: {
+const MinMaxFilter = ({ filters, setFilters }: {
 	name?: string,
 } & UseFilterState): JSX.Element => {
 	const updateMin = (event: Event): void => {
@@ -265,13 +270,36 @@ const MinMaxFilter = ({ name, filters, setFilters }: {
 
 	return (
 		<>
-			{name && <Heading size="xs">{name}</Heading>}
+			{/* {name && <Heading size="xs">{name}</Heading>} */}
 			<HStack my="2">
-				<Input placeholder="Min" onChange={updateMin} />
-				<Input placeholder="Max" onChange={updateMax} />
+				<Input placeholder="Min Bounty Value" onChange={updateMin} />
+				<Input placeholder="Max Bounty Value" onChange={updateMax} />
 			</HStack>
 		</>
 	);
+};
+
+const SaveFilter = ({ filters }: {filters: FilterParams}): JSX.Element => {
+	const { colorMode } = useColorMode();
+	const [showModal, setShowModal] = useState(false);
+	const { user } = useUser();
+	
+	const handleSaveFilter = () => {
+		setShowModal(true);
+	};
+
+	if (!user) return <></>;
+
+	return <>
+		<Button
+			p={5}
+			size="xs"
+			bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+			onClick={handleSaveFilter} mr="2">
+			Save this Search
+		</Button>
+		<SaveSearchModal onClose={() => setShowModal(false)} isOpen={showModal} filters={filters} discordId={user.id}/>
+	</>;
 };
 
 const Filters = (props: {
@@ -308,39 +336,48 @@ const Filters = (props: {
 		},
 	];
 	return (
-		<Stack width={{ base: '100%' }}>
-			<Stack borderWidth={3} borderRadius={10} px={5} py={5} mb={3}>
-				<SearchFilter
-					filters={props.filters}
-					setFilters={props.setFilters}
-				/>
-				<SelectFilters
-					name="Filter Status"
-					options={filterStatusList}
-					filters={props.filters}
-					setFilters={props.setFilters}
-				/>
-				<MyBountiesFilter
-					filters={props.filters}
-					setFilters={props.setFilters}
-				/>
-				<PaidFilter
-					name="Filter by Paid"
-					options={filterPaidStatusList}
-					filters={props.filters}
-					setFilters={props.setFilters}
-				/>
-				<MinMaxFilter
-					name="Filter Bounty Value"
-					filters={props.filters}
-					setFilters={props.setFilters}
-				/>
-				<SortBy
-					name="Sort By"
-					options={sortOptions}
-					filters={props.filters}
-					setFilters={props.setFilters}
-				/>
+		<Stack width={{ base: '100%', lg: '70vw' }} >
+			<Stack borderWidth={3} width={'100%'} borderRadius={10} px={3} py={5} mb={3} direction={{ base: 'column', lg: 'row' }}>
+				<Stack px={2} flexGrow={1}>
+					<Stack direction={{ base: 'row' }} justifyContent={'space-between'}>
+						<SelectFilters
+							name="Filter Status"
+							options={filterStatusList}
+							filters={props.filters}
+							setFilters={props.setFilters}
+						/>
+						<PaidFilter
+							name="Filter by Paid"
+							options={filterPaidStatusList}
+							filters={props.filters}
+							setFilters={props.setFilters}
+						/>
+					</Stack>
+					<MyBountiesFilter
+						filters={props.filters}
+						setFilters={props.setFilters}
+					/>
+					<SortBy
+						name="Sort By"
+						options={sortOptions}
+						filters={props.filters}
+						setFilters={props.setFilters}
+					/>
+				</Stack>
+				<Stack px={2} flexGrow={1}>
+					<SearchFilter
+						filters={props.filters}
+						setFilters={props.setFilters}
+					/>
+					<MinMaxFilter
+						name="Filter Bounty Value"
+						filters={props.filters}
+						setFilters={props.setFilters}
+					/>
+					<SaveFilter
+						filters={props.filters}
+					/>
+				</Stack>
 			</Stack>
 		</Stack>
 	);

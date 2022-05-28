@@ -5,9 +5,8 @@ export function CheckboxCard(props: UseRadioProps): JSX.Element {
 	const { getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props);
 	const input = getInputProps();
 	const checkbox = getCheckboxProps();
-  
 	return (
-		<Box as='label' {...htmlProps} width="20%" minW={'125px'}>
+		<Box as='label' {...htmlProps}>
 			<input {...input} />
 			<Box
 				{...checkbox}
@@ -19,8 +18,9 @@ export function CheckboxCard(props: UseRadioProps): JSX.Element {
 					color: 'white',
 					borderColor: 'teal.600',
 				}}
-				px={5}
-				py={'6px'}>
+				fontSize={12}
+				px={3}
+				py={'10px'}>
 				<input {...getInputProps()} hidden />
 				<Text {...getLabelProps()} align="center">
 					{props.value}

@@ -12,6 +12,7 @@ import MiscUtils from '../../../utils/miscUtils';
 import { useRouter } from 'next/router';
 import { FilterParams } from '@app/types/Filter';
 import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
+import SavedQueriesMenu from './Filters/SavedQueriesMenu';
 
 export const PAGE_SIZE = 10;
 
@@ -28,11 +29,11 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 	<Stack
 		borderWidth={3}
 		borderRadius={10}
-		width={{ base: '95vw', lg: '700px' }}
 		textAlign="center"
 		direction="row"
 		justify="center"
 		align="center"
+		width=" 100%"
 	>
 		<Text fontSize="lg">{message}</Text>
 	</Stack>
@@ -191,34 +192,41 @@ const Bounties = (): JSX.Element => {
 	return (
 		<>
 			<Stack
-				direction={{ base: 'column' }}
-				align="top"
-				fontSize="sm"
-				fontWeight="600"
-				gridGap="4"
+				direction={{ base: 'column', lg: 'row' }}
 			>
-				<VStack
-				  gridGap="1px"
+				<SavedQueriesMenu/>
+				<Stack
+					direction={{ base: 'column' }}
+					align="center"
+					fontSize="sm"
+					fontWeight="600"
+					gridGap="4"
+					width={'100%'}
 				>
-					<Filters
-						filters={filters}
-					  setFilters={setFilters}
-					/>
-					<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
-				</VStack>
+					<VStack
+						gridGap="1px"
+						width={'100%'}
+					>
+						<Filters
+							filters={filters}
+							setFilters={setFilters}
+						/>
+						<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					</VStack>
 
-				{isError || noResults
-					? <FilterResultPlaceholder message={'No Results'} />
-					: isLoading
-						? <FilterResultPlaceholder message={'Loading'} />
-						: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
-				}
+					{isError || noResults
+						? <FilterResultPlaceholder message={'No Results'} />
+						: isLoading
+							? <FilterResultPlaceholder message={'Loading'} />
+							: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					}
+					<BountyPaginate
+						page={page}
+						setPage={setPage}
+						maxPages={maxPages(bounties)}
+					/>
+				</Stack>
 			</Stack>
-			<BountyPaginate
-				page={page}
-				setPage={setPage}
-				maxPages={maxPages(bounties)}
-			/>
 		</>
 	);
 };
