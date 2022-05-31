@@ -1,7 +1,7 @@
 import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { BountyCollection } from '@app/models/Bounty';
 import axios from '@app/utils/AxiosUtils';
-import { Alert, AlertIcon, AlertTitle, Button, CloseButton } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertTitle, Button, CloseButton, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import bountyStatus from '@app/constants/bountyStatus';
 import { useState } from 'react';
@@ -48,18 +48,20 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 	return (
 		<>
 			<AccessibleLink href={'/create-bounty'}>
-				<Button my={2} size="sm">
-					Edit This Draft
-				</Button>
+				<Box p={2}>
+					<Button>
+						Edit This Draft
+					</Button>
+				</Box>
 			</AccessibleLink>
-			<Button
-				m={2}
-				size="sm"
-				colorScheme="primary"
-				onClick={() => upload()}
-			>
-				Confirm
-			</Button>
+			<Box p={2}>
+				<Button
+					colorScheme="primary"
+					onClick={() => upload()}
+				>
+					Confirm
+				</Button>
+			</Box>
 			{
 				error &&
 				<Alert status='error'>

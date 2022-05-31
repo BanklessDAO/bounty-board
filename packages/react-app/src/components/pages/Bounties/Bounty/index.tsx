@@ -23,8 +23,10 @@ import {
 	ModalCloseButton,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useBounty } from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
+import { BountyNotFound } from '@app/pages/[id]';
+import { SkeletonCircle, SkeletonText } from '@chakra-ui/skeleton';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
@@ -35,6 +37,7 @@ import MiscUtils from '../../../../utils/miscUtils';
 import DOMPurify from 'dompurify';
 import { toHTML } from 'discord-markdown';
 import ReactHtmlParser from 'react-html-parser';
+import { useRouter } from 'next/router';
 
 
 type SetState<T extends any> = (arg: T) => void;
@@ -133,7 +136,9 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 			</Box>
 			<Flex width="100%" justifyContent="space-between" alignItems="center">
 				<Box mb={2}>
-					for: {bounty.assign ? '@' + bounty.assignedName :
+					for: {bounty.assignTo ? '@' + bounty.assignTo.discordHandle :
+						  bounty.assign ? '@' + bounty.assignedName :
+						  bounty.gateTo ? '@' + bounty.gateTo[0].discordName :
 						  bounty.gate ? '@' + bounty.gate[0] : 'anyone'}
 				</Box>
 				<Spacer />
@@ -145,47 +150,66 @@ export const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Eleme
 	);
 };
 
-const BountyModal = ({ bounty, setBounty, isOpen, onClose }: { bounty: BountyCollection, setBounty: SetState<BountyCollection>, isOpen: boolean, onClose: () => void }): JSX.Element => {
+export const BountyHeader = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
+	
+	return (
+		<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }} >
+			<Box >
+				<UserAvatar user={bounty.createdBy} size='sm' />
+			</Box>
+			<Box pl='2' width="100%">
+				<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
+					{bounty.title}
+				</Heading>
+			</Box>
+		</Flex>
+	);
+};
+
+export const BountyActions = ({ bounty, onCancel }: { bounty: BountyCollection, onCancel: () => void }): JSX.Element => {
+
+	return (
+		<Flex justifyContent={'flex-end'}>
+			{bounty.status == BOUNTY_STATUS.DRAFT &&
+				(
+					<BountySubmit bounty={bounty} />
+				)
+			}
+			{(bounty.status == BOUNTY_STATUS.OPEN) &&
+				(
+					<BountyClaim bounty={bounty} />
+				)
+			}
+			{(bounty.status == BOUNTY_STATUS.DRAFT || bounty.status == BOUNTY_STATUS.OPEN) &&
+				(
+					<BountyEditButton bounty={bounty} />
+				)
+			}
+			<Box p={2} >
+				<Button onClick={onCancel}>Cancel</Button>
+			</Box>
+		</Flex>
+	);
+};
+
+const BountyModal = ({ bounty, isOpen, onClose }: { bounty: BountyCollection, isOpen: boolean, onClose: () => void }): JSX.Element => {
 	// TODO Need a Delete action if Draft or Open
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} >
-		  <ModalOverlay />
-		  <ModalContent maxW={'700px'} borderWidth={3} >
+			<ModalOverlay />
+			<ModalContent maxW={'700px'} borderWidth={3} >
 				<ModalHeader bg={useColorModeValue('gray.200', 'gray.600')} roundedTop="md">
-					<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }} >
-						<Box >
-							<UserAvatar user={bounty.createdBy} size='sm' />
-						</Box>
-						<Box pl='2' width="100%">
-							<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
-								{bounty.title}
-							</Heading>
-						</Box>
-					</Flex>
+					<BountyHeader bounty={bounty} />
 				</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-			  		<BountyDetails bounty={bounty} />
+					<BountyDetails bounty={bounty} />
 				</ModalBody>
 				<ModalFooter>
-					<Flex>
-						{bounty.status && bounty.status == BOUNTY_STATUS.DRAFT ?
-							<BountySubmit bounty={bounty} />
-							: bounty.status == BOUNTY_STATUS.OPEN ?
-								<BountyClaim bounty={bounty} setBounty={setBounty}/>
-								: <Button onClick={onClose}>Close</Button>
-						}
-						{bounty.status && (bounty.status == BOUNTY_STATUS.DRAFT || bounty.status == BOUNTY_STATUS.OPEN) &&
-					<Box ml="5">
-						<BountyEditButton bounty={bounty} />
-					</Box>
-						}
-	 			</Flex>
-
-
+					<BountyActions bounty={bounty} onCancel={onClose} />
 				</ModalFooter>
-		  </ModalContent>
+			</ModalContent>
 		</Modal>
 	);
 };
@@ -271,7 +295,10 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 				</Box>
 				<Box pr="2" >
 					<Text isTruncated={true} as="span" fontSize="sm">
-						{bounty.assignedName ||	bounty.gate || 'anyone'}
+						{bounty.assignTo ? '@' + bounty.assignTo.discordHandle :
+						 bounty.assign ? '@' + bounty.assignedName :
+						 bounty.gateTo ? '@' + bounty.gateTo[0].discordName :
+						 bounty.gate ? '@' + bounty.gate[0] : 'anyone'}
 					</Text>
 				</Box>
 			</Flex>
@@ -289,99 +316,28 @@ const BountyDetails = ({ bounty }: { bounty: BountyCollection }): JSX.Element =>
 			</Text>
 		</Flex>
 	);
-	// const {
-	// 	_id,
-	// 	description,
-	// 	criteria,
-	// 	createdBy,
-	// 	claimedBy,
-	// 	createdAt,
-	// 	status,
-	// 	dueAt,
-	// } = bounty;
-	// return (
-	// 	<Grid gap={6} width={{ base: '95vw', lg: '700px' }}>
-	// 		{_id &&
-	// 			<GridItem>
-	// 				<Heading size="sm">Bounty ID</Heading>
-	// 				<Text>{_id}</Text>
-	// 			</GridItem>
-	// 		}
-	// 		<GridItem>
-	// 			<Text>status</Text>
-	// 			<Status bounty={bounty} />
-	// 			<Box
-	// 				width={{ base: '100%', md: '30%' }}
-	// 				textAlign={{ base: 'left', md: 'right' }}
-	// 				mt={{ base: 0, md: 2 }}
-	// 				ml="auto"
-	// 			>
-	// 				{bounty.reward && (
-	// 					<Heading mb={4} size="md">
-	// 						{calculateReward(bounty.reward)}
-	// 					</Heading>
-	// 				)}
-	// 			</Box>
-
-	// 		</GridItem>
-	// 		<GridItem>
-	// 			<Heading size="sm">Created Date</Heading>
-	// 			<Text>{createdAt.substring(0, 10)}</Text>
-	// 		</GridItem>
-	// 		<GridItem>
-	// 			<Heading size="sm">Description</Heading>
-	// 			<Text>{description}</Text>
-	// 		</GridItem>
-	// 		<GridItem>
-	// 			<Heading size="sm">Done Criteria</Heading>
-	// 			<Text>{criteria}</Text>
-	// 		</GridItem>
-	// 		{dueAt &&
-	// 			<GridItem>
-	// 				<Heading size="sm">Deadline</Heading>
-	// 				<Text>{new Date(dueAt).toDateString()}</Text>
-	// 			</GridItem>
-	// 		}
-	// 		{
-	// 			createdBy
-	// 				? <GridItem>
-	// 					<Heading size="sm">Requested By</Heading>
-	// 					<DiscordStub name={createdBy.discordHandle as string} />
-	// 				</GridItem>
-	// 				: null
-	// 		}
-	// 		<GridItem>
-	// 			<Flex>{
-	// 				status && status.toLowerCase() === 'draft'
-	// 					? <BountySubmit bounty={bounty} />
-	// 					: claimedBy
-	// 						? (
-	// 							<Flex flexDirection={'column'} justifyContent="start">
-	// 								<Heading size="sm" my='0'>Claimed By</Heading>
-	// 								<DiscordStub name={claimedBy.discordHandle ?? 'Unknown'} />
-	// 							</Flex>
-	// 						)
-	// 						: status.toLowerCase() !== 'deleted' && <BountyClaim bounty={bounty} />
-	// 			}
-	// 			<Box ml="5">
-	// 				<BountyEditButton bounty={bounty} />
-	// 			</Box>
-	// 			</Flex>
-	// 		</GridItem>
-	// 	</Grid>
-	// );
 };
 
 export const BountyCard = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+
+	const router = useRouter();
+
+	const onCancel = () => {
+		router.push('/');
+	};
 	return (
 		<Box width={{ base: '95vw', lg: '700px' }}>
 			<Box borderWidth={3} borderRadius={10} mb={3} p={4}>
 				<Box pb={5}>
-					<BountySummary bounty={bounty} />
+					<BountyHeader bounty={bounty} />
 				</Box>
 				<Box mx={2}>
 					<BountyDetails bounty={bounty} />
 				</Box>
+				<Box>
+					<BountyActions bounty={bounty} onCancel={onCancel} />
+				</Box>
+
 			</Box>
 		</Box>
 	);
@@ -404,22 +360,32 @@ export const AccordionBountyItem = ({ bounty, selectedBounties, setSelectedBount
 
 export const BountyItem = ({ initialBounty, selectedBounties, setSelectedBounties }: { initialBounty: BountyCollection, selectedBounties: string[], setSelectedBounties: SetState<string[]> }): JSX.Element => {
 	const { isOpen: isBountyModalOpen, onOpen: onBountyModalOpen, onClose: onBountyModalClose } = useDisclosure();
-	const [bounty, setBounty] = useState(initialBounty);
+	const { bounty, isLoading } = useBounty(initialBounty._id);
 
-	return(
+	return (
 		<Box w='100%' borderWidth={3} borderRadius={10} mb={1}>
-			<HStack>
-				<BountySelect bountyId={bounty._id} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties} />
-				<Box w='100%' pb={2} pt={0} onClick={onBountyModalOpen}>
-					<BountySummary bounty={bounty} />
-				</Box>
-				<BountyModal
-					isOpen={isBountyModalOpen}
-					onClose={onBountyModalClose}
-					bounty={bounty}
-					setBounty={setBounty}
-				/>
-			</HStack>
+			{
+				isLoading
+				// if loading, show the loader
+					? (
+						<Box padding='6' boxShadow='lg'>
+							<SkeletonCircle size='10' />
+							<SkeletonText mt='4' noOfLines={3} spacing='4' />
+						</Box>
+					) : bounty ? (
+						<HStack>
+							<BountySelect bountyId={bounty._id} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties} />
+							<Box w='100%' pb={2} pt={0} onClick={onBountyModalOpen}>
+								<BountySummary bounty={bounty} />
+							</Box>
+							<BountyModal
+								isOpen={isBountyModalOpen}
+								onClose={onBountyModalClose}
+								bounty={bounty}
+							/>
+						</HStack>
+					) : <BountyNotFound />
+			}
 		</Box>
 	);
 };

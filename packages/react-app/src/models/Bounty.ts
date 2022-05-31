@@ -86,6 +86,12 @@ export const RequiredDiscordUser = object({
 	(params) => bothRequiredIfOneRequired(params),
 );
 
+export const RoleObject = object({
+	discordId: string().optional(),
+	discordName: string().optional(),
+	iconUrl: string().optional(),
+});
+
 export const Applicant = object({
 	discordId: string().optional(),
 	discordHandle: string().optional(),
@@ -148,10 +154,11 @@ export const BountySchema = object({
 	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	customerId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	status: status.when('$method', (method, schema) => requiredForPost({ method, schema })),
-	paidStatus: paidStatus.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
 	season: string().optional(),
+
+	paidStatus: paidStatus.optional(),
 
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
@@ -172,7 +179,9 @@ export const BountySchema = object({
 	childrenIds: array(string()).optional(),
 	assign: string().optional().nullable(),
 	assignedName: string().optional().nullable(),
+	assignTo: DiscordUser.optional().default(undefined),
 	gate: array(string()).optional(),
+	gateTo: array(RoleObject).optional().default(undefined),
 	requireApplication: boolean().optional(),
 	applicants: array(Applicant).optional(),
 	isIOU: boolean().optional(),
@@ -337,6 +346,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	},
 	childrenIds: {
 		type: Array,
+		default: undefined,
 	},
 	assign: {
 		type: String,
@@ -344,14 +354,26 @@ export const BountyBoardSchema = new mongoose.Schema({
 	assignedName: {
 		type: String,
 	},
+	assignTo: {
+		discordHandle: String,
+		discordId: Number,
+		iconUrl: String,
+		type: Object,
+	},
 	gate: {
 		type: Array,
+		default: undefined,
+	},
+	gateTo: {
+		type: Array,
+		default: undefined,
 	},
 	requireApplication: {
 		type: Boolean,
 	},
 	applicants: {
 		type: Array,
+		default: undefined,
 	},
 	isIOU: {
 		type: Boolean,

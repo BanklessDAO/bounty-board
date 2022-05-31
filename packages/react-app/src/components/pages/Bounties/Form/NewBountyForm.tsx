@@ -38,7 +38,9 @@ const NotNeededFields = [
 	'childrenIds',
 	'assign',
 	'assignedName',
+	'assignTo',
 	'gate',
+	'gateTo',
 	'requireApplication',
 	'applicants',
 	'isIOU',
@@ -90,7 +92,7 @@ const generatePreviewData = (
 		createdBy: {
 			discordHandle: `${user.username}#${user.discriminator}`,
 			discordId: user.id,
-			iconUrl: '',
+			iconUrl: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`,
 		},
 	};
 };

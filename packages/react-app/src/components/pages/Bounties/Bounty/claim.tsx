@@ -1,7 +1,7 @@
 import { useUser } from '@app/hooks/useUser';
 import { ActivityHistoryItem, BountyClaimCollection, BountyCollection, StatusHistoryItem } from '@app/models/Bounty';
 import axios from '@app/utils/AxiosUtils';
-import { Alert, AlertIcon, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, Tooltip, useColorMode, useDisclosure } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, Box, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, Tooltip, useColorMode, useDisclosure } from '@chakra-ui/react';
 // import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useContext } from 'react';
@@ -15,9 +15,7 @@ import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
 import miscUtils from '@app/utils/miscUtils';
 
-type SetState<T extends any> = (arg: T) => void;
-
-const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBounty: SetState<BountyCollection> }): JSX.Element => {
+const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	// const router = useRouter();
 	const { colorMode } = useColorMode();
@@ -46,7 +44,6 @@ const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBount
 					const updatedBounty = { ...bounty, ...claimData };
 					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
 					// if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
-					setBounty(updatedBounty);
 					setClaiming(false, onClose);
 				}
 			} catch {
@@ -106,7 +103,7 @@ const BountyClaim = ({ bounty, setBounty }: { bounty: BountyCollection, setBount
 						>
 						Confirm
 						</Button>
-			  		<Button ml="3" onClick={onClose}>Close</Button>
+			  		<Button onClick={onClose}>Close</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
@@ -143,15 +140,17 @@ export const ClaimWeb = ({ onOpen }: { onOpen: () => void }): JSX.Element => {
 			mt='3'
 			display={canClaim ? 'hidden' : 'inline-block'}
 		>
-			<Button
-				transition="background 100ms linear"
-				aria-label='claim-button'
-				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				onClick={onOpen}
-				disabled={!canClaim}
-			>
-			Claim It
-			</Button>
+			<Box p={2}>
+				<Button
+					transition="background 100ms linear"
+					aria-label='claim-button'
+					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+					onClick={onOpen}
+					disabled={!canClaim}
+				>
+				Claim It
+				</Button>
+			</Box>
 			<Text
 				as="i"
 				my={1}

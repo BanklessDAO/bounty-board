@@ -3,7 +3,7 @@ import bountyStatus from '@app/constants/bountyStatus';
 import { useRoles } from '@app/hooks/useRoles';
 import { useUser } from '@app/hooks/useUser';
 import { BountyCollection } from '@app/models/Bounty';
-import { Button, useColorMode } from '@chakra-ui/react';
+import { Button, Box, useColorMode } from '@chakra-ui/react';
 import router from 'next/router';
 import { useMemo } from 'react';
 
@@ -27,12 +27,12 @@ export const BountyEditButton: React.FC<{ bounty: BountyCollection }> = ({ bount
 			{
 				show &&
 				<RestrictedTo roles={['edit-own-bounty', 'admin']}>
-					<Button
-						bg='transparent'
-						border="2px"
-						borderColor={colorMode === 'dark' ? 'primary.700' : 'primary.300' }
-						onClick={() => router.push(`/${bounty._id}/edit`)}
-					>Edit</Button>
+					<Box p={2}>
+						<Button
+							borderColor={colorMode === 'dark' ? 'primary.700' : 'primary.300' }
+							onClick={() => router.push(`/${bounty._id}/edit`)}
+						>Edit</Button>
+					</Box>
 				</RestrictedTo>
 			}
 		</>
