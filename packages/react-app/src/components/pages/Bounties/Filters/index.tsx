@@ -83,7 +83,7 @@ const SelectFilters = ({ options,
 			status: value,
 		});
 	};
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 	const { getCheckboxProps } = useCheckboxGroup({
 		value: filters.status || [],
 		onChange: updateStatus,
@@ -270,7 +270,6 @@ const MinMaxFilter = ({ filters, setFilters }: {
 
 	return (
 		<>
-			{/* {name && <Heading size="xs">{name}</Heading>} */}
 			<HStack my="2">
 				<Input placeholder="Min Bounty Value" onChange={updateMin} />
 				<Input placeholder="Max Bounty Value" onChange={updateMax} />

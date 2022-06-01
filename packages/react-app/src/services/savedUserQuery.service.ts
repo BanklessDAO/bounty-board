@@ -6,6 +6,10 @@ export const addQuery = async (data: SaveQueryType): Promise<SavedUserQueryProps
 	return await SavedUserQuery.create(data);
 };
 
+export const deleteQuery = async (id: string): Promise<{ ok?: number, n?: number, deletedCount?: number }> => {
+	return await SavedUserQuery.deleteOne({ _id: id });
+};
+
 export const getQueriesByDiscordId = async (query: NextApiQuery): Promise<SavedUserQueryProps[]> => {
 	const discordId = query.discordId as string;
 	const data = await SavedUserQuery.find({ discordId });

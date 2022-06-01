@@ -32,6 +32,16 @@ export const handler = async (
 		break;
 	}
 
+	case 'DELETE': {
+		try {
+			const data = await service.deleteQuery(req.query.id as string);
+			res.status(200).json({ success: true, data });
+		} catch (error) {
+			res.status(400).json({ success: false });
+		}
+		break;
+	}
+	
 	default: {
 		res.status(400).json({ success: false });
 		break;
