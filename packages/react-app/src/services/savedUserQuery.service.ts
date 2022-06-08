@@ -6,7 +6,8 @@ export const addQuery = async (data: SaveQueryType): Promise<SavedUserQueryProps
 	return await SavedUserQuery.create(data);
 };
 
-export const deleteQuery = async (id: string): Promise<{ ok?: number, n?: number, deletedCount?: number }> => {
+export const deleteSingleQuery = async (id: string): Promise<{ ok?: number, n?: number, deletedCount?: number }> => {
+	if (typeof id !== 'string') throw new Error('id must be a string');
 	return await SavedUserQuery.deleteOne({ _id: id });
 };
 

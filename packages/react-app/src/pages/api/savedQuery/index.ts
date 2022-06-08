@@ -34,8 +34,8 @@ export const handler = async (
 
 	case 'DELETE': {
 		try {
-			const data = await service.deleteQuery(req.query.id as string);
-			res.status(200).json({ success: true, data });
+			await service.deleteSingleQuery(req.query.id as string);
+			res.status(204).json({ success: true });
 		} catch (error) {
 			res.status(400).json({ success: false });
 		}
