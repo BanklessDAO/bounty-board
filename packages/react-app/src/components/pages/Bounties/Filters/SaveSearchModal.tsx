@@ -45,7 +45,7 @@ const SaveSearchModal = ({ onClose, isOpen, filters, discordId }:{ onClose: any,
 				<ModalHeader>Save this Search</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-					<Input placeholder='Name the name for this search' onChange={(e) => setName(e.target.value)} />
+					<Input placeholder='Enter the name for this search?' onChange={(e) => setName(e.target.value)} />
 				</ModalBody>
 				<ModalFooter>
 					<Button onClick={onSave} disabled={!name}>Save</Button>

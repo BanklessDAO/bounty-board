@@ -5,7 +5,7 @@ import React from 'react';
 import { SavedQuery } from '@app/types/SavedQuery';
 import DeleteSearchModal from './DeleteSearchModal';
 
-const SavedQueriesMenu: React.FC = () => {
+const SavedQueriesMenu = (): JSX.Element => {
 	const { user, loadingQueries, savedQueries } = useUser();
 	const [queryToDelete, setQueryToDelete] = React.useState<SavedQuery | undefined>(undefined);
 

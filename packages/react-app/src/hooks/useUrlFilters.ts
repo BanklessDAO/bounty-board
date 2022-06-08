@@ -8,6 +8,8 @@ import { useContext, useMemo } from 'react';
 import useDebounce from './useDebounce';
 
 const keysWithArrayVals = ['status', 'paidStatus'];
+const keysWithNumberVals = ['gte', 'lte'];
+const keysWithBooleanVals = ['asc'];
 const validStatusKeys = Object.values(BOUNTY_STATUS);
 const validPaidStatusKeys = Object.values(PAID_STATUS);
 
@@ -54,7 +56,9 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 	}, [filters, customer, debounceSearch, ready]);
 };
 
-const sanitizeFilter = (key: string, val: string): string | string[] => {
+const sanitizeFilter = (key: string, val: string | number | boolean): string | string[] | boolean | number => {
+	if (keysWithNumberVals.includes(key)) return (typeof val === 'number') ? val : parseInt(val as string, 10);
+	if (keysWithBooleanVals.includes(key)) return val == 'true' ? true : false;
 	if (!keysWithArrayVals.includes(key) || typeof val !== 'string') return val;
 
 	const arrayVal: any[] = val.split(',').map((v: string) => v.trim());
