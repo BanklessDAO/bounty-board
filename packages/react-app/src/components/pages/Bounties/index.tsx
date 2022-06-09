@@ -169,9 +169,11 @@ const Bounties = (): JSX.Element => {
 	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
+		if (!router.isReady) return;
+
 		const asPathWithoutLeadinggSlash = router.asPath.replace(/\//, '');
-		if ((router.isReady && firstLoad.current && filtersDefined(router.query)) ||
-			(!firstLoad.current && asPathWithoutLeadinggSlash !== urlQuery)) {
+		if ((firstLoad.current && filtersDefined(router.query)) ||
+			(!firstLoad.current && Object.keys(router.query).length > 0 && asPathWithoutLeadinggSlash !== urlQuery)) {
 			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
 			setFilters(newFilters);
 			firstLoad.current = false;

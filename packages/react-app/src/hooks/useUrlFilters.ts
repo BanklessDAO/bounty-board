@@ -57,7 +57,14 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 };
 
 const sanitizeFilter = (key: string, val: string | number | boolean): string | string[] | boolean | number => {
-	if (keysWithNumberVals.includes(key)) return (typeof val === 'number') ? val : parseInt(val as string, 10);
+	if (keysWithNumberVals.includes(key)) {
+		return (typeof val === 'number')
+			? val
+			: val === 'Infinity'
+				? Infinity
+				: parseInt(val as string, 10);
+	}
+	
 	if (keysWithBooleanVals.includes(key)) return val == 'true' ? true : false;
 	if (!keysWithArrayVals.includes(key) || typeof val !== 'string') return val;
 
