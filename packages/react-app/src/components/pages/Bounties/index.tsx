@@ -166,15 +166,17 @@ const Bounties = (): JSX.Element => {
 	// otherwise you will lose filers and/or create inf loop
 	// only render the saved search the first time, to prevent loops
 	const firstLoad = useRef(true);
+	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
+
 	useEffect(() => {
-		if (router.isReady && firstLoad.current && filtersDefined(router.query)) {
+		const asPathWithoutLeadinggSlash = router.asPath.replace(/\//, '');
+		if ((router.isReady && firstLoad.current && filtersDefined(router.query)) ||
+			(!firstLoad.current && asPathWithoutLeadinggSlash !== urlQuery)) {
 			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}
 	}, [router.isReady, router.query, firstLoad]);
-
-	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
 		if (router.isReady) {

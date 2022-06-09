@@ -4,12 +4,18 @@ import { BsTrash } from 'react-icons/bs';
 import React from 'react';
 import { SavedQuery } from '@app/types/SavedQuery';
 import DeleteSearchModal from './DeleteSearchModal';
+import { useRouter } from 'next/router';
 
 const SavedQueriesMenu = (): JSX.Element => {
 	const { user, loadingQueries, savedQueries } = useUser();
+	const router = useRouter();
 	const [queryToDelete, setQueryToDelete] = React.useState<SavedQuery | undefined>(undefined);
 
 	if (!user || loadingQueries || !(savedQueries && savedQueries.length)) return <></>;
+
+	const routeQueryTo = (url: string | undefined) => {
+		if (url) router.push(url, undefined, { shallow: true });
+	};
 
 	return (
 		<Stack width={{ base: '100%', lg: '20%' }}>
@@ -19,7 +25,7 @@ const SavedQueriesMenu = (): JSX.Element => {
 				<Stack gap={1}>
 					{savedQueries.map((query) => (
 						<Stack direction={'row'} key={query._id} justifyContent="space-between">
-							<Link href={query.savedQuery} key={query.discordId}>{query.name}</Link>
+							<Link onClick={() => routeQueryTo(query.savedQuery)} key={query.discordId}>{query.name}</Link>
 							<BsTrash onClick={() => setQueryToDelete(query)} cursor="pointer"/>
 						</Stack>
 					))}
