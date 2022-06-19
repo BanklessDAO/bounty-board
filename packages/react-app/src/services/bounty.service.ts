@@ -15,8 +15,8 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	 */
 	const filters = {} as FilterParams;
 
-	if (typeof query.status === 'string') filters.status = query.status;
-	if (typeof query.paidStatus === 'string') filters.paidStatus = query.paidStatus;
+	if (typeof query.status === 'string') filters.status = query.status ? query.status.split(',') : [];
+	if (typeof query.paidStatus === 'string') filters.paidStatus = query.paidStatus ? query.paidStatus.split(',') : [];
 	if (typeof query.search === 'string') filters.search = query.search;
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
 	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
@@ -83,34 +83,23 @@ export const getSortByValue = (originalInput: string): AcceptedSortOutputs => {
 	return output;
 };
 
-export const filterStatus = (query: FilterQuery<BountyCollection>, status?: string): FilterQuery<BountyCollection> => {
+export const filterStatus = (query: FilterQuery<BountyCollection>, status?: string[]): FilterQuery<BountyCollection> => {
 	/**
 	 * Pass status and append the corresponding status query to the query object
 	 */
-	if (status == null || status == '' || status == 'All' || status == undefined) {
-		query.status = { $in: ['Open', 'In-Progress', 'In-Review', 'Completed'] };
-	} else {
-		query.status = status;
-	}
+	
+	query.status = { $in: status && status.length ? status : ['Open', 'In-Progress', 'In-Review', 'Completed'] };
 	return query;
 };
 
-export const filterPaidStatus = (query: FilterQuery<BountyCollection>, paidStatus?: string): FilterQuery<BountyCollection> => {
+export const filterPaidStatus = (query: FilterQuery<BountyCollection>, paidStatus?: string[]): FilterQuery<BountyCollection> => {
 	/**
 	 * Pass paid status and append the corresponding status query to the query object
 	 */
-	if (paidStatus == null || paidStatus == '' || paidStatus == 'All' || paidStatus == undefined) {
-		query.$or = [
-			{ paidStatus: { $in: [PAID_STATUS.PAID, PAID_STATUS.UNPAID] } },
-			{ paidStatus: { $exists: false } },
-		];
-	} else if (paidStatus === PAID_STATUS.UNPAID) {
-		query.$or = [
-			{ paidStatus: PAID_STATUS.UNPAID },
-			{ paidStatus: { $exists: false } },
-		];
-	} else {
-		query.paidStatus = paidStatus;
+	query.$or = [{ paidStatus: { $in: paidStatus && paidStatus.length ? paidStatus : [PAID_STATUS.PAID, PAID_STATUS.UNPAID] } }];
+
+	if (!(paidStatus && paidStatus.length) || paidStatus.includes(PAID_STATUS.UNPAID)) {
+		query.$or.push({ paidStatus: { $exists: false } });
 	}
 	return query;
 };
