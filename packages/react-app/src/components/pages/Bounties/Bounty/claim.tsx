@@ -5,24 +5,22 @@ import { Alert, AlertIcon, Button, Box, Flex, Modal, ModalBody, ModalCloseButton
 // import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useContext } from 'react';
-import { claimedBy, newActivityHistory, newStatusHistory } from '@app/utils/formUtils';
+import { claimedBy, isClaimableByUser, newActivityHistory, newStatusHistory } from '@app/utils/formUtils';
 import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
 import { useRequiredRoles } from '@app/components/global/Auth';
-import { useExternalRoles } from '@app/hooks/useExternalRoles';
 import { mutate } from 'swr';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
 import miscUtils from '@app/utils/miscUtils';
+import { APIUser } from 'discord-api-types';
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	// const router = useRouter();
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
-	const externalRoles = useExternalRoles();
-	console.log(externalRoles);
 	const [message, setMessage] = useState<string>();
 	const [claiming, setClaiming] = miscUtils.useStateCallback<boolean>(false);
 	const [error, setError] = useState(false);
@@ -66,7 +64,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				// If we have discord message info for the bounty, the user is taken into discord to claim
 					? <ClaimDiscord discordMessageId={bounty.discordMessageId} />
 				// else, they must use the web form variant
-			 	: <ClaimWeb onOpen={onOpen} />
+			 	: <ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
 			}
 			<Modal onClose={onClose} isOpen={isOpen} isCentered>
 		  		<ModalOverlay />
@@ -131,14 +129,23 @@ export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string })
 	);
 };
 
-export const ClaimWeb = ({ onOpen }: { onOpen: () => void }): JSX.Element => {
+export const ClaimWeb = ({ user, bounty, onOpen }: { user: APIUser | undefined, bounty: BountyCollection, onOpen: () => void }): JSX.Element => {
 	const { colorMode } = useColorMode();
-	const canClaim = useRequiredRoles(['claim-bounties', 'admin']);
-	const notSignedInHelpMessage = canClaim ? 'Claim this bounty	' : 'You need to sign in and have the correct permissions to claim this bounty';
+	let canClaim = useRequiredRoles(['claim-bounties', 'admin']);
+	let helpMessage = 'Claim this bounty	';
+	if (canClaim) {
+		const { isClaimable, reason } = isClaimableByUser(bounty, user);
+		if (!isClaimable) {
+			canClaim = false;
+			helpMessage = reason;
+		}
+	} else {
+		helpMessage = 'You need to sign in and have the correct permissions to claim this bounty';
+	}
 	return (
 		<Tooltip
 			hasArrow
-			label={notSignedInHelpMessage}
+			label={helpMessage}
 			shouldWrapChildren
 			mt='3'
 			display={canClaim ? 'hidden' : 'inline-block'}
@@ -160,7 +167,7 @@ export const ClaimWeb = ({ onOpen }: { onOpen: () => void }): JSX.Element => {
 				color="primary.500"
 				display={canClaim ? 'none' : { base: 'block', md: 'none' }}
 			>
-				{notSignedInHelpMessage}
+				{helpMessage}
 			</Text>
 		</Tooltip>
 	);

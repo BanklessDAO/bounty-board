@@ -1,5 +1,6 @@
 import { ACTIVITY_VALUES, CLIENT } from '@app/constants/activity';
 import { BOUNTY_STATUS_VALUES } from '@app/constants/bountyStatus';
+import { useExternalRoles } from '@app/hooks/useExternalRoles';
 import { ActivityHistoryItem, BountyCollection, DiscordBoardUser, StatusHistoryItem } from '@app/models/Bounty';
 import { APIUser } from 'discord-api-types';
 
@@ -62,4 +63,45 @@ export const createRewardObject = (reward: string, currency: string): BountyColl
 		amountWithoutScale,
 		scale,
 	};
+};
+
+export const isClaimableByUser = (bounty: BountyCollection, user: APIUser | undefined): { isClaimable: boolean, reason: string } => {
+	let isClaimable = true;
+	let reason = '';
+	if (bounty.evergreen) {
+		isClaimable = false;
+		reason = 'Cannot claim multi-claimant bounties on the web, claim in Discord instead.';
+	}
+	if (bounty.requireApplication) {
+		isClaimable = false;
+		reason = 'Cannot claim multi-applicant bounties on the web, claim in Discord instead.';
+	}
+	if (bounty.assign) {
+		if (!user || user.id != bounty.assign) {
+			isClaimable = false;
+			reason = 'This bounty is assigned to another user for claiming';
+		}
+	}
+	if (bounty.assignTo) {
+		if (!user || user.id != bounty.assignTo.discordId) {
+			isClaimable = false;
+			reason = 'This bounty is assigned to another user for claiming';
+		}
+	}
+	if (bounty.gate || bounty.gateTo) {
+		const externalRoles = useExternalRoles();
+		if (bounty.gate) {
+			if (bounty.gate[0] && !externalRoles.includes(bounty.gate[0])) {
+				isClaimable = false;
+				reason = 'You do not have a role that can claim this bounty';
+			}
+		}
+		if (bounty.gateTo) {
+			if (bounty.gateTo[0] && !externalRoles.includes(bounty.gateTo[0].discordId)) {
+				isClaimable = false;
+				reason = 'You do not have a role that can claim this bounty';
+			}
+		}
+	}
+	return { isClaimable: isClaimable, reason: reason };
 };
