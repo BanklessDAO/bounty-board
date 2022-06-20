@@ -10,6 +10,7 @@ import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
 import { useRequiredRoles } from '@app/components/global/Auth';
+import { useExternalRoles } from '@app/hooks/useExternalRoles';
 import { mutate } from 'swr';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
@@ -20,6 +21,8 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	// const router = useRouter();
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
+	const externalRoles = useExternalRoles();
+	console.log(externalRoles);
 	const [message, setMessage] = useState<string>();
 	const [claiming, setClaiming] = miscUtils.useStateCallback<boolean>(false);
 	const [error, setError] = useState(false);

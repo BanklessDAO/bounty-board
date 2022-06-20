@@ -21,3 +21,18 @@
     color: #00bcd4;
     text-decoration: underline;
 }
+
+.switch .single-head {
+    display: none;
+}
+
+@media screen and (max-width: 767px) {
+    .switch .single-head {
+        display: block;
+    }
+
+    .switch .multi-head {
+        display: none;
+    }
+}
+    
