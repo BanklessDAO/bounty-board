@@ -22,7 +22,7 @@ jest.mock('@app/components/global/SiteLayout', () => {
 
 describe('Testing the bounty id page', () => {
 	beforeEach(() => {
-		jest.spyOn(customerHooks, 'useCustomerFromBountyIdAndKey').mockReturnValue(customers[0]);
+		jest.spyOn(customerHooks, 'useCustomerFromBountyIdAndKey').mockReturnValue({ customer: customers[0], isLoading: false });
 
 		jest.spyOn(router, 'useRouter').mockImplementation(() => ({
 			query: {

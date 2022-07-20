@@ -401,6 +401,7 @@
             }
         ],
         "status": "Open",
+        "paidStatus": "Unpaid",
         "dueAt": "2022-05-10T14:43:35.642Z",
         "evergreen": true,
         "isParent": true,
@@ -437,6 +438,7 @@
             }
         ],
         "status": "Open",
+        "paidStatus": "Paid",
         "dueAt": "2022-05-10T14:43:35.642Z",
         "evergreen": true,
         "isParent": true,

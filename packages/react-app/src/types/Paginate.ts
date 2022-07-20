@@ -21,6 +21,14 @@ extends Model
   TMethods
 >
 {
+	aggregateFn<Options extends PaginateOptions>
+  (
+    // paginate takes 3 optional arguments: a standard Mongoose query, a set of options and a callback
+		query?: FilterQuery<T>,
+		options?: Options,
+		callback?: PaginateCallback<T, TMethods, TVirtuals, Options>
+    // it returns a promise containing a single page of a paginated document 
+	): Promise<PaginateResult<PaginateDocument<T, TMethods, TVirtuals, Options>>>;
   // here we define the actual extendion to the type - a single method called 'paginate'
 	paginate<Options extends PaginateOptions>
   (

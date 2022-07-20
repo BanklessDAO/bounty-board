@@ -1,15 +1,22 @@
-import { Stack, Text } from '@chakra-ui/react';
+import { Stack, Text, VStack, Button } from '@chakra-ui/react';
+import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
 import Filters from './Filters';
 import useBounties from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
 import BountyPaginate from './Filters/bountyPaginate';
+import { CSVLink } from 'react-csv';
+import { BOUNTY_EXPORT_ITEMS } from '../../../constants/bountyExportItems';
+import MiscUtils from '../../../utils/miscUtils';
 import { useRouter } from 'next/router';
 import { FilterParams } from '@app/types/Filter';
 import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
+import SavedQueriesMenu from './Filters/SavedQueriesMenu';
 
 export const PAGE_SIZE = 10;
+
+type SetState<T extends any> = (arg: T) => void;
 
 const maxPages = (bounties: BountyCollection | BountyCollection[] | undefined) => {
 	if (!bounties || !Array.isArray(bounties)) return 0;
@@ -22,15 +29,117 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 	<Stack
 		borderWidth={3}
 		borderRadius={10}
-		width={{ base: '95vw', lg: '700px' }}
 		textAlign="center"
 		direction="row"
 		justify="center"
 		align="center"
+		width=" 100%"
 	>
 		<Text fontSize="lg">{message}</Text>
 	</Stack>
 );
+
+/**
+Define a set state function that runs a callback on setting of the state
+**/
+
+function useStateCallback<T, C extends CallableFunction =(...args: any) => void>(initialState: T): [T, (state: T, cb: C) => void] {
+	const [state, setState] = useState<T>(initialState);
+	// init mutable ref container for callbacks
+	const cbRef = useRef<C | null>(null);
+
+	const setStateCallback = useCallback((s: T, cb: C) => {
+		// store current, passed callback in ref
+		cbRef.current = cb;
+		// keep object reference stable, exactly like `useState`
+		setState(s);
+	}, []);
+
+	useEffect(() => {
+		// cb.current is `null` on initial render, 
+		// so we only invoke callback on state *updates*
+		if (cbRef.current) {
+			cbRef.current(state);
+			// reset callback after execution
+			cbRef.current = null;
+		}
+	}, [state]);
+
+	return [state, setStateCallback];
+}
+
+const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
+	bounties: BountyCollection[] | undefined,
+	selectedBounties: string[],
+	setSelectedBounties: SetState<string[]>,
+	}): JSX.Element => {
+
+	const { colorMode } = useColorMode();
+	const [csvData, setCsvData] = useStateCallback<Record<string, unknown>[]>([]);
+	const csvLink = useRef<CSVLink & HTMLAnchorElement & { link: HTMLAnchorElement }>(null);
+
+	const handleSelectAll = (): void => {
+		if (bounties && selectedBounties.length < bounties.length) {
+			setSelectedBounties(bounties.map(({ _id }) => _id));
+		}
+	};
+
+	const handleClearAll = (): void => {
+		setSelectedBounties([]);
+	};
+
+	const handleCSV = (): void => {
+		if (bounties && csvLink.current) {
+			const getCsvData = bounties
+				.filter(({ _id }) => selectedBounties.includes(_id))
+				.map(MiscUtils.csvEncode);
+				
+			setCsvData(getCsvData, () => {
+				csvLink?.current?.link.click();
+			});
+		}
+	};
+
+	return (
+		<Stack justify="space-between" direction="row" mt={1}>
+			<Button
+				p={2}
+				disabled={!bounties || selectedBounties.length == bounties.length}
+				size="xs"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				onClick={handleSelectAll}
+			>
+				Select All
+			</Button>
+			<Button
+				p={2}
+				disabled={!bounties || selectedBounties.length == 0}
+				size="xs"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				onClick={handleClearAll}
+			>
+				Clear All
+			</Button>
+			<Button
+				p={2}
+				disabled={!bounties || selectedBounties.length == 0}
+				size="xs"
+				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				onClick={handleCSV}
+			>
+				Export
+			</Button>
+			<CSVLink
+			  	data={csvData}
+				headers={BOUNTY_EXPORT_ITEMS}
+				filename='bounties.csv'
+				className='hidden'
+				ref={csvLink}
+				target='_blank'
+			/>
+		</Stack>
+	);
+});
 
 type UsePaginatedBountiesResult = { paginatedBounties: BountyCollection[], noResults: boolean }
 const usePaginatedBounties = (bounties: BountyCollection[] | undefined, page: number, filters: FilterParams): UsePaginatedBountiesResult => {
@@ -45,25 +154,31 @@ const usePaginatedBounties = (bounties: BountyCollection[] | undefined, page: nu
 	}, [bounties, page, PAGE_SIZE, filters.status, filters.search]);
 };
 
+
 const Bounties = (): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
 	const router = useRouter();
 	const [page, setPage] = useState(0);
 	const [filters, setFilters] = useState<FilterParams>(baseFilters);
-
+	const [selectedBounties, setSelectedBounties] = useState<string[]>([]);
+	
 	// Watch this only runs on page load once the params are instantiated
 	// otherwise you will lose filers and/or create inf loop
 	// only render the saved search the first time, to prevent loops
 	const firstLoad = useRef(true);
+	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
+
 	useEffect(() => {
-		if (router.isReady && firstLoad.current && filtersDefined(router.query)) {
-			const newFilters = getFiltersFromUrl(router.query);
+		if (!router.isReady) return;
+
+		const asPathWithoutLeadinggSlash = router.asPath.replace(/\//, '');
+		if ((firstLoad.current && filtersDefined(router.query)) ||
+			(!firstLoad.current && Object.keys(router.query).length > 0 && asPathWithoutLeadinggSlash !== urlQuery)) {
+			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}
 	}, [router.isReady, router.query, firstLoad]);
-
-	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -76,33 +191,46 @@ const Bounties = (): JSX.Element => {
 
 	useEffect(() => {
 		setPage(0);
-	}, [filters.search, filters.gte, filters.lte, filters.sortBy, filters?.claimedBy, filters?.createdBy]);
+	}, [filters]);
 
 	return (
 		<>
 			<Stack
 				direction={{ base: 'column', lg: 'row' }}
-				align="top"
-				fontSize="sm"
-				fontWeight="600"
-				gridGap="4"
 			>
-				<Filters
-					filters={filters}
-					setFilters={setFilters}
-				/>
-				{isError || noResults
-					? <FilterResultPlaceholder message={'No Results'} />
-					: isLoading
-						? <FilterResultPlaceholder message={'Loading'} />
-						: <BountyAccordion bounties={paginatedBounties} />
-				}
+				<SavedQueriesMenu/>
+				<Stack
+					direction={{ base: 'column' }}
+					align="center"
+					fontSize="sm"
+					fontWeight="600"
+					gridGap="4"
+					width={'100%'}
+				>
+					<VStack
+						gridGap="1px"
+						width={'100%'}
+					>
+						<Filters
+							filters={filters}
+							setFilters={setFilters}
+						/>
+						<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					</VStack>
+
+					{isError || noResults
+						? <FilterResultPlaceholder message={'No Results'} />
+						: isLoading
+							? <FilterResultPlaceholder message={'Loading'} />
+							: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					}
+					<BountyPaginate
+						page={page}
+						setPage={setPage}
+						maxPages={maxPages(bounties)}
+					/>
+				</Stack>
 			</Stack>
-			<BountyPaginate
-				page={page}
-				setPage={setPage}
-				maxPages={maxPages(bounties)}
-			/>
 		</>
 	);
 };

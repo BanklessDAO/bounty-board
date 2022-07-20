@@ -1,0 +1,38 @@
+.md-desc {
+    font-weight: 400;
+}
+
+.md-desc blockquote {
+    border-left: 4px solid #fafafa1a;
+    padding: 0 0 0 1rem;
+}
+
+.md-desc code {
+    background-color: #fafafa1a;
+    border-radius: 3px;
+    padding: 1px 4px;
+}
+
+.md-desc a {
+    color: #00bcd4;
+}
+
+.md-desc a:hover {
+    color: #00bcd4;
+    text-decoration: underline;
+}
+
+.switch .single-head {
+    display: none;
+}
+
+@media screen and (max-width: 767px) {
+    .switch .single-head {
+        display: block;
+    }
+
+    .switch .multi-head {
+        display: none;
+    }
+}
+    
