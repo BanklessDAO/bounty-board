@@ -9,6 +9,7 @@ import SEO from '../../next-seo.config';
 import GlobalStyle from '../styles';
 import '../styles/css/nprogress.css';
 import '../styles/css/date-picker.css';
+import '../styles/css/bounty.css';
 import { CustomerContext } from '../context/CustomerContext';
 import { useTheme } from '@app/hooks/useTheme';
 import { useCustomer } from '@app/hooks/useCustomer';
