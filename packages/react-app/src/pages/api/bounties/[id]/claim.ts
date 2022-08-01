@@ -14,8 +14,9 @@ export const handler = async (
 	req: NextApiRequest,
 	res: NextApiResponse
 ): Promise<void> => {
-
-	const { query: { id } } = req;
+	const {
+		query: { id },
+	} = req;
 	if (typeof id !== 'string') {
 		return res.status(400).json({
 			success: false,
@@ -31,7 +32,6 @@ export const handler = async (
 	}
 
 	switch (req.method) {
-
 	case 'PATCH':
 		/* Edit a model by its ID */
 		try {
@@ -43,7 +43,10 @@ export const handler = async (
 					bountyStatus: bounty.status,
 				});
 			}
-			const updateBounty = await service.editBounty({ bounty, body: req.body });
+			const updateBounty = await service.editBounty({
+				bounty,
+				body: req.body,
+			});
 			res.status(200).json({ success: true, data: updateBounty });
 		} catch (error) {
 			internalServerError(res);
@@ -55,4 +58,8 @@ export const handler = async (
 	}
 };
 
-export default middlewares({ schema: BountyClaimSchema, handler, restrictions });
+export default middlewares({
+	schema: BountyClaimSchema,
+	handler,
+	restrictions,
+});

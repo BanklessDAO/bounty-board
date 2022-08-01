@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 
-export const useDebounce = <T>(value : T, timeout : number, immediate? : boolean) : T => {
-	const [state, setState] = useState < T > (value);
-	const handler = useRef < ReturnType < typeof setTimeout > | undefined > (undefined);
+export const useDebounce = <T>(
+	value: T,
+	timeout: number,
+	immediate?: boolean
+): T => {
+	const [state, setState] = useState<T>(value);
+	const handler = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
 	useEffect(() => {
 		if (handler.current) {

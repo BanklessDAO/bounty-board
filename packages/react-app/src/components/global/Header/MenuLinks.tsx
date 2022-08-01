@@ -13,9 +13,9 @@ import { toggleDiscordSignIn } from '../../../services/discord.service';
 import DiscordBttn from './DiscordBttn';
 
 interface MenuItemProps {
-	children?: React.ReactNode;
-	isLast?: boolean;
-	newTab?: boolean;
+  children?: React.ReactNode;
+  isLast?: boolean;
+  newTab?: boolean;
 }
 
 const MenuItem = ({
@@ -29,7 +29,6 @@ const MenuItem = ({
 		</Text>
 	</AccessibleLink>
 );
-
 
 export const tokenFetcher = (url: string, token: string): any =>
 	axios

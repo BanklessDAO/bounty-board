@@ -22,10 +22,19 @@ const asyncSome = async (arr: Array<any>, predicate: (arg0: any) => any) => {
 	return false;
 };
 
-const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid, markPaidMessage } :
-	{ isOpen: boolean, onClose: () => void, bounties: BountyCollection[] | undefined, setMarkedSomePaid : SetState<boolean>, markPaidMessage: string
+const MarkPaidModal = ({
+	isOpen,
+	onClose,
+	bounties,
+	setMarkedSomePaid,
+	markPaidMessage,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  bounties: BountyCollection[] | undefined;
+  setMarkedSomePaid: SetState<boolean>;
+  markPaidMessage: string;
 }) => {
-
 	const [error, setError] = useState(false);
 
 	const handleMarkPaid = async () => {
@@ -35,51 +44,54 @@ const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid, markPaidM
 
 	const markBountiesPaid = async () => {
 		let markedSome = false;
-		bounties && await asyncSome(bounties, async (bounty: BountyCollection) => {
-			bounty.paidStatus = PAID_STATUS.PAID;
-			try {
-				const res = await axios.patch<void, any, BountyCollection>(
-					`api/bounties/${bounty._id}?customerId=${bounty.customerId}&force=true`, bounty
-				);
-				if (res.status !== 200)	{
-					setError(true);
-					return true;
-				}
-				markedSome = true;
-			} catch (e) {
-				console.error(e);
-				setError(true);
-				return true;
-			}
-			return false;
-		});
+		bounties &&
+      (await asyncSome(bounties, async (bounty: BountyCollection) => {
+      	bounty.paidStatus = PAID_STATUS.PAID;
+      	try {
+      		const res = await axios.patch<void, any, BountyCollection>(
+      			`api/bounties/${bounty._id}?customerId=${bounty.customerId}&force=true`,
+      			bounty
+      		);
+      		if (res.status !== 200) {
+      			setError(true);
+      			return true;
+      		}
+      		markedSome = true;
+      	} catch (e) {
+      		console.error(e);
+      		setError(true);
+      		return true;
+      	}
+      	return false;
+      }));
 		if (markedSome) setMarkedSomePaid(true);
 	};
 
-
 	return (
-		<Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered >
+		<Modal
+			closeOnOverlayClick={false}
+			isOpen={isOpen}
+			onClose={onClose}
+			isCentered
+		>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>Mark Paid?</ModalHeader>
-				{
-					error &&
-				<Alert status='error'>
-					<AlertIcon />
-					There was a problem marking the bounties as paid
-				</Alert>
-				}
+				{error && (
+					<Alert status="error">
+						<AlertIcon />
+                       There was a problem marking the bounties as paid
+					</Alert>
+				)}
 				<ModalCloseButton />
-				<ModalBody>
-				Export completed. {markPaidMessage}
-				</ModalBody>
+				<ModalBody>Export completed. {markPaidMessage}</ModalBody>
 
 				<ModalFooter>
-					<Button colorScheme='blue' mr={3} onClick={handleMarkPaid}>
-					Yes
+					<Button colorScheme="blue" mr={3} onClick={handleMarkPaid}>
+                      Yes
 					</Button>
-					<Button variant='ghost' onClick={onClose}>
-					No
+					<Button variant="ghost" onClick={onClose}>
+                       No
 					</Button>
 				</ModalFooter>
 			</ModalContent>
@@ -88,4 +100,3 @@ const MarkPaidModal = ({ isOpen, onClose, bounties, setMarkedSomePaid, markPaidM
 };
 
 export default MarkPaidModal;
-

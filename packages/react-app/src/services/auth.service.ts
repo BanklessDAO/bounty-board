@@ -27,10 +27,13 @@ export const getRolesForUserInGuild = async (
 	customerId: string
 ): Promise<string[]> => {
 	/**
-	* Get discord roleIds (numeric) for this user (accessToken) in this guild (customerId)
-	*/
+   * Get discord roleIds (numeric) for this user (accessToken) in this guild (customerId)
+   */
 
-	const discordUserStats = await discordService.getDiscordUserInGuild(accessToken, customerId);
+	const discordUserStats = await discordService.getDiscordUserInGuild(
+		accessToken,
+		customerId
+	);
 	return discordUserStats.data.roles;
 };
 
@@ -38,10 +41,7 @@ export const createSessionHash = (session: SessionWithToken): string => {
 	// expires is regenerated every time but lasts for much longer than our cache
 	const { user, accessToken } = session;
 	const sessionString = JSON.stringify([user, accessToken]);
-	return crypto
-		.createHash('sha256')
-		.update(sessionString)
-		.digest('base64');
+	return crypto.createHash('sha256').update(sessionString).digest('base64');
 };
 
 export const cacheExpired = (cache: IRoleCache): boolean => {
@@ -54,7 +54,11 @@ export const cacheValid = (cache: IRoleCache, sessionHash: string): boolean => {
 	return notExpired && unchangedSessionHash;
 };
 
-export const generateCacheObject = (sessionHash: string, roles: Role[], customerId: string): IRoleCache => ({
+export const generateCacheObject = (
+	sessionHash: string,
+	roles: Role[],
+	customerId: string
+): IRoleCache => ({
 	createdAt: new Date().getTime(),
 	roles,
 	sessionHash,
@@ -63,11 +67,11 @@ export const generateCacheObject = (sessionHash: string, roles: Role[], customer
 });
 
 type CreateCacheProps = {
-	cache: Document<IRoleCache> | null,
-	sessionHash: string,
-	token: string,
-	customerId: string,
-}
+  cache: Document<IRoleCache> | null;
+  sessionHash: string;
+  token: string;
+  customerId: string;
+};
 
 export const createCache = async ({
 	cache,
@@ -82,7 +86,10 @@ export const createCache = async ({
 	return newCache;
 };
 
-export const getPermissions = async (accessToken: string, customerId: string): Promise<Role[]> => {
+export const getPermissions = async (
+	accessToken: string,
+	customerId: string
+): Promise<Role[]> => {
 	/**
    * Returns a list of permissions (aka roles) for the current user's external roles.
    * Uses the external roles => permissions (roles) mapping in the customer record.
@@ -100,7 +107,10 @@ export const getPermissions = async (accessToken: string, customerId: string): P
 		return [];
 	}
 
-	const externalRolesForUser = await getRolesForUserInGuild(accessToken, customerId);
+	const externalRolesForUser = await getRolesForUserInGuild(
+		accessToken,
+		customerId
+	);
 
 	if (customer.externalRoleMap.adminExternalRoles) {
 		// All roles for this customer are admin
@@ -108,7 +118,11 @@ export const getPermissions = async (accessToken: string, customerId: string): P
 			return ['admin'];
 		}
 		// User has an external role listed in our admin group
-		if (externalRolesForUser.filter(exRole => customer.externalRoleMap?.adminExternalRoles?.includes(exRole)).length > 0) {
+		if (
+			externalRolesForUser.filter((exRole) =>
+				customer.externalRoleMap?.adminExternalRoles?.includes(exRole)
+			).length > 0
+		) {
 			return ['admin'];
 		}
 	}
@@ -117,14 +131,18 @@ export const getPermissions = async (accessToken: string, customerId: string): P
 
 	if (customer.externalRoleMap.baseExternalRoles) {
 		// User has an external role that covers the base roles
-		if (externalRolesForUser.filter(exRole => customer.externalRoleMap?.baseExternalRoles?.includes(exRole)).length > 0) {
+		if (
+			externalRolesForUser.filter((exRole) =>
+				customer.externalRoleMap?.baseExternalRoles?.includes(exRole)
+			).length > 0
+		) {
 			roles.push(...baseRoles);
 		}
 	}
 
 	if (customer.externalRoleMap.customExternalRoleMap) {
 		// Get the list of roles from the custom map
-		customer.externalRoleMap.customExternalRoleMap.forEach(map => {
+		customer.externalRoleMap.customExternalRoleMap.forEach((map) => {
 			if (externalRolesForUser.includes(map.externalRole)) {
 				roles.push(...map.roles);
 			}
@@ -134,7 +152,11 @@ export const getPermissions = async (accessToken: string, customerId: string): P
 	return roles;
 };
 
-export const getPermissionsCached = async (session: SessionWithToken, customerId: string, flush = true): Promise<Role[]> => {
+export const getPermissionsCached = async (
+	session: SessionWithToken,
+	customerId: string,
+	flush = true
+): Promise<Role[]> => {
 	if (flush) flushCache();
 	if (customerId === 'undefined') {
 		throw Error('Passed a string of "undefined" as the customer ID');
@@ -144,16 +166,21 @@ export const getPermissionsCached = async (session: SessionWithToken, customerId
 	if (cache && cacheValid(cache, sessionHash)) {
 		return cache.roles;
 	} else {
-		const newCache = await createCache({ cache, sessionHash, token: session.accessToken, customerId });
+		const newCache = await createCache({
+			cache,
+			sessionHash,
+			token: session.accessToken,
+			customerId,
+		});
 		return newCache.roles;
 	}
 };
 
 const flushCache = async (): Promise<void> => {
 	/**
-	 * Periodically call to remove records older than 10 minutes.
-	 * Keep as synchronous method in order not to impact performance
-	 */
-	const TenMinsAgo = new Date().getTime() - (2 * FIVE_MINUTES);
+   * Periodically call to remove records older than 10 minutes.
+   * Keep as synchronous method in order not to impact performance
+   */
+	const TenMinsAgo = new Date().getTime() - 2 * FIVE_MINUTES;
 	await RoleCache.deleteMany({ createdAt: { $lte: TenMinsAgo } });
 };

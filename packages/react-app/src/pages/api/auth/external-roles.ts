@@ -9,11 +9,10 @@ const handler = async (
 	req: NextApiRequest,
 	res: NextApiResponse
 ): Promise<void> => {
-
 	switch (req.method) {
 	case 'GET': {
 		try {
-			const session = await getSession({ req }) as SessionWithToken ;
+			const session = (await getSession({ req })) as SessionWithToken;
 			const { customerId } = req.query;
 			if (!customerId || typeof customerId !== 'string') {
 				return res.status(400).json({
@@ -22,7 +21,10 @@ const handler = async (
 				});
 			}
 			if (session && session.accessToken) {
-				const externalRoles = await service.getRolesForUserInGuild(session.accessToken, customerId);
+				const externalRoles = await service.getRolesForUserInGuild(
+					session.accessToken,
+					customerId
+				);
 				console.log(`External roles: ${externalRoles}`);
 				res.status(200).json({
 					success: true,
@@ -31,13 +33,18 @@ const handler = async (
 					},
 				});
 			} else {
-				res.status(200).json({ success: 200, data: {
-					roles: [],
-					notes: 'No session found',
-				} });
+				res.status(200).json({
+					success: 200,
+					data: {
+						roles: [],
+						notes: 'No session found',
+					},
+				});
 			}
 		} catch (error: any) {
-			res.status(error.status ?? 400).json({ success: false, error: error?.response?.statusText });
+			res
+				.status(error.status ?? 400)
+				.json({ success: false, error: error?.response?.statusText });
 		}
 		break;
 	}
@@ -49,4 +56,3 @@ const handler = async (
 };
 
 export default handler;
-

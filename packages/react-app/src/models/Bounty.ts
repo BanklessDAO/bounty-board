@@ -1,14 +1,7 @@
 import mongoose from 'mongoose';
 import { SchemaToInterface, ToInterface } from '../types/Models';
 import { PaginateModel } from '../types/Paginate';
-import {
-	string,
-	number,
-	object,
-	array,
-	mixed,
-	boolean,
-} from 'yup';
+import { string, number, object, array, mixed, boolean } from 'yup';
 
 // Have to use ignore here due to some strange error with typescript not picking
 // up the declaration file, unless you change the name every deploy
@@ -18,8 +11,16 @@ import BOUNTYSTATUS from '@app/constants/bountyStatus';
 import PAIDSTATUS from '@app/constants/paidStatus';
 import ACTIVITY, { CLIENT } from '@app/constants/activity';
 
-type RequiredForPostProps = { method: 'POST' | 'PATCH', schema: any, isObject?: boolean };
-const requiredForPost = ({ method, schema, isObject }: RequiredForPostProps) => {
+type RequiredForPostProps = {
+  method: 'POST' | 'PATCH';
+  schema: any;
+  isObject?: boolean;
+};
+const requiredForPost = ({
+	method,
+	schema,
+	isObject,
+}: RequiredForPostProps) => {
 	if (method === 'POST') {
 		return schema.defined();
 	}
@@ -32,7 +33,6 @@ const requiredForPost = ({ method, schema, isObject }: RequiredForPostProps) => 
 };
 
 const aggregatePlugin = (schema: any, options: any) => {
-
 	const aggregateFn = function(this: any, params: any) {
 		if (!this.collection) {
 			throw new Error('collection property not found');
@@ -48,12 +48,13 @@ const aggregatePlugin = (schema: any, options: any) => {
 	}
 };
 
-
-type ParamsType = { discordId: string | undefined, discordHandle: string | undefined } | undefined;
+type ParamsType =
+  | { discordId: string | undefined; discordHandle: string | undefined }
+  | undefined;
 const bothRequiredIfOneRequired = (params: ParamsType): boolean => {
 	/**
-	 * If discord id is specified, ensure discord handle is also specified
-	 */
+   * If discord id is specified, ensure discord handle is also specified
+   */
 	if (params && (params.discordHandle || params.discordId)) {
 		const { discordId, discordHandle } = params;
 		return !!discordId && !!discordHandle;
@@ -65,25 +66,33 @@ export const DiscordUser = object({
 	discordId: string().optional(),
 	discordHandle: string().optional(),
 	iconUrl: string().optional().nullable(),
-})
-	.test(
-		'is-optional',
-		'${path}.discordId or ${path}.discordHandle is required',
-		(params) => bothRequiredIfOneRequired(params ? { discordId: params.discordHandle, discordHandle: params.discordId } : undefined),
-	);
+}).test(
+	'is-optional',
+	'${path}.discordId or ${path}.discordHandle is required',
+	(params) =>
+		bothRequiredIfOneRequired(
+			params
+				? { discordId: params.discordHandle, discordHandle: params.discordId }
+				: undefined
+		)
+);
 
 /**
- * Nested objects in yup behave strangely. We require a separate 
- * object to conditionally require the fields inside of it 
+ * Nested objects in yup behave strangely. We require a separate
+ * object to conditionally require the fields inside of it
  */
 export const RequiredDiscordUser = object({
-	discordId: string().optional().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	discordHandle: string().optional().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	discordId: string()
+		.optional()
+		.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	discordHandle: string()
+		.optional()
+		.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	iconUrl: string().optional().nullable(),
 }).test(
 	'is-optional',
 	'Missing one of [discordId, discordHandle] in ${path}',
-	(params) => bothRequiredIfOneRequired(params),
+	(params) => bothRequiredIfOneRequired(params)
 );
 
 export const RoleObject = object({
@@ -96,29 +105,39 @@ export const Applicant = object({
 	discordId: string().optional(),
 	discordHandle: string().optional(),
 	pitch: string().optional(),
-})
-	.test(
-		'is-optional',
-		'${path}.discordId or ${path}.discordHandle is required',
-		(params) => bothRequiredIfOneRequired(params ? { discordId: params.discordHandle, discordHandle: params.discordId } : undefined),
-	);
-
+}).test(
+	'is-optional',
+	'${path}.discordId or ${path}.discordHandle is required',
+	(params) =>
+		bothRequiredIfOneRequired(
+			params
+				? { discordId: params.discordHandle, discordHandle: params.discordId }
+				: undefined
+		)
+);
 
 export const Reward = object({
-	amount: number().min(0).when('$method', (method, schema) => requiredForPost({ method, schema })),
-	currency: string().default('BANK').when('$method', (method, schema) => requiredForPost({ method, schema })),
-	scale: number().default(0).when('$method', (method, schema) => requiredForPost({ method, schema })),
-	amountWithoutScale: number().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	amount: number()
+		.min(0)
+		.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	currency: string()
+		.default('BANK')
+		.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	scale: number()
+		.default(0)
+		.when('$method', (method, schema) => requiredForPost({ method, schema })),
+	amountWithoutScale: number().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
 }).test(
 	'is-optional',
 	'Missing one of [amount, currency, scale, amountWithoutScale] in ${path}.',
 	(params): boolean => {
 		if (params) {
 			const { amount, currency, scale } = params;
-			const allDefined = (!!amount || amount === 0)
-				&& (!!scale || scale === 0)
-				&& !!currency;
-				// && (!!amountWithoutScale || amountWithoutScale === 0) // Removed for bot compatibility
+			const allDefined =
+        (!!amount || amount === 0) && (!!scale || scale === 0) && !!currency;
+			// && (!!amountWithoutScale || amountWithoutScale === 0) // Removed for bot compatibility
 
 			return allDefined;
 		}
@@ -149,13 +168,27 @@ export const MessageInfo = object({
 
 export const BountySchema = object({
 	_id: string().optional(),
-	title: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	description: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	criteria: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	customerId: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	status: status.when('$method', (method, schema) => requiredForPost({ method, schema })),
-	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
-	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	title: string().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
+	description: string().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
+	criteria: string().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
+	customerId: string().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
+	status: status.when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
+	dueAt: string().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
+	reward: Reward.when('$method', (method, schema) =>
+		requiredForPost({ method, schema, isObject: true })
+	),
 	season: string().optional(),
 
 	paidStatus: paidStatus.optional(),
@@ -188,13 +221,16 @@ export const BountySchema = object({
 	resolutionNote: string().optional().nullable(),
 	owedTo: DiscordUser.optional().default(undefined),
 
-
-	createdAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
+	createdAt: string().when('$method', (method, schema) =>
+		requiredForPost({ method, schema })
+	),
 	claimedAt: string().optional(),
 	submittedAt: string().optional(),
 	reviewedAt: string().optional(),
 
-	createdBy: RequiredDiscordUser.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	createdBy: RequiredDiscordUser.when('$method', (method, schema) =>
+		requiredForPost({ method, schema, isObject: true })
+	),
 	claimedBy: DiscordUser.optional().default(undefined),
 	submittedBy: DiscordUser.optional().default(undefined),
 	reviewedBy: DiscordUser.optional().default(undefined),
@@ -391,5 +427,5 @@ export const BountyBoardSchema = new mongoose.Schema({
 
 BountyBoardSchema.plugin(aggregatePlugin);
 
-export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
-	mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);
+export default (mongoose.models.Bounty as PaginateModel<BountyCollection>) ||
+  mongoose.model<BountyCollection>('Bounty', BountyBoardSchema);

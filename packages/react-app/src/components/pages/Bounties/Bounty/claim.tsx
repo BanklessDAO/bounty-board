@@ -1,11 +1,39 @@
 import { useUser } from '@app/hooks/useUser';
-import { ActivityHistoryItem, BountyClaimCollection, BountyCollection, StatusHistoryItem } from '@app/models/Bounty';
+import {
+	ActivityHistoryItem,
+	BountyClaimCollection,
+	BountyCollection,
+	StatusHistoryItem,
+} from '@app/models/Bounty';
 import axios from '@app/utils/AxiosUtils';
-import { Alert, AlertIcon, Button, Box, Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, Tooltip, useColorMode, useDisclosure } from '@chakra-ui/react';
+import {
+	Alert,
+	AlertIcon,
+	Button,
+	Box,
+	Flex,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
+	Text,
+	Textarea,
+	Tooltip,
+	useColorMode,
+	useDisclosure,
+} from '@chakra-ui/react';
 // import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useContext } from 'react';
-import { claimedBy, isClaimableByUser, newActivityHistory, newStatusHistory } from '@app/utils/formUtils';
+import {
+	claimedBy,
+	isClaimableByUser,
+	newActivityHistory,
+	newStatusHistory,
+} from '@app/utils/formUtils';
 import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
@@ -26,21 +54,27 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const [error, setError] = useState(false);
 
 	const confirmBounty = async () => {
-
 		if (message && user) {
 			const claimData: BountyClaimCollection = {
 				claimedBy: claimedBy(user),
 				submissionNotes: message,
 				status: 'In-Progress',
-				activityHistory: newActivityHistory(bounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
-				statusHistory: newStatusHistory(bounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
+				activityHistory: newActivityHistory(
+                   bounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
+				statusHistory: newStatusHistory(
+                    bounty.statusHistory as StatusHistoryItem[],
+                    BOUNTY_STATUS.IN_PROGRESS
+				),
 			};
 			try {
 				setClaiming(true, () => undefined);
 				const res = await axios.patch<void, any, BountyClaimCollection>(
-					`api/bounties/${bounty._id}/claim?customerId=${bounty.customerId}`, claimData
+					`api/bounties/${bounty._id}/claim?customerId=${bounty.customerId}`,
+					claimData
 				);
-				if (res.status === 200)	{
+				if (res.status === 200) {
 					const bountyPageRoute = '/' + bounty._id;
 					const updatedBounty = { ...bounty, ...claimData };
 					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
@@ -55,56 +89,58 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 			setError(true);
 		}
 	};
-	
+
 	return (
 		<>
-	  		{
-				  // TODO This is obsolete...
-				bounty.discordMessageId
+			{
+				// TODO This is obsolete...
+				bounty.discordMessageId ? (
 				// If we have discord message info for the bounty, the user is taken into discord to claim
-					? <ClaimDiscord discordMessageId={bounty.discordMessageId} />
+					<ClaimDiscord discordMessageId={bounty.discordMessageId} />
+				) : (
 				// else, they must use the web form variant
-			 	: <ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
+					<ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
+				)
 			}
 			<Modal onClose={onClose} isOpen={isOpen} isCentered>
-		  		<ModalOverlay />
-		  		<ModalContent>
+				<ModalOverlay />
+				<ModalContent>
 					<ModalHeader>Claim This Bounty</ModalHeader>
-					{
-						claiming &&
-							<Alert status='success'>
-    							<AlertIcon />
-								Bounty Claimed!
-  							</Alert>
-					}
-					{
-						error &&
-						<Alert status='error'>
+					{claiming && (
+						<Alert status="success">
 							<AlertIcon />
-							There was a problem claiming the bounty
-					  	</Alert>
-					}
+                            Bounty Claimed!
+						</Alert>
+					)}
+					{error && (
+						<Alert status="error">
+							<AlertIcon />
+                           There was a problem claiming the bounty
+						</Alert>
+					)}
 					<ModalCloseButton />
-					<ModalBody
-						flexDirection="column"
-						justifyContent="space-evenly"
-					>
+					<ModalBody flexDirection="column" justifyContent="space-evenly">
 						<Flex mb="5">
-					Add a message to the bounty creator, then hit 'Confirm' to send and claim the bounty.
+                        Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
+                        and claim the bounty.
 						</Flex>
-						<Textarea placeholder='Send a message' onChange={e => setMessage(e.target.value)} />
+						<Textarea
+							placeholder="Send a message"
+							onChange={(e) => setMessage(e.target.value)}
+						/>
 					</ModalBody>
 					<ModalFooter justifyContent="start">
-						<Button transition="background 100ms linear"
+						<Button
+							transition="background 100ms linear"
 							disabled={!message || bounty.status !== 'Open'}
 							onClick={confirmBounty}
 							isLoading={claiming}
-							loadingText='Submitting'
+							loadingText="Submitting"
 							bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 						>
-						Confirm
+                          Confirm
 						</Button>
-			  		<Button onClick={onClose}>Close</Button>
+						<Button onClick={onClose}>Close</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
@@ -112,8 +148,14 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	);
 };
 
-export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string }): JSX.Element => {
-	const { customer: { customerId, bountyChannel } } = useContext(CustomerContext);
+export const ClaimDiscord = ({
+	discordMessageId,
+}: {
+  discordMessageId: string;
+}): JSX.Element => {
+	const {
+		customer: { customerId, bountyChannel },
+	} = useContext(CustomerContext);
 	const url = `${baseUrl}/${customerId}/${bountyChannel}/${discordMessageId}`;
 	const { colorMode } = useColorMode();
 	return (
@@ -121,15 +163,24 @@ export const ClaimDiscord = ({ discordMessageId }: { discordMessageId: string })
 			<Button
 				transition="background 100ms linear"
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				my={2} size="sm"
+				my={2}
+				size="sm"
 			>
-				Claim It
+              Claim It
 			</Button>
 		</AccessibleLink>
 	);
 };
 
-export const ClaimWeb = ({ user, bounty, onOpen }: { user: APIUser | undefined, bounty: BountyCollection, onOpen: () => void }): JSX.Element => {
+export const ClaimWeb = ({
+	user,
+	bounty,
+	onOpen,
+}: {
+  user: APIUser | undefined;
+  bounty: BountyCollection;
+  onOpen: () => void;
+}): JSX.Element => {
 	const { colorMode } = useColorMode();
 	let canClaim = useRequiredRoles(['claim-bounties', 'admin']);
 	let helpMessage = 'Claim this bounty	';
@@ -140,25 +191,26 @@ export const ClaimWeb = ({ user, bounty, onOpen }: { user: APIUser | undefined, 
 			helpMessage = reason;
 		}
 	} else {
-		helpMessage = 'You need to sign in and have the correct permissions to claim this bounty';
+		helpMessage =
+      'You need to sign in and have the correct permissions to claim this bounty';
 	}
 	return (
 		<Tooltip
 			hasArrow
 			label={helpMessage}
 			shouldWrapChildren
-			mt='3'
+			mt="3"
 			display={canClaim ? 'hidden' : 'inline-block'}
 		>
 			<Box p={2}>
 				<Button
 					transition="background 100ms linear"
-					aria-label='claim-button'
+					aria-label="claim-button"
 					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 					onClick={onOpen}
 					disabled={!canClaim}
 				>
-				Claim It
+                 Claim It
 				</Button>
 			</Box>
 			<Text

@@ -129,8 +129,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 				<Textarea
 					id="criteria"
 					placeholder="criteria"
-					{...register('criteria')}
-				/>
+					{...register('criteria')} />
 				<FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
 			</FormControl>
 			<FormControl isInvalid={errors.rewardAmount} mb={5}>
@@ -138,13 +137,12 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 				<Input
 					id="rewardAmount"
 					placeholder="amount"
-					{...register('rewardAmount')}
-				/>
+					{...register('rewardAmount')} />
 				<FormErrorMessage>{errors.rewardAmount?.message}</FormErrorMessage>
 			</FormControl>
 
 			<Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-        Submit
+               Submit
 			</Button>
 		</form>
 	);

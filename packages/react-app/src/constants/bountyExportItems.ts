@@ -1,17 +1,24 @@
 import { BountyCollection } from '@app/models/Bounty';
 
-type NestedDotNotationKeys<T, K extends keyof T & string> = `${K}.${Extract<keyof T[K], string>}`;
+type NestedDotNotationKeys<T, K extends keyof T & string> = `${K}.${Extract<
+  keyof T[K],
+  string
+>}`;
 
 type RewardKeys = NestedDotNotationKeys<BountyCollection, 'reward'>;
 type CreatedByKeys = NestedDotNotationKeys<BountyCollection, 'createdBy'>;
 type ClaimedByKeys = NestedDotNotationKeys<BountyCollection, 'claimedBy'>;
 
-type BountyExportKeys = keyof Omit<BountyCollection, 'reward' | 'createdBy' | 'claimedBy'> | RewardKeys | CreatedByKeys | ClaimedByKeys;
+type BountyExportKeys =
+  | keyof Omit<BountyCollection, 'reward' | 'createdBy' | 'claimedBy'>
+  | RewardKeys
+  | CreatedByKeys
+  | ClaimedByKeys;
 
 type BountyExportItems = Array<{
-	label: string;
-	key: BountyExportKeys
-}>
+  label: string;
+  key: BountyExportKeys;
+}>;
 
 export const BOUNTY_EXPORT_ITEMS: BountyExportItems = [
 	{ label: 'ID', key: '_id' },

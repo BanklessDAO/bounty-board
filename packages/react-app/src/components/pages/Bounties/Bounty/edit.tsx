@@ -19,22 +19,24 @@ const useShowEditBountyButton = (bounty: BountyCollection): boolean => {
 	return show;
 };
 
-export const BountyEditButton: React.FC<{ bounty: BountyCollection }> = ({ bounty }) => {
+export const BountyEditButton: React.FC<{ bounty: BountyCollection }> = ({
+	bounty,
+}) => {
 	const { colorMode } = useColorMode();
 	const show = useShowEditBountyButton(bounty);
 	return (
 		<>
-			{
-				show &&
+			{show && (
 				<RestrictedTo roles={['edit-own-bounty', 'admin']}>
 					<Box p={2}>
 						<Button
-							borderColor={colorMode === 'dark' ? 'primary.700' : 'primary.300' }
-							onClick={() => router.push(`/${bounty._id}/edit`)}
-						>Edit</Button>
+							borderColor={colorMode === 'dark' ? 'primary.700' : 'primary.300'}
+							onClick={() => router.push(`/${bounty._id}/edit`)} >
+                            Edit
+						</Button>
 					</Box>
 				</RestrictedTo>
-			}
+			)}
 		</>
 	);
 };

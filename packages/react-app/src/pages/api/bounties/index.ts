@@ -54,4 +54,3 @@ const handler = async (
 };
 
 export default middlewares({ schema: BountySchema, handler, restrictions });
-

@@ -29,7 +29,11 @@ Router.events.on('routeChangeError', function() {
 
 const MotionBox = motion(Box);
 
-function MyApp({ Component, pageProps: { session, ...pageProps }, router }: AppProps): JSX.Element {
+function MyApp({
+	Component,
+	pageProps: { session, ...pageProps },
+	router,
+}: AppProps): JSX.Element {
 	const { id, customerKey } = router.query;
 	const { customer, setCustomer } = useCustomer(id, customerKey);
 

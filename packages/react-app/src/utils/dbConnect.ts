@@ -36,9 +36,11 @@ async function dbConnect(): Promise<Mongoose> {
 			useCreateIndex: true,
 		};
 
-		cached.promise = await mongoose.connect(MONGODB_URI, opts).then((mongooseConnect: Mongoose) => {
-			return mongooseConnect;
-		});
+		cached.promise = await mongoose
+			.connect(MONGODB_URI, opts)
+			.then((mongooseConnect: Mongoose) => {
+				return mongooseConnect;
+			});
 	}
 	cached.conn = await cached.promise;
 	return cached.conn;

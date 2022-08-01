@@ -23,6 +23,7 @@ describe('Testing the bounty API', () => {
 		...testBounty,
 		status: 'In-Progress',
 	};
+
 	let connection: Connection;
 	let req: MockRequest<NextApiRequest>;
 	let res: MockResponse<NextApiResponse>;
@@ -68,8 +69,14 @@ describe('Testing the bounty API', () => {
 				},
 				submissionNotes: 'Test',
 				status: 'In-Progress',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+                   testOpenBounty.statusHistory as StatusHistoryItem[],
+                   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(200);
@@ -87,21 +94,36 @@ describe('Testing the bounty API', () => {
 				},
 				submissionNotes: 'Test',
 				status: 'In-Progress',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+                   testOpenBounty.statusHistory as StatusHistoryItem[],
+                   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
-			expect(res._getJSONData().message).toEqual('Unable to edit bounty, as is not in an editable status');
+			expect(res._getJSONData().message).toEqual(
+				'Unable to edit bounty, as is not in an editable status'
+			);
 		});
 
 		it('Requires the status, claimant details and statusHistory passed', async () => {
 			req.body = {
 				submissionNotes: 'Test',
 				status: 'In-Progress',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+                   testOpenBounty.statusHistory as StatusHistoryItem[],
+                   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
+
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 
@@ -111,9 +133,16 @@ describe('Testing the bounty API', () => {
 					discordId: 'testid',
 				},
 				submissionNotes: 'Test',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+				   testOpenBounty.statusHistory as StatusHistoryItem[],
+				   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
+
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 
@@ -124,6 +153,7 @@ describe('Testing the bounty API', () => {
 				},
 				submissionNotes: 'Test',
 			};
+			
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 		});

@@ -22,13 +22,25 @@ export default class MyDocument extends NextDocument {
 				<Head>
 					<meta charSet="UTF-8" />
 					<meta property="og:type" content="website" />
-					<meta property="og:url" content="https://bountyboard.bankless.community" />
+					<meta
+						property="og:url"
+						content="https://bountyboard.bankless.community"
+					/>
 					<meta property="og:title" content="Bankless Bounty Board" />
-					<meta property="og:description" content="Find, claim, and post bounties." />
-					<meta property="og:image" content="https://bountyboard.bankless.community/preview.png" />
+					<meta
+						property="og:description"
+						content="Find, claim, and post bounties."
+					/>
+					<meta
+						property="og:image"
+						content="https://bountyboard.bankless.community/preview.png"
+					/>
 
 					<link rel="preconnect" href="https://fonts.gstatic.com" />
-					<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+					<link
+						href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+						rel="stylesheet"
+					/>
 				</Head>
 
 				<body>

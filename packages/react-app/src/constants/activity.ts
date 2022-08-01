@@ -20,6 +20,6 @@ export const CLIENT = {
 	BOUNTYBOT: 'bountybot',
 };
 
-export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>
+export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>;
 
 export default ACTIVITY;

@@ -16,8 +16,9 @@ export const handler = async (
 	req: NextApiRequest,
 	res: NextApiResponse
 ): Promise<void> => {
-
-	const { query: { id } } = req;
+	const {
+		query: { id },
+	} = req;
 
 	const forceUpdate = MiscUtils.boolFromReq(req, 'force');
 
@@ -41,7 +42,7 @@ export const handler = async (
 		res.status(200).json({ success: true, data: bounty });
 		break;
 
-	case 'PATCH' :
+	case 'PATCH':
 		/* Edit a model by its ID */
 		try {
 			if (!forceUpdate) {
@@ -54,13 +55,16 @@ export const handler = async (
 					});
 				}
 			}
-			const updateBounty = await service.editBounty({ bounty, body: req.body });
+			const updateBounty = await service.editBounty({
+				bounty,
+				body: req.body,
+			});
 			res.status(200).json({ success: true, data: updateBounty });
 		} catch (error) {
 			internalServerError(res);
 		}
 		break;
-		
+
 	case 'DELETE':
 		try {
 			await service.deleteBounty(id as string);

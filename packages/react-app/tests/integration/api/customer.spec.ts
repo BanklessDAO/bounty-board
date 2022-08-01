@@ -42,7 +42,9 @@ describe('Testing the customer API', () => {
 			req.method = 'POST';
 			await customersHandler(req, res);
 			expect(res.statusCode).toEqual(201);
-			expect(res._getJSONData().data.customerName).toEqual(testCustomer.customerName);
+			expect(res._getJSONData().data.customerName).toEqual(
+				testCustomer.customerName
+			);
 		});
 
 		it('Can get customers', async () => {
@@ -66,7 +68,9 @@ describe('Testing the customer API', () => {
 
 			await customerHandler(req, res);
 			expect(res.statusCode).toEqual(200);
-			expect(res._getJSONData().data.customerName).toEqual(testCustomer.customerName);
+			expect(res._getJSONData().data.customerName).toEqual(
+				testCustomer.customerName
+			);
 		});
 
 		it('Can update a customer with PUT', async () => {
@@ -82,7 +86,9 @@ describe('Testing the customer API', () => {
 			};
 			await customerHandler(req, res);
 			expect(res.statusCode).toEqual(201);
-			expect(res._getJSONData().data.customerName).toEqual(customers[0].customerName);
+			expect(res._getJSONData().data.customerName).toEqual(
+				customers[0].customerName
+			);
 		});
 
 		it('Can delete a customer', async () => {

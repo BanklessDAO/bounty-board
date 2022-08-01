@@ -24,7 +24,11 @@ export const handler = async (
 	case 'POST': {
 		const currentTime = new Date().valueOf();
 		try {
-			const data = await service.addQuery({ ...req.body, createdAt: currentTime, updatedAt: currentTime });
+			const data = await service.addQuery({
+				...req.body,
+				createdAt: currentTime,
+				updatedAt: currentTime,
+			});
 			res.status(201).json({ success: true, data });
 		} catch (error) {
 			res.status(400).json({ success: false });
@@ -41,7 +45,7 @@ export const handler = async (
 		}
 		break;
 	}
-	
+
 	default: {
 		res.status(400).json({ success: false });
 		break;
