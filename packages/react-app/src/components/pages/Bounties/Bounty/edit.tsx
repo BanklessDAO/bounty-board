@@ -30,9 +30,12 @@ export const BountyEditButton: React.FC<{ bounty: BountyCollection }> = ({
 				<RestrictedTo roles={['edit-own-bounty', 'admin']}>
 					<Box p={2}>
 						<Button
+							boxShadow={'md'}
 							borderColor={colorMode === 'dark' ? 'primary.700' : 'primary.300'}
+							size='md'
+							width='200px'
 							onClick={() => router.push(`/${bounty._id}/edit`)} >
-                            Edit
+                            Edit this bounty
 						</Button>
 					</Box>
 				</RestrictedTo>

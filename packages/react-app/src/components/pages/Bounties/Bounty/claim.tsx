@@ -161,12 +161,13 @@ export const ClaimDiscord = ({
 	return (
 		<AccessibleLink href={url} isExternal={true}>
 			<Button
+				boxShadow={'md'}
 				transition="background 100ms linear"
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				my={2}
-				size="sm"
+				size='md'
+				width='200px'
 			>
-              Claim It
+              Claim this bounty
 			</Button>
 		</AccessibleLink>
 	);
@@ -204,13 +205,16 @@ export const ClaimWeb = ({
 		>
 			<Box p={2}>
 				<Button
+					boxShadow={'md'}
 					transition="background 100ms linear"
 					aria-label="claim-button"
 					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 					onClick={onOpen}
 					disabled={!canClaim}
+					size='md'
+					width='200px'
 				>
-                 Claim It
+                 Claim this bounty
 				</Button>
 			</Box>
 			<Text

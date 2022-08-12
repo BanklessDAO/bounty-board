@@ -5,13 +5,13 @@ import {
 	AccordionPanel,
 	Spacer,
 	Box,
-	Button,
 	Checkbox,
 	Flex,
 	Tag,
 	TagLabel,
 	Text,
 	HStack,
+	Stack,
 	Heading,
 	useDisclosure,
 	Modal,
@@ -22,6 +22,9 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	useColorModeValue,
+	useColorMode,
+	Button,
+	Center,
 } from '@chakra-ui/react';
 import { useBounty } from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
@@ -133,7 +136,7 @@ export const BountySummary = ({
 					<UserAvatar user={bounty.createdBy} size="sm" />
 				</Box>
 				<Box pl="2" width="100%">
-					<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
+					<Heading mb={2} size="md" flex={{ base: 1, md: 0 }}>
 						{bounty.title}
 					</Heading>
 				</Box>
@@ -179,9 +182,6 @@ export const BountyHeader = ({
 }): JSX.Element => {
 	return (
 		<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }}>
-			<Box>
-				<UserAvatar user={bounty.createdBy} size="sm" />
-			</Box>
 			<Box pl="2" width="100%">
 				<Heading isTruncated mb={2} size="md" flex={{ base: 1, md: 0 }}>
 					{bounty.title}
@@ -193,7 +193,6 @@ export const BountyHeader = ({
 
 export const BountyActions = ({
 	bounty,
-	onCancel,
 }: {
   bounty: BountyCollection;
   onCancel: () => void;
@@ -206,9 +205,7 @@ export const BountyActions = ({
         bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyEditButton bounty={bounty} />
 			)}
-			<Box p={2}>
-				<Button onClick={onCancel}>Cancel</Button>
-			</Box>
+	
 		</Flex>
 	);
 };
@@ -223,26 +220,43 @@ const BountyModal = ({
   onClose: () => void;
 }): JSX.Element => {
 	// TODO Need a Delete action if Draft or Open
-
+	const { colorMode } = useColorMode();
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
-			<ModalOverlay />
-			<ModalContent maxW={'700px'} borderWidth={3}>
-				<ModalHeader
-					bg={useColorModeValue('gray.200', 'gray.600')}
-					roundedTop="md"
-				>
-					<BountyHeader bounty={bounty} />
-				</ModalHeader>
-				<ModalCloseButton />
-				<ModalBody>
-					<BountyDetails bounty={bounty} />
-				</ModalBody>
-				<ModalFooter>
-					<BountyActions bounty={bounty} onCancel={onClose} />
-				</ModalFooter>
-			</ModalContent>
-		</Modal>
+		
+		<Center>
+			<Modal isOpen={isOpen} onClose={onClose}>
+				<ModalOverlay />
+				<ModalContent maxW={'700px'} borderWidth={3}>
+					<ModalHeader
+						bg={useColorModeValue('gray.200', 'gray.600')}
+						roundedTop="md"
+					>
+						<BountyHeader bounty={bounty} />
+					</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<BountyDetails bounty={bounty} />
+					</ModalBody>
+					<ModalFooter>
+						<Stack direction='row' spacing={1} alignItems='center' alignContent='center' verticalAlign={'center'}>
+							<BountyActions bounty={bounty} onCancel={onClose} />
+							 <Button boxShadow={'md'}
+								transition="background 100ms linear"
+								aria-label="Delete-button"
+								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+								size='md'
+								width='200px'
+								isLoading
+								loadingText='Delete this bounty'
+							>Delete this bounty</Button>
+							<BountyEditButton bounty={bounty} />
+						</Stack>
+						
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+		</Center>
+		
 	);
 };
 
@@ -255,20 +269,18 @@ const BountyDetails = ({
 		? MiscUtils.shortDate(new Date(bounty.dueAt))
 		: 'unspecified';
 
-	// TODO: Fix for mobile, clean up quotes, handle markdown in description and criteria (from other PR)
-
 	return (
-		<Flex flexWrap="wrap" width="100%" pl="2" pr="2">
+		<Flex justifyItems={'center'} alignItems="center" flexWrap="wrap" width="100%" pl="2" pr="2">
 			<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
 				<Box
 					width="120px"
-					display="flex"
+					display="inline-block"
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-            status
+                      status
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -289,13 +301,13 @@ const BountyDetails = ({
 			<Flex flexWrap="wrap" alignItems="center" width="80%" pb="3">
 				<Box
 					width="120px"
-					display="flex"
+					display="inline-block"
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-            created by
+                     created by
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -307,16 +319,17 @@ const BountyDetails = ({
 				<Spacer />
 				<Box
 					width="120px"
-					display="flex"
+					display="inline-block"
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
+					ml="2"
 				>
 					<Heading size="sm" m={0}>
-            created date
+                     created date
 					</Heading>
 				</Box>
-				<Box width="100px">
+				<Box>
 					<Text as="span" fontSize="sm">
 						{MiscUtils.shortDate(new Date(bounty.createdAt))}
 					</Text>
@@ -325,13 +338,13 @@ const BountyDetails = ({
 			<Flex flexWrap="wrap" alignItems="center" width="80%" pb="3">
 				<Box
 					width="120px"
-					display="flex"
+					display="inline-block"
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-            claimed by
+                      claimed by
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -343,16 +356,17 @@ const BountyDetails = ({
 				<Spacer />
 				<Box
 					width="120px"
-					display="flex"
+					display="inline-block"
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
+				    ml="2"
 				>
 					<Heading size="sm" m={0}>
-            due date
+                      due date
 					</Heading>
 				</Box>
-				<Box width="100px">
+				<Box>
 					<Text as="span" fontSize="sm">
 						{dueAt}
 					</Text>
@@ -361,13 +375,13 @@ const BountyDetails = ({
 			<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
 				<Box
 					width="120px"
-					display="flex"
+					display="inline-block"
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-            claimable by
+                      claimable by
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -384,18 +398,18 @@ const BountyDetails = ({
 					</Text>
 				</Box>
 			</Flex>
-			<Heading width="100%" size="md" mb="0">
-        Description
+			<Heading mt="5" width="100%" size="md" mb="0">
+               Description
 			</Heading>
-			<Text fontSize="sm" ml="2">
+			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(
 					DOMPurify.sanitize(toHTML(bounty.description || 'none'))
 				)}
 			</Text>
-			<Heading width="100%" size="md" pt="2" mb="0">
-        Success Criteria
+			<Heading mt="5" width="100%" size="md" pt="2" mb="0">
+              Success Criteria
 			</Heading>
-			<Text fontSize="sm" ml="2">
+			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
 		</Flex>
