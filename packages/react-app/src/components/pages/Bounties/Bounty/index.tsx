@@ -22,9 +22,6 @@ import {
 	ModalBody,
 	ModalCloseButton,
 	useColorModeValue,
-	useColorMode,
-	Button,
-	Center,
 } from '@chakra-ui/react';
 import { useBounty } from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
@@ -33,6 +30,8 @@ import { SkeletonCircle, SkeletonText } from '@chakra-ui/skeleton';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
+import { BountyDeleteButton } from './delete';
+
 import UserAvatar from '@app/components/parts/UserAvatar';
 import PAID_STATUS from '@app/constants/paidStatus';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
@@ -205,6 +204,10 @@ export const BountyActions = ({
         bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyEditButton bounty={bounty} />
 			)}
+			{(bounty.status == BOUNTY_STATUS.DRAFT ||
+        bounty.status == BOUNTY_STATUS.OPEN) && (
+				<BountyDeleteButton bounty={bounty} />
+			)}
 	
 		</Flex>
 	);
@@ -219,43 +222,29 @@ const BountyModal = ({
   isOpen: boolean;
   onClose: () => void;
 }): JSX.Element => {
-	// TODO Need a Delete action if Draft or Open
-	const { colorMode } = useColorMode();
+	
 	return (
-		
-		<Center>
-			<Modal isOpen={isOpen} onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent maxW={'700px'} borderWidth={3}>
-					<ModalHeader
-						bg={useColorModeValue('gray.200', 'gray.600')}
-						roundedTop="md"
-					>
-						<BountyHeader bounty={bounty} />
-					</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<BountyDetails bounty={bounty} />
-					</ModalBody>
-					<ModalFooter>
-						<Stack direction='row' spacing={1} alignItems='center' alignContent='center' verticalAlign={'center'}>
-							<BountyActions bounty={bounty} onCancel={onClose} />
-							 <Button boxShadow={'md'}
-								transition="background 100ms linear"
-								aria-label="Delete-button"
-								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-								size='md'
-								width='200px'
-								isLoading
-								loadingText='Delete this bounty'
-							>Delete this bounty</Button>
-							<BountyEditButton bounty={bounty} />
-						</Stack>
+		<Modal scrollBehavior={'inside'} isOpen={isOpen} onClose={onClose}>
+			<ModalOverlay/>
+			<ModalContent maxW={'700px'} borderWidth={3}>
+				<ModalHeader
+					bg={useColorModeValue('gray.200', 'gray.600')}
+					roundedTop="md"
+				>
+					<BountyHeader bounty={bounty} />
+				</ModalHeader>
+				<ModalCloseButton />
+				<ModalBody>
+					<BountyDetails bounty={bounty} />
+				</ModalBody>
+				<ModalFooter>
+					<Stack direction='row' spacing={1} alignItems='center' alignContent='center' verticalAlign={'center'}>
+						<BountyActions bounty={bounty} onCancel={onClose} />
+					</Stack>
 						
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-		</Center>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 		
 	);
 };
@@ -408,7 +397,7 @@ const BountyDetails = ({
 			</Text>
 			<Heading mt="5" width="100%" size="md" pt="2" mb="0">
               Success Criteria
-			</Heading>
+			  </Heading>
 			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
