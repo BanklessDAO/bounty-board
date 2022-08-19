@@ -93,7 +93,7 @@ const EditBountyForm = ({
 				)
 				.then(({ data: res }) => {
 					mutate(`/api/bounties/${bounty._id}`, res.data);
-					router.push(`/${bounty._id}`);
+					router.push(`/${bounty._id}/edit`);
 					localStorage.removeItem('cachedEdit');
 				})
 				.catch((err) => {
