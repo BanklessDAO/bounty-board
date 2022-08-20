@@ -31,7 +31,9 @@ export const BountyEditButton: React.FC<{ bounty: BountyCollection }> = ({
 					<Box p={2}>
 						<Button
 							boxShadow={'md'}
-							borderColor={colorMode === 'dark' ? 'primary.700' : 'primary.300'}
+							transition="background 100ms linear"
+							aria-label="claim-button"
+							bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 							size='md'
 							width='200px'
 							onClick={() => router.push(`/${bounty._id}/edit`)}>
