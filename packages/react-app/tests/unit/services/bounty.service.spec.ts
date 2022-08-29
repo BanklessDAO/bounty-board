@@ -23,7 +23,7 @@ describe('Testing the bounty service', () => {
 			expect(Object.keys(filters))
 				.toEqual([...Object.keys(rest), 'lte', 'gte']);
 
-			expect(typeof Object.values(rest)[0]).toBe('string');
+			expect(typeof Object.values(rest)[0]).toBe('object');
 			expect(lte).toEqual(1);
 			expect(gte).toEqual(1);
 		});
@@ -108,7 +108,7 @@ describe('Testing the bounty service', () => {
 
 	describe('Search and status filters', () => {
 		it('Sets status as array of values when nothing passed', () => {
-			[undefined, '', 'All'].forEach(entry => {
+			[undefined, []].forEach(entry => {
 				expect(
 					service.filterStatus({}, entry).status.$in
 				)
@@ -117,8 +117,8 @@ describe('Testing the bounty service', () => {
 		});
 
 		it('Else it returns the status', () => {
-			const status = 'This could be anything';
-			expect(service.filterStatus({}, status).status).toEqual(status);
+			const status = ['This could be anything'];
+			expect(service.filterStatus({}, status).status.$in).toEqual(status);
 		});
 
 		it('returns the text search', () => {
@@ -149,7 +149,9 @@ describe('Testing the bounty service', () => {
 			};
 			const expected: FilterQuery<BountyCollection> = {
 				$match: {
-					status: 'Open',
+					status: {
+						$in: ['Open'],
+					},
 					customerId: 'testId',
 					$text: {
 						$search: 'Test',
@@ -181,7 +183,9 @@ describe('Testing the bounty service', () => {
 		const expected: FilterQuery<BountyCollection> =
 		{
 			$match: {
-				status: 'Open',
+				status: {
+					$in: ['Open'],
+				},
 				customerId: 'testId',
 				$text: {
 					$search: 'Test',
@@ -191,7 +195,7 @@ describe('Testing the bounty service', () => {
 					$gte: 0,
 				},
 				$or: [
-					{ paidStatus: PAID_STATUS.UNPAID },
+					{ paidStatus: { $in: [PAID_STATUS.UNPAID] } },
 					{ paidStatus: { $exists: false } },
 				],
 			},
@@ -200,8 +204,7 @@ describe('Testing the bounty service', () => {
 		expect(actual).toEqual(expected);
 
 		query.paidStatus = PAID_STATUS.PAID;
-		delete expected.$match.$or;
-		expected.$match.paidStatus = PAID_STATUS.PAID;
+		expected.$match.$or = [{ paidStatus: { $in: [PAID_STATUS.PAID] } }];
 
 		actual = service.getFilterQuery(query);
 		expect(actual).toEqual(expected);

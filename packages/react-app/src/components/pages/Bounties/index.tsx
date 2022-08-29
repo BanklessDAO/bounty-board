@@ -12,6 +12,7 @@ import MiscUtils from '../../../utils/miscUtils';
 import { useRouter } from 'next/router';
 import { FilterParams } from '@app/types/Filter';
 import { baseFilters, filtersDefined, getFiltersFromUrl, useDynamicUrl } from '@app/hooks/useUrlFilters';
+import SavedQueriesMenu from './Filters/SavedQueriesMenu';
 
 export const PAGE_SIZE = 10;
 
@@ -28,11 +29,11 @@ const FilterResultPlaceholder = ({ message }: { message: string }): JSX.Element 
 	<Stack
 		borderWidth={3}
 		borderRadius={10}
-		width={{ base: '95vw', lg: '700px' }}
 		textAlign="center"
 		direction="row"
 		justify="center"
 		align="center"
+		width=" 100%"
 	>
 		<Text fontSize="lg">{message}</Text>
 	</Stack>
@@ -165,15 +166,19 @@ const Bounties = (): JSX.Element => {
 	// otherwise you will lose filers and/or create inf loop
 	// only render the saved search the first time, to prevent loops
 	const firstLoad = useRef(true);
+	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
+
 	useEffect(() => {
-		if (router.isReady && firstLoad.current && filtersDefined(router.query)) {
+		if (!router.isReady) return;
+
+		const asPathWithoutLeadinggSlash = router.asPath.replace(/\//, '');
+		if ((firstLoad.current && filtersDefined(router.query)) ||
+			(!firstLoad.current && Object.keys(router.query).length > 0 && asPathWithoutLeadinggSlash !== urlQuery)) {
 			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}
 	}, [router.isReady, router.query, firstLoad]);
-
-	const urlQuery = useDynamicUrl(filters, router.isReady && !firstLoad.current);
 
 	useEffect(() => {
 		if (router.isReady) {
@@ -192,33 +197,40 @@ const Bounties = (): JSX.Element => {
 		<>
 			<Stack
 				direction={{ base: 'column', lg: 'row' }}
-				align="top"
-				fontSize="sm"
-				fontWeight="600"
-				gridGap="4"
 			>
-				<VStack
-				  gridGap="1px"
+				<SavedQueriesMenu/>
+				<Stack
+					direction={{ base: 'column' }}
+					align="center"
+					fontSize="sm"
+					fontWeight="600"
+					gridGap="4"
+					width={'100%'}
 				>
-					<Filters
-						filters={filters}
-					  setFilters={setFilters}
-					/>
-					<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
-				</VStack>
+					<VStack
+						gridGap="1px"
+						width={'100%'}
+					>
+						<Filters
+							filters={filters}
+							setFilters={setFilters}
+						/>
+						<SelectExport bounties={bounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					</VStack>
 
-				{isError || noResults
-					? <FilterResultPlaceholder message={'No Results'} />
-					: isLoading
-						? <FilterResultPlaceholder message={'Loading'} />
-						: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
-				}
+					{isError || noResults
+						? <FilterResultPlaceholder message={'No Results'} />
+						: isLoading
+							? <FilterResultPlaceholder message={'Loading'} />
+							: <BountyAccordion bounties={paginatedBounties} selectedBounties={selectedBounties} setSelectedBounties={setSelectedBounties}/>
+					}
+					<BountyPaginate
+						page={page}
+						setPage={setPage}
+						maxPages={maxPages(bounties)}
+					/>
+				</Stack>
 			</Stack>
-			<BountyPaginate
-				page={page}
-				setPage={setPage}
-				maxPages={maxPages(bounties)}
-			/>
 		</>
 	);
 };
