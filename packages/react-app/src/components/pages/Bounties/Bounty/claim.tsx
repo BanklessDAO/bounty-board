@@ -167,7 +167,7 @@ export const ClaimDiscord = ({
 				size='md'
 				width='200px'
 			>
-              Claim this bounty
+              Claim It
 			</Button>
 		</AccessibleLink>
 	);
@@ -184,7 +184,7 @@ export const ClaimWeb = ({
 }): JSX.Element => {
 	const { colorMode } = useColorMode();
 	let canClaim = useRequiredRoles(['claim-bounties', 'admin']);
-	let helpMessage = 'Claim this bounty	';
+	let helpMessage = 'Claim this bounty';
 	if (canClaim) {
 		const { isClaimable, reason } = isClaimableByUser(bounty, user);
 		if (!isClaimable) {
@@ -214,7 +214,7 @@ export const ClaimWeb = ({
 					size='md'
 					width='200px'
 				>
-                 Claim this bounty
+                 Claim It
 				</Button>
 			</Box>
 			<Text
