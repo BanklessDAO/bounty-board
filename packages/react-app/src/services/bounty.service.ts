@@ -340,6 +340,7 @@ export const editBounty = async ({
 	bounty,
 	body,
 }: EditBountyProps): Promise<BountyCollection> => {
+	console.log('Editing Bounty in API');
 	const updatedBounty = (await Bounty.findByIdAndUpdate(bounty._id, body, {
 		new: true,
 		omitUndefined: true,

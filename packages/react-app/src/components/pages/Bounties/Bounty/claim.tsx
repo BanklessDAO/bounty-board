@@ -60,12 +60,12 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 				submissionNotes: message,
 				status: 'In-Progress',
 				activityHistory: newActivityHistory(
-                   bounty.activityHistory as ActivityHistoryItem[],
-                   ACTIVITY.CLAIM
+					bounty.activityHistory as ActivityHistoryItem[],
+					ACTIVITY.CLAIM
 				),
 				statusHistory: newStatusHistory(
-                    bounty.statusHistory as StatusHistoryItem[],
-                    BOUNTY_STATUS.IN_PROGRESS
+					bounty.statusHistory as StatusHistoryItem[],
+					BOUNTY_STATUS.IN_PROGRESS
 				),
 			};
 			try {
@@ -95,10 +95,10 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 			{
 				// TODO This is obsolete...
 				bounty.discordMessageId ? (
-				// If we have discord message info for the bounty, the user is taken into discord to claim
+					// If we have discord message info for the bounty, the user is taken into discord to claim
 					<ClaimDiscord discordMessageId={bounty.discordMessageId} />
 				) : (
-				// else, they must use the web form variant
+					// else, they must use the web form variant
 					<ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
 				)
 			}
@@ -109,38 +109,42 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 					{claiming && (
 						<Alert status="success">
 							<AlertIcon />
-                            Bounty Claimed!
+							Bounty Claimed!
 						</Alert>
 					)}
 					{error && (
 						<Alert status="error">
 							<AlertIcon />
-                           There was a problem claiming the bounty
+							There was a problem claiming the bounty
 						</Alert>
 					)}
 					<ModalCloseButton />
 					<ModalBody flexDirection="column" justifyContent="space-evenly">
 						<Flex mb="5">
-                        Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
-                        and claim the bounty.
+							Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
+							and claim the bounty.
 						</Flex>
 						<Textarea
 							placeholder="Send a message"
 							onChange={(e) => setMessage(e.target.value)}
 						/>
 					</ModalBody>
-					<ModalFooter justifyContent="start">
-						<Button
-							transition="background 100ms linear"
-							disabled={!message || bounty.status !== 'Open'}
-							onClick={confirmBounty}
-							isLoading={claiming}
-							loadingText="Submitting"
-							bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-						>
-                          Confirm
-						</Button>
-						<Button onClick={onClose}>Close</Button>
+					<ModalFooter justifyContent="flex-end">
+						<Box p={2}>
+							<Button
+								transition="background 100ms linear"
+								disabled={!message || bounty.status !== 'Open'}
+								onClick={confirmBounty}
+								isLoading={claiming}
+								loadingText="Submitting"
+								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+							>
+								Confirm
+							</Button>
+						</Box>
+						<Box p={2}>
+							<Button onClick={onClose}>Close</Button>
+						</Box>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
@@ -151,7 +155,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 export const ClaimDiscord = ({
 	discordMessageId,
 }: {
-  discordMessageId: string;
+	discordMessageId: string;
 }): JSX.Element => {
 	const {
 		customer: { customerId, bountyChannel },
@@ -167,7 +171,7 @@ export const ClaimDiscord = ({
 				size='md'
 				width='200px'
 			>
-              Claim It
+				Claim It
 			</Button>
 		</AccessibleLink>
 	);
@@ -178,9 +182,9 @@ export const ClaimWeb = ({
 	bounty,
 	onOpen,
 }: {
-  user: APIUser | undefined;
-  bounty: BountyCollection;
-  onOpen: () => void;
+	user: APIUser | undefined;
+	bounty: BountyCollection;
+	onOpen: () => void;
 }): JSX.Element => {
 	const { colorMode } = useColorMode();
 	let canClaim = useRequiredRoles(['claim-bounties', 'admin']);
@@ -193,7 +197,7 @@ export const ClaimWeb = ({
 		}
 	} else {
 		helpMessage =
-      'You need to sign in and have the correct permissions to claim this bounty';
+			'You need to sign in and have the correct permissions to claim this bounty';
 	}
 	return (
 		<Tooltip
@@ -214,7 +218,7 @@ export const ClaimWeb = ({
 					size='md'
 					width='200px'
 				>
-                 Claim It
+					Claim It
 				</Button>
 			</Box>
 			<Text
