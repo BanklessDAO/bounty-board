@@ -15,13 +15,6 @@ import PAID_STATUS from '@app/constants/paidStatus';
 
 type SetState<T extends any> = (arg: T) => void;
 
-const asyncSome = async (arr: Array<any>, predicate: (arg0: any) => any) => {
-	for (const e of arr) {
-		if (await predicate(e)) return true;
-	}
-	return false;
-};
-
 const MarkPaidModal = ({
 	isOpen,
 	onClose,
@@ -43,28 +36,28 @@ const MarkPaidModal = ({
 	};
 
 	const markBountiesPaid = async () => {
-		let markedSome = false;
-		bounties &&
-      (await asyncSome(bounties, async (bounty: BountyCollection) => {
-      	bounty.paidStatus = PAID_STATUS.PAID;
-      	try {
-      		const res = await axios.patch<void, any, BountyCollection>(
-      			`api/bounties/${bounty._id}?customerId=${bounty.customerId}&force=true`,
-      			bounty
-      		);
-      		if (res.status !== 200) {
-      			setError(true);
-      			return true;
-      		}
-      		markedSome = true;
-      	} catch (e) {
-      		console.error(e);
-      		setError(true);
-      		return true;
-      	}
-      	return false;
-      }));
-		if (markedSome) setMarkedSomePaid(true);
+		if (bounties) {
+			const markBounties = bounties?.map(async function(bounty) {
+				bounty.paidStatus = PAID_STATUS.PAID;
+				try {
+					const res = await axios.patch<void, any, BountyCollection>(
+						`api/bounties/${bounty._id}?customerId=${bounty.customerId}&force=true`,
+						bounty
+					);
+					if (res.status !== 200) {
+						setError(true);
+						return true;
+					}
+				} catch (e) {
+					console.error(e);
+					setError(true);
+					return true;
+				}
+				return false;
+	
+			});
+			Promise.all(markBounties).then((anyErrors) => { !anyErrors.includes(true) && setMarkedSomePaid(true);});
+		}
 	};
 
 	return (
