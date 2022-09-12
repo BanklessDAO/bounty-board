@@ -13,6 +13,7 @@ export const ACTIVITY = {
 	HELP: 'help',
 	TAG: 'tag',
 	EDIT: 'edit',
+	PAID: 'paid',
 } as const;
 
 export const CLIENT = {

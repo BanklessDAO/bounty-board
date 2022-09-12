@@ -22,7 +22,7 @@ import { useUser } from '@app/hooks/useUser';
 import { useRoles } from '@app/hooks/useRoles';
 
 import SavedQueriesMenu from './Filters/SavedQueriesMenu';
-import BOUNTY_STATUS from '@app/constants/bountyStatus';
+import ServiceUtils from '@app/utils/ServiceUtils';
 
 export const PAGE_SIZE = 10;
 
@@ -108,7 +108,7 @@ const SelectExport = ({
 				if (roles.some((r: string) => ['admin'].includes(r))) {
 					bountiesToMark = selectedBounties.filter((_id) => {
 						const bounty = bounties?.find((b) => b._id == _id);
-						return [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(bounty?.status);
+						return bounty && ServiceUtils.canBePaid({ bounty });
 					});
 					setMarkPaidMessage('Mark exported claimed bounties as paid?');
 				} else if (
@@ -118,7 +118,7 @@ const SelectExport = ({
 				) {
 					bountiesToMark = selectedBounties.filter((_id) => {
 						const bounty = bounties?.find((b) => b._id == _id);
-						return bounty?.createdBy.discordId == user.id && [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(bounty?.status);
+						return bounty && (bounty.createdBy.discordId == user.id) && ServiceUtils.canBePaid({ bounty });
 					});
 					setMarkPaidMessage('Mark exported claimed bounties you created as paid?');
 				}

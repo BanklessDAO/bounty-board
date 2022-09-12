@@ -318,20 +318,6 @@ export const getBounty = async (
 	return id.length === 24 ? await Bounty.findById(id) : null;
 };
 
-export const canBeEdited = ({
-	bounty,
-}: {
-  bounty: BountyCollection;
-}): boolean => {
-	/**
-   * We allow edits to the bounty only if the status is currently `draft` or `open`
-   */
-	const bountyOpenForEdits = ['draft', 'open'].includes(
-		bounty.status.toLowerCase()
-	);
-	return bountyOpenForEdits;
-};
-
 type EditBountyProps = {
   bounty: BountyCollection;
   body: Record<string, unknown>;

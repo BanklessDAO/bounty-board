@@ -25,6 +25,8 @@ const NotNeededFields = [
 	'reviewedBy',
 	'submittedBy',
 	'paidStatus',
+	'paidAt',
+	'paidBy',
 	'evergreen',
 	'claimLimit',
 	'isParent',

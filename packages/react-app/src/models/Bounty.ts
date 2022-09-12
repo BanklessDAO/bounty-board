@@ -192,6 +192,8 @@ export const BountySchema = object({
 	season: string().optional(),
 
 	paidStatus: paidStatus.optional(),
+	paidAt: string().optional(),
+	paidBy: DiscordUser.optional(),
 
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
@@ -244,8 +246,16 @@ export const BountyClaimSchema = object({
 	activityHistory: array(ActivityHistory).required(),
 }).noUnknown(true);
 
+export const BountyPaidSchema = object({
+	paidBy: DiscordUser.required(),
+	paidStatus: paidStatus.required(),
+	paidAt: string().required(),
+	activityHistory: array(ActivityHistory).required(),
+}).noUnknown(true);
+
 export type BountyCollection = SchemaToInterface<typeof BountySchema>;
 export type BountyClaimCollection = SchemaToInterface<typeof BountyClaimSchema>;
+export type BountyPaidCollection = SchemaToInterface<typeof BountyPaidSchema>;
 export type StatusHistoryItem = SchemaToInterface<typeof StatusHistory>;
 export type ActivityHistoryItem = SchemaToInterface<typeof ActivityHistory>;
 export type DiscordBoardUser = ToInterface<typeof DiscordUser>;
@@ -312,6 +322,15 @@ export const BountyBoardSchema = new mongoose.Schema({
 		/* Bounty Paid Status */
 		/* "Unpaid", "Paid" */
 		type: String,
+	},
+	paidAt: {
+		type: String,
+	},
+	paidBy: {
+		discordHandle: String,
+		discordId: Number,
+		iconUrl: String,
+		type: Object,
 	},
 	activityHistory: {
 		type: Array,

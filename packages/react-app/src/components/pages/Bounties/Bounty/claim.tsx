@@ -29,7 +29,7 @@ import {
 import { useState } from 'react';
 import { useContext } from 'react';
 import {
-	claimedBy,
+	actionBy,
 	isClaimableByUser,
 	newActivityHistory,
 	newStatusHistory,
@@ -56,7 +56,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const confirmBounty = async () => {
 		if (message && user) {
 			const claimData: BountyClaimCollection = {
-				claimedBy: claimedBy(user),
+				claimedBy: actionBy(user),
 				submissionNotes: message,
 				status: 'In-Progress',
 				activityHistory: newActivityHistory(

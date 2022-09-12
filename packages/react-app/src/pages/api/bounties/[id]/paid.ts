@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '@app/utils/dbConnect';
-import { BountyClaimSchema } from '@app/models/Bounty';
+import { BountyPaidSchema } from '@app/models/Bounty';
 import { internalServerError, notFound } from '@app/errors';
 import * as service from '@app/services/bounty.service';
 import middlewares from '@app/middlewares';
@@ -8,7 +8,7 @@ import { RoleRestrictions } from '@app/types/Role';
 import ServiceUtils from '@app/utils/ServiceUtils';
 
 const restrictions: RoleRestrictions = {
-	PATCH: ['admin', 'claim-bounties'],
+	PATCH: ['admin', 'edit-bounties', 'edit-own-bounty'],
 };
 
 export const handler = async (
@@ -36,11 +36,11 @@ export const handler = async (
 	case 'PATCH':
 		/* Edit a model by its ID */
 		try {
-			const bountyIsEditable = ServiceUtils.canBeEdited({ bounty });
+			const bountyIsEditable = ServiceUtils.canBePaid({ bounty });
 			if (!bountyIsEditable) {
 				return res.status(400).json({
 					success: false,
-					message: 'Unable to edit bounty, as is not in an editable status',
+					message: 'Unable to pay bounty, as is not in an payable status',
 					bountyStatus: bounty.status,
 				});
 			}
@@ -60,7 +60,7 @@ export const handler = async (
 };
 
 export default middlewares({
-	schema: BountyClaimSchema,
+	schema: BountyPaidSchema,
 	handler,
 	restrictions,
 });

@@ -26,7 +26,7 @@ export const validNonNegativeDecimal = (v: string): string | boolean => {
 	return Number(v) > 0 ? true : 'Must be > 0';
 };
 
-export const claimedBy = (user: APIUser): DiscordBoardUser => ({
+export const actionBy = (user: APIUser): DiscordBoardUser => ({
 	discordHandle: `${user?.username}#${user.discriminator}`,
 	discordId: user?.id,
 	iconUrl: '',

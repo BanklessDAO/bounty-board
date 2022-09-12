@@ -1,7 +1,7 @@
 import { Button, Alert, AlertIcon } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import axios from '@app/utils/AxiosUtils';
-import { BountyCollection } from '@app/models/Bounty';
+import { ActivityHistoryItem, BountyCollection, BountyPaidCollection } from '@app/models/Bounty';
 import {
 	Modal,
 	ModalOverlay,
@@ -12,6 +12,9 @@ import {
 	ModalCloseButton,
 } from '@chakra-ui/react';
 import PAID_STATUS from '@app/constants/paidStatus';
+import { actionBy, newActivityHistory } from '@app/utils/formUtils';
+import ACTIVITY from '@app/constants/activity';
+import { useUser } from '@app/hooks/useUser';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -29,6 +32,7 @@ const MarkPaidModal = ({
   markPaidMessage: string;
 }) => {
 	const [error, setError] = useState(false);
+	const { user } = useUser();
 
 	const handleMarkPaid = async () => {
 		await markBountiesPaid();
@@ -36,13 +40,21 @@ const MarkPaidModal = ({
 	};
 
 	const markBountiesPaid = async () => {
-		if (bounties) {
+		if (bounties && user) {
 			const markBounties = bounties?.map(async function(bounty) {
-				bounty.paidStatus = PAID_STATUS.PAID;
+				const paidData: BountyPaidCollection = {
+					paidBy: actionBy(user),
+					paidStatus: PAID_STATUS.PAID,
+					paidAt: new Date().toISOString(),
+					activityHistory: newActivityHistory(
+						bounty.activityHistory as ActivityHistoryItem[],
+						ACTIVITY.PAID
+					),
+				};
 				try {
-					const res = await axios.patch<void, any, BountyCollection>(
-						`api/bounties/${bounty._id}?customerId=${bounty.customerId}&force=true`,
-						bounty
+					const res = await axios.patch<void, any, BountyPaidCollection>(
+						`api/bounties/${bounty._id}/paid?customerId=${bounty.customerId}`,
+						paidData
 					);
 					if (res.status !== 200) {
 						setError(true);

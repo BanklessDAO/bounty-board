@@ -6,6 +6,7 @@ import * as service from '../../../services/bounty.service';
 import middlewares from '../../../middlewares';
 import { RoleRestrictions } from '@app/types/Role';
 import MiscUtils from '../../../utils/miscUtils';
+import ServiceUtils from '../../../utils/ServiceUtils';
 
 const restrictions: RoleRestrictions = {
 	PATCH: ['admin', 'edit-bounties', 'edit-own-bounty'],
@@ -46,7 +47,7 @@ export const handler = async (
 		/* Edit a model by its ID */
 		try {
 			if (!forceUpdate) {
-				const bountyIsEditable = service.canBeEdited({ bounty });
+				const bountyIsEditable = ServiceUtils.canBeEdited({ bounty });
 				if (!bountyIsEditable) {
 					return res.status(400).json({
 						success: false,
