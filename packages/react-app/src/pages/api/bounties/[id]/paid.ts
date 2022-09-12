@@ -40,7 +40,7 @@ export const handler = async (
 			if (!bountyIsEditable) {
 				return res.status(400).json({
 					success: false,
-					message: 'Unable to pay bounty, as is not in an payable status',
+					message: 'Unable to mark bounty as paid, as is not in an payable status',
 					bountyStatus: bounty.status,
 				});
 			}
