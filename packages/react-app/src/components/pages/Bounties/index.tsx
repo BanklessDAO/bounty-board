@@ -22,6 +22,7 @@ import { useUser } from '@app/hooks/useUser';
 import { useRoles } from '@app/hooks/useRoles';
 
 import SavedQueriesMenu from './Filters/SavedQueriesMenu';
+import BOUNTY_STATUS from '@app/constants/bountyStatus';
 
 export const PAGE_SIZE = 10;
 
@@ -103,10 +104,13 @@ const SelectExport = ({
 			});
 			if (user && roles) {
 				let bountiesToMark: string[] = [];
-				// If Admin, allow all to be marked, otherwise only own bouties and if correct permissions
+				// If Admin, allow all to be marked, otherwise only own bounties and if correct permissions
 				if (roles.some((r: string) => ['admin'].includes(r))) {
-					bountiesToMark = selectedBounties;
-					setMarkPaidMessage('Mark exported bounties as paid?');
+					bountiesToMark = selectedBounties.filter((_id) => {
+						const bounty = bounties?.find((b) => b._id == _id);
+						return [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(bounty?.status);
+					});
+					setMarkPaidMessage('Mark exported claimed bounties as paid?');
 				} else if (
 					roles.some((r: string) =>
 						['edit-bounties', 'edit-own-bounty'].includes(r)
@@ -114,9 +118,9 @@ const SelectExport = ({
 				) {
 					bountiesToMark = selectedBounties.filter((_id) => {
 						const bounty = bounties?.find((b) => b._id == _id);
-						return bounty?.createdBy.discordId == user.id;
+						return bounty?.createdBy.discordId == user.id && [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(bounty?.status);
 					});
-					setMarkPaidMessage('Mark exported bounties you created as paid?');
+					setMarkPaidMessage('Mark exported claimed bounties you created as paid?');
 				}
 				if (bountiesToMark.length > 0) {
 					setBountiesToMark(bountiesToMark);
