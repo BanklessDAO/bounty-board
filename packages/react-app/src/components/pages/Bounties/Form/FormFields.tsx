@@ -2,7 +2,6 @@ import { Controller, UseFormReturn } from 'react-hook-form';
 import React from 'react';
 import DatePicker from '@app/components/parts/DatePicker';
 import {
-	Box,
 	FormLabel,
 	FormControl,
 	Input,
@@ -11,7 +10,7 @@ import {
 	Flex,
 	FormControlProps,
 	Textarea,
-	BoxProps,
+	useColorMode,
 } from '@chakra-ui/react';
 import {
 	dateIsNotInPast,
@@ -39,31 +38,22 @@ export const bountyFormFieldValues = {
 	dueAt: new Date().toISOString(),
 };
 
-// Additional text above the main input
-const HelperBox = (
-	props: { children?: React.ReactNode; text?: string } & BoxProps
-): JSX.Element => (
-	<Box bg="rgba(0,0,0,0.2)" p="4" my="2" textColor="gray.700" {...props}>
-		{props.children ? props.children : props.text}
-	</Box>
-);
-
 function BountyFormFields(props: {
   formProps: UseFormReturn<typeof bountyFormFieldValues>;
 }): JSX.Element {
 	const currencies = useCurrencies();
+	const { colorMode } = useColorMode();
 	const {
 		register,
 		control,
 		formState: { errors },
 	} = props.formProps;
 	const inputBorderColor = 'gray.400';
-	const sharedFormatting: FormControlProps = { mt: '5', textColor: 'white' };
+	const sharedFormatting: FormControlProps = { mt: '5', textColor: colorMode === 'light' ? 'black' : 'white' };
 	return (
 		<>
 			<FormControl isInvalid={!!errors.title} {...sharedFormatting}>
 				<FormLabel htmlFor="title">Bounty Title</FormLabel>
-				<HelperBox>Give the bounty a catchy title</HelperBox>
 				<Input
 					id="title"
 					borderColor={inputBorderColor}
@@ -75,7 +65,6 @@ function BountyFormFields(props: {
 
 			<FormControl isInvalid={!!errors.description} {...sharedFormatting}>
 				<FormLabel htmlFor="description">Description</FormLabel>
-				<HelperBox>Provide a brief description of the bounty</HelperBox>
 				<Textarea
 					id="description"
 					borderColor={inputBorderColor}
@@ -87,10 +76,6 @@ function BountyFormFields(props: {
 
 			<FormControl isInvalid={!!errors.criteria} {...sharedFormatting}>
 				<FormLabel htmlFor="criteria">Criteria</FormLabel>
-				<HelperBox>
-          What is absolutely required before the bounty will be considered
-          complete?
-				</HelperBox>
 				<Textarea
 					id="criteria"
 					borderColor={inputBorderColor}
