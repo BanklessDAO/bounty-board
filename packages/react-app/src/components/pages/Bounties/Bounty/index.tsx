@@ -166,9 +166,13 @@ export const BountySummary = ({
 									: 'anyone'}
 				</Box>
 				<Spacer />
-				<Box mb={2}>
+				<Box mb={2} pr="2">
 					{bounty.status && <Status bounty={bounty} withAvatar={true} />}
 				</Box>
+				<Box mb={2}>
+					<PaidStatus bounty={bounty} />
+				</Box>
+
 			</Flex>
 		</Flex>
 	);

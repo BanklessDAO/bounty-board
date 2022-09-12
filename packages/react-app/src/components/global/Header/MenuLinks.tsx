@@ -8,6 +8,7 @@ import { DiscordGuild } from '../../../types/Discord';
 import axios from 'axios';
 import useSWR from 'swr';
 import NewBounty from './NewBounty';
+import BountyList from './BountyList';
 import { DAOSelector } from './DAOSelector';
 import { toggleDiscordSignIn } from '../../../services/discord.service';
 import DiscordBttn from './DiscordBttn';
@@ -87,6 +88,7 @@ export const MenuLinks = (): JSX.Element => {
 				direction={{ base: 'column-reverse', md: 'row' }}
 				align="center"
 			>
+				<BountyList />
 				<NewBounty />
 				{session && <DAOSelector customers={customers} />}
 				<MenuItem newTab={false}>
