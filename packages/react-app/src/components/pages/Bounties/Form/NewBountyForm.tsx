@@ -55,6 +55,9 @@ const generatePreviewData = (
 		status: bountyStatus.DRAFT,
 		dueAt: new Date(data.dueAt).toISOString(),
 		reward: createRewardObject(data.reward, data.currency),
+		tags: {
+			text: data?.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+		},
 		statusHistory: [
 			{
 				status: bountyStatus.DRAFT,

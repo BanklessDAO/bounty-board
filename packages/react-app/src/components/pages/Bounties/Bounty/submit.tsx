@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import bountyStatus from '@app/constants/bountyStatus';
 import { useState } from 'react';
 import activity, { CLIENT } from '@app/constants/activity';
+import paidStatus from '@app/constants/paidStatus';
 
 const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const router = useRouter();
@@ -13,6 +14,7 @@ const BountySubmit = ({ bounty }: { bounty: BountyCollection }): JSX.Element => 
 	const upload = () => {
 		// update the status of the bounty from DRAFT to OPEN before posting
 		bounty.status = bountyStatus.OPEN;
+		bounty.paidStatus = paidStatus.UNPAID;
 		bounty.statusHistory.push({
 			modifiedAt: new Date().toISOString(),
 			status: bountyStatus.OPEN,

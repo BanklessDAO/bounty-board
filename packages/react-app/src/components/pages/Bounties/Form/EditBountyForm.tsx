@@ -32,6 +32,9 @@ const getEditData = (
 			updatedBountyFormData.currency
 		),
 		activityHistory: newActivityHistory(exisitingBounty.activityHistory as [], ACTIVITY.EDIT),
+		tags: {
+			text: updatedBountyFormData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+		},
 	};
 };
 
@@ -42,6 +45,7 @@ const editableValues = (bounty: BountyCollection): typeof bountyFormFieldValues 
 	currency: bounty.reward.currency,
 	criteria: bounty.criteria,
 	dueAt: bounty.dueAt,
+	tags: bounty.tags.text?.join(', ') ?? '',
 });
 
 const EditBountyForm = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {

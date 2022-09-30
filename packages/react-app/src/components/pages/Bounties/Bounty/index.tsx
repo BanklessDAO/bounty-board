@@ -9,6 +9,7 @@ import {
 	Grid,
 	GridItem,
 	Heading,
+	HStack,
 	Tag,
 	TagLabel,
 	Text,
@@ -74,6 +75,13 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 
 
 const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
+	let tags: string[] = [];
+	
+	if (bounty.tags?.channelCategory) {
+		tags = tags.concat(bounty.tags.channelCategory);
+	} if (bounty.tags?.text) {
+		tags = tags.concat(bounty.tags.text);
+	}
 	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
@@ -108,6 +116,19 @@ const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 			<Flex width="full" justifyContent="space-between" alignItems="center">
 				<Box mb={2}>
 					{<Status indication={bounty.paidStatus ? bounty.paidStatus : PAID_STATUS.UNPAID} />}
+				</Box>
+			</Flex>
+			<Flex width="full" justifyContent="space-between" alignItems="center">
+				<Box mb={2}>
+					<HStack spacing={2}>
+						{tags.length && tags.map((tag) =>
+							<>
+								<Tag key={tag} size='md' colorScheme='purple' variant='subtle' borderRadius='full'>
+									<TagLabel>{tag.replace('-', ' ')}</TagLabel>
+								</Tag>
+							</>
+						)}
+					</HStack>
 				</Box>
 			</Flex>
 		</Flex>

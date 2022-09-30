@@ -23,6 +23,7 @@ const PLACEHOLDERS = {
 	TITLE: 'Example: Create new Logo',
 	DESCRIPTION: 'Example: We need someone to create some snappy looking logos for our new Web3 project.',
 	CRITERIA: 'Example: SVG and PNG images approved by the team',
+	TAGS: 'Example: Level1, Marketing, Development',
 };
 
 export const bountyFormFieldValues = {
@@ -32,6 +33,7 @@ export const bountyFormFieldValues = {
 	currency: 'BANK',
 	criteria: '',
 	dueAt: new Date().toISOString(),
+	tags: '',
 };
 
 
@@ -108,6 +110,21 @@ function BountyFormFields(props: { formProps: UseFormReturn<typeof bountyFormFie
 					{...register('criteria', { required })}
 				/>
 				<FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
+			</FormControl>
+
+			<FormControl
+				{...sharedFormatting}
+			>
+				<FormLabel htmlFor='tags'>Tags</FormLabel>
+				<HelperBox>
+					Give the bounty a good tag(s)
+				</HelperBox>
+				<Input
+					id='tags'
+					borderColor={inputBorderColor}
+					placeholder={PLACEHOLDERS.TAGS}
+					{...register('tags')}
+				/>
 			</FormControl>
 
 			<FormControl

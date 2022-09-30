@@ -120,6 +120,11 @@ export const ActivityHistory = object({
 	modifiedAt: string(),
 });
 
+export const TagObject = object({
+	channelCategory: string().optional(),
+	text: array(string()),
+});
+
 export const BountySchema = object({
 	_id: string().optional(),
 	title: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
@@ -130,6 +135,7 @@ export const BountySchema = object({
 	paidStatus: paidStatus.when('$method', (method, schema) => requiredForPost({ method, schema })),
 	dueAt: string().when('$method', (method, schema) => requiredForPost({ method, schema })),
 	reward: Reward.when('$method', (method, schema) => requiredForPost({ method, schema, isObject: true })),
+	tags: TagObject.default(undefined).optional(),
 
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
@@ -259,8 +265,12 @@ export const BountyBoardSchema = new mongoose.Schema({
 		discordId: Number,
 		type: Object,
 	},
+	tags: {
+		text: [String],
+	},
 });
 
+BountyBoardSchema.index({ title: 'text', description: 'text', criteria: 'text', 'tags.text': 'text', 'tags.channelCategory': 'text' });
 BountyBoardSchema.plugin(aggregatePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
