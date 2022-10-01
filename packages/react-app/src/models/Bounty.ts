@@ -270,7 +270,7 @@ export const BountyBoardSchema = new mongoose.Schema({
 	},
 });
 
-BountyBoardSchema.index({ title: 'text', description: 'text', criteria: 'text', 'tags.text': 'text', 'tags.channelCategory': 'text' });
+// BountyBoardSchema.index({ title: 'text', description: 'text', criteria: 'text', 'tags.text': 'text', 'tags.channelCategory': 'text' });
 BountyBoardSchema.plugin(aggregatePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||
