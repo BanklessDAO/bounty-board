@@ -93,6 +93,12 @@ const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 			>
 				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
 					{bounty.title}
+
+					{tags && tags.map((tag) =>
+						<Tag key={tag} size='sm' colorScheme='purple' variant='subtle' borderRadius='full' ml='1.5'>
+							<TagLabel>{tag.replace('-', ' ')}</TagLabel>
+						</Tag>
+					)}
 				</Heading>
 			</Box>
 			<Box
@@ -116,19 +122,6 @@ const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 			<Flex width="full" justifyContent="space-between" alignItems="center">
 				<Box mb={2}>
 					{<Status indication={bounty.paidStatus ? bounty.paidStatus : PAID_STATUS.UNPAID} />}
-				</Box>
-			</Flex>
-			<Flex width="full" justifyContent="space-between" alignItems="center">
-				<Box mb={2}>
-					<HStack spacing={2}>
-						{tags.length && tags.map((tag) =>
-							<>
-								<Tag key={tag} size='md' colorScheme='purple' variant='subtle' borderRadius='full'>
-									<TagLabel>{tag.replace('-', ' ')}</TagLabel>
-								</Tag>
-							</>
-						)}
-					</HStack>
 				</Box>
 			</Flex>
 		</Flex>
