@@ -99,10 +99,10 @@ describe('Testing the bounty API', () => {
 			};
 
 			await bountyHandler(req, res);
-			expect(res._getJSONData().data.reward.amount)
-				.toEqual(testFieldChange.reward.amount);
+			expect(res._getJSONData().data.reward.amount).toEqual(
+				testFieldChange.reward.amount
+			);
 			expect(res.statusCode).toEqual(200);
-
 		});
 
 		it('Can delete a bounty', async () => {
@@ -198,11 +198,9 @@ describe('Testing the bounty API', () => {
 			await bountyHandler(req, res);
 			expect(res.statusCode).toEqual(404);
 		});
-
 	});
 
 	describe('Pagination, searching, sorting and filtering', () => {
-
 		beforeEach(async () => {
 			await Bounty.insertMany(bounties);
 		});
@@ -214,7 +212,9 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const allOpenStatuses = data.every((d: BountyCollection) => d.status === 'Open');
+			const allOpenStatuses = data.every(
+				(d: BountyCollection) => d.status === 'Open'
+			);
 			expect(data.length).toBeGreaterThan(0);
 			expect(allOpenStatuses).toEqual(true);
 		});
@@ -235,7 +235,9 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const paidStatuses = data.every((d: BountyCollection) => d.paidStatus === PAID_STATUS.PAID);
+			const paidStatuses = data.every(
+				(d: BountyCollection) => d.paidStatus === PAID_STATUS.PAID
+			);
 			expect(data.length).toBeGreaterThan(0);
 			expect(paidStatuses).toEqual(true);
 		});
@@ -247,7 +249,10 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const paidStatuses = data.every((d: BountyCollection) => d.paidStatus === PAID_STATUS.UNPAID || !d.paidStatus);
+			const paidStatuses = data.every(
+				(d: BountyCollection) =>
+					d.paidStatus === PAID_STATUS.UNPAID || !d.paidStatus
+			);
 			expect(data.length).toBeGreaterThan(0);
 			expect(paidStatuses).toEqual(true);
 		});
@@ -259,7 +264,8 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const correctSearchTerm = data[0].title === 'Implement React Components for Filters';
+			const correctSearchTerm =
+        data[0].title === 'Implement React Components for Filters';
 			expect(correctSearchTerm).toEqual(true);
 		});
 
@@ -271,7 +277,8 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const foundBounty = data[0].title === 'Create logic to add Pagination to search filters';
+			const foundBounty =
+        data[0].title === 'Create logic to add Pagination to search filters';
 			expect(foundBounty).toEqual(true);
 			expect(data.length).toEqual(1);
 		});
@@ -306,7 +313,8 @@ describe('Testing the bounty API', () => {
 			};
 			await bountiesHandler(req, res);
 			const { data } = res._getJSONData();
-			const correctSearchTerm = data[0].description === 'Penguins and dinosaurs';
+			const correctSearchTerm =
+        data[0].description === 'Penguins and dinosaurs';
 			expect(correctSearchTerm).toEqual(true);
 		});
 
@@ -335,7 +343,9 @@ describe('Testing the bounty API', () => {
 			const { data }: { data: BountyCollection[] } = res._getJSONData();
 			const sortedByCreatedAtDesc = data.slice().sort((a, b) => {
 				if (a.createdAt && b.createdAt && a.createdAt && b.createdAt) {
-					return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+					return (
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					);
 				}
 				return 1;
 			});

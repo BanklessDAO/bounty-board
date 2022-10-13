@@ -29,7 +29,7 @@ const Footer = (): JSX.Element => {
 					</HStack>
 				</Flex>
 				<Text my={['5', '5', '0']} textAlign="center" w="1/2">
-          &copy; {new Date().getFullYear()} Bankless DAO
+                 &copy; {new Date().getFullYear()} Bankless DAO
 				</Text>
 			</Flex>
 			<ThemeToggle />

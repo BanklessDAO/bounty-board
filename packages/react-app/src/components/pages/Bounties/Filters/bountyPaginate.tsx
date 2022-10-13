@@ -5,10 +5,13 @@ type BountyPaginateProps = {
   page: number;
   setPage(page: number): void;
   maxPages: number;
-}
+};
 
-function BountyPaginate({ page, setPage, maxPages }: BountyPaginateProps): JSX.Element {
-
+function BountyPaginate({
+	page,
+	setPage,
+	maxPages,
+}: BountyPaginateProps): JSX.Element {
 	const { colorMode } = useColorMode();
 
 	const incrementPage = (): void => {
@@ -29,18 +32,16 @@ function BountyPaginate({ page, setPage, maxPages }: BountyPaginateProps): JSX.E
 				disabled={page === 0}
 				size="sm"
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				onClick={decrementPage}
-			>
-      &larr; Previous Page
+				onClick={decrementPage} >
+                &larr; Previous Page
 			</Button>
 			<Button
 				p={5}
 				disabled={page === maxPages - 1 || maxPages === 0}
 				size="sm"
 				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				onClick={incrementPage}
-			>
-      Next Page &rarr;
+				onClick={incrementPage}>
+                Next Page &rarr;
 			</Button>
 		</Stack>
 	);

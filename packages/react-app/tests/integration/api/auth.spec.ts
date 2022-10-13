@@ -39,11 +39,11 @@ describe('Testing the Role Caching', () => {
 		const connect = await dbConnect();
 		connection = connect.connections[0];
 	});
-  
+
 	afterAll(async () => {
 		await connection.close();
 	});
-  
+
 	beforeEach(() => {
 		spy = jest.spyOn(service, 'getPermissions').mockResolvedValue(['admin']);
 		jest.spyOn(nextAuth, 'getSession').mockResolvedValue(mockSession);
@@ -115,7 +115,9 @@ describe('Testing the Role Caching', () => {
 		};
 		await RoleCache.create(cacheExpired);
 
-		spy = jest.spyOn(service, 'getPermissions').mockResolvedValue(['create-customer']);
+		spy = jest
+			.spyOn(service, 'getPermissions')
+			.mockResolvedValue(['create-customer']);
 
 		await roleHandler(req, res);
 		const roleCache = await RoleCache.find();

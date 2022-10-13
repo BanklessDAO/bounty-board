@@ -7,7 +7,7 @@ export type SetCustomerType = Dispatch<SetStateAction<CustomerProps>>;
 type CustomerContextProps = {
   customer: CustomerProps;
   setCustomer?: SetCustomerType;
-}
+};
 
 export const CustomerContext = createContext<CustomerContextProps>({
 	customer: BANKLESS,

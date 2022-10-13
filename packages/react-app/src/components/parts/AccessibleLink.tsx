@@ -4,7 +4,7 @@ import {
 } from '@chakra-ui/react';
 import Link, { LinkProps } from 'next/link';
 
-type AccessibleLinkProps = LinkProps & ChakraLinkProps
+type AccessibleLinkProps = LinkProps & ChakraLinkProps;
 
 const AccessibleLink = ({
 	href,

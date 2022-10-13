@@ -7,7 +7,6 @@ const handler = async (
 	req: NextApiRequest,
 	res: NextApiResponse
 ): Promise<void> => {
-
 	switch (req.method) {
 	case 'GET': {
 		try {
@@ -21,8 +20,8 @@ const handler = async (
 			}
 			if (session && session.accessToken) {
 				const roles = await service.getPermissionsCached(
-					session as SessionWithToken,
-					customerId as string
+            session as SessionWithToken,
+            customerId as string
 				);
 				res.status(200).json({
 					success: true,
@@ -31,13 +30,18 @@ const handler = async (
 					},
 				});
 			} else {
-				res.status(200).json({ success: 200, data: {
-					roles: [],
-					notes: 'No session found',
-				} });
+				res.status(200).json({
+					success: 200,
+					data: {
+						roles: [],
+						notes: 'No session found',
+					},
+				});
 			}
 		} catch (error: any) {
-			res.status(error.status ?? 400).json({ success: false, error: error?.response?.statusText });
+			res
+				.status(error.status ?? 400)
+				.json({ success: false, error: error?.response?.statusText });
 		}
 		break;
 	}
@@ -49,4 +53,3 @@ const handler = async (
 };
 
 export default handler;
-

@@ -27,11 +27,11 @@ describe('Testing URL Filters', () => {
 	describe('Testing the dynamic URL', () => {
 
 		it('renders', () => {
-			renderHook(() => useDynamicUrl({} as FilterParams, true));
+			renderHook(() => useDynamicUrl({} as FilterParams, false, true));
 		});
 
 		it('Returns a blank URL query if not ready', () => {
-			const { result } = renderHook(() => useDynamicUrl({} as FilterParams, false));
+			const { result } = renderHook(() => useDynamicUrl({} as FilterParams, false, false));
 			expect(result.current).toEqual('');
 		});
 
@@ -43,7 +43,7 @@ describe('Testing URL Filters', () => {
 				customerId: BANKLESS.customerId,
 				customerKey: BANKLESS.customerKey,
 			};
-			const { result } = renderHook(() => useDynamicUrl(filters, true));
+			const { result } = renderHook(() => useDynamicUrl(filters, false, true));
 			const expected = `?search=${filters.search}&asc=${filters.asc}&customerId=${filters.customerId}&customerKey=${filters.customerKey}&createdBy=${filters.createdBy}`;
 			expect(result.current).toEqual(expected);
 		});
@@ -56,7 +56,7 @@ describe('Testing URL Filters', () => {
 				customerId: 'SHOULD NOT SHOW',
 				customerKey: 'ALSO NO SHOW',
 			};
-			const { result } = renderHook(() => useDynamicUrl(filters, true));
+			const { result } = renderHook(() => useDynamicUrl(filters, false, true));
 			const expected = `?search=${filters.search}&asc=${filters.asc}&customerId=${BANKLESS.customerId}&customerKey=${BANKLESS.customerKey}&createdBy=${filters.createdBy}`;
 			expect(result.current).toEqual(expected);
 		});
