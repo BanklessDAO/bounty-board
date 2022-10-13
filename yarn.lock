@@ -2186,7 +2186,7 @@
     "@types/htmlparser2" "*"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.15", "@types/react@>=16.0.0":
+"@types/react@*", "@types/react@>=16.0.0", "@types/react@^17.0.15":
   version "17.0.39"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.39.tgz#d0f4cde092502a6db00a1cded6e6bf2abb7633ce"
   integrity sha512-UVavlfAxDd/AgAacMa60Azl7ygyQNRwC/DsHZmKgNvPmRR5p70AJ5Q9EAmL2NWOJmeV+vVUI4IAP7GZrN8h8Ug==
@@ -4461,14 +4461,6 @@ env-cmd@^10.1.0:
     commander "^4.0.0"
     cross-spawn "^7.0.0"
 
-envify@~0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/envify/-/envify-0.2.0.tgz#645091cfaf1279f7f8364a893b0cf81c680ecbe0"
-  integrity sha1-ZFCRz68Seff4NkqJOwz4HGgOy+A=
-  dependencies:
-    falafel "~0.2.1"
-    through "~2.3.4"
-
 enzyme-shallow-equal@^1.0.0, enzyme-shallow-equal@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/enzyme-shallow-equal/-/enzyme-shallow-equal-1.0.4.tgz#b9256cb25a5f430f9bfe073a84808c1d74fced2e"
@@ -4919,10 +4911,6 @@ esprima@^4.0.0, esprima@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
-
-esprima@substack/esprima#is-keyword:
-  version "1.1.0-dev"
-  resolved "https://codeload.github.com/substack/esprima/tar.gz/0a7f8489a11b44b019ce168506f535f22d0be290"
 
 esquery@^1.0.1, esquery@^1.4.0:
   version "1.4.0"
@@ -5389,13 +5377,6 @@ fake-merkle-patricia-tree@^1.0.1:
   integrity sha1-S4w6z7Ugr635hgsfFM2M40As3dM=
   dependencies:
     checkpoint-store "^1.1.0"
-
-falafel@~0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/falafel/-/falafel-0.2.1.tgz#9efc51ce19ec5729086b22ae889e5d7d0e256601"
-  integrity sha1-nvxRzhnsVykIayKuiJ5dfQ4lZgE=
-  dependencies:
-    esprima substack/esprima#is-keyword
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -9510,14 +9491,6 @@ react-test-renderer@^17.0.0, react-test-renderer@^17.0.2:
     react-shallow-renderer "^16.13.1"
     scheduler "^0.20.2"
 
-react-test-utils@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/react-test-utils/-/react-test-utils-0.0.1.tgz#cd69a37c3e4d726e3497e325462a32785a19c026"
-  integrity sha1-zWmjfD5Ncm40l+MlRioyeFoZwCY=
-  dependencies:
-    envify "~0.2.0"
-    react "~0.8.0"
-
 react@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
@@ -9525,11 +9498,6 @@ react@^17.0.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-
-react@~0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-0.8.0.tgz#9aef0dbc3e05b44d96139cdbdaa5d727b0506e1e"
-  integrity sha1-mu8NvD4FtE2WE5zb2qXXJ7BQbh4=
 
 readable-stream@^1.0.33:
   version "1.1.14"
@@ -10814,7 +10782,7 @@ throat@^6.0.1:
   resolved "https://registry.yarnpkg.com/throat/-/throat-6.0.1.tgz#d514fedad95740c12c2d7fc70ea863eb51ade375"
   integrity sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==
 
-through@^2.3.6, through@^2.3.8, through@~2.3.4:
+through@^2.3.6, through@^2.3.8:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
