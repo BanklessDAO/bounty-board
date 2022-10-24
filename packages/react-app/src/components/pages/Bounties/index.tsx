@@ -1,4 +1,4 @@
-import { Stack, Text, VStack, Button } from '@chakra-ui/react';
+import { Stack, Text, VStack, Button, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import BountyAccordion from './BountyAccordion';
 import React, { useMemo, useEffect, useState, useRef, useCallback } from 'react';
@@ -88,12 +88,40 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 		setSelectedBounties([]);
 	};
 
-	const handleCSV = (): void => {
+	const createParcel = (bounty: BountyCollection): Record<string, unknown> => {
+
+		type ParcelFormat = {
+			Name: string;
+			Address: string;
+			Amount: number;
+			Token: string;
+		}
+
+		const address = '';
+		const parcelRecord: ParcelFormat = {
+			'Name' : bounty.claimedBy.discordHandle ? bounty.claimedBy.discordHandle : '',
+			'Address' : address,
+			'Amount' : bounty.reward && bounty.reward.amount ? bounty.reward.amount : 0,
+			'Token' : bounty.reward && bounty.reward.currency ? bounty.reward.currency : '',
+		};
+
+		return MiscUtils.csvEncode(parcelRecord);
+
+	};
+
+	const handleCSV = (format: string): void => {
 		if (bounties && csvLink.current) {
-			const getCsvData = bounties
-				.filter(({ _id }) => selectedBounties.includes(_id))
-				.map(MiscUtils.csvEncode);
-				
+			let getCsvData = [];
+			if (format == '1') {
+				getCsvData = bounties
+					.filter(({ _id }) => selectedBounties.includes(_id))
+					.filter(bounty => bounty.claimedBy)
+					.map(createParcel);
+			} else {
+				getCsvData = bounties
+					.filter(({ _id }) => selectedBounties.includes(_id))
+					.map(MiscUtils.csvEncode);
+			}
 			setCsvData(getCsvData, () => {
 				csvLink?.current?.link.click();
 			});
@@ -120,15 +148,33 @@ const SelectExport = (({ bounties, selectedBounties, setSelectedBounties }: {
 			>
 				Clear All
 			</Button>
-			<Button
-				p={2}
-				disabled={!bounties || selectedBounties.length == 0}
-				size="xs"
-				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				onClick={handleCSV}
-			>
-				Export
-			</Button>
+			<Menu>
+				<MenuButton
+					as={Button}
+					p={2}
+					disabled={!bounties || selectedBounties.length == 0}
+					size="xs"
+					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+				>
+					Export
+				</MenuButton>
+				<MenuList>
+					<MenuItem
+						onClick={ () => {
+							handleCSV('1');
+						} }
+					>
+						parcel.money format (only claimed bounties)
+					</MenuItem>
+					<MenuItem
+						onClick={ () => {
+							handleCSV('2');
+						} }
+					>
+						all data
+					</MenuItem>
+				</MenuList>
+			</Menu>
 			<CSVLink
 			  	data={csvData}
 				headers={BOUNTY_EXPORT_ITEMS}
