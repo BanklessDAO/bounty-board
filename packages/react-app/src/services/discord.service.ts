@@ -10,30 +10,34 @@ import { Session } from 'next-auth';
 
 const BOUNTY_BOARD_URL = process.env.NEXT_PUBLIC_DAO_BOUNTY_BOARD_URL || '';
 const IN_PROGRESS_COLOR_YELLOW = 1998388;
-const END_OF_SEASON = process.env.NEXT_PUBLIC_DAO_CURRENT_SEASON_END_DATE as string;
+const END_OF_SEASON = process.env
+	.NEXT_PUBLIC_DAO_CURRENT_SEASON_END_DATE as string;
 
 export const getDiscordUserInGuild = async (
 	accessToken: string,
 	customerId: string
 ): Promise<AxiosResponse<APIGuildMember, any>> => {
 	/**
-	 * Fetches detailed information from discord about a user's guild stats
-	 * @param session is the next auth session
-	 * At the moment, we currently only support the bankless DAO for role gating
-	 * 
-	 * This function reaches out to the discord API and unfortunately seems to have an aggressive
-	 * rate limiting. This means that relying on it can make the application very brittle. We should
-	 * instead be looking to cache the response or find an alternative auth mechanism or endpoint
-	 */
-	return await axios.get<APIGuildMember>(`https://discord.com/api/users/@me/guilds/${customerId}/member`, 	{
-		headers: {
-			authorization: `Bearer ${accessToken}`,
-		},
-	});
+   * Fetches detailed information from discord about a user's guild stats
+   * @param session is the next auth session
+   * At the moment, we currently only support the bankless DAO for role gating
+   *
+   * This function reaches out to the discord API and unfortunately seems to have an aggressive
+   * rate limiting. This means that relying on it can make the application very brittle. We should
+   * instead be looking to cache the response or find an alternative auth mechanism or endpoint
+   */
+	return await axios.get<APIGuildMember>(
+		`https://discord.com/api/users/@me/guilds/${customerId}/member`,
+		{
+			headers: {
+				authorization: `Bearer ${accessToken}`,
+			},
+		}
+	);
 };
 
 export const toggleDiscordSignIn = (
-	session: SessionWithToken | Session | unknown,
+	session: SessionWithToken | Session | unknown
 ): void => {
 	/**
    * @param session is whether the user is logged in.
@@ -51,11 +55,12 @@ export const publishBountyToDiscordChannel = async (
 	bounty: BountyCollection,
 	previousStatus: string
 ): Promise<any> => {
-
 	const { DISCORD_BOUNTY_BOARD_WEBHOOK } = process.env;
-	
+
 	if (!DISCORD_BOUNTY_BOARD_WEBHOOK) {
-		console.warn('Attempting to edit bounties without a discord webhook set, users will not be notified of changes - please ensure the DISCORD_BOUNTY_BOARD_WEBHOOK is correctly set');
+		console.warn(
+			'Attempting to edit bounties without a discord webhook set, users will not be notified of changes - please ensure the DISCORD_BOUNTY_BOARD_WEBHOOK is correctly set'
+		);
 		return;
 	}
 
@@ -65,11 +70,14 @@ export const publishBountyToDiscordChannel = async (
 
 	const embedMessage = generateBountyEmbedsMessage(bounty);
 	try {
-		const response = await axios.post(DISCORD_BOUNTY_BOARD_WEBHOOK + '?wait=true', {
-			data: {
-				embedMessage,
-			},
-		});
+		const response = await axios.post(
+			DISCORD_BOUNTY_BOARD_WEBHOOK + '?wait=true',
+			{
+				data: {
+					embedMessage,
+				},
+			}
+		);
 		console.log(response);
 	} catch (error) {
 		// to do: pass to sentry
@@ -79,17 +87,23 @@ export const publishBountyToDiscordChannel = async (
 
 export const rewardValue = (reward: BountyCollection['reward']): string => {
 	/**
-	 * Construct a runtime safe reward
-	 */
+   * Construct a runtime safe reward
+   */
 	const { amount, currency, scale } = reward;
-	return ((amount ?? 0).valueOf() / (10 ** (scale ?? 0).valueOf())) + ' ' + (currency ?? 'BANK');
+	return (
+		(amount ?? 0).valueOf() / 10 ** (scale ?? 0).valueOf() +
+    ' ' +
+    (currency ?? 'BANK')
+	);
 };
 
 /**
  * Creates the required bounty message to integrate with discord
  * @TODO check if there is an off-the-shelf api typing for the return object
  */
-export const generateBountyEmbedsMessage = (bounty: BountyCollection): DiscordEmbed => ({
+export const generateBountyEmbedsMessage = (
+	bounty: BountyCollection
+): DiscordEmbed => ({
 	embeds: [
 		{
 			title: bounty.title,

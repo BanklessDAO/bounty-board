@@ -20,7 +20,7 @@ const NewBounty = (): JSX.Element => {
 					w={{ base: '20em', md: 'auto' }}
 					h={{ base: '3em', md: '2.6em' }}
 				>
-          New Bounty
+                  New Bounty
 				</ColorModeButton>
 			</Link>
 		</RestrictedTo>

@@ -23,36 +23,36 @@
  * */
 
 module.exports = {
-  projects: [
-    {
-      displayName: 'server',
-      preset: 'ts-jest',
-      testMatch: ["**/?(*.)+(spec|test).[tj]s"],
-      moduleNameMapper: {
-        '@app/(.*)$': '<rootDir>/src/$1',
-        '@tests/(.*)$': '<rootDir>/tests/$1'
-      },   
-    },
-    {
-      displayName: 'client',
-      testEnvironment: "jsdom",
-      preset: 'ts-jest/presets/js-with-ts',
-      setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
-      globals: {
-        'ts-jest': {
-          tsconfig: '<rootDir>/tsconfig.jest.json',
-        },
-      },
-      testMatch: ["**/?(*.)+(spec|test).[tj]sx"],
-      moduleNameMapper: {
-        '^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts',
-        '@app/(.*)$': '<rootDir>/src/$1',
-        '@tests/(.*)$': '<rootDir>/tests/$1'
-      },
-    }
-  ],
-  collectCoverageFrom: [
-    "<rootDir>/src/**/*.{js,ts}",
-    "!**/node_modules/**",
-  ],
-}
+	projects: [
+		{
+			displayName: 'server',
+			preset: 'ts-jest',
+			testMatch: ['**/?(*.)+(spec|test).[tj]s'],
+			moduleNameMapper: {
+				'@app/(.*)$': '<rootDir>/src/$1',
+				'@tests/(.*)$': '<rootDir>/tests/$1',
+			},
+		},
+		{
+			displayName: 'client',
+			testEnvironment: 'jsdom',
+			preset: 'ts-jest/presets/js-with-ts',
+			setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+			globals: {
+				'ts-jest': {
+					tsconfig: '<rootDir>/tsconfig.jest.json',
+				},
+			},
+			testMatch: ['**/?(*.)+(spec|test).[tj]sx'],
+			moduleNameMapper: {
+				'^.+\\.(css|scss|less|sass)$': '<rootDir>/tests/stubs/css.stub.ts',
+				'@app/(.*)$': '<rootDir>/src/$1',
+				'@tests/(.*)$': '<rootDir>/tests/$1',
+			},
+		},
+	],
+	collectCoverageFrom: [
+		'<rootDir>/src/**/*.{js,ts}',
+		'!**/node_modules/**',
+	],
+};
