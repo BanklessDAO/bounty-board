@@ -8,7 +8,9 @@ import bountiesHandler from '@app/pages/api/bounties';
 import bountyHandler from '@app/pages/api/bounties/[id]';
 import { testBounty } from '@tests/stubs/bounty.stub';
 import bounties from '@tests/stubs/bounties.stub.json';
+import { testUser } from '@tests/stubs/user.stub';
 import PAID_STATUS from '@app/constants/paidStatus';
+import User from '@app/models/User';
 
 describe('Testing the bounty API', () => {
 	let connection: Connection;
@@ -40,6 +42,7 @@ describe('Testing the bounty API', () => {
 	afterEach(async () => {
 		jest.clearAllMocks();
 		await Bounty.deleteMany();
+		await User.deleteMany();
 	});
 
 	describe('CRUD operations through the API', () => {
@@ -369,5 +372,37 @@ describe('Testing the bounty API', () => {
 			});
 			expect(data).toEqual(sortedByRewardDesc);
 		});
+
+		it('API returns no payee data if Bounty is claimed and user is not registered', async () => {
+			req.method = 'GET';
+			req.query = {
+				asc: 'false',
+				sortBy: 'reward',
+			};
+			await bountiesHandler(req, res);
+			const { data }: { data: BountyCollection[] } = res._getJSONData();
+			const claimedBounty : any = data.find(bounty => bounty._id == '10f6585b453e70eed340e8e3');
+			expect(claimedBounty).toBeDefined();
+			expect(claimedBounty?.claimedBy.discordId).toEqual('324423432343239764');
+			expect(claimedBounty?.payeeData?.userDiscordId).toBeUndefined();
+		});
+
+		it('API returns payee data if Bounty is claimed and user is registered', async () => {
+			await User.insertMany(testUser);
+
+			req.method = 'GET';
+			req.query = {
+				asc: 'false',
+				sortBy: 'reward',
+			};
+			await bountiesHandler(req, res);
+			const { data }: { data: BountyCollection[] } = res._getJSONData();
+			const claimedBounty : any = data.find(bounty => bounty._id == '10f6585b453e70eed340e8e3');
+			expect(claimedBounty).toBeDefined();
+			expect(claimedBounty?.claimedBy.discordId).toEqual('324423432343239764');
+			expect(claimedBounty?.payeeData?.userDiscordId).toEqual('324423432343239764');
+			expect(claimedBounty?.payeeData?.walletAddress).toEqual('0xb57a97cDbEc1B71E9F0E33e76f7334984375cfdf');
+		});
+
 	});
 });
