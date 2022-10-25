@@ -94,9 +94,9 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 		<>
 			{
 				// TODO This is obsolete...
-				bounty.discordMessageId ? (
+				bounty.evergreen || bounty.requireApplication ? (
 					// If we have discord message info for the bounty, the user is taken into discord to claim
-					<ClaimDiscord discordMessageId={bounty.discordMessageId} />
+					<ClaimDiscord canonicalCard={bounty.canonicalCard} />
 				) : (
 					// else, they must use the web form variant
 					<ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
@@ -153,26 +153,29 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 };
 
 export const ClaimDiscord = ({
-	discordMessageId,
+	canonicalCard,
 }: {
-	discordMessageId: string;
+	canonicalCard: { messageId: string | undefined, channelId: string | undefined };
 }): JSX.Element => {
 	const {
-		customer: { customerId, bountyChannel },
+		customer: { customerId },
 	} = useContext(CustomerContext);
-	const url = `${baseUrl}/${customerId}/${bountyChannel}/${discordMessageId}`;
+	const url = `${baseUrl}/${customerId}/${canonicalCard.channelId}/${canonicalCard.messageId}`;
 	const { colorMode } = useColorMode();
 	return (
 		<AccessibleLink href={url} isExternal={true}>
-			<Button
-				boxShadow={'md'}
-				transition="background 100ms linear"
-				bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-				size='md'
-				width='200px'
-			>
-				Claim It
-			</Button>
+			<Box p={2}>
+				<Button
+					boxShadow={'md'}
+					transition="background 100ms linear"
+					bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+					size='md'
+					width='200px'
+					disabled={!canonicalCard || !canonicalCard.channelId || !canonicalCard.messageId}
+				>
+					Claim It
+				</Button>
+			</Box>
 		</AccessibleLink>
 	);
 };
