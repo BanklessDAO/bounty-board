@@ -309,6 +309,7 @@ export const getBounties = async (
 	const aggregation = await Bounty.aggregateFn(bountyQuery);
 
 	// Populate the payee data from the User DB. Needed until wallet addresses are stored directly in bounties
+	// Had to use a for loop so we didn't end up with a bunch of parallel db connections
 	if (aggregation && aggregation.results) {
 		const populatedResults = [];
 		for (const bounty of (aggregation.results as Array<BountyCollection>)) {
@@ -327,18 +328,7 @@ export const getBounty = async (
    * @param id is a 24 character string, try to find it in the db
    * If the character !== 24 chars, or we can't find the bounty, return null
    */
-	// return id.length === 24 ? 
-	
-	let bounty = null;
-	try {
-		bounty = await Bounty.findById(id).populate('payeeData');
-	} catch (err) {
-		console.log(`Error: ${err}`);
-	}
-	if (bounty) {
-		console.log(`getBounty1: ${JSON.stringify(bounty)}`);
-	} else {console.log('Bounty Null');}
-	return bounty;
+	return id.length === 24 ? await Bounty.findById(id).populate('payeeData') : null;
 };
 
 type EditBountyProps = {

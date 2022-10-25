@@ -94,7 +94,7 @@ const SelectExport = ({
 		setSelectedBounties([]);
 	};
 
-	const handleCSV = (claimedOnly = false): void => {
+	const handleCSV = (claimedOnly = false, extraMapFunc?: (bounty: Record<string, unknown>) => Record<string, unknown>): void => {
 		if (bounties && csvLink.current) {
 			let csvData = [];
 			if (claimedOnly) {
@@ -106,6 +106,9 @@ const SelectExport = ({
 				csvData = bounties
 					.filter(({ _id }) => selectedBounties.includes(_id))
 					.map(miscUtils.csvEncode);
+			}
+			if (extraMapFunc) {
+				csvData = csvData.map(bounty => extraMapFunc(bounty));
 			}
 			setCsvData(csvData, () => {
 				csvLink?.current?.link.click();
@@ -198,7 +201,13 @@ const SelectExport = ({
 					<MenuItem
 						onClick={ () => {
 							setCsvFormat(BOUNTY_PARCEL_EXPORT_ITEMS);
-							handleCSV(true);
+							handleCSV(true, function(bounty: any) {
+								if (bounty['claimedBy']) {
+									bounty['compositeName'] = bounty['claimedBy']['discordHandle'];
+								}
+								bounty['compositeName'] += ' - ' + bounty['title'];
+								return bounty;
+							});
 						} }
 					>
 						Parcel.money format (only claimed bounties)

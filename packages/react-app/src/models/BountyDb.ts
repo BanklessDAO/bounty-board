@@ -204,36 +204,6 @@ BountyBoardSchema.virtual('payeeData', {
 	justOne: true,
 });
 
-// BountyBoardSchema.virtual('payAddress').get(async function() {
-// 	//@ts-ignore - needed because 'this' gives it fits
-// 	if (this && this['claimedBy']) {
-// 		//@ts-ignore
-// 		const userId = this['claimedBy']['discordId'];
-// 		return await getPayAddress(userId);
-// 	} else {
-// 		return '';
-// 	}
-// });
-
-// const getPayAddress = async (userId: string): Promise<string> => {
-// 	let address = '';
-// 	console.log(`UserID: ${userId}`)
-// 	if (userId) {
-// 		try {
-// 			const user = await User.findOne({userDiscordId: userId}).exec();
-// 			console.log(`User: ${JSON.stringify(user)}`);
-// 			if (user) {
-// 				address = user.walletAddress;
-// 				console.log(`Address: ${address}`);
-// 			}
-// 		} catch (err) {
-// 			console.log(`Error: ${err}`);
-// 		}
-// 	}
-// 	return address;
-// };
-
-
 const aggregatePlugin = (schema: any, options: any) => {
 	const aggregateFn = function(this: any, params: any) {
 		if (!this.collection) {
