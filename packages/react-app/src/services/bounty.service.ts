@@ -1,6 +1,7 @@
 import { NextApiRequest } from 'next';
 import { FilterQuery, PaginateResult } from 'mongoose';
-import Bounty, { BountyCollection } from '../models/Bounty';
+import Bounty from '../models/BountyDb';
+import { BountyCollection } from '../models/Bounty';
 import { AcceptedSortOutputs, FilterParams, SortParams } from '../types/Filter';
 import { NextApiQuery } from '../types/Queries';
 import * as discord from './discord.service';
@@ -305,7 +306,18 @@ export const getBounties = async (
 		...paginationOptions,
 	};
 
-	return await Bounty.aggregateFn(bountyQuery);
+	const aggregation = await Bounty.aggregateFn(bountyQuery);
+
+	// Populate the payee data from the User DB. Needed until wallet addresses are stored directly in bounties
+	if (aggregation && aggregation.results) {
+		const populatedResults = [];
+		for (const bounty of (aggregation.results as Array<BountyCollection>)) {
+			populatedResults.push(await Bounty.populate(bounty, [{ path: 'payeeData' }]));
+		}
+		aggregation.results = populatedResults;
+	}
+
+	return aggregation;
 };
 
 export const getBounty = async (
@@ -315,7 +327,18 @@ export const getBounty = async (
    * @param id is a 24 character string, try to find it in the db
    * If the character !== 24 chars, or we can't find the bounty, return null
    */
-	return id.length === 24 ? await Bounty.findById(id) : null;
+	// return id.length === 24 ? 
+	
+	let bounty = null;
+	try {
+		bounty = await Bounty.findById(id).populate('payeeData');
+	} catch (err) {
+		console.log(`Error: ${err}`);
+	}
+	if (bounty) {
+		console.log(`getBounty1: ${JSON.stringify(bounty)}`);
+	} else {console.log('Bounty Null');}
+	return bounty;
 };
 
 type EditBountyProps = {

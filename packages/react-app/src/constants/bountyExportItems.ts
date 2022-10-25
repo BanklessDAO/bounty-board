@@ -16,7 +16,7 @@ type BountyExportKeys =
   | CreatedByKeys
   | ClaimedByKeys
   | PaidByKeys
-  | 'address';
+  | 'payeeData.walletAddress';
 
 type BountyExportItems = Array<{
   label: string;
@@ -37,14 +37,14 @@ export const BOUNTY_LIMITED_EXPORT_ITEMS: BountyExportItems = [
 	{ label: 'Claimed By', key: 'claimedBy.discordHandle' },
 	{ label: 'Paid By', key: 'paidBy.discordHandle' },
 	{ label: 'Paid At', key: 'paidAt' },
+	{ label: 'Pay Address', key: 'payeeData.walletAddress' },
 	{ label: 'Submission Notes', key: 'submissionNotes' },
 	{ label: 'Submission URL', key: 'submissionUrl' },
-	{ label: 'Address', key: 'address' },
 ];
 
 export const BOUNTY_PARCEL_EXPORT_ITEMS: BountyExportItems = [
 	{ label: 'Name', key: 'claimedBy.discordHandle' },
-	{ label: 'Address', key: 'address' },
+	{ label: 'Address', key: 'payeeData.walletAddress' },
 	{ label: 'Amount', key: 'reward.amount' },
 	{ label: 'Token', key: 'reward.currency' },
 ];
