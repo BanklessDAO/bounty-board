@@ -210,7 +210,7 @@ const SelectExport = ({
 							});
 						} }
 					>
-						Parcel.money format (only claimed bounties)
+						Parcel.money format
 					</MenuItem>
 					<MenuItem
 						onClick={ () => {
@@ -218,14 +218,14 @@ const SelectExport = ({
 							handleCSV();
 						} }
 					>
-						Limited data (CSV format)
+						CSV format
 					</MenuItem>
 					<MenuItem
 						onClick={ () => {
 							handleJSON();
 						} }
 					>
-						All data (JSON format)
+						JSON format
 					</MenuItem>
 				</MenuList>
 			</Menu>
