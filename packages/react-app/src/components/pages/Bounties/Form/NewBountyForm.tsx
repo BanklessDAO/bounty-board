@@ -46,6 +46,7 @@ const NotNeededFields = [
 	'creatorMessage',
 	'claimantMessage',
 	'createdInChannel',
+	'payeeData',
 ] as const;
 
 const useCachedForm = () => {

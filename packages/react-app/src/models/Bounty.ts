@@ -142,6 +142,10 @@ export const MessageInfo = object({
 	messageId: string(),
 	channelId: string(),
 });
+export const PayeeData = object({
+	walletAddress: string(),
+	userDiscordId: string(),
+});
 
 export const BountySchema = object({
 	_id: string().optional(),
@@ -171,6 +175,7 @@ export const BountySchema = object({
 	paidStatus: paidStatus.optional(),
 	paidAt: string().optional(),
 	paidBy: DiscordUser.optional(),
+	payeeData: PayeeData.optional(),
 
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
