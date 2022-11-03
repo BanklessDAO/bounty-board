@@ -193,7 +193,7 @@ const SelectExport = ({
 							if (bounties) {
 								const exportBounties = (bounties
 									.filter(({ _id }) => selectedBounties.includes(_id))
-									.filter(bounty => bounty.claimedBy && bounty.payeeData && bounty.payeeData.walletAddress && ALLOWED_CURRENCY_CONTRACTS[bounty.reward.currency as ALLOWED_CURRENCIES_TYPE]) as any[])
+									.filter(bounty => bounty.claimedBy && bounty?.payeeData?.walletAddress && ALLOWED_CURRENCY_CONTRACTS[bounty.reward.currency as ALLOWED_CURRENCIES_TYPE]) as any[])
 									.map((bounty) => {
 										if (bounty['claimedBy']) {
 											bounty['compositeName'] = bounty['claimedBy']['discordHandle'];
