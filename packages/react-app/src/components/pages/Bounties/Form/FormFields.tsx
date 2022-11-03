@@ -17,9 +17,10 @@ import {
 	required,
 	validNonNegativeDecimal,
 } from '@app/utils/formUtils';
+import ALLOWED_CURRENCIES from '@app/constants/currency';
 
 const useCurrencies = (): string[] => {
-	return ['BANK'];
+	return ALLOWED_CURRENCIES;
 };
 
 const PLACEHOLDERS = {
@@ -33,7 +34,7 @@ export const bountyFormFieldValues = {
 	title: '',
 	description: '',
 	reward: '1000',
-	currency: 'BANK',
+	currency: ALLOWED_CURRENCIES[0],
 	criteria: '',
 	dueAt: new Date().toISOString(),
 };

@@ -22,6 +22,7 @@ import { useUser } from '@app/hooks/useUser';
 import { useRoles } from '@app/hooks/useRoles';
 
 import SavedQueriesMenu from './Filters/SavedQueriesMenu';
+import { ALLOWED_CURRENCIES_TYPE, ALLOWED_CURRENCY_CONTRACTS } from '@app/constants/currency';
 import ServiceUtils from '@app/utils/ServiceUtils';
 
 export const PAGE_SIZE = 10;
@@ -94,25 +95,13 @@ const SelectExport = ({
 		setSelectedBounties([]);
 	};
 
-	const handleCSV = (claimedOnly = false, extraMapFunc?: (bounty: Record<string, unknown>) => Record<string, unknown>): void => {
-		if (bounties && csvLink.current) {
-			let csvData = [];
-			if (claimedOnly) {
-				csvData = bounties
-					.filter(({ _id }) => selectedBounties.includes(_id))
-					.filter(bounty => bounty.claimedBy)
-					.map(miscUtils.csvEncode);
-			} else {
-				csvData = bounties
-					.filter(({ _id }) => selectedBounties.includes(_id))
-					.map(miscUtils.csvEncode);
-			}
-			if (extraMapFunc) {
-				csvData = csvData.map(bounty => extraMapFunc(bounty));
-			}
-			setCsvData(csvData, () => {
+	const handleCSV = (exportBounties: any[]): void => {
+		if (exportBounties && csvLink.current) {
+			setCsvData(exportBounties, () => {
 				csvLink?.current?.link.click();
 			});
+			// TODO - redo all this as part of the Mark as Paid project. 
+
 			if (user && roles) {
 				let bountiesToMark: string[] = [];
 				// If Admin, allow all to be marked, otherwise only own bounties and if correct permissions
@@ -201,31 +190,46 @@ const SelectExport = ({
 					<MenuItem
 						onClick={ () => {
 							setCsvFormat(BOUNTY_PARCEL_EXPORT_ITEMS);
-							handleCSV(true, function(bounty: any) {
-								if (bounty['claimedBy']) {
-									bounty['compositeName'] = bounty['claimedBy']['discordHandle'];
-								}
-								bounty['compositeName'] += ' - ' + bounty['title'];
-								return bounty;
-							});
+							if (bounties) {
+								const exportBounties = (bounties
+									.filter(({ _id }) => selectedBounties.includes(_id))
+									.filter(bounty => bounty.claimedBy && bounty.payeeData.walletAddress && ALLOWED_CURRENCY_CONTRACTS[bounty.reward.currency as ALLOWED_CURRENCIES_TYPE]) as any[])
+									.map((bounty) => {
+										if (bounty['claimedBy']) {
+											bounty['compositeName'] = bounty['claimedBy']['discordHandle'];
+										}
+										if (bounty.reward) {
+											bounty.reward.currency = ALLOWED_CURRENCY_CONTRACTS[bounty.reward.currency as ALLOWED_CURRENCIES_TYPE];
+										}
+										bounty['compositeName'] += ' - ' + bounty['title'];
+										return miscUtils.csvEncode(bounty);
+									});
+								handleCSV(exportBounties);
+							}
 						} }
 					>
-						Parcel.money format (only claimed bounties)
+						Parcel.money format
 					</MenuItem>
 					<MenuItem
 						onClick={ () => {
 							setCsvFormat(BOUNTY_LIMITED_EXPORT_ITEMS);
-							handleCSV();
+							if (bounties) {
+								const exportBounties = bounties
+									.filter(({ _id }) => selectedBounties.includes(_id))
+									.filter(bounty => bounty.claimedBy)
+									.map(miscUtils.csvEncode);
+								handleCSV(exportBounties);
+							}
 						} }
 					>
-						Limited data (CSV format)
+						CSV format
 					</MenuItem>
 					<MenuItem
 						onClick={ () => {
 							handleJSON();
 						} }
 					>
-						All data (JSON format)
+						JSON format
 					</MenuItem>
 				</MenuList>
 			</Menu>
