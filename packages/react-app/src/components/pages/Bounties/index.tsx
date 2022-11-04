@@ -135,7 +135,7 @@ const SelectExport = ({
 		if (bounties) {
 
 		  // create file in browser
-		  const fileName = 'bounties.json';
+		  const fileName = 'bounties';
 		  const jsonData = bounties
 		  .filter(({ _id }) => selectedBounties.includes(_id))
 		  .map(miscUtils.csvEncode);
@@ -208,7 +208,7 @@ const SelectExport = ({
 							}
 						} }
 					>
-						Parcel.money format
+						Parcel.money
 					</MenuItem>
 					<MenuItem
 						onClick={ () => {
@@ -216,20 +216,19 @@ const SelectExport = ({
 							if (bounties) {
 								const exportBounties = bounties
 									.filter(({ _id }) => selectedBounties.includes(_id))
-									.filter(bounty => bounty.claimedBy)
 									.map(miscUtils.csvEncode);
 								handleCSV(exportBounties);
 							}
 						} }
 					>
-						CSV format
+						CSV
 					</MenuItem>
 					<MenuItem
 						onClick={ () => {
 							handleJSON();
 						} }
 					>
-						JSON format
+						JSON
 					</MenuItem>
 				</MenuList>
 			</Menu>
