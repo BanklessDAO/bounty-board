@@ -1,5 +1,5 @@
-import { ACTIVITY_VALUES, CLIENT } from '@app/constants/activity';
-import { BOUNTY_STATUS_VALUES } from '@app/constants/bountyStatus';
+import ACTIVITY, { ACTIVITY_VALUES, CLIENT } from '@app/constants/activity';
+import BOUNTY_STATUS, { BOUNTY_STATUS_VALUES } from '@app/constants/bountyStatus';
 import { useExternalRoles } from '@app/hooks/useExternalRoles';
 import {
 	ActivityHistoryItem,
@@ -7,6 +7,7 @@ import {
 	DiscordBoardUser,
 	StatusHistoryItem,
 } from '@app/models/Bounty';
+import { Role } from '@app/types/Role';
 import { APIUser } from 'discord-api-types';
 
 export const dateIsNotInPast = (d: string): string | boolean => {
@@ -77,6 +78,32 @@ export const createRewardObject = (
 		scale,
 	};
 };
+
+export const canUserDoActivity = (
+	activity: ACTIVITY_VALUES,
+	bounty: BountyCollection,
+	user: APIUser | undefined,
+	roles: Role[]
+): { canDoActivity: boolean; reason: string } => {
+
+	switch (activity) {
+	case ACTIVITY.PAID:
+		if (!user) {
+			return { canDoActivity: false, reason: 'Not logged in' };
+		}
+		if (!([BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(bounty.status))) {
+			return { canDoActivity: false, reason: 'Bounty needs to be claimed' };
+		}
+		if ((user?.id !== bounty.createdBy.discordId) && (!roles.includes('admin'))) {
+			return { canDoActivity: false, reason: 'Bounty not created by you' };
+		}
+		return { canDoActivity: true, reason: '' };
+
+	default:
+		return { canDoActivity: false, reason: 'Unknown activity' };
+	}
+};
+
 
 export const isClaimableByUser = (
 	bounty: BountyCollection,

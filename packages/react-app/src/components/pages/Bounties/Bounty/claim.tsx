@@ -26,7 +26,7 @@ import {
 	useDisclosure,
 } from '@chakra-ui/react';
 // import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useContext } from 'react';
 import {
 	actionBy,
@@ -43,10 +43,20 @@ import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
 import miscUtils from '@app/utils/miscUtils';
 import { APIUser } from 'discord-api-types';
+import bountyStatus from '@app/constants/bountyStatus';
+
+const useShowClaimBountyButton = (bounty: BountyCollection): boolean => {
+	const show = useMemo(() => {
+		const isOpen = bounty.status === bountyStatus.OPEN;
+		return isOpen;
+	}, [bounty]);
+	return show;
+};
+
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	// const router = useRouter();
+	const show = useShowClaimBountyButton(bounty);
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
 	const [message, setMessage] = useState<string>();
@@ -93,61 +103,64 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	return (
 		<>
 			{
-				// TODO This is obsolete...
-				bounty.evergreen || bounty.requireApplication ? (
-					// If we have discord message info for the bounty, the user is taken into discord to claim
-					<ClaimDiscord canonicalCard={bounty.canonicalCard} />
-				) : (
-					// else, they must use the web form variant
-					<ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
+				show && (
+					// For complex bounties, take them back to Discord
+					bounty.evergreen || bounty.requireApplication ? (
+						<ClaimDiscord canonicalCard={bounty.canonicalCard} />
+					) : (
+						<>
+							<ClaimWeb user={user} bounty={bounty} onOpen={onOpen} />
+							<Modal onClose={onClose} isOpen={isOpen} isCentered>
+								<ModalOverlay />
+								<ModalContent>
+									<ModalHeader>Claim This Bounty</ModalHeader>
+									{claiming && (
+										<Alert status="success">
+											<AlertIcon />
+											Bounty Claimed!
+										</Alert>
+									)}
+									{error && (
+										<Alert status="error">
+											<AlertIcon />
+											There was a problem claiming the bounty
+										</Alert>
+									)}
+									<ModalCloseButton />
+									<ModalBody flexDirection="column" justifyContent="space-evenly">
+										<Flex mb="5">
+											Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
+											and claim the bounty.
+										</Flex>
+										<Textarea
+											placeholder="Send a message"
+											onChange={(e) => setMessage(e.target.value)}
+										/>
+									</ModalBody>
+									<ModalFooter justifyContent="flex-end">
+										<Box p={2}>
+											<Button
+												transition="background 100ms linear"
+												disabled={!message || bounty.status !== 'Open'}
+												onClick={confirmBounty}
+												isLoading={claiming}
+												loadingText="Submitting"
+												bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
+											>
+												Confirm
+											</Button>
+										</Box>
+										<Box p={2}>
+											<Button onClick={onClose}>Close</Button>
+										</Box>
+									</ModalFooter>
+								</ModalContent>
+							</Modal>
+						</>
+
+					)
 				)
 			}
-			<Modal onClose={onClose} isOpen={isOpen} isCentered>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>Claim This Bounty</ModalHeader>
-					{claiming && (
-						<Alert status="success">
-							<AlertIcon />
-							Bounty Claimed!
-						</Alert>
-					)}
-					{error && (
-						<Alert status="error">
-							<AlertIcon />
-							There was a problem claiming the bounty
-						</Alert>
-					)}
-					<ModalCloseButton />
-					<ModalBody flexDirection="column" justifyContent="space-evenly">
-						<Flex mb="5">
-							Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
-							and claim the bounty.
-						</Flex>
-						<Textarea
-							placeholder="Send a message"
-							onChange={(e) => setMessage(e.target.value)}
-						/>
-					</ModalBody>
-					<ModalFooter justifyContent="flex-end">
-						<Box p={2}>
-							<Button
-								transition="background 100ms linear"
-								disabled={!message || bounty.status !== 'Open'}
-								onClick={confirmBounty}
-								isLoading={claiming}
-								loadingText="Submitting"
-								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
-							>
-								Confirm
-							</Button>
-						</Box>
-						<Box p={2}>
-							<Button onClick={onClose}>Close</Button>
-						</Box>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
 		</>
 	);
 };

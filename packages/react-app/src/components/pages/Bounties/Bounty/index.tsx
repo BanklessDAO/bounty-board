@@ -28,13 +28,12 @@ import { BountyCollection } from '@app/models/Bounty';
 import { BountyNotFound } from '@app/pages/[id]';
 import { SkeletonCircle, SkeletonText } from '@chakra-ui/skeleton';
 import BountyClaim from './claim';
-import BountySubmit from './submit';
+import BountyPublish from './publish';
 import { BountyEditButton } from './edit';
 import { BountyDeleteButton } from './delete';
 
 import UserAvatar from '@app/components/parts/UserAvatar';
 import PAID_STATUS from '@app/constants/paidStatus';
-import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import MiscUtils from '../../../../utils/miscUtils';
 import DOMPurify from 'dompurify';
 import { toHTML } from 'discord-markdown';
@@ -202,17 +201,10 @@ export const BountyActions = ({
 }): JSX.Element => {
 	return (
 		<Flex justifyContent={'flex-end'}>
-			{bounty.status == BOUNTY_STATUS.DRAFT && <BountySubmit bounty={bounty} />}
-			{bounty.status == BOUNTY_STATUS.OPEN && <BountyClaim bounty={bounty} />}
-			{(bounty.status == BOUNTY_STATUS.DRAFT ||
-        bounty.status == BOUNTY_STATUS.OPEN) && (
-				<BountyEditButton bounty={bounty} />
-			)}
-			{(bounty.status == BOUNTY_STATUS.DRAFT ||
-        bounty.status == BOUNTY_STATUS.OPEN) && (
-				<BountyDeleteButton bounty={bounty} />
-			)}
-	
+			<BountyPublish bounty={bounty} />
+			<BountyClaim bounty={bounty} />
+			<BountyEditButton bounty={bounty} />
+			<BountyDeleteButton bounty={bounty} />
 		</Flex>
 	);
 };
