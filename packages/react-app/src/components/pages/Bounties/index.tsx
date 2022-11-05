@@ -281,6 +281,7 @@ const usePaginatedBounties = (
 	}, [bounties, page, PAGE_SIZE, filters.status, filters.search]);
 };
 
+
 const Bounties = (): JSX.Element => {
 	/* Bounties will fetch all data to start, unless a single bounty is requested */
 	const router = useRouter();
