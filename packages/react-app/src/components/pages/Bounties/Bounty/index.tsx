@@ -9,10 +9,11 @@ import {
 	Grid,
 	GridItem,
 	Heading,
-	HStack,
+	Stack,
 	Tag,
 	TagLabel,
 	Text,
+	Tooltip,
 } from '@chakra-ui/react';
 import { BountyCollection } from '@app/models/Bounty';
 import BountyClaim from './claim';
@@ -22,6 +23,7 @@ import PAID_STATUS from '@app/constants/paidStatus';
 import DOMPurify from 'dompurify';
 import { toHTML } from 'discord-markdown';
 import ReactHtmlParser from 'react-html-parser';
+import { BsThreeDots } from 'react-icons/bs';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -73,16 +75,46 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
+const BountyTags = ({ tags }: { tags: {channelCategory: string, keywords: string[]} }): JSX.Element => {
+	let labels: string[] = [];
+
+	if (tags.channelCategory) {
+		labels = labels.concat(tags.channelCategory);
+	} if (tags.keywords) {
+		labels = labels.concat(tags.keywords);
+	}
+
+	return (
+		<>
+			{
+				labels && labels.slice(0, 3).map((tag, index) =>
+					<Tag key={index} size="sm" colorScheme="teal" variant="subtle" borderRadius="full" ml={1.5}>
+						<TagLabel>{tag.replace('-', ' ')}</TagLabel>
+					</Tag>)
+			}
+			{
+				labels.length > 3 &&
+				<Tooltip
+					hasArrow
+					label={
+						<Stack>
+							{labels.slice(3).map((label, index) => <Text key={index}>{label}</Text>)}
+						</Stack>
+					}
+					fontSize="md"
+					closeDelay={500}
+				>
+					<Tag size="sm" colorScheme="teal" variant="subtle" borderRadius="full" ml={1.5}>
+						<TagLabel><BsThreeDots /></TagLabel>
+					</Tag>
+				</Tooltip>
+
+			}
+		</>
+	);
+};
 
 const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
-	let tags: string[] = [];
-	
-	if (bounty.tags?.channelCategory) {
-		tags = tags.concat(bounty.tags.channelCategory);
-	} if (bounty.tags?.text) {
-		tags = tags.concat(bounty.tags.text);
-	}
-	
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" ml="2">
 			<Box
@@ -93,12 +125,9 @@ const BountySummary = ({ bounty }: {bounty: BountyCollection}): JSX.Element => {
 			>
 				<Heading mb={4} size="md" flex={{ base: 1, md: 0 }}>
 					{bounty.title}
-
-					{tags && tags.map((tag) =>
-						<Tag key={tag} size='sm' colorScheme='purple' variant='subtle' borderRadius='full' ml='1.5'>
-							<TagLabel>{tag.replace('-', ' ')}</TagLabel>
-						</Tag>
-					)}
+					{
+						bounty.tags && <BountyTags tags={bounty.tags} />
+					}
 				</Heading>
 			</Box>
 			<Box
