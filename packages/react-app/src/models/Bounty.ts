@@ -122,7 +122,7 @@ export const ActivityHistory = object({
 
 export const TagObject = object({
 	channelCategory: string().optional(),
-	text: array(string()),
+	keywords: array(string()),
 });
 
 export const BountySchema = object({
@@ -266,11 +266,10 @@ export const BountyBoardSchema = new mongoose.Schema({
 		type: Object,
 	},
 	tags: {
-		text: [String],
+		keywords: [String],
 	},
 });
 
-// BountyBoardSchema.index({ title: 'text', description: 'text', criteria: 'text', 'tags.text': 'text', 'tags.channelCategory': 'text' });
 BountyBoardSchema.plugin(aggregatePlugin);
 
 export default mongoose.models.Bounty as PaginateModel<BountyCollection> ||

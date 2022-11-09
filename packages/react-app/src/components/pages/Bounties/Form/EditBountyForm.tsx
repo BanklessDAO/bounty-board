@@ -22,6 +22,14 @@ const getEditData = (
 	/**
    * Transform form data to match shape of bounty collection
    */
+	 const keywords: string[] = [];
+	 const tags = updatedBountyFormData.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+	 tags.forEach(tag => {
+		 if (!keywords.includes(tag.toLowerCase())) {
+			 keywords.push(tag.toLowerCase());
+		 }
+	 });
+	 
 	return {
 		title: updatedBountyFormData.title,
 		description: updatedBountyFormData.description,
@@ -33,7 +41,7 @@ const getEditData = (
 		),
 		activityHistory: newActivityHistory(exisitingBounty.activityHistory as [], ACTIVITY.EDIT),
 		tags: {
-			text: updatedBountyFormData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+			keywords: keywords,
 		},
 	};
 };
@@ -45,7 +53,7 @@ const editableValues = (bounty: BountyCollection): typeof bountyFormFieldValues 
 	currency: bounty.reward.currency,
 	criteria: bounty.criteria,
 	dueAt: bounty.dueAt,
-	tags: bounty.tags.text?.join(', ') ?? '',
+	tags: bounty.tags.keywords?.join(', ') ?? '',
 });
 
 const EditBountyForm = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {

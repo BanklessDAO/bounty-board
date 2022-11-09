@@ -47,6 +47,14 @@ const generatePreviewData = (
    * Transform form data to match shape of bounty collection, then
    * cache to local storage so it can be picked up by the preview page
    */
+	const keywords: string[] = [];
+	const tags = data?.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+	tags.forEach(tag => {
+		if (!keywords.includes(tag.toLowerCase())) {
+			keywords.push(tag.toLowerCase());
+		}
+	});
+
 	return {
 		title: data.title,
 		description: data.description,
@@ -56,7 +64,7 @@ const generatePreviewData = (
 		dueAt: new Date(data.dueAt).toISOString(),
 		reward: createRewardObject(data.reward, data.currency),
 		tags: {
-			text: data?.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+			keywords: keywords,
 		},
 		statusHistory: [
 			{
