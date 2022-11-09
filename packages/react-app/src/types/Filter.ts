@@ -19,6 +19,7 @@ export interface FilterParams {
 	next?: string;
 	previous?: string;
 	limit?: number;
+	tags?: string[];
 }
 
 export type UseFilterState = {

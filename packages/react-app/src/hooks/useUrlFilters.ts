@@ -7,7 +7,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { useContext, useMemo } from 'react';
 import useDebounce from './useDebounce';
 
-const keysWithArrayVals = ['status', 'paidStatus'];
+const keysWithArrayVals = ['status', 'paidStatus', 'tags'];
 const keysWithNumberVals = ['gte', 'lte'];
 const keysWithBooleanVals = ['asc'];
 const validStatusKeys = Object.values(BOUNTY_STATUS);
@@ -17,6 +17,7 @@ export const baseFilters: FilterParams = {
 	search: '',
 	status: [],
 	paidStatus: [],
+	tags: [],
 	gte: 0,
 	lte: Infinity,
 	sortBy: 'reward',
@@ -34,11 +35,12 @@ export const useDynamicUrl = (filters: FilterParams, ready: boolean): string => 
 		let urlQuery = '';
 
 		if (ready) {
-			const { status, paidStatus, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy } = filters;
+			const { status, paidStatus, lte, gte, sortBy, asc: sortAscending, claimedBy, createdBy, tags } = filters;
 
 			if (status) urlQuery += `&status=${status || []}`;
 			if (paidStatus) urlQuery += `&paidStatus=${paidStatus || []}`;
 			if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
+			if (tags) urlQuery += `&tags=${tags || []}`;
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;
 			if (sortBy) urlQuery += `&sortBy=${sortBy}`;
@@ -74,6 +76,8 @@ const sanitizeFilter = (key: string, val: string | number | boolean): string | s
 		return Array.from(new Set(arrayVal.filter((s: BOUNTY_STATUS_VALUES) => validStatusKeys.includes(s))).values());
 	case 'paidStatus':
 		return Array.from(new Set(arrayVal.filter((s: PAID_STATUS_VALUES) => validPaidStatusKeys.includes(s))).values());
+	case 'tags':
+		return arrayVal;
 	default:
 		return [];
 	}

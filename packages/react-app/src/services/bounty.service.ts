@@ -21,6 +21,7 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	if (typeof query.customerId === 'string') filters.customerId = query.customerId;
 	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
 	if (typeof query.claimedBy === 'string') filters.claimedBy = query.claimedBy;
+	if (typeof query.tags === 'string') filters.tags = query.tags ? query.tags.split(',') : [];
 
 	if (query.lte) filters.lte = Number(query.lte);
 	if (query.gte) filters.gte = Number(query.gte);
@@ -178,6 +179,20 @@ export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	limit: (Number(query.limit)) ? Number(query.limit) : 1000,
 });
 
+export const filterTags = (query: FilterQuery<BountyCollection>, tags?: string[]): FilterQuery<BountyCollection> => {
+	if (tags && tags.length) {
+		query.$and = [
+			{
+				$or:
+				[
+					{ 'tags.channelCategory': { $in: tags } },
+					{ 'tags.keywords': { $in: tags } },
+				],
+			},
+		];
+	}
+	return query;
+};
 
 export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	/**
@@ -187,7 +202,7 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 
 	const filters = getFilters(query);
 
-	const { status, paidStatus, search, lte, gte, customerId, claimedBy, createdBy } = filters;
+	const { status, paidStatus, search, lte, gte, customerId, claimedBy, createdBy, tags } = filters;
 
 	filterQuery = filterStatus(filterQuery, status);
 	filterQuery = filterPaidStatus(filterQuery, paidStatus);
@@ -195,6 +210,7 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	if (customerId) filterQuery = filterCustomerId(filterQuery, customerId);
 	filterQuery = filterLessGreater({ query: filterQuery, by: 'reward.amount', lte, gte });
 	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
+	filterQuery = filterTags(filterQuery, tags);
 	filterQuery = handleEmpty(filterQuery);
 
 	return { '$match' : filterQuery };

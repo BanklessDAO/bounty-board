@@ -15,6 +15,7 @@ import {
 	useColorMode,
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
+import { Select as MultiSelect, OptionBase, GroupBase } from 'chakra-react-select';
 import bountyStatus from '@app/constants/bountyStatus';
 import paidStatus from '@app/constants/paidStatus';
 import { AcceptedSortInputs, FilterParams, UseFilterState } from '@app/types/Filter';
@@ -22,6 +23,7 @@ import React, { useMemo, useState } from 'react';
 import { useUser } from '@app/hooks/useUser';
 import { CheckboxCard } from '@app/components/parts/SelectButton';
 import SaveSearchModal from './SaveSearchModal';
+import { BountyCollection } from '@app/models/Bounty';
 
 
 type SetState<T extends any> = (arg: T) => void;
@@ -301,7 +303,37 @@ const SaveFilter = ({ filters }: {filters: FilterParams}): JSX.Element => {
 	</>;
 };
 
+interface TagOption extends OptionBase {
+	label: string;
+	value: string;
+  }
+const TagFilter = ({ options, filters, setFilters }: {
+	options: TagOption[],
+} & UseFilterState): JSX.Element => {
+
+	const updateTags = (selected: readonly TagOption[]): void => {
+		setFilters({
+			...filters,
+			tags: selected.map((opt: TagOption) => opt.value),
+		});
+	};
+
+	return (
+		<MultiSelect<TagOption, true, GroupBase<TagOption>>
+			isMulti
+			name="tags"
+			placeholder="Filter by tags"
+			id="tags"
+			instanceId="tags"
+			closeMenuOnSelect={options.length > 5 ? true : false}
+			options={options}
+			onChange={updateTags}
+		/>
+	);
+};
+
 const Filters = (props: {
+	bounties: BountyCollection[] | undefined,
 	filters: FilterParams,
 	setFilters: SetState<FilterParams>
 }): JSX.Element => {
@@ -334,6 +366,21 @@ const Filters = (props: {
 			value: paidStatus.UNPAID,
 		},
 	];
+
+	const labels: string[] = [];
+	const bountyTags = props.bounties?.filter(({ tags }) => tags?.channelCategory || tags?.keywords).map(({ tags }) => ({ channelCategory: tags.channelCategory, keywords: tags.keywords }));
+
+	bountyTags?.map(({ channelCategory, keywords }) => {
+		if (channelCategory && !labels.includes(channelCategory.toLowerCase())) {
+			labels.push(channelCategory.toLowerCase());
+		}
+		keywords?.forEach((word: string) => {
+			if (!labels.includes(word.toLowerCase())) {
+				labels.push(word.toLowerCase());
+			}
+		});
+	});
+	
 	return (
 		<Stack width={{ base: '100%', lg: '70vw' }} >
 			<Stack borderWidth={3} width={'100%'} borderRadius={10} px={3} py={5} mb={3} direction={{ base: 'column', lg: 'row' }}>
@@ -365,6 +412,11 @@ const Filters = (props: {
 				</Stack>
 				<Stack px={2} flexGrow={1}>
 					<SearchFilter
+						filters={props.filters}
+						setFilters={props.setFilters}
+					/>
+					<TagFilter
+						options={labels.map((opt)=> ({ value: opt, label: opt }))}
 						filters={props.filters}
 						setFilters={props.setFilters}
 					/>

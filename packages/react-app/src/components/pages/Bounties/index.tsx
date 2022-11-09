@@ -149,9 +149,9 @@ const usePaginatedBounties = (bounties: BountyCollection[] | undefined, page: nu
 			? bounties.slice(PAGE_SIZE * page, Math.min(bounties.length, PAGE_SIZE * (page + 1)))
 			: [];
 
-		const noResults = Boolean(((filters.search || filters.status) && bounties && paginatedBounties.length === 0));
+		const noResults = Boolean(((filters.search || filters.status || filters.tags) && bounties && paginatedBounties.length === 0));
 		return { paginatedBounties, noResults };
-	}, [bounties, page, PAGE_SIZE, filters.status, filters.search]);
+	}, [bounties, page, PAGE_SIZE, filters.status, filters.search, filters.tags]);
 };
 
 
@@ -212,6 +212,7 @@ const Bounties = (): JSX.Element => {
 						width={'100%'}
 					>
 						<Filters
+							bounties={bounties}
 							filters={filters}
 							setFilters={setFilters}
 						/>
