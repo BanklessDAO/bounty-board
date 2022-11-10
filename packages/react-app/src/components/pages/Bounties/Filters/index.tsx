@@ -47,6 +47,12 @@ const sortOptions: { name: string; value: AcceptedSortInputs }[] = [
 		name: 'Paid Status',
 		value: 'paidStatus',
 	},
+	{
+		name: 'Bounty Status', value: 'status',
+	},
+	{
+		name: 'Paid Status', value: 'paidStatus',
+	},
 ];
 
 const SearchIcon = ({ color }: { color: string }): JSX.Element => (
