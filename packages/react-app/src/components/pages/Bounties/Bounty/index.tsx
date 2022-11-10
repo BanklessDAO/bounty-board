@@ -168,7 +168,7 @@ const BountyTags = ({
 					<Tooltip
 						hasArrow
 						label={
-							<Stack>
+							<Stack textAlign="center">
 								{labels.slice(3).map((label, index) => <Text key={index}>{label}</Text>)}
 							</Stack>
 						}
