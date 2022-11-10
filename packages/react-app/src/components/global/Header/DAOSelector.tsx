@@ -6,15 +6,15 @@ import { CustomerContext } from '../../../context/CustomerContext';
 export const DAOSelector = ({
 	customers,
 }: {
-	customers: CustomerProps[] | [];
+  customers: CustomerProps[] | [];
 }): JSX.Element => {
 	const { customer, setCustomer } = useContext(CustomerContext);
 
 	const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		/**
-	 * When the user changes the DAO using the selector
-	 * navigate to the homepage and update the customer to the newly selected DAO
-	 */
+     * When the user changes the DAO using the selector
+     * navigate to the homepage and update the customer to the newly selected DAO
+     */
 		// router.push('/');
 		const _customer = customers.find(
 			({ customerName }) => customerName === event.target.value
@@ -38,12 +38,11 @@ export const DAOSelector = ({
 			h={{ base: '3em', md: '2.6em' }}
 			textAlign={{ base: 'center', md: 'start' }}
 		>
-
 			{customers && customers.map((option) => (
-				<option key={option.customerId} value={option.customerName}>
-					{option.customerName}
-				</option>
-			))}
+        	<option key={option.customerId} value={option.customerName}>
+        		{option.customerName}
+        	</option>
+		 ))}
 		</Select>
 	);
 };

@@ -17,7 +17,7 @@ import BountyFormFields, { bountyFormFieldValues } from './FormFields';
 
 const getEditData = (
 	updatedBountyFormData: typeof bountyFormFieldValues,
-	exisitingBounty: BountyCollection,
+	exisitingBounty: BountyCollection
 ): Partial<BountyCollection> => {
 	/**
    * Transform form data to match shape of bounty collection
@@ -39,24 +39,33 @@ const getEditData = (
 			updatedBountyFormData.reward,
 			updatedBountyFormData.currency
 		),
-		activityHistory: newActivityHistory(exisitingBounty.activityHistory as [], ACTIVITY.EDIT),
+		activityHistory: newActivityHistory(
+      exisitingBounty.activityHistory as [],
+      ACTIVITY.EDIT
+		),
 		tags: {
 			keywords: keywords,
 		},
 	};
 };
 
-const editableValues = (bounty: BountyCollection): typeof bountyFormFieldValues => ({
+const editableValues = (
+	bounty: BountyCollection
+): typeof bountyFormFieldValues => ({
 	title: bounty.title,
 	description: bounty.description,
 	reward: bounty.reward.amount?.toString() as string,
 	currency: bounty.reward.currency,
 	criteria: bounty.criteria,
 	dueAt: bounty.dueAt,
-	tags: bounty.tags.keywords?.join(', ') ?? '',
+	tags: bounty.tags?.keywords.join(', ') ?? '',
 });
 
-const EditBountyForm = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+const EditBountyForm = ({
+	bounty,
+}: {
+  bounty: BountyCollection;
+}): JSX.Element => {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const disclosure = useDisclosure();
@@ -71,58 +80,64 @@ const EditBountyForm = ({ bounty }: { bounty: BountyCollection }): JSX.Element =
 	useEffect(() => {
 		const deleted = bounty.status === BOUNTY_STATUS.DELETED;
 		const ownBounty = bounty.createdBy.discordId === user?.id;
-		const elevatedPrivs = roles.includes('admin') || roles.includes('edit-bounties') || roles.includes('delete-bounties');
+		const elevatedPrivs =
+      roles.includes('admin') ||
+      roles.includes('edit-bounties') ||
+      roles.includes('delete-bounties');
 		const canEdit = elevatedPrivs || ownBounty;
 		if (deleted || !canEdit) router.push(`/${bounty._id}`);
 	}, [bounty, router]);
 
+	const editBounty = useCallback(
+		(editedBounty: Partial<BountyCollection>): void => {
+			/**
+       * Edit bounty is not guaranteed to have all fields, so we can
+       * Instead use the passed bounty details for customerId and _id
+       */
+			setLoading(true);
+			axios
+				.patch<{ data: BountyCollection }>(
+					`api/bounties/${bounty._id}?customerId=${bounty.customerId}`,
+					editedBounty,
+					{
+						baseURL: '/',
+					}
+				)
+				.then(({ data: res }) => {
+					mutate(`/api/bounties/${bounty._id}`, res.data);
+					router.push(`/${bounty._id}`);
+					localStorage.removeItem('cachedEdit');
+				})
+				.catch((err) => {
+					console.error(err);
+					setError('There was a problem editing the bounty');
+				})
+				.finally(() => setLoading(false));
+		},
+		[bounty, setLoading, router, mutate, axios]
+	);
 
-	const editBounty = useCallback((editedBounty: Partial<BountyCollection>): void => {
-		/**
-         * Edit bounty is not guaranteed to have all fields, so we can
-         * Instead use the passed bounty details for customerId and _id
-         */
-		setLoading(true);
-		axios.patch<{ data: BountyCollection }>(`api/bounties/${bounty._id}?customerId=${bounty.customerId}`, editedBounty, {
-			baseURL: '/',
-		})
-			.then(({ data: res }) => {
-				mutate(`/api/bounties/${bounty._id}`, res.data);
-				router.push(`/${bounty._id}`);
-				localStorage.removeItem('cachedEdit');
-			})
-			.catch(err => {
-				console.error(err);
-				setError('There was a problem editing the bounty');
-			})
-			.finally(() => setLoading(false))
-		;
-	}, [bounty, setLoading, router, mutate, axios]);
-    
 	return (
 		<>
 			<DeleteBountyConfirm bounty={bounty} disclosure={disclosure} />
-			<form onSubmit={handleSubmit(data => {
-				const editBountyData = getEditData(data, bounty);
-				editBounty(editBountyData);
-			})}>
+			<form
+				onSubmit={handleSubmit((data) => {
+					const editBountyData = getEditData(data, bounty);
+					editBounty(editBountyData);
+				})}>
 				<BountyFormFields formProps={formProps} />
 				<Button
 					bg="primary.700"
 					my="5"
 					w="full"
 					type="submit"
-					isLoading={loading}
-				>
-    	Confirm
+					isLoading={loading} >
+					Confirm
 				</Button>
 				<ErrorAlert error={error} setError={setError} />
 				<RestrictedTo roles={['delete-own-bounty', 'admin', 'delete-bounties']}>
-					<Button
-						w='full'
-						onClick={disclosure.onOpen}
-					>
-                    Delete
+					<Button w="full" onClick={disclosure.onOpen}>
+                      Delete
 					</Button>
 				</RestrictedTo>
 			</form>

@@ -22,10 +22,7 @@ const NavBar: React.FC = (props): JSX.Element => {
 	const { customer } = useContext(CustomerContext);
 	return (
 		<NavBarContainer {...props}>
-			<Logo
-				alt={customer?.customerName}
-				img={customer?.customization?.logo}
-			/>
+			<Logo alt={customer?.customerName} img={customer?.customization?.logo} />
 			<Menu />
 		</NavBarContainer>
 	);

@@ -15,28 +15,24 @@ export const ColorSchema = object({
 	Deleted: string().optional(),
 	Draft: string().optional(),
 	primary: string().optional(),
-})
-	.noUnknown(true);
+}).noUnknown(true);
 
 export const CustomizationSchema = object({
 	logo: string().optional(),
 	colors: ColorSchema,
-})
-	.noUnknown(true);
+}).noUnknown(true);
 
 export const CustomExternalRoleMapSchema = object({
 	externalRole: string().defined(),
 	roles: array().of(string()).defined(),
-})
-	.noUnknown(true);
-	
+}).noUnknown(true);
+
 export const ExternalRoleMapSchema = object({
 	baseExternalRoles: array().of(string()).optional(),
 	adminExternalRoles: array().of(string()).optional(),
 	customExternalRoleMap: array().of(CustomExternalRoleMapSchema).optional(),
-})
-	.noUnknown(true);
-	
+}).noUnknown(true);
+
 export const CustomerSchema = object({
 	customerId: string().defined(),
 	customerName: string().defined(),
@@ -44,60 +40,62 @@ export const CustomerSchema = object({
 	bountyChannel: string().defined(),
 	customization: CustomizationSchema.optional().default(undefined),
 	externalRoleMap: ExternalRoleMapSchema.optional().default(undefined),
-})
-	.noUnknown(true);
+}).noUnknown(true);
 
 export interface CustomerProps {
-	_id?: string;
-	customerId: string;
-	customerKey: string;
-	customerName: string;
-	customization?: Customization;
-	bountyChannel: string;
-	externalRoleMap?: ExternalRoleMap;
+  _id?: string;
+  customerId: string;
+  customerKey: string;
+  customerName: string;
+  customization?: Customization;
+  bountyChannel: string;
+  externalRoleMap?: ExternalRoleMap;
 }
 export interface ExternalRoleMap {
-	baseExternalRoles?: string[];
-	adminExternalRoles?: string[];
-	customExternalRoleMap?: CustomExternalRoleMap[];
+  baseExternalRoles?: string[];
+  adminExternalRoles?: string[];
+  customExternalRoleMap?: CustomExternalRoleMap[];
 }
 export interface CustomExternalRoleMap {
-	externalRole: string;
-	roles: Role[];
+  externalRole: string;
+  roles: Role[];
 }
 
 export interface Customization {
-	logo?: string;
-	colors?: SupportedColorCustomizations;
+  logo?: string;
+  colors?: SupportedColorCustomizations;
 }
 export interface SupportedColorCustomizations {
-	background?: LightDark;
-	'In-Review'?: string;
-	'In-Progress'?: string;
-	Open?: string;
-	Completed?: string;
-	Done?: string;
-	Deleted?: string;
-	Draft?: string;
-	primary?: string;
+  background?: LightDark;
+  'In-Review'?: string;
+  'In-Progress'?: string;
+  Open?: string;
+  Completed?: string;
+  Done?: string;
+  Deleted?: string;
+  Draft?: string;
+  primary?: string;
 }
 export interface LightDark {
-	light: string;
-	dark: string;
+  light: string;
+  dark: string;
 }
 
-export const CustomizationModel = new mongoose.Schema<Customization>({
-	logo: String,
-	colors: {
-		type: Object,
-		background: {
+export const CustomizationModel = new mongoose.Schema<Customization>(
+	{
+		logo: String,
+		colors: {
 			type: Object,
-			light: String,
-			dark: String,
-			required: false,
+			background: {
+				type: Object,
+				light: String,
+				dark: String,
+				required: false,
+			},
 		},
 	},
-}, { strict: false });
+	{ strict: false }
+);
 
 export const ExternalRoleMapModel = new mongoose.Schema<ExternalRoleMap>({
 	baseExternalRoles: {
@@ -107,10 +105,12 @@ export const ExternalRoleMapModel = new mongoose.Schema<ExternalRoleMap>({
 	adminExternalRoles: {
 		type: [String],
 	},
-	customExternalRoleMap: [{
-		externalRole: String,
-		roles: [String],
-	}],
+	customExternalRoleMap: [
+		{
+			externalRole: String,
+			roles: [String],
+		},
+	],
 });
 
 export const CustomerModel = new mongoose.Schema<CustomerProps>({
@@ -130,5 +130,5 @@ export const CustomerModel = new mongoose.Schema<CustomerProps>({
 	externalRoleMap: ExternalRoleMapModel,
 });
 
-export default mongoose.models.Customer as mongoose.Model<CustomerProps>
-	|| mongoose.model<CustomerProps>('Customer', CustomerModel);
+export default (mongoose.models.Customer as mongoose.Model<CustomerProps>) ||
+  mongoose.model<CustomerProps>('Customer', CustomerModel);

@@ -2,14 +2,13 @@ import { SchemaToInterface } from '@app/types/Models';
 import mongoose from 'mongoose';
 import { object, string } from 'yup';
 
-
 export interface SavedUserQueryProps {
-	_id?: string;
-	customerId: string;
-	discordId: string;
-	savedQuery: string;
-	name: string;
-	createdAt: Date;
+  _id?: string;
+  customerId: string;
+  discordId: string;
+  savedQuery: string;
+  name: string;
+  createdAt: Date;
 }
 
 export const SavedUserQuerySchema = object({
@@ -39,5 +38,6 @@ export const SavedUserQuery = new mongoose.Schema<SavedUserQueryProps>({
 	},
 });
 
-export default mongoose.models.SavedUserQuery as mongoose.Model<SavedUserQueryProps>
-	|| mongoose.model<SavedUserQueryProps>('SavedUserQuery', SavedUserQuery);
+export default (mongoose.models
+	.SavedUserQuery as mongoose.Model<SavedUserQueryProps>) ||
+  mongoose.model<SavedUserQueryProps>('SavedUserQuery', SavedUserQuery);

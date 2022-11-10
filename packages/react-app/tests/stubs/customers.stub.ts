@@ -8,14 +8,17 @@ export const customers: CustomerProps[] = [
 		bountyChannel: '850402063741091880',
 		externalRoleMap: {
 			baseExternalRoles: [
-			  '840627393777762344',
-			  '839005209611075614',
-			  '839005084016312360',
-			  '834560235704025108',
+				'840627393777762344',
+				'839005209611075614',
+				'839005084016312360',
+				'834560235704025108',
 			],
-			adminExternalRoles: [ '911038195397967892' ],
+			adminExternalRoles: ['911038195397967892'],
 			customExternalRoleMap: [
-				{ externalRole: '843924063591727195', roles: ['create-bounty', 'edit-bounties'] },
+				{
+					externalRole: '843924063591727195',
+					roles: ['create-bounty', 'edit-bounties'],
+				},
 			],
 		},
 	},
@@ -24,7 +27,7 @@ export const customers: CustomerProps[] = [
 		customerKey: 'bbbs',
 		customerName: 'BBBS',
 		bountyChannel: '850402063741091880',
-		externalRoleMap: { adminExternalRoles: [ '*' ] },
+		externalRoleMap: { adminExternalRoles: ['*'] },
 	},
 	{
 		customerId: '402910780124561410',

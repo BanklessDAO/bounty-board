@@ -14,26 +14,26 @@ export interface DiscordGuild {
 }
 
 export type DiscordEmbed = {
-	embeds: Embed[]
-}
+  embeds: Embed[];
+};
 
 type Embed = {
-	title: string;
-	url: string;
-	author: {
-		name: BountyCollection['createdBy']['discordHandle'];
-	}
-	description: string;
-	color: number;
-	fields: EmbedField[];
-	timestamp: string;
-	footer: {
-		text: string;
-	}
+  title: string;
+  url: string;
+  author: {
+    name: BountyCollection['createdBy']['discordHandle'];
+  };
+  description: string;
+  color: number;
+  fields: EmbedField[];
+  timestamp: string;
+  footer: {
+    text: string;
+  };
 };
 
 type EmbedField = {
-	name: string;
-	value: string;
-	inline?: boolean;
-}
+  name: string;
+  value: string;
+  inline?: boolean;
+};

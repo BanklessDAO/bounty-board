@@ -5,9 +5,9 @@ import Header from '../Header';
 import Footer from '../Footer';
 
 type LayoutProps = {
-  children: ReactNode
-  title: string
-}
+  children: ReactNode;
+  title: string;
+};
 
 const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
 	return (
@@ -20,8 +20,8 @@ const SiteLayout = ({ children, title }: LayoutProps): JSX.Element => {
 				transition="background 100ms linear"
 				align="center"
 				justify="center"
-				bg="primary"
-			>
+				bg="primary">
+					
 				<Box>
 					<Heading size="xl" as="h1" textAlign="center">
 						{title}

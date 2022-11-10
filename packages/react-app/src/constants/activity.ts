@@ -13,6 +13,7 @@ export const ACTIVITY = {
 	HELP: 'help',
 	TAG: 'tag',
 	EDIT: 'edit',
+	PAID: 'paid',
 } as const;
 
 export const CLIENT = {
@@ -20,6 +21,6 @@ export const CLIENT = {
 	BOUNTYBOT: 'bountybot',
 };
 
-export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>
+export type ACTIVITY_VALUES = ObjectValues<typeof ACTIVITY>;
 
 export default ACTIVITY;
