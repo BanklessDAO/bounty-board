@@ -6,21 +6,19 @@ import NewBountyForm from '@app/components/pages/Bounties/Form/NewBountyForm';
 
 const CreateBounty = (): JSX.Element => {
 	const { status } = useSession({ required: false });
-	const unauthorized = (status !== 'loading' && status !== 'authenticated');
+	const unauthorized = status !== 'loading' && status !== 'authenticated';
 	return (
 		<Layout title={unauthorized ? 'Not Authorized' : 'Create a new Bounty'}>
-			{
-				unauthorized
-					?	(
-						<Stack align="center" justify="center" h="400px">
-							<Heading size="4xl" alignItems="center">
-								<strong>403</strong>
-							</Heading>
-							<Heading size="xl">Unauthorized - Sign In to Access</Heading>
-						</Stack>
-					)
-					: <NewBountyForm />
-			}
+			{unauthorized ? (
+				<Stack align="center" justify="center" h="400px">
+					<Heading size="4xl" alignItems="center">
+						<strong>403</strong>
+					</Heading>
+					<Heading size="xl">Unauthorized - Sign In to Access</Heading>
+				</Stack>
+			) : (
+				<NewBountyForm />
+			)}
 		</Layout>
 	);
 };

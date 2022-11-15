@@ -17,8 +17,8 @@ import ThemeToggle from '@app/components/parts/ThemeToggle';
 import { MenuLinks } from './MenuLinks';
 
 interface MobileProps {
-	isOpen: boolean;
-	onClose: VoidFunction;
+  isOpen: boolean;
+  onClose: VoidFunction;
 }
 
 export const MobileMenu = ({ isOpen, onClose }: MobileProps): JSX.Element => {
@@ -31,7 +31,9 @@ export const MobileMenu = ({ isOpen, onClose }: MobileProps): JSX.Element => {
 					<Flex>
 						<Logo
 							alt={`${customer?.customerName ?? 'DAO'} Logo`}
-							img={'/assets/logos/' + (customer?.customization?.logo ?? 'logo.png')}
+							img={
+								'/assets/logos/' + (customer?.customization?.logo ?? 'logo.png')
+							}
 						/>
 						<DrawerCloseButton w={'4em'} h={'4em'} onClick={onClose} />
 					</Flex>

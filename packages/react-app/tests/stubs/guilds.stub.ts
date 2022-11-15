@@ -127,11 +127,7 @@ export const guilds: DiscordGuild[] = [
 		icon: '934f3f7c5d6df1d014c55c1760090d7d',
 		owner: false,
 		permissions: '1071698533953',
-		features: [
-			'ANIMATED_ICON',
-			'INVITE_SPLASH',
-			'THREE_DAY_THREAD_ARCHIVE',
-		],
+		features: ['ANIMATED_ICON', 'INVITE_SPLASH', 'THREE_DAY_THREAD_ARCHIVE'],
 	},
 	{
 		id: '544810647683072000',
@@ -593,11 +589,7 @@ export const guilds: DiscordGuild[] = [
 		icon: '1b66300f2d64b9a93b57c043647feb1a',
 		owner: false,
 		permissions: '1071698529857',
-		features: [
-			'COMMUNITY',
-			'NEWS',
-			'THREADS_ENABLED',
-		],
+		features: ['COMMUNITY', 'NEWS', 'THREADS_ENABLED'],
 	},
 	{
 		id: '895856754292838460',

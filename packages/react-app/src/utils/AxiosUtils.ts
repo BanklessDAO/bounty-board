@@ -10,24 +10,27 @@ const axios = $http.create({
 	},
 });
 
-export const axiosTokenFetcher = (url: string, token: string): any => axios.get(
-	// fetcher function with token
-	url,
-	{
-		headers: {
-			authorization: `Bearer ${token}`,
-		},
-	}
-).then(res => res.data).catch(error => console.warn(error));
+export const axiosTokenFetcher = (url: string, token: string): any =>
+	axios
+		.get(
+			// fetcher function with token
+			url,
+			{
+				headers: {
+					authorization: `Bearer ${token}`,
+				},
+			}
+		)
+		.then((res) => res.data)
+		.catch((error) => console.warn(error));
 
-
-export const axiosFetcher = (url: string): any => axios.get(
-	url,
-)
-// strips the messy data.data thing
-	.then(({ data: res }) => res.data)
-	.catch(error => {
-		console.warn(error.message ?? error);
-	});
+export const axiosFetcher = (url: string): any =>
+	axios
+		.get(url)
+	// strips the messy data.data thing
+		.then(({ data: res }) => res.data)
+		.catch((error) => {
+			console.warn(error.message ?? error);
+		});
 
 export default axios;

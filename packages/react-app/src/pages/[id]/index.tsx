@@ -17,7 +17,7 @@ export const BountyNotFound = (): JSX.Element => (
 		<Box>
 			<Heading size="xl">Bounty not found</Heading>
 		</Box>
-		<Link href='/'>
+		<Link href="/">
 			<Box my="5">
 				<ColorModeButton>Go Back</ColorModeButton>
 			</Box>
@@ -26,9 +26,9 @@ export const BountyNotFound = (): JSX.Element => (
 );
 
 export const BountyLoader = (): JSX.Element => (
-	<Box padding='6' boxShadow='lg'>
-		<SkeletonCircle size='10' />
-		<SkeletonText mt='4' noOfLines={10} spacing='4' />
+	<Box padding="6" boxShadow="lg">
+		<SkeletonCircle size="10" />
+		<SkeletonText mt="4" noOfLines={10} spacing="4" />
 	</Box>
 );
 
@@ -36,26 +36,26 @@ export const BountyPage = (): JSX.Element => {
 	const router = useRouter();
 	const { id, customerKey } = router.query;
 	const { bounty, isLoading, isError } = useBounty(id);
-	const { customer, isLoading: isCustomerLoading } = useCustomerFromBountyIdAndKey(id, customerKey);
+	const { customer, isLoading: isCustomerLoading } =
+    useCustomerFromBountyIdAndKey(id, customerKey);
 	return (
-		<>{
-			isLoading || isCustomerLoading
-				? <BountyLoader />
-				: bounty && customer ?
-					<Stack
-						direction={{ base: 'column', lg: 'row' }}
-						align="top"
-						fontSize="sm"
-						fontWeight="600"
-						gridGap="4"
-					>
-						<BountyCard bounty={bounty} />
-					</Stack>
-
-					: ((id && !customer) || (id && isError))
-					&& <BountyNotFound />
-
-		}</>
+		<>
+			{isLoading || isCustomerLoading ? (
+				<BountyLoader />
+			) : bounty && customer ? (
+				<Stack
+					direction={{ base: 'column', lg: 'row' }}
+					align="top"
+					fontSize="sm"
+					fontWeight="600"
+					gridGap="4"
+				>
+					<BountyCard bounty={bounty} />
+				</Stack>
+			) : (
+				((id && !customer) || (id && isError)) && <BountyNotFound />
+			)}
+		</>
 	);
 };
 

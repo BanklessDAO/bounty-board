@@ -1,10 +1,28 @@
 import { useUser } from '@app/hooks/useUser';
 import { SavedQuery } from '@app/types/SavedQuery';
 import axios from '@app/utils/AxiosUtils';
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from '@chakra-ui/react';
+import {
+	Button,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	ModalOverlay,
+	useToast,
+} from '@chakra-ui/react';
 import { mutate } from 'swr';
 
-const DeleteSearchModal = ({ showModal, onClick, queryToDelete }:{ onClick: any, showModal: boolean, queryToDelete: SavedQuery | undefined }):JSX.Element => {
+const DeleteSearchModal = ({
+	showModal,
+	onClick,
+	queryToDelete,
+}: {
+  onClick: any;
+  showModal: boolean;
+  queryToDelete: SavedQuery | undefined;
+}): JSX.Element => {
 	const { user } = useUser();
 	const toast = useToast();
 
@@ -39,11 +57,11 @@ const DeleteSearchModal = ({ showModal, onClick, queryToDelete }:{ onClick: any,
 			<ModalContent>
 				<ModalHeader>Delete this Search</ModalHeader>
 				<ModalCloseButton />
-				<ModalBody>
-					Are you sure you want to delete this search?
-				</ModalBody>
+				<ModalBody>Are you sure you want to delete this search?</ModalBody>
 				<ModalFooter gap={3}>
-					<Button colorScheme='primary' onClick={onClick}>Cancel</Button>
+					<Button colorScheme="primary" onClick={onClick}>
+                      Cancel
+					</Button>
 					<Button onClick={onDelete}>Delete</Button>
 				</ModalFooter>
 			</ModalContent>

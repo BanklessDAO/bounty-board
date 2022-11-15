@@ -2,7 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks, MockResponse, MockRequest } from 'node-mocks-http';
 import { Connection } from 'mongoose';
 import dbConnect from '@app/utils/dbConnect';
-import Bounty, { ActivityHistoryItem, BountyBoardSchema, StatusHistoryItem } from '@app/models/Bounty';
+import { ActivityHistoryItem, StatusHistoryItem } from '@app/models/Bounty';
+import Bounty, { BountyBoardSchema } from '@app/models/BountyDb';
 import bountyClaimHandler from '@app/pages/api/bounties/[id]/claim';
 import { testBounty } from '@tests/stubs/bounty.stub';
 import { newActivityHistory, newStatusHistory } from '@app/utils/formUtils';
@@ -23,6 +24,7 @@ describe('Testing the bounty API', () => {
 		...testBounty,
 		status: 'In-Progress',
 	};
+
 	let connection: Connection;
 	let req: MockRequest<NextApiRequest>;
 	let res: MockResponse<NextApiResponse>;
@@ -68,8 +70,14 @@ describe('Testing the bounty API', () => {
 				},
 				submissionNotes: 'Test',
 				status: 'In-Progress',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+                   testOpenBounty.statusHistory as StatusHistoryItem[],
+                   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(200);
@@ -87,21 +95,36 @@ describe('Testing the bounty API', () => {
 				},
 				submissionNotes: 'Test',
 				status: 'In-Progress',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+                   testOpenBounty.statusHistory as StatusHistoryItem[],
+                   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
-			expect(res._getJSONData().message).toEqual('Unable to edit bounty, as is not in an editable status');
+			expect(res._getJSONData().message).toEqual(
+				'Unable to edit bounty, as is not in an editable status'
+			);
 		});
 
 		it('Requires the status, claimant details and statusHistory passed', async () => {
 			req.body = {
 				submissionNotes: 'Test',
 				status: 'In-Progress',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+                   testOpenBounty.statusHistory as StatusHistoryItem[],
+                   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
+
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 
@@ -111,9 +134,16 @@ describe('Testing the bounty API', () => {
 					discordId: 'testid',
 				},
 				submissionNotes: 'Test',
-				statusHistory: newStatusHistory(testOpenBounty.statusHistory as StatusHistoryItem[], BOUNTY_STATUS.IN_PROGRESS),
-				activityHistory: newActivityHistory(testOpenBounty.activityHistory as ActivityHistoryItem[], ACTIVITY.CLAIM),
+				statusHistory: newStatusHistory(
+				   testOpenBounty.statusHistory as StatusHistoryItem[],
+				   BOUNTY_STATUS.IN_PROGRESS
+				),
+				activityHistory: newActivityHistory(
+                   testOpenBounty.activityHistory as ActivityHistoryItem[],
+                   ACTIVITY.CLAIM
+				),
 			};
+
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 
@@ -124,6 +154,7 @@ describe('Testing the bounty API', () => {
 				},
 				submissionNotes: 'Test',
 			};
+			
 			await bountyClaimHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 		});

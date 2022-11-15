@@ -18,8 +18,7 @@ function DatePicker(props: ReactDatePickerProps & BoxProps): JSX.Element {
 				isClearable={isClearable}
 				showPopperArrow={showPopperArrow}
 				className="react-datapicker__input-text"
-				{...rest}
-			/>
+				{...rest} />
 		</Box>
 	);
 }
