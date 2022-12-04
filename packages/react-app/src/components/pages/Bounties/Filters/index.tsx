@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { FaSearch } from 'react-icons/fa';
 import bountyStatus from '@app/constants/bountyStatus';
+import { Select as MultiSelect, OptionBase, GroupBase } from 'chakra-react-select';
 import paidStatus from '@app/constants/paidStatus';
 import {
 	AcceptedSortInputs,
@@ -26,6 +27,7 @@ import React, { useMemo, useState } from 'react';
 import { useUser } from '@app/hooks/useUser';
 import { CheckboxCard } from '@app/components/parts/SelectButton';
 import SaveSearchModal from './SaveSearchModal';
+import { BountyCollection } from '@app/models/Bounty';
 
 type SetState<T extends any> = (arg: T) => void;
 type Event = React.ChangeEvent<HTMLInputElement>;
@@ -46,12 +48,6 @@ const sortOptions: { name: string; value: AcceptedSortInputs }[] = [
 	{
 		name: 'Paid Status',
 		value: 'paidStatus',
-	},
-	{
-		name: 'Bounty Status', value: 'status',
-	},
-	{
-		name: 'Paid Status', value: 'paidStatus',
 	},
 ];
 
@@ -360,9 +356,41 @@ const SaveFilter = ({ filters }: { filters: FilterParams }): JSX.Element => {
 	);
 };
 
+interface TagOption extends OptionBase {
+	label: string;
+	value: string;
+  }
+const TagFilter = ({ options, filters, setFilters }: {
+	options: TagOption[],
+} & UseFilterState): JSX.Element => {
+
+	console.log(`options: ${JSON.stringify(options)}`);
+	console.log(`filters: ${JSON.stringify(filters)}`);
+	const updateTags = (selected: readonly TagOption[]): void => {
+		setFilters({
+			...filters,
+			tags: selected.map((opt: TagOption) => opt.value),
+		});
+	};
+
+	return (
+		<MultiSelect<TagOption, true, GroupBase<TagOption>>
+			isMulti
+			name="tags"
+			placeholder="Filter by tags"
+			id="tags"
+			instanceId="tags"
+			closeMenuOnSelect={false}
+			options={options}
+			onChange={updateTags}
+		/>
+	);
+};
+
 const Filters = (props: {
-  filters: FilterParams;
-  setFilters: SetState<FilterParams>;
+	bounties: BountyCollection[] | undefined,
+	filters: FilterParams,
+	setFilters: SetState<FilterParams>
 }): JSX.Element => {
 	const filterStatusList = [
 		{
@@ -393,6 +421,21 @@ const Filters = (props: {
 			value: paidStatus.UNPAID,
 		},
 	];
+
+	const labels: string[] = [];
+	const bountyTags = props.bounties?.filter(({ tags }) => tags?.channelCategory || tags?.keywords)
+		.map(({ tags }) => ({ channelCategory: tags.channelCategory, keywords: tags.keywords }));
+	bountyTags?.map(({ channelCategory, keywords }) => {
+		if (channelCategory && !labels.includes(channelCategory.toLowerCase())) {
+			labels.push(channelCategory.toLowerCase());
+		}
+		keywords?.forEach((word: string) => {
+			if (!labels.includes(word.toLowerCase())) {
+				labels.push(word.toLowerCase());
+			}
+		});
+	});
+	
 	return (
 		<Stack width={{ base: '100%', lg: '70vw' }}>
 			<Stack
@@ -423,10 +466,16 @@ const Filters = (props: {
 						name="Sort By"
 						options={sortOptions}
 						filters={props.filters}
-						setFilters={props.setFilters} />
-				    </Stack>
-				    <Stack px={2} flexGrow={1}>
+						setFilters={props.setFilters}
+					/>
+				</Stack>
+				<Stack px={2} flexGrow={1}>
 					<SearchFilter filters={props.filters} setFilters={props.setFilters} />
+					<TagFilter
+						options={labels.map((opt)=> ({ value: opt, label: opt }))}
+						filters={props.filters}
+						setFilters={props.setFilters}
+					/>
 					<MinMaxFilter
 						name="Filter Bounty Value"
 						filters={props.filters}

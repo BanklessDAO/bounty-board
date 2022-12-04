@@ -7,6 +7,7 @@ import {
 	Box,
 	Checkbox,
 	Flex,
+	Tooltip,
 	Tag,
 	TagLabel,
 	Text,
@@ -39,6 +40,7 @@ import MiscUtils from '../../../../utils/miscUtils';
 import DOMPurify from 'dompurify';
 import { toHTML } from 'discord-markdown';
 import ReactHtmlParser from 'react-html-parser';
+import { BsThreeDots } from 'react-icons/bs';
 import { useRouter } from 'next/router';
 
 type SetState<T extends any> = (arg: T) => void;
@@ -123,6 +125,66 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
+const Label = ({ keyword }: { keyword: string }): JSX.Element => (
+	<Tag
+		size="sm"
+		colorScheme="teal"
+		variant="subtle"
+		borderRadius="full"
+		ml={1.5}
+	>
+		<TagLabel>
+			{keyword.replace('-', ' ')}
+		</TagLabel>
+	</Tag>
+);
+
+const BountyTags = ({
+	tags,
+	showAll = false,
+}: {
+	tags: { channelCategory: string, keywords: string[] };
+	showAll: boolean;
+}): JSX.Element => {
+	let labels: string[] = [];
+
+	if (tags.channelCategory) {
+		labels = labels.concat(tags.channelCategory);
+	} if (tags.keywords) {
+		labels = labels.concat(tags.keywords);
+	}
+
+	return (
+		showAll
+			?
+			<>
+				{ labels && labels.map((label, index) => <Label key={index} keyword={label} />) }
+			</>
+			:
+			<>
+				{ labels && labels.slice(0, 3).map((label, index) => <Label key={index} keyword={label} />) }
+				{
+					labels.length > 3 &&
+					<Tooltip
+						hasArrow
+						label={
+							<Stack textAlign="center">
+								{labels.slice(3).map((label, index) => <Text key={index}>{label}</Text>)}
+							</Stack>
+						}
+						fontSize="md"
+						closeDelay={500}
+					>
+						<Tag size="sm" colorScheme="teal" variant="subtle" borderRadius="full" ml={1.5}>
+							<TagLabel><BsThreeDots /></TagLabel>
+						</Tag>
+					</Tooltip>
+
+				}
+			</>
+	);
+};
+
 export const BountySummary = ({
 	bounty,
 }: {
@@ -137,6 +199,7 @@ export const BountySummary = ({
 				<Box pl="2" width="100%">
 					<Heading mb={2} size="md" flex={{ base: 1, md: 0 }}>
 						{bounty.title}
+						{ bounty.tags && <BountyTags tags={bounty.tags} showAll={false} /> }
 					</Heading>
 				</Box>
 			</Flex>
@@ -405,6 +468,9 @@ const BountyDetails = ({
 			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
+			<Box mt="3" width="100%">
+				{ bounty.tags && <BountyTags tags={bounty.tags} showAll={true} /> }
+			</Box>
 		</Flex>
 	);
 };

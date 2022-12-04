@@ -191,6 +191,9 @@ export const BountyBoardSchema = new mongoose.Schema({
 		iconUrl: String,
 		type: Object,
 	},
+	tags: {
+		keywords: [String],
+	},
 }, {
 	// So `res.json()` and other `JSON.stringify()` and `toObject()` functions include virtuals
 	toJSON: { virtuals: true },

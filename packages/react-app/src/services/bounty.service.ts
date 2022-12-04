@@ -25,6 +25,7 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
 	if (typeof query.customerId === 'string') {filters.customerId = query.customerId;}
 	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
 	if (typeof query.claimedBy === 'string') filters.claimedBy = query.claimedBy;
+	if (typeof query.tags === 'string') filters.tags = query.tags ? query.tags.split(',') : [];
 
 	if (query.lte) filters.lte = Number(query.lte);
 	if (query.gte) filters.gte = Number(query.gte);
@@ -243,6 +244,21 @@ export const getPagination = (query: NextApiQuery): BountyQuery => ({
 	limit: Number(query.limit) ? Number(query.limit) : 1000,
 });
 
+export const filterTags = (query: FilterQuery<BountyCollection>, tags?: string[]): FilterQuery<BountyCollection> => {
+	if (tags && tags.length) {
+		query.$and = [
+			{
+				$or:
+				[
+					{ 'tags.channelCategory': { $in: tags } },
+					{ 'tags.keywords': { $in: tags } },
+				],
+			},
+		];
+	}
+	return query;
+};
+
 export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	/**
    * Construct the filter query and return query object from mongoose
@@ -260,6 +276,7 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 		customerId,
 		claimedBy,
 		createdBy,
+		tags,
 	} = filters;
 
 	filterQuery = filterStatus(filterQuery, status);
@@ -273,6 +290,7 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 		gte,
 	});
 	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
+	filterQuery = filterTags(filterQuery, tags);
 	filterQuery = handleEmpty(filterQuery);
 
 	return { $match: filterQuery };

@@ -28,6 +28,7 @@ const PLACEHOLDERS = {
 	DESCRIPTION:
     'Example: We need someone to create some snappy looking logos for our new Web3 project.',
 	CRITERIA: 'Example: SVG and PNG images approved by the team',
+	TAGS: 'Example: Level1, Marketing, Development',
 };
 
 export const bountyFormFieldValues = {
@@ -37,6 +38,7 @@ export const bountyFormFieldValues = {
 	currency: ALLOWED_CURRENCIES[0],
 	criteria: '',
 	dueAt: new Date().toISOString(),
+	tags: '',
 };
 
 function BountyFormFields(props: {
@@ -86,9 +88,19 @@ function BountyFormFields(props: {
 				<FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
 			</FormControl>
 
+			<FormControl {...sharedFormatting}>
+				<FormLabel htmlFor='tags'>Tags</FormLabel>
+				<Input
+					id='tags'
+					borderColor={inputBorderColor}
+					placeholder={PLACEHOLDERS.TAGS}
+					{...register('tags')}
+				/>
+			</FormControl>
+
 			<FormControl isInvalid={!!errors.dueAt} {...sharedFormatting}>
 				<FormLabel htmlFor="dueAt" mr="0">
-          Due At
+					Due At
 				</FormLabel>
 				<Controller
 					name="dueAt"

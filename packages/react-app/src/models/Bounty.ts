@@ -142,9 +142,15 @@ export const MessageInfo = object({
 	messageId: string(),
 	channelId: string(),
 });
+
 export const PayeeData = object({
 	walletAddress: string(),
 	userDiscordId: string(),
+});
+
+export const TagObject = object({
+	channelCategory: string().optional(),
+	keywords: array(string()),
 });
 
 export const BountySchema = object({
@@ -176,6 +182,7 @@ export const BountySchema = object({
 	paidAt: string().optional(),
 	paidBy: DiscordUser.optional(),
 	payeeData: PayeeData.optional(),
+	tags: TagObject.default(undefined).optional(),
 
 	statusHistory: array(StatusHistory).optional(),
 	activityHistory: array(ActivityHistory).optional(),
@@ -241,4 +248,3 @@ export type BountyPaidCollection = SchemaToInterface<typeof BountyPaidSchema>;
 export type StatusHistoryItem = SchemaToInterface<typeof StatusHistory>;
 export type ActivityHistoryItem = SchemaToInterface<typeof ActivityHistory>;
 export type DiscordBoardUser = ToInterface<typeof DiscordUser>;
-
