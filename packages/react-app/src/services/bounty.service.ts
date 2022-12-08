@@ -8,8 +8,8 @@ import * as discord from './discord.service';
 import PAID_STATUS from '@app/constants/paidStatus';
 
 export type BountyQuery = FilterQuery<BountyCollection> & {
-  next?: string;
-  prev?: string;
+	next?: string;
+	prev?: string;
 };
 export type AddFieldsQuery = { $addFields: { [key: string]: any } };
 
@@ -19,10 +19,10 @@ export const getFilters = (query: NextApiQuery): FilterParams => {
    */
 	const filters = {} as FilterParams;
 
-	if (typeof query.status === 'string') {filters.status = query.status ? query.status.split(',') : [];}
-	if (typeof query.paidStatus === 'string') {filters.paidStatus = query.paidStatus ? query.paidStatus.split(',') : [];}
+	if (typeof query.status === 'string') { filters.status = query.status ? query.status.split(',') : []; }
+	if (typeof query.paidStatus === 'string') { filters.paidStatus = query.paidStatus ? query.paidStatus.split(',') : []; }
 	if (typeof query.search === 'string') filters.search = query.search;
-	if (typeof query.customerId === 'string') {filters.customerId = query.customerId;}
+	if (typeof query.customerId === 'string') { filters.customerId = query.customerId; }
 	if (typeof query.createdBy === 'string') filters.createdBy = query.createdBy;
 	if (typeof query.claimedBy === 'string') filters.claimedBy = query.claimedBy;
 	if (typeof query.tags === 'string') filters.tags = query.tags ? query.tags.split(',') : [];
@@ -115,9 +115,9 @@ export const filterStatus = (
 
 	query.status = {
 		$in:
-      status && status.length
-      	? status
-      	: ['Open', 'In-Progress', 'In-Review', 'Completed'],
+			status && status.length
+				? status
+				: ['Open', 'In-Progress', 'In-Review', 'Completed'],
 	};
 	return query;
 };
@@ -133,16 +133,16 @@ export const filterPaidStatus = (
 		{
 			paidStatus: {
 				$in:
-          paidStatus && paidStatus.length
-          	? paidStatus
-          	: [PAID_STATUS.PAID, PAID_STATUS.UNPAID],
+					paidStatus && paidStatus.length
+						? paidStatus
+						: [PAID_STATUS.PAID, PAID_STATUS.UNPAID],
 			},
 		},
 	];
 
 	if (
 		!(paidStatus && paidStatus.length) ||
-    paidStatus.includes(PAID_STATUS.UNPAID)
+		paidStatus.includes(PAID_STATUS.UNPAID)
 	) {
 		query.$or.push({ paidStatus: { $exists: false } });
 	}
@@ -168,10 +168,10 @@ export const filterLessGreater = ({
 	lte,
 	gte,
 }: {
-  by: AcceptedSortOutputs;
-  query: FilterQuery<BountyCollection>;
-  lte?: number;
-  gte?: number;
+	by: AcceptedSortOutputs;
+	query: FilterQuery<BountyCollection>;
+	lte?: number;
+	gte?: number;
 }): FilterQuery<BountyCollection> => {
 	/**
    * Filters the passed @param by according to a standardised filter query:
@@ -238,21 +238,25 @@ export const getPagination = (query: NextApiQuery): BountyQuery => ({
    */
 	next: query.next && typeof query.next === 'string' ? query.next : undefined,
 	previous:
-    query.previous && typeof query.previous === 'string'
-    	? query.previous
-    	: undefined,
+		query.previous && typeof query.previous === 'string'
+			? query.previous
+			: undefined,
 	limit: Number(query.limit) ? Number(query.limit) : 1000,
 });
 
 export const filterTags = (query: FilterQuery<BountyCollection>, tags?: string[]): FilterQuery<BountyCollection> => {
 	if (tags && tags.length) {
+		const tagRegexp:RegExp[] = [];
+		tags.forEach(function(tag) {
+			tagRegexp.push(new RegExp('^' + tag + '$', 'i'));
+		});
 		query.$and = [
 			{
 				$or:
-				[
-					{ 'tags.channelCategory': { $in: tags } },
-					{ 'tags.keywords': { $in: tags } },
-				],
+					[
+						{ 'tags.channelCategory': { $in: tagRegexp } },
+						{ 'tags.keywords': { $in: tagRegexp } },
+					],
 			},
 		];
 	}
@@ -350,8 +354,8 @@ export const getBounty = async (
 };
 
 type EditBountyProps = {
-  bounty: BountyCollection;
-  body: Record<string, unknown>;
+	bounty: BountyCollection;
+	body: Record<string, unknown>;
 };
 export const editBounty = async ({
 	bounty,

@@ -364,8 +364,6 @@ const TagFilter = ({ options, filters, setFilters }: {
 	options: TagOption[],
 } & UseFilterState): JSX.Element => {
 
-	console.log(`options: ${JSON.stringify(options)}`);
-	console.log(`filters: ${JSON.stringify(filters)}`);
 	const updateTags = (selected: readonly TagOption[]): void => {
 		setFilters({
 			...filters,
@@ -426,8 +424,8 @@ const Filters = (props: {
 	const bountyTags = props.bounties?.filter(({ tags }) => tags?.channelCategory || tags?.keywords)
 		.map(({ tags }) => ({ channelCategory: tags.channelCategory, keywords: tags.keywords }));
 	bountyTags?.map(({ channelCategory, keywords }) => {
-		if (channelCategory && !labels.includes(channelCategory.toLowerCase())) {
-			labels.push(channelCategory.toLowerCase());
+		if (channelCategory && !labels.includes(channelCategory)) {
+			labels.push(channelCategory);
 		}
 		keywords?.forEach((word: string) => {
 			if (!labels.includes(word.toLowerCase())) {

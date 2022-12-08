@@ -192,7 +192,9 @@ export const BountyBoardSchema = new mongoose.Schema({
 		type: Object,
 	},
 	tags: {
-		keywords: [String],
+		keywords: Array,
+		channelCategory: String,
+		type: Object,
 	},
 }, {
 	// So `res.json()` and other `JSON.stringify()` and `toObject()` functions include virtuals

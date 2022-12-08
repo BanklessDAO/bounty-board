@@ -150,7 +150,7 @@ export const PayeeData = object({
 
 export const TagObject = object({
 	channelCategory: string().optional(),
-	keywords: array(string()),
+	keywords: array(string()).optional(),
 });
 
 export const BountySchema = object({
