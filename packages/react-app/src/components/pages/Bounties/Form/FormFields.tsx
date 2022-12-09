@@ -1,6 +1,7 @@
 import { Controller, UseFormReturn } from 'react-hook-form';
 import React from 'react';
 import DatePicker from '@app/components/parts/DatePicker';
+import { CreatableSelect, OptionBase, GroupBase } from 'chakra-react-select';
 import {
 	FormLabel,
 	FormControl,
@@ -11,6 +12,8 @@ import {
 	FormControlProps,
 	Textarea,
 	useColorMode,
+	Box,
+	BorderProps,
 } from '@chakra-ui/react';
 import {
 	dateIsNotInPast,
@@ -18,6 +21,7 @@ import {
 	validNonNegativeDecimal,
 } from '@app/utils/formUtils';
 import ALLOWED_CURRENCIES from '@app/constants/currency';
+import { useTags } from '@app/hooks/useTags';
 
 const useCurrencies = (): string[] => {
 	return ALLOWED_CURRENCIES;
@@ -28,23 +32,56 @@ const PLACEHOLDERS = {
 	DESCRIPTION:
     'Example: We need someone to create some snappy looking logos for our new Web3 project.',
 	CRITERIA: 'Example: SVG and PNG images approved by the team',
-	TAGS: 'Example: Level1, Marketing, Development',
+	TAGS: 'Example: L1, Marketing, Dev',
 };
 
-export const bountyFormFieldValues = {
-	title: '',
-	description: '',
-	reward: '1000',
-	currency: ALLOWED_CURRENCIES[0],
-	criteria: '',
-	dueAt: new Date().toISOString(),
-	tags: '',
+export const bountyFormFieldValues : {
+	title: string,
+	description: string,
+	reward: string,
+	currency: string,
+	criteria: string,
+	dueAt: string,
+	tags : string[] } = {
+		title: '',
+		description: '',
+		reward: '1000',
+		currency: ALLOWED_CURRENCIES[0],
+		criteria: '',
+		dueAt: new Date().toISOString(),
+		tags: [],
+	};
+
+interface TagOption extends OptionBase {
+	label: string;
+	value: string;
+  }
+const TagInput = ({ options, borderProps }: {
+	options: TagOption[],
+	borderProps: BorderProps,
+}): JSX.Element => {
+
+	return (
+		<Box borderColor={borderProps.borderColor}>
+			<CreatableSelect<TagOption, true, GroupBase<TagOption>>
+				isMulti
+				name="tags"
+				placeholder={PLACEHOLDERS.TAGS}
+				id="tags"
+				instanceId="tags"
+				closeMenuOnSelect={true}
+				options={options}
+			/>
+		</Box>
+	);
 };
+
 
 function BountyFormFields(props: {
   formProps: UseFormReturn<typeof bountyFormFieldValues>;
 }): JSX.Element {
 	const currencies = useCurrencies();
+	const tags = useTags();
 	const { colorMode } = useColorMode();
 	const {
 		register,
@@ -90,10 +127,9 @@ function BountyFormFields(props: {
 
 			<FormControl {...sharedFormatting}>
 				<FormLabel htmlFor='tags'>Tags</FormLabel>
-				<Input
-					id='tags'
-					borderColor={inputBorderColor}
-					placeholder={PLACEHOLDERS.TAGS}
+				<TagInput
+					options={tags.map(function(tag: string) { return { label: tag, value: tag }; })}
+					borderProps={{ 'borderColor': inputBorderColor }}
 					{...register('tags')}
 				/>
 			</FormControl>

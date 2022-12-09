@@ -353,6 +353,12 @@ export const getBounty = async (
 	return id.length === 24 ? await Bounty.findById(id).populate('payeeData') : null;
 };
 
+export const getTags = async (customerId: string): Promise<string[]> => {
+	const groupedTags = Bounty.aggregate([{ $match : { 'customerId' : customerId } }, { $unwind : '$tags.keywords' }, { $group : { '_id' : '$tags.keywords' } }]);
+	const result = await groupedTags.exec();
+	return result.map((item: { _id: any; }) => item._id);
+};
+
 type EditBountyProps = {
 	bounty: BountyCollection;
 	body: Record<string, unknown>;

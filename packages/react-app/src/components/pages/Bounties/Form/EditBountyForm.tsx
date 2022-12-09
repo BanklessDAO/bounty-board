@@ -23,7 +23,7 @@ const getEditData = (
    * Transform form data to match shape of bounty collection
    */
 	 const keywords: string[] = [];
-	 const tags = updatedBountyFormData.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+	 const tags = updatedBountyFormData.tags.map(tag => tag.trim()).filter(tag => tag);
 	 tags.forEach(tag => {
 		 if (!keywords.includes(tag.toLowerCase())) {
 			 keywords.push(tag.toLowerCase());
@@ -58,7 +58,7 @@ const editableValues = (
 	currency: bounty.reward.currency,
 	criteria: bounty.criteria,
 	dueAt: bounty.dueAt,
-	tags: bounty.tags?.keywords.join(', ') ?? '',
+	tags: bounty.tags?.keywords ?? [],
 });
 
 const EditBountyForm = ({

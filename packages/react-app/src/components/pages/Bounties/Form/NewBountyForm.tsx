@@ -65,12 +65,14 @@ const generatePreviewData = (
    * cache to local storage so it can be picked up by the preview page
    */
 	const keywords: string[] = [];
-	const tags = data?.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+	const tags = data?.tags.map(tag => tag.trim()).filter(tag => tag);
+	console.log(`Data: ${JSON.stringify(data)}`);
 	tags.forEach(tag => {
 		if (!keywords.includes(tag.toLowerCase())) {
 			keywords.push(tag.toLowerCase());
 		}
 	});
+	console.log(`Keywords: ${keywords}`);
 
 	return {
 		title: data.title,
