@@ -7,7 +7,6 @@ import { CustomerContext } from '@app/context/CustomerContext';
 import { FilterParams } from '@app/types/Filter';
 import { ParsedUrlQuery } from 'querystring';
 import { useContext, useMemo } from 'react';
-import useDebounce from './useDebounce';
 
 const keysWithArrayVals = ['status', 'paidStatus', 'tags'];
 const keysWithNumberVals = ['gte', 'lte'];
@@ -35,13 +34,13 @@ export const useDynamicUrl = (
 	ready: boolean
 ): string => {
 	const { customer } = useContext(CustomerContext);
-	const debounceSearch = useDebounce(filters.search, 500, true);
 
 	return useMemo(() => {
 		let urlQuery = '';
 
 		if (ready) {
 			const {
+				search,
 				status,
 				paidStatus,
 				lte,
@@ -55,7 +54,7 @@ export const useDynamicUrl = (
 
 			if (status) urlQuery += `&status=${status || []}`;
 			if (paidStatus) urlQuery += `&paidStatus=${paidStatus || []}`;
-			if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
+			if (search) urlQuery += `&search=${search}`;
 			if (tags) urlQuery += `&tags=${tags || []}`;
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;
@@ -78,7 +77,7 @@ export const useDynamicUrl = (
 			if (urlQuery[0] === '&') urlQuery = '?' + urlQuery.substring(1);
 		}
 		return urlQuery;
-	}, [filters, bountiesChanged, customer, debounceSearch, ready]);
+	}, [filters, bountiesChanged, customer, ready]);
 };
 
 const sanitizeFilter = (
