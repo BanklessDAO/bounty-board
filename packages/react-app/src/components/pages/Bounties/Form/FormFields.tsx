@@ -13,7 +13,6 @@ import {
 	Textarea,
 	useColorMode,
 	Box,
-	BorderProps,
 } from '@chakra-ui/react';
 import {
 	dateIsNotInPast,
@@ -42,7 +41,7 @@ export const bountyFormFieldValues : {
 	currency: string,
 	criteria: string,
 	dueAt: string,
-	tags : string[] } = {
+	tags : TagOption[] } = {
 		title: '',
 		description: '',
 		reward: '1000',
@@ -52,30 +51,10 @@ export const bountyFormFieldValues : {
 		tags: [],
 	};
 
-interface TagOption extends OptionBase {
+export interface TagOption extends OptionBase {
 	label: string;
 	value: string;
-  }
-const TagInput = ({ options, borderProps }: {
-	options: TagOption[],
-	borderProps: BorderProps,
-}): JSX.Element => {
-
-	return (
-		<Box borderColor={borderProps.borderColor}>
-			<CreatableSelect<TagOption, true, GroupBase<TagOption>>
-				isMulti
-				name="tags"
-				placeholder={PLACEHOLDERS.TAGS}
-				id="tags"
-				instanceId="tags"
-				closeMenuOnSelect={true}
-				options={options}
-			/>
-		</Box>
-	);
-};
-
+}
 
 function BountyFormFields(props: {
   formProps: UseFormReturn<typeof bountyFormFieldValues>;
@@ -127,10 +106,29 @@ function BountyFormFields(props: {
 
 			<FormControl {...sharedFormatting}>
 				<FormLabel htmlFor='tags'>Tags</FormLabel>
-				<TagInput
-					options={tags.map(function(tag: string) { return { label: tag, value: tag }; })}
-					borderProps={{ 'borderColor': inputBorderColor }}
-					{...register('tags')}
+				<Controller
+					control={control}
+					name="tags"
+					render={({
+						field: { onChange, onBlur, value, name, ref },
+					}) => (
+						<Box borderColor={inputBorderColor}>
+							<CreatableSelect<TagOption, true, GroupBase<TagOption>>
+								isMulti
+								onChange={onChange}
+								onBlur={onBlur}
+								value={value as unknown as TagOption[]}
+								name={name}
+								ref={ref}
+								placeholder={PLACEHOLDERS.TAGS}
+								id="tags"
+								instanceId="tags"
+								closeMenuOnSelect={true}
+								options={tags.map(function(tag: string) { return { label: tag, value: tag }; })}
+							/>
+						</Box>
+			
+					)}
 				/>
 			</FormControl>
 

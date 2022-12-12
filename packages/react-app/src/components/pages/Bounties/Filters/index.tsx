@@ -378,6 +378,7 @@ const TagFilter = ({ options, filters, setFilters }: {
 			placeholder="Filter by tags"
 			id="tags"
 			instanceId="tags"
+			ref={this}
 			closeMenuOnSelect={true}
 			options={options}
 			onChange={updateTags}

@@ -8,6 +8,8 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { testBounty } from '../../../../stubs/bounty.stub';
 import { BountyCollection } from '@app/models/Bounty';
+import Bounties from '@app/components/pages/Bounties';
+import { ChakraProvider } from '@chakra-ui/react';
 
 jest.mock('next/router', () => ({
 	useRouter: () => ({ router: { isReady: true } }),
@@ -161,8 +163,7 @@ describe('Testing the bounty claim component', () => {
 	});
 });
 
-// TODO: Commented out while in tag development
-/* describe('Testing the bounty listing page', () => {
+describe('Testing the bounty listing page', () => {
 
 	afterEach(async () => {
 		jest.resetAllMocks();
@@ -170,8 +171,11 @@ describe('Testing the bounty claim component', () => {
 
 	it('Shows the Claimed/Created By Me checkboxes if the user is signed in', () => {
 		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+
 		render(
-			<Bounties />
+			<ChakraProvider>
+				<Bounties />
+			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
 		expect(chk).not.toBeNull();
@@ -180,10 +184,12 @@ describe('Testing the bounty claim component', () => {
 	it('Hides the Claimed/Created By Me checkboxes if the user is not signed in', () => {
 		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false });
 		render(
-			<Bounties />
+			<ChakraProvider>
+				<Bounties />
+			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
 		expect(chk).toBeNull();
 	});
 
-}); */
+});
