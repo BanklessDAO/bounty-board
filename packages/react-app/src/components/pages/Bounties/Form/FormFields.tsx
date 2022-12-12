@@ -34,6 +34,9 @@ const PLACEHOLDERS = {
 	TAGS: 'Example: L1, Marketing, Dev',
 };
 
+const dueAtDefault = new Date();
+dueAtDefault.setMonth(dueAtDefault.getMonth() + 3);
+
 export const bountyFormFieldValues : {
 	title: string,
 	description: string,
@@ -47,7 +50,7 @@ export const bountyFormFieldValues : {
 		reward: '1000',
 		currency: ALLOWED_CURRENCIES[0],
 		criteria: '',
-		dueAt: new Date().toISOString(),
+		dueAt: dueAtDefault.toISOString(),
 		tags: [],
 	};
 
