@@ -21,8 +21,8 @@ export const baseFilters: FilterParams = {
 	tags: [],
 	gte: 0,
 	lte: Infinity,
-	sortBy: 'reward',
-	asc: false,
+	sortBy: 'status',
+	asc: true,
 	customerId: BANKLESS.customerId,
 	customerKey: BANKLESS.customerKey,
 	// no created or claimed
@@ -92,7 +92,9 @@ const sanitizeFilter = (
 				: parseInt(val as string, 10);
 	}
 
-	if (keysWithBooleanVals.includes(key)) return val == 'true' ? true : false;
+	if (keysWithBooleanVals.includes(key)) {
+		return (typeof val == 'boolean' && val) || val == 'true' ? true : false;
+	}
 	if (!keysWithArrayVals.includes(key) || typeof val !== 'string') return val;
 
 	const arrayVal: any[] = val.split(',').map((v: string) => v.trim());

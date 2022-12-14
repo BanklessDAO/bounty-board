@@ -148,6 +148,7 @@ const SortBy = ({
 		});
 	};
 	const toggleSortAscending = (): void => {
+		console.log(`In toggle: ${booleanAsc}`);
 		setFilters({
 			...filters,
 			asc: !booleanAsc,
