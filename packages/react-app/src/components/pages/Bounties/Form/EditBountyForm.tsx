@@ -45,6 +45,7 @@ const getEditData = (
 		),
 		tags: {
 			keywords: keywords,
+			channelCategory: exisitingBounty.tags?.channelCategory,
 		},
 	};
 };
@@ -58,7 +59,7 @@ const editableValues = (
 	currency: bounty.reward.currency,
 	criteria: bounty.criteria,
 	dueAt: bounty.dueAt,
-	tags: bounty.tags?.keywords.map(function(tag: string) { return { label: tag, value: tag }; }) ?? [],
+	tags: bounty.tags?.keywords?.map(function(tag: string) { return { label: tag, value: tag }; }) ?? [],
 });
 
 const EditBountyForm = ({

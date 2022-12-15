@@ -42,6 +42,7 @@ import { toHTML } from 'discord-markdown';
 import ReactHtmlParser from 'react-html-parser';
 import { BsThreeDots } from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -125,13 +126,13 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
-const Label = ({ keyword }: { keyword: string }): JSX.Element => (
+const Label = ({ keyword, noMargin = false }: { keyword: string; noMargin?: boolean }): JSX.Element => (
 	<Tag
 		size="sm"
 		colorScheme="teal"
 		variant="subtle"
 		borderRadius="full"
-		ml={1.5}
+		ml={noMargin ? 0 : 1.5}
 	>
 		<TagLabel>
 			{keyword.replace('-', ' ')}
@@ -158,11 +159,11 @@ const BountyTags = ({
 		showAll
 			?
 			<>
-				{ labels && labels.map((label, index) => <Label key={index} keyword={label} />) }
+				{ labels && labels.map((label, index) => <Label key={index} keyword={label} noMargin={index == 0}/>) }
 			</>
 			:
 			<>
-				{ labels && labels.slice(0, 3).map((label, index) => <Label key={index} keyword={label} />) }
+				{ labels && labels.slice(0, 3).map((label, index) => <Label key={index} keyword={label} noMargin={index == 0}/>) }
 				{
 					labels.length > 3 &&
 					<Tooltip
@@ -197,9 +198,13 @@ export const BountySummary = ({
 					<UserAvatar user={bounty.createdBy} size="sm" />
 				</Box>
 				<Box pl="2" width="100%">
-					<Heading mb={2} size="md" flex={{ base: 1, md: 0 }}>
+					<Heading mb={2} size="md" noOfLines={1} flex={{ base: 1, md: 0 }}>
 						{bounty.title}
-						{ bounty.tags && <BountyTags tags={bounty.tags} showAll={false} /> }
+						{ bounty.tags &&
+							<Text as="span" ml={2} mt={2}>
+								<BountyTags tags={bounty.tags} showAll={false} />
+							</Text>
+						}
 					</Heading>
 				</Box>
 			</Flex>
@@ -281,14 +286,17 @@ export const BountyActions = ({
 };
 
 const BountyModal = ({
-	bounty,
+	bountyIn,
 	isOpen,
 	onClose,
 }: {
-  bounty: BountyCollection;
+  bountyIn: BountyCollection;
   isOpen: boolean;
   onClose: () => void;
 }): JSX.Element => {
+
+	// Keep the bounty data from changing what the modal is displaying if a rerender happens 
+	const bounty = useMemo(() => bountyIn, [ isOpen ]);
 	
 	return (
 		<Modal scrollBehavior={'inside'} isOpen={isOpen} onClose={onClose}>
@@ -454,6 +462,24 @@ const BountyDetails = ({
 					</Text>
 				</Box>
 			</Flex>
+			{ bounty.tags &&
+				<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
+					<Box
+						width="120px"
+						display="inline-block"
+						justifyContent="flex-end"
+						alignItems="center"
+						pr="2"
+					>
+						<Heading size="sm" m={0}>
+							tags
+						</Heading>
+					</Box>
+					<Box pr="2">
+						<BountyTags tags={bounty.tags} showAll={true} />
+					</Box>
+				</Flex>
+			}
 			<Heading mt="5" width="100%" size="md" mb="0">
                Description
 			</Heading>
@@ -468,9 +494,6 @@ const BountyDetails = ({
 			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
-			<Box mt="3" width="100%">
-				{ bounty.tags && <BountyTags tags={bounty.tags} showAll={true} /> }
-			</Box>
 		</Flex>
 	);
 };
@@ -572,7 +595,7 @@ export const BountyItem = ({
 					<BountyModal
 						isOpen={isBountyModalOpen}
 						onClose={onBountyModalClose}
-						bounty={bounty}
+						bountyIn={bounty}
 					/>
 				</HStack>
 			) : (
