@@ -214,9 +214,14 @@ const SelectExport = ({
 						onClick={ () => {
 							setCsvFormat(BOUNTY_LIMITED_EXPORT_ITEMS);
 							if (bounties) {
-								const exportBounties = bounties
-									.filter(({ _id }) => selectedBounties.includes(_id))
-									.map(miscUtils.csvEncode);
+								const exportBounties = (bounties
+									.filter(({ _id }) => selectedBounties.includes(_id)) as any[])
+									.map((bounty) => {
+										if (bounty.tags?.keywords) {
+											bounty['tagList'] = bounty.tags.keywords.join(',');
+										}
+										return miscUtils.csvEncode(bounty);
+									});
 								handleCSV(exportBounties);
 							}
 						} }
