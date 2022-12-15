@@ -64,7 +64,6 @@ const generatePreviewData = (
    * Transform form data to match shape of bounty collection, then
    * cache to local storage so it can be picked up by the preview page
    */
-	console.log(`Data: ${JSON.stringify(data)}`);
 	const keywords: string[] = [];
 	const tags = data?.tags.map(tag => tag.value.trim()).filter(tag => tag);
 	tags.forEach(tag => {
@@ -72,7 +71,6 @@ const generatePreviewData = (
 			keywords.push(tag.toLowerCase());
 		}
 	});
-	console.log(`Keywords: ${keywords}`);
 
 	return {
 		title: data.title,

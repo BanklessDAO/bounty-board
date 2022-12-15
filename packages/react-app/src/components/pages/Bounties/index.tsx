@@ -312,8 +312,6 @@ const Bounties = (): JSX.Element => {
         asPathWithoutLeadinggSlash !== urlQuery)
 		) {
 			const newFilters = getFiltersFromUrl({ ...baseFilters, ...router.query });
-			console.log(`Router.query: ${JSON.stringify(router.query)}`);
-			console.log(`New filters: ${JSON.stringify(newFilters)}`);
 			setFilters(newFilters);
 			firstLoad.current = false;
 		}

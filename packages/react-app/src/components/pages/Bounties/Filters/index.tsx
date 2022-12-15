@@ -81,10 +81,6 @@ const SearchFilter = ({
 		});
 	};
 
-	console.log(`Search: ${search}`);
-	console.log(`Filters.search: ${filters.search}`);
-	console.log(`Debounce Search: ${search}`);
-
 	return (
 		<InputGroup>
 			<InputLeftElement pointerEvents="none">
@@ -148,7 +144,6 @@ const SortBy = ({
 		});
 	};
 	const toggleSortAscending = (): void => {
-		console.log(`In toggle: ${booleanAsc}`);
 		setFilters({
 			...filters,
 			asc: !booleanAsc,
