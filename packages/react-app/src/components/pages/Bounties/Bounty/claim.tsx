@@ -20,7 +20,6 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
-	Textarea,
 	Tooltip,
 	useColorMode,
 	useDisclosure,
@@ -43,21 +42,20 @@ import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
 import miscUtils from '@app/utils/miscUtils';
 import { APIUser } from 'discord-api-types';
+import { useRouter } from 'next/router';
 
 const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	// const router = useRouter();
+	const router = useRouter();
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
-	const [message, setMessage] = useState<string>();
 	const [claiming, setClaiming] = miscUtils.useStateCallback<boolean>(false);
 	const [error, setError] = useState(false);
 
 	const confirmBounty = async () => {
-		if (message && user) {
+		if (user) {
 			const claimData: BountyClaimCollection = {
 				claimedBy: actionBy(user),
-				submissionNotes: message,
 				status: 'In-Progress',
 				activityHistory: newActivityHistory(
 					bounty.activityHistory as ActivityHistoryItem[],
@@ -78,7 +76,7 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 					const bountyPageRoute = '/' + bounty._id;
 					const updatedBounty = { ...bounty, ...claimData };
 					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
-					// if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
+					if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
 					setClaiming(false, onClose);
 				}
 			} catch {
@@ -121,22 +119,17 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 					<ModalCloseButton />
 					<ModalBody flexDirection="column" justifyContent="space-evenly">
 						<Flex mb="5">
-							Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
-							and claim the bounty.
+							Press &apos;Confirm&apos; claim the bounty.
 						</Flex>
-						<Textarea
-							placeholder="Send a message"
-							onChange={(e) => setMessage(e.target.value)}
-						/>
 					</ModalBody>
 					<ModalFooter justifyContent="flex-end">
 						<Box p={2}>
 							<Button
 								transition="background 100ms linear"
-								disabled={!message || bounty.status !== 'Open'}
+								disabled={bounty.status !== 'Open'}
 								onClick={confirmBounty}
 								isLoading={claiming}
-								loadingText="Submitting"
+								loadingText="Claiming"
 								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 							>
 								Confirm
