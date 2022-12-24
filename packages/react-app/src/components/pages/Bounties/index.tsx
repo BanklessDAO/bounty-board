@@ -199,7 +199,7 @@ const SelectExport = ({
 											bounty['compositeName'] = bounty['claimedBy']['discordHandle'];
 										}
 										if (bounty.reward) {
-											bounty.reward.currency = ALLOWED_CURRENCY_CONTRACTS[bounty.reward.currency as ALLOWED_CURRENCIES_TYPE];
+											bounty['tokenContract'] = ALLOWED_CURRENCY_CONTRACTS[bounty.reward.currency as ALLOWED_CURRENCIES_TYPE];
 										}
 										bounty['compositeName'] += ' - ' + bounty['title'];
 										return miscUtils.csvEncode(bounty);

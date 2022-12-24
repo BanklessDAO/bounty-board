@@ -61,19 +61,25 @@ const Status = ({ bounty, withAvatar }: StatusProps): JSX.Element => (
 	</Tag>
 );
 
-const PaidStatus = ({ bounty, paidStatus = '' }: { bounty: BountyCollection; paidStatus: string | undefined }): JSX.Element => (
-	<Tag
-		my={0}
-		size="lg"
-		key="lg"
-		variant="outline"
-		colorScheme={(paidStatus || bounty.paidStatus) ?? PAID_STATUS.UNPAID}
-	>
-		<TagLabel>
-			{(paidStatus || bounty.paidStatus) ?? PAID_STATUS.UNPAID}
-		</TagLabel>
-	</Tag>
-);
+const PaidStatus = ({ bounty }: { bounty: BountyCollection}): JSX.Element => {
+	const paidStatus = bounty.paidStatus.split('|')[0];
+	const paidError = bounty.paidStatus.split('|')[1];
+	return (
+		<Tag
+			my={0}
+			size="lg"
+			key="lg"
+			variant="outline"
+			colorScheme={paidStatus ?? PAID_STATUS.UNPAID}
+		>
+			<Tooltip label={paidError}>
+				<TagLabel>
+					{paidStatus ?? PAID_STATUS.UNPAID}
+				</TagLabel>
+			</Tooltip>
+		</Tag>
+	);
+};
 
 const BountySelect = ({
 	selectedBounties,
@@ -188,10 +194,8 @@ const BountyTags = ({
 
 export const BountySummary = ({
 	bounty,
-	paidStatus = '',
 }: {
 	bounty: BountyCollection;
-	paidStatus: string | undefined;
 }): JSX.Element => {
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" pl="2" pr="2">
@@ -241,7 +245,7 @@ export const BountySummary = ({
 					{bounty.status && <Status bounty={bounty} withAvatar={true} />}
 				</Box>
 				<Box mb={2}>
-					<PaidStatus bounty={bounty} paidStatus={paidStatus}/>
+					<PaidStatus bounty={bounty} />
 				</Box>
 
 			</Flex>
@@ -354,7 +358,7 @@ const BountyDetails = ({
 					<Status bounty={bounty} />
 				</Box>
 				<Box pr="2">
-					<PaidStatus bounty={bounty} paidStatus={undefined} />
+					<PaidStatus bounty={bounty} />
 				</Box>
 				<Spacer />
 				<Box>
@@ -544,7 +548,7 @@ export const AccordionBountyItem = ({
 			setSelectedBounties={setSelectedBounties}
 		/>
 		<AccordionButton pb={5} pt={0}>
-			<BountySummary bounty={bounty} paidStatus={undefined} />
+			<BountySummary bounty={bounty} />
 			<Box
 				pos="relative"
 				textAlign="right"
@@ -593,7 +597,7 @@ export const BountyItem = ({
 						setSelectedBounties={setSelectedBounties}
 					/>
 					<Box w="100%" pb={2} pt={0} onClick={onBountyModalOpen}>
-						<BountySummary bounty={bounty} paidStatus={undefined} />
+						<BountySummary bounty={bounty} />
 					</Box>
 					<BountyModal
 						isOpen={isBountyModalOpen}

@@ -35,15 +35,22 @@ const MarkPaidModal = ({
 	const [error, setError] = useState(false);
 	const { user } = useUser();
 	const [doneMarking, setDoneMarking] = useState(false);
+	const [bountiesToMark, setBountiesToMark] = useState([] as BountyCollection[]);
+	if (isOpen && !bountiesToMark.length && bounties?.length) setBountiesToMark(bounties);
 	const handleMarkPaid = async () => {
 		await markBountiesPaid();
 		// onClose();
 	};
+	const modalClose = () => {
+		setDoneMarking(false);
+		setBountiesToMark([]);
+		onClose();
+	};
 
 	const markBountiesPaid = async () => {
 		setDoneMarking(false);
-		if (bounties && user) {
-			const markBounties = bounties?.map(async function(bounty) {
+		if (bountiesToMark && user) {
+			const markBounties = bountiesToMark?.map(async function(bounty) {
 				const paidData: BountyPaidCollection = {
 					paidBy: actionBy(user),
 					paidStatus: PAID_STATUS.PAID,
@@ -59,18 +66,15 @@ const MarkPaidModal = ({
 						paidData
 					);
 					if (res.status !== 200) {
-						// TODO: Catch errors here, put a message on the bounty summary about what happened if possible
-						// TODO: "doneMarking" not getting reset on modal close
-						// TODO: Currency shows a strange value for a while before it switches
+						// Not sure this code ever gets hit. Errors will go to catch
 						// TODO: Bounty List doesn't refresh after making right away
 						setError(true);
-						bounty.paidStatus = 'Error Marking';
+						bounty.paidStatus = `Error|${res.message}`;
 						return true;
 					}
 					bounty.paidStatus = PAID_STATUS.PAID;
-				} catch (e) {
-					console.error(e);
-					bounty.paidStatus = 'Error Marking';
+				} catch (e: any) {
+					bounty.paidStatus = `Error|${e.response?.data?.message || 'Server error'}`;
 					setError(true);
 					return true;
 				}
@@ -87,57 +91,55 @@ const MarkPaidModal = ({
 	};
 
 	return (
-		<>
-			{isOpen && (<Modal
-				closeOnOverlayClick={false}
-				isOpen={isOpen}
-				onClose={onClose}
-				isCentered
-				size={'3xl'}
-			>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>Mark Paid?</ModalHeader>
-					{error && (
-						<Alert status="error">
-							<AlertIcon />
-						There was a problem marking the bounties as paid
-						</Alert>
-					)}
-					<ModalCloseButton />
-					<ModalBody>Export completed. {doneMarking ? 'Marking complete.' : markPaidMessage}
-						<Divider mt={2} mb={2} />
-						<Box overflowY="auto" maxHeight="400px" width={{ base: '95vw', lg: '700px' }}>
-							{bounties?.map((bounty) =>
-								<Box key={bounty._id} w="100%" borderWidth={3} borderRadius={10} mb={1}>
-									<Box key={bounty._id} w="100%" pb={2} pt={0} >
-										<BountySummary bounty={bounty} paidStatus={undefined} />
-									</Box>
+		<Modal
+			closeOnOverlayClick={false}
+			isOpen={isOpen}
+			onClose={modalClose}
+			isCentered
+			size={'3xl'}
+		>
+			<ModalOverlay />
+			<ModalContent>
+				<ModalHeader>Mark Paid?</ModalHeader>
+				{error && (
+					<Alert status="error">
+						<AlertIcon />
+						There was a problem marking some bounties as paid
+					</Alert>
+				)}
+				<ModalCloseButton />
+				<ModalBody>Export completed. {doneMarking ? 'Marking complete.' : markPaidMessage}
+					<Divider mt={2} mb={2} />
+					<Box overflowY="auto" maxHeight="400px" width={{ base: '95vw', lg: '700px' }}>
+						{bountiesToMark?.map((bounty) =>
+							<Box key={bounty._id} w="100%" borderWidth={3} borderRadius={10} mb={1}>
+								<Box key={bounty._id} w="100%" pb={2} pt={0} >
+									<BountySummary bounty={bounty} />
 								</Box>
+							</Box>
 
-							)}
+						)}
 
-						</Box>
-						<Divider mt={2} mb={2} />
-					</ModalBody>
+					</Box>
+					<Divider mt={2} mb={2} />
+				</ModalBody>
 
-					<ModalFooter>
-						{doneMarking ?
-							<Button variant="ghost" onClick={onClose}>
+				<ModalFooter>
+					{doneMarking ?
+						<Button variant="ghost" onClick={modalClose}>
 									Close
-							</Button>
-							:
-							<><Button colorScheme="blue" mr={3} onClick={handleMarkPaid}>
+						</Button>
+						:
+						<><Button colorScheme="blue" mr={3} onClick={handleMarkPaid}>
 									Yes
-							</Button>
-							<Button variant="ghost" onClick={onClose}>
+						</Button>
+						<Button variant="ghost" onClick={modalClose}>
 									No
-							</Button></>
-						}
-					</ModalFooter>
-				</ModalContent>
-			</Modal>) }
-		</>
+						</Button></>
+					}
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 	);
 };
 
