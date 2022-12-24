@@ -110,7 +110,7 @@ const SelectExport = ({
 						const bounty = bounties?.find((b) => b._id == _id);
 						return bounty && ServiceUtils.canBePaid({ bounty });
 					});
-					setMarkPaidMessage('Mark exported claimed bounties as paid?');
+					setMarkPaidMessage('Mark these exported claimed bounties as paid?');
 				} else if (
 					roles.some((r: string) =>
 						['edit-bounties', 'edit-own-bounty'].includes(r)
@@ -120,7 +120,7 @@ const SelectExport = ({
 						const bounty = bounties?.find((b) => b._id == _id);
 						return bounty && (bounty.createdBy.discordId == user.id) && ServiceUtils.canBePaid({ bounty });
 					});
-					setMarkPaidMessage('Mark exported claimed bounties you created as paid?');
+					setMarkPaidMessage('Mark these exported claimed bounties you created as paid?');
 				}
 				if (bountiesToMark.length > 0) {
 					setBountiesToMark(bountiesToMark);

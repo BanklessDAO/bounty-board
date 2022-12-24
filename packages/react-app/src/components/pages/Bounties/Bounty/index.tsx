@@ -47,8 +47,8 @@ import { useMemo } from 'react';
 type SetState<T extends any> = (arg: T) => void;
 
 interface StatusProps {
-  bounty: BountyCollection;
-  withAvatar?: boolean;
+	bounty: BountyCollection;
+	withAvatar?: boolean;
 }
 const Status = ({ bounty, withAvatar }: StatusProps): JSX.Element => (
 	<Tag my={0} size="lg" key="lg" variant="outline" colorScheme={bounty.status}>
@@ -61,16 +61,16 @@ const Status = ({ bounty, withAvatar }: StatusProps): JSX.Element => (
 	</Tag>
 );
 
-const PaidStatus = ({ bounty }: { bounty: BountyCollection }): JSX.Element => (
+const PaidStatus = ({ bounty, paidStatus = '' }: { bounty: BountyCollection; paidStatus: string | undefined }): JSX.Element => (
 	<Tag
 		my={0}
 		size="lg"
 		key="lg"
 		variant="outline"
-		colorScheme={bounty.paidStatus ? bounty.paidStatus : PAID_STATUS.UNPAID}
+		colorScheme={(paidStatus || bounty.paidStatus) ?? PAID_STATUS.UNPAID}
 	>
 		<TagLabel>
-			{bounty.paidStatus ? bounty.paidStatus : PAID_STATUS.UNPAID}
+			{(paidStatus || bounty.paidStatus) ?? PAID_STATUS.UNPAID}
 		</TagLabel>
 	</Tag>
 );
@@ -80,9 +80,9 @@ const BountySelect = ({
 	setSelectedBounties,
 	bountyId,
 }: {
-  selectedBounties: string[];
-  setSelectedBounties: SetState<string[]>;
-  bountyId: string;
+	selectedBounties: string[];
+	setSelectedBounties: SetState<string[]>;
+	bountyId: string;
 }): JSX.Element => {
 	const updateSelectedBounties = (event: any): void => {
 		const bId = event.target.value;
@@ -114,7 +114,7 @@ const DiscordStub = ({ name }: { name: string | undefined }): JSX.Element => (
 	<Flex my={2} align="center" gridGap={3}>
 		{name ? (
 			<Text fontSize="md" color="steelblue">
-        @{name}
+				@{name}
 			</Text>
 		) : (
 			'no one'
@@ -159,11 +159,11 @@ const BountyTags = ({
 		showAll
 			?
 			<>
-				{ labels && labels.map((label, index) => <Label key={index} keyword={label} noMargin={index == 0}/>) }
+				{labels && labels.map((label, index) => <Label key={index} keyword={label} noMargin={index == 0} />)}
 			</>
 			:
 			<>
-				{ labels && labels.slice(0, 3).map((label, index) => <Label key={index} keyword={label} noMargin={index == 0}/>) }
+				{labels && labels.slice(0, 3).map((label, index) => <Label key={index} keyword={label} noMargin={index == 0} />)}
 				{
 					labels.length > 3 &&
 					<Tooltip
@@ -188,8 +188,10 @@ const BountyTags = ({
 
 export const BountySummary = ({
 	bounty,
+	paidStatus = '',
 }: {
-  bounty: BountyCollection;
+	bounty: BountyCollection;
+	paidStatus: string | undefined;
 }): JSX.Element => {
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" pl="2" pr="2">
@@ -200,7 +202,7 @@ export const BountySummary = ({
 				<Box pl="2" width="100%">
 					<Heading mb={2} size="md" noOfLines={1} flex={{ base: 1, md: 0 }}>
 						{bounty.title}
-						{ bounty.tags &&
+						{bounty.tags &&
 							<Text as="span" ml={2} mt={2}>
 								<BountyTags tags={bounty.tags} showAll={false} />
 							</Text>
@@ -222,23 +224,24 @@ export const BountySummary = ({
 			</Box>
 			<Flex width="100%" justifyContent="space-between" alignItems="center">
 				<Box mb={2}>
-          for:{' '}
-					{bounty.assignTo
-						? '@' + bounty.assignTo.discordHandle
-						: bounty.assign
-							? '@' + bounty.assignedName
-							: bounty.gateTo
-								? '@' + bounty.gateTo[0].discordName
-								: bounty.gate
-									? '@' + bounty.gate[0]
-									: 'anyone'}
+					{bounty.claimedBy ? `claimed by: @${bounty.claimedBy.discordHandle}` :
+						`for: ${
+							bounty.assignTo
+								? '@' + bounty.assignTo.discordHandle
+								: bounty.assign
+									? '@' + bounty.assignedName
+									: bounty.gateTo
+										? '@' + bounty.gateTo[0].discordName
+										: bounty.gate
+											? '@' + bounty.gate[0]
+											: 'anyone'}`}
 				</Box>
 				<Spacer />
 				<Box mb={2} pr="2">
 					{bounty.status && <Status bounty={bounty} withAvatar={true} />}
 				</Box>
 				<Box mb={2}>
-					<PaidStatus bounty={bounty} />
+					<PaidStatus bounty={bounty} paidStatus={paidStatus}/>
 				</Box>
 
 			</Flex>
@@ -249,7 +252,7 @@ export const BountySummary = ({
 export const BountyHeader = ({
 	bounty,
 }: {
-  bounty: BountyCollection;
+	bounty: BountyCollection;
 }): JSX.Element => {
 	return (
 		<Flex flexWrap="nowrap" width={{ base: '100%', md: '60%' }}>
@@ -265,22 +268,22 @@ export const BountyHeader = ({
 export const BountyActions = ({
 	bounty,
 }: {
-  bounty: BountyCollection;
-  onCancel: () => void;
+	bounty: BountyCollection;
+	onCancel: () => void;
 }): JSX.Element => {
 	return (
 		<Flex justifyContent={'flex-end'}>
 			{bounty.status == BOUNTY_STATUS.DRAFT && <BountySubmit bounty={bounty} />}
 			{bounty.status == BOUNTY_STATUS.OPEN && <BountyClaim bounty={bounty} />}
 			{(bounty.status == BOUNTY_STATUS.DRAFT ||
-        bounty.status == BOUNTY_STATUS.OPEN) && (
+				bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyEditButton bounty={bounty} />
 			)}
 			{(bounty.status == BOUNTY_STATUS.DRAFT ||
-        bounty.status == BOUNTY_STATUS.OPEN) && (
+				bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyDeleteButton bounty={bounty} />
 			)}
-	
+
 		</Flex>
 	);
 };
@@ -290,17 +293,17 @@ const BountyModal = ({
 	isOpen,
 	onClose,
 }: {
-  bountyIn: BountyCollection;
-  isOpen: boolean;
-  onClose: () => void;
+	bountyIn: BountyCollection;
+	isOpen: boolean;
+	onClose: () => void;
 }): JSX.Element => {
 
 	// Keep the bounty data from changing what the modal is displaying if a rerender happens 
-	const bounty = useMemo(() => bountyIn, [ isOpen ]);
-	
+	const bounty = useMemo(() => bountyIn, [isOpen]);
+
 	return (
 		<Modal scrollBehavior={'inside'} isOpen={isOpen} onClose={onClose}>
-			<ModalOverlay/>
+			<ModalOverlay />
 			<ModalContent maxW={'700px'} borderWidth={3}>
 				<ModalHeader
 					bg={useColorModeValue('gray.200', 'gray.600')}
@@ -316,18 +319,18 @@ const BountyModal = ({
 					<Stack direction='row' spacing={1} alignItems='center' alignContent='center' verticalAlign={'center'}>
 						<BountyActions bounty={bounty} onCancel={onClose} />
 					</Stack>
-						
+
 				</ModalFooter>
 			</ModalContent>
 		</Modal>
-		
+
 	);
 };
 
 const BountyDetails = ({
 	bounty,
 }: {
-  bounty: BountyCollection;
+	bounty: BountyCollection;
 }): JSX.Element => {
 	const dueAt = bounty.dueAt
 		? MiscUtils.shortDate(new Date(bounty.dueAt))
@@ -344,14 +347,14 @@ const BountyDetails = ({
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-                      status
+						status
 					</Heading>
 				</Box>
 				<Box pr="2">
 					<Status bounty={bounty} />
 				</Box>
 				<Box pr="2">
-					<PaidStatus bounty={bounty} />
+					<PaidStatus bounty={bounty} paidStatus={undefined} />
 				</Box>
 				<Spacer />
 				<Box>
@@ -371,7 +374,7 @@ const BountyDetails = ({
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-                     created by
+						created by
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -390,7 +393,7 @@ const BountyDetails = ({
 					ml="2"
 				>
 					<Heading size="sm" m={0}>
-                     created date
+						created date
 					</Heading>
 				</Box>
 				<Box>
@@ -408,7 +411,7 @@ const BountyDetails = ({
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-                      claimed by
+						claimed by
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -424,10 +427,10 @@ const BountyDetails = ({
 					justifyContent="flex-end"
 					alignItems="center"
 					pr="2"
-				    ml="2"
+					ml="2"
 				>
 					<Heading size="sm" m={0}>
-                      due date
+						due date
 					</Heading>
 				</Box>
 				<Box>
@@ -445,7 +448,7 @@ const BountyDetails = ({
 					pr="2"
 				>
 					<Heading size="sm" m={0}>
-                      claimable by
+						claimable by
 					</Heading>
 				</Box>
 				<Box pr="2">
@@ -462,7 +465,7 @@ const BountyDetails = ({
 					</Text>
 				</Box>
 			</Flex>
-			{ bounty.tags &&
+			{bounty.tags &&
 				<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
 					<Box
 						width="120px"
@@ -481,7 +484,7 @@ const BountyDetails = ({
 				</Flex>
 			}
 			<Heading mt="5" width="100%" size="md" mb="0">
-               Description
+				Description
 			</Heading>
 			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(
@@ -489,8 +492,8 @@ const BountyDetails = ({
 				)}
 			</Text>
 			<Heading mt="5" width="100%" size="md" pt="2" mb="0">
-              Success Criteria
-			  </Heading>
+				Success Criteria
+			</Heading>
 			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
@@ -501,7 +504,7 @@ const BountyDetails = ({
 export const BountyCard = ({
 	bounty,
 }: {
-  bounty: BountyCollection;
+	bounty: BountyCollection;
 }): JSX.Element => {
 	const router = useRouter();
 
@@ -530,9 +533,9 @@ export const AccordionBountyItem = ({
 	selectedBounties,
 	setSelectedBounties,
 }: {
-  bounty: BountyCollection;
-  selectedBounties: string[];
-  setSelectedBounties: SetState<string[]>;
+	bounty: BountyCollection;
+	selectedBounties: string[];
+	setSelectedBounties: SetState<string[]>;
 }): JSX.Element => (
 	<AccordionItem borderWidth={3} borderRadius={10} mb={3}>
 		<BountySelect
@@ -541,7 +544,7 @@ export const AccordionBountyItem = ({
 			setSelectedBounties={setSelectedBounties}
 		/>
 		<AccordionButton pb={5} pt={0}>
-			<BountySummary bounty={bounty} />
+			<BountySummary bounty={bounty} paidStatus={undefined} />
 			<Box
 				pos="relative"
 				textAlign="right"
@@ -563,9 +566,9 @@ export const BountyItem = ({
 	selectedBounties,
 	setSelectedBounties,
 }: {
-  initialBounty: BountyCollection;
-  selectedBounties: string[];
-  setSelectedBounties: SetState<string[]>;
+	initialBounty: BountyCollection;
+	selectedBounties: string[];
+	setSelectedBounties: SetState<string[]>;
 }): JSX.Element => {
 	const {
 		isOpen: isBountyModalOpen,
@@ -577,7 +580,7 @@ export const BountyItem = ({
 	return (
 		<Box w="100%" borderWidth={3} borderRadius={10} mb={1}>
 			{isLoading ? (
-			// if loading, show the loader
+				// if loading, show the loader
 				<Box padding="6" boxShadow="lg">
 					<SkeletonCircle size="10" />
 					<SkeletonText mt="4" noOfLines={3} spacing="4" />
@@ -590,7 +593,7 @@ export const BountyItem = ({
 						setSelectedBounties={setSelectedBounties}
 					/>
 					<Box w="100%" pb={2} pt={0} onClick={onBountyModalOpen}>
-						<BountySummary bounty={bounty} />
+						<BountySummary bounty={bounty} paidStatus={undefined} />
 					</Box>
 					<BountyModal
 						isOpen={isBountyModalOpen}
