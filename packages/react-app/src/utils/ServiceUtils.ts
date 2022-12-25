@@ -1,4 +1,5 @@
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
+import PAID_STATUS from '@app/constants/paidStatus';
 import { BountyCollection } from '@app/models/Bounty';
 
 export default {
@@ -34,8 +35,7 @@ export default {
 	  bounty: BountyCollection;
 	}): boolean {
 		const bountyOpenForPaying = [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(
-			bounty.status
-		);
+			bounty.status) && (bounty.paidStatus !== PAID_STATUS.PAID);
 		return bountyOpenForPaying;
 	},
 	

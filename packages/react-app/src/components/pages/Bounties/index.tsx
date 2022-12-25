@@ -328,6 +328,14 @@ const Bounties = (): JSX.Element => {
 		}
 	}, [urlQuery, router.isReady]);
 
+	useEffect(() => {
+		// Force refresh if bounties were marked paid after export
+		if (markedSomePaid)	{
+			setPage(0);
+		}
+		setMarkedSomePaid(false);
+	}, [markedSomePaid]);
+
 	const { bounties, isLoading, isError } = useBounties(
 		'/api/bounties' + urlQuery,
 		router.isReady

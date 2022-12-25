@@ -62,8 +62,8 @@ const Status = ({ bounty, withAvatar }: StatusProps): JSX.Element => (
 );
 
 const PaidStatus = ({ bounty }: { bounty: BountyCollection}): JSX.Element => {
-	const paidStatus = bounty.paidStatus.split('|')[0];
-	const paidError = bounty.paidStatus.split('|')[1];
+	const paidStatus = bounty.paidStatus?.split('|')[0];
+	const paidError = bounty.paidStatus?.split('|')[1];
 	return (
 		<Tag
 			my={0}
