@@ -115,11 +115,12 @@ const Bounties = (): JSX.Element => {
 		}
 	}, [router.isReady, router.query, firstLoad]);
 
-	// If the URL changed, take us there
+	// If the URL changed, take us there and reset
 	useEffect(() => {
 		if (router.isReady) {
 			router.push(urlQuery, undefined, { shallow: true });
 		}
+		setSelectedBounties([]);
 		setPage(0);
 	}, [urlQuery, router.isReady]);
 
@@ -130,13 +131,13 @@ const Bounties = (): JSX.Element => {
 
 	// Force a fetch of the bounties if bounties updated
 	useEffect(() => {
-		console.log(`Bounties Updated: ${bountiesUpdated}`);
+		console.log(`Bounties Updated: ${bountiesUpdated} url: ${urlQuery}`);
 		if (bountiesUpdated) {
 			mutate('/api/bounties' + urlQuery);
 			setBountiesUpdated(false);
 			setPage(0);
 		}
-	}, [firstLoad, bountiesUpdated]);
+	}, [bountiesUpdated, urlQuery]);
 
 	const { paginatedBounties, noResults } = usePaginatedBounties(
 		bounties,

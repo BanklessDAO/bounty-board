@@ -17,6 +17,7 @@ import ACTIVITY from '@app/constants/activity';
 import { useUser } from '@app/hooks/useUser';
 import { BountySummary } from '../Bounty';
 import { BountiesUpdatedContext } from '..';
+import { useEffect } from 'react';
 
 const MarkPaidModal = ({
 	isOpen,
@@ -36,30 +37,38 @@ const MarkPaidModal = ({
 		[id : string] : string;
 	}
 
-	console.log(`In Modal: ${bounties?.length}`);
 	
 	const [error, setError] = useState(false);
 	const [errorMsgs, setErrorMsgs] = useState({} as ErrorMessages);
 	const { user } = useUser();
 	const [doneMarking, setDoneMarking] = useState(false);
 	const { setBountiesUpdated } = useContext(BountiesUpdatedContext);
+	const [ bountiesDisplayed, setBountiesDisplayed ] = useState<BountyCollection[]>([]);
+	console.log(`In Modal: bounties: ${bounties?.length} bountiesDisplayed ${bountiesDisplayed.length} isOpen ${isOpen}`);
+
+	// Only set our copy once when modal is open, then leave it
+	useEffect(() => {
+		if (bounties && isOpen && !bountiesDisplayed.length) {
+			setBountiesDisplayed(bounties);
+		}
+	}, [bounties, isOpen]);
 
 	const handleMarkPaid = async () => {
 		await markBountiesPaid();
-		// onClose();
 	};
 	const modalClose = () => {
+		console.log('Modal Closed');
 		setDoneMarking(false);
-		// setBountiesToMark([]);
 		setError(false);
 		setErrorMsgs({});
+		setBountiesDisplayed([]);
 		onClose();
 	};
 
 	const markBountiesPaid = async () => {
 		setDoneMarking(false);
-		if (bounties && user) {
-			const successes = bounties?.map(async function(bounty) {
+		if (bountiesDisplayed && user) {
+			const successes = bountiesDisplayed?.map(async function(bounty) {
 
 				const paidData: BountyPaidCollection = {
 					paidBy: markPaidOrUnpaid == PAID_STATUS.PAID ? actionBy(user) : { discordId: undefined, discordHandle: undefined, iconUrl: null },
@@ -123,7 +132,7 @@ const MarkPaidModal = ({
 				{error && (
 					<Alert status="error">
 						<AlertIcon />
-						{bounties && bounties.length == 1 ?
+						{bountiesDisplayed && bountiesDisplayed.length == 1 ?
 							`There was a problem marking the bounty ${markPaidOrUnpaid}` :
 							`There was a problem marking some bounties ${markPaidOrUnpaid}`
 						}
@@ -133,7 +142,7 @@ const MarkPaidModal = ({
 				<ModalBody> {doneMarking ? 'Marking complete.' : markPaidMessage}
 					<Divider mt={2} mb={2} />
 					<Box overflowY="auto" maxHeight="400px" width={{ base: '95vw', lg: '700px' }}>
-						{bounties?.map((bounty) =>
+						{bountiesDisplayed?.map((bounty) =>
 							<Box key={bounty._id} w="100%" borderWidth={3} borderRadius={10} mb={1}>
 								<Box key={bounty._id} w="100%" pb={2} pt={0} >
 									<BountySummary bounty={bounty} errorMsg={errorMsgs[bounty._id]} />
