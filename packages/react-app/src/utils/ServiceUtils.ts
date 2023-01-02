@@ -1,5 +1,5 @@
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
-import PAID_STATUS from '@app/constants/paidStatus';
+import PAID_STATUS, { PAID_STATUS_VALUES } from '@app/constants/paidStatus';
 import { BountyCollection } from '@app/models/Bounty';
 
 export default {
@@ -19,7 +19,7 @@ export default {
 	canBeEdited({
 		bounty,
 	}: {
-	  bounty: BountyCollection;
+		bounty: BountyCollection;
 	}): boolean {
 		/**
 	   * We allow edits to the bounty only if the status is currently `draft` or `open`
@@ -29,14 +29,17 @@ export default {
 		);
 		return bountyOpenForEdits;
 	},
-	canBePaid({
-		bounty,
-	}: {
-	  bounty: BountyCollection;
-	}): boolean {
-		const bountyOpenForPaying = [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(
-			bounty.status) && (bounty.paidStatus !== PAID_STATUS.PAID);
-		return bountyOpenForPaying;
+	canChangePaidStatus(
+		bounty: BountyCollection,
+		proposedStatus: PAID_STATUS_VALUES,
+	): boolean {
+		if (proposedStatus == PAID_STATUS.PAID) {
+			return [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(
+				bounty.status) && (bounty.paidStatus !== PAID_STATUS.PAID);
+		} else {
+			return [BOUNTY_STATUS.OPEN, BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(
+				bounty.status) && (bounty.paidStatus == PAID_STATUS.PAID);
+		}
 	},
-	
+
 };

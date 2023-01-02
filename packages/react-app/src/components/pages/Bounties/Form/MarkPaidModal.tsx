@@ -1,5 +1,5 @@
 import { Button, Alert, AlertIcon, Box, Divider } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from '@app/utils/AxiosUtils';
 import { ActivityHistoryItem, BountyCollection, BountyPaidCollection } from '@app/models/Bounty';
 import {
@@ -11,50 +11,60 @@ import {
 	ModalBody,
 	ModalCloseButton,
 } from '@chakra-ui/react';
-import PAID_STATUS from '@app/constants/paidStatus';
+import PAID_STATUS, { PAID_STATUS_VALUES } from '@app/constants/paidStatus';
 import { actionBy, newActivityHistory } from '@app/utils/formUtils';
 import ACTIVITY from '@app/constants/activity';
 import { useUser } from '@app/hooks/useUser';
 import { BountySummary } from '../Bounty';
-
-type SetState<T extends any> = (arg: T) => void;
+import { BountiesUpdatedContext } from '..';
 
 const MarkPaidModal = ({
 	isOpen,
 	onClose,
 	bounties,
-	setMarkedSomePaid,
 	markPaidMessage,
+	markPaidOrUnpaid = PAID_STATUS.PAID,
 }: {
 	isOpen: boolean;
 	onClose: () => void;
 	bounties: BountyCollection[] | undefined;
-	setMarkedSomePaid: SetState<boolean>;
 	markPaidMessage: string;
+	markPaidOrUnpaid: PAID_STATUS_VALUES
 }) => {
+
+	interface ErrorMessages {
+		[id : string] : string;
+	}
+
+	console.log(`In Modal: ${bounties?.length}`);
+	
 	const [error, setError] = useState(false);
+	const [errorMsgs, setErrorMsgs] = useState({} as ErrorMessages);
 	const { user } = useUser();
 	const [doneMarking, setDoneMarking] = useState(false);
-	const [bountiesToMark, setBountiesToMark] = useState([] as BountyCollection[]);
-	if (isOpen && !bountiesToMark.length && bounties?.length) setBountiesToMark(bounties);
+	const { setBountiesUpdated } = useContext(BountiesUpdatedContext);
+
 	const handleMarkPaid = async () => {
 		await markBountiesPaid();
 		// onClose();
 	};
 	const modalClose = () => {
 		setDoneMarking(false);
-		setBountiesToMark([]);
+		// setBountiesToMark([]);
+		setError(false);
+		setErrorMsgs({});
 		onClose();
 	};
 
 	const markBountiesPaid = async () => {
 		setDoneMarking(false);
-		if (bountiesToMark && user) {
-			const markBounties = bountiesToMark?.map(async function(bounty) {
+		if (bounties && user) {
+			const successes = bounties?.map(async function(bounty) {
+
 				const paidData: BountyPaidCollection = {
-					paidBy: actionBy(user),
-					paidStatus: PAID_STATUS.PAID,
-					paidAt: new Date().toISOString(),
+					paidBy: markPaidOrUnpaid == PAID_STATUS.PAID ? actionBy(user) : { discordId: undefined, discordHandle: undefined, iconUrl: null },
+					paidStatus: markPaidOrUnpaid,
+					paidAt: markPaidOrUnpaid == PAID_STATUS.PAID ? new Date().toISOString() : '',
 					activityHistory: newActivityHistory(
 						bounty.activityHistory as ActivityHistoryItem[],
 						ACTIVITY.PAID
@@ -69,22 +79,31 @@ const MarkPaidModal = ({
 						// Not sure this code ever gets hit. Errors will go to catch
 						// TODO: Bounty List doesn't refresh after making right away
 						setError(true);
-						bounty.paidStatus = `Error|${res.message}`;
-						return true;
+						setErrorMsgs(eMsgs => {
+							eMsgs[bounty._id] = `${res.message}`;
+							return eMsgs;
+						});
+						return false;
 					}
-					bounty.paidStatus = PAID_STATUS.PAID;
+					bounty.paidStatus = markPaidOrUnpaid;
 				} catch (e: any) {
-					bounty.paidStatus = `Error|${e.response?.data?.message || 'Server error'}`;
+					console.log(`Errors before ${JSON.stringify(errorMsgs)}`);
+					setErrorMsgs(eMsgs => {
+						eMsgs[bounty._id] = `${e.response?.data?.message || 'Server error'}`;
+						return eMsgs;
+					});
+					console.log(`Errors after ${JSON.stringify(errorMsgs)}`);
 					setError(true);
-					return true;
+					return false;
 				}
-				return false;
+				return true;
 
 			});
-			Promise.all(markBounties).then((anyErrors) => {
+			Promise.all(successes).then((anySuccess) => {
 				setDoneMarking(true);
-				if (anyErrors.includes(false)) {
-					setMarkedSomePaid(true);
+				console.log(`Any success: ${JSON.stringify(anySuccess)}`);
+				if (anySuccess.includes(true)) {
+					setBountiesUpdated(true);
 				}
 		 	});
 		}
@@ -100,21 +119,24 @@ const MarkPaidModal = ({
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Mark Paid?</ModalHeader>
+				<ModalHeader>Mark Bounty</ModalHeader>
 				{error && (
 					<Alert status="error">
 						<AlertIcon />
-						There was a problem marking some bounties as paid
+						{bounties && bounties.length == 1 ?
+							`There was a problem marking the bounty ${markPaidOrUnpaid}` :
+							`There was a problem marking some bounties ${markPaidOrUnpaid}`
+						}
 					</Alert>
 				)}
 				<ModalCloseButton />
-				<ModalBody>Export completed. {doneMarking ? 'Marking complete.' : markPaidMessage}
+				<ModalBody> {doneMarking ? 'Marking complete.' : markPaidMessage}
 					<Divider mt={2} mb={2} />
 					<Box overflowY="auto" maxHeight="400px" width={{ base: '95vw', lg: '700px' }}>
-						{bountiesToMark?.map((bounty) =>
+						{bounties?.map((bounty) =>
 							<Box key={bounty._id} w="100%" borderWidth={3} borderRadius={10} mb={1}>
 								<Box key={bounty._id} w="100%" pb={2} pt={0} >
-									<BountySummary bounty={bounty} />
+									<BountySummary bounty={bounty} errorMsg={errorMsgs[bounty._id]} />
 								</Box>
 							</Box>
 

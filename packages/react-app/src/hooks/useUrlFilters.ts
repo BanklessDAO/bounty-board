@@ -30,7 +30,6 @@ export const baseFilters: FilterParams = {
 
 export const useDynamicUrl = (
 	filters: FilterParams,
-	bountiesChanged: boolean,
 	ready: boolean
 ): string => {
 	const { customer } = useContext(CustomerContext);
@@ -77,7 +76,7 @@ export const useDynamicUrl = (
 			if (urlQuery[0] === '&') urlQuery = '?' + urlQuery.substring(1);
 		}
 		return urlQuery;
-	}, [filters, bountiesChanged, customer, ready]);
+	}, [filters, customer, ready]);
 };
 
 const sanitizeFilter = (

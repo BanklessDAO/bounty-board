@@ -32,7 +32,6 @@ import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
 import { BountyDeleteButton } from './delete';
-
 import UserAvatar from '@app/components/parts/UserAvatar';
 import PAID_STATUS from '@app/constants/paidStatus';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
@@ -42,7 +41,8 @@ import { toHTML } from 'discord-markdown';
 import ReactHtmlParser from 'react-html-parser';
 import { BsThreeDots } from 'react-icons/bs';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { BountyMarkPaidButton } from './markPaid';
+import { WarningIcon } from '@chakra-ui/icons';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -194,8 +194,10 @@ const BountyTags = ({
 
 export const BountySummary = ({
 	bounty,
+	errorMsg,
 }: {
 	bounty: BountyCollection;
+	errorMsg?: string;
 }): JSX.Element => {
 	return (
 		<Flex flexWrap="wrap" width="100%" justifyContent="flex-end" pl="2" pr="2">
@@ -247,7 +249,13 @@ export const BountySummary = ({
 				<Box mb={2}>
 					<PaidStatus bounty={bounty} />
 				</Box>
-
+				{errorMsg && (
+					<Box pl="2" mb={2} >
+						<Tooltip label={errorMsg}>
+							<WarningIcon color="red.500" />
+						</Tooltip>
+					</Box>
+				)}
 			</Flex>
 		</Flex>
 	);
@@ -271,9 +279,10 @@ export const BountyHeader = ({
 
 export const BountyActions = ({
 	bounty,
+	onClose,
 }: {
 	bounty: BountyCollection;
-	onCancel: () => void;
+	onClose: () => void;
 }): JSX.Element => {
 	return (
 		<Flex justifyContent={'flex-end'}>
@@ -283,6 +292,7 @@ export const BountyActions = ({
 				bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyEditButton bounty={bounty} />
 			)}
+			<BountyMarkPaidButton bounty={bounty} onCloseParent={onClose} />
 			{(bounty.status == BOUNTY_STATUS.DRAFT ||
 				bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyDeleteButton bounty={bounty} />
@@ -293,17 +303,17 @@ export const BountyActions = ({
 };
 
 const BountyModal = ({
-	bountyIn,
+	bounty,
 	isOpen,
 	onClose,
 }: {
-	bountyIn: BountyCollection;
+	bounty: BountyCollection;
 	isOpen: boolean;
 	onClose: () => void;
 }): JSX.Element => {
 
 	// Keep the bounty data from changing what the modal is displaying if a rerender happens 
-	const bounty = useMemo(() => bountyIn, [isOpen]);
+	// const bounty = useMemo(() => bountyIn, [isOpen]);
 
 	return (
 		<Modal scrollBehavior={'inside'} isOpen={isOpen} onClose={onClose}>
@@ -321,7 +331,7 @@ const BountyModal = ({
 				</ModalBody>
 				<ModalFooter>
 					<Stack direction='row' spacing={1} alignItems='center' alignContent='center' verticalAlign={'center'}>
-						<BountyActions bounty={bounty} onCancel={onClose} />
+						<BountyActions bounty={bounty} onClose={onClose} />
 					</Stack>
 
 				</ModalFooter>
@@ -525,7 +535,7 @@ export const BountyCard = ({
 					<BountyDetails bounty={bounty} />
 				</Box>
 				<Box>
-					<BountyActions bounty={bounty} onCancel={onCancel} />
+					<BountyActions bounty={bounty} onClose={onCancel} />
 				</Box>
 			</Box>
 		</Box>
@@ -602,7 +612,7 @@ export const BountyItem = ({
 					<BountyModal
 						isOpen={isBountyModalOpen}
 						onClose={onBountyModalClose}
-						bountyIn={bounty}
+						bounty={bounty}
 					/>
 				</HStack>
 			) : (

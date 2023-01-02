@@ -34,13 +34,12 @@ export const handler = async (
 
 	switch (req.method) {
 	case 'PATCH':
-		/* Edit a model by its ID */
 		try {
-			const bountyIsEditable = ServiceUtils.canBePaid({ bounty });
+			const bountyIsEditable = ServiceUtils.canChangePaidStatus(bounty, req.body.paidStatus);
 			if (!bountyIsEditable) {
 				return res.status(400).json({
 					success: false,
-					message: 'Unable to mark bounty as paid, as is not in an payable status',
+					message: `Unable to mark bounty as ${req.body.paidStatus}, current status is not correct`,
 					bountyStatus: bounty.status,
 				});
 			}
