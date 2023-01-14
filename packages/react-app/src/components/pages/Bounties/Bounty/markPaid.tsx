@@ -10,7 +10,6 @@ const useShowMarkPaid = (bounty: BountyCollection): boolean => {
 	const show = useMemo(() => {
 		return ServiceUtils.canChangePaidStatus(bounty, bounty.paidStatus == PAID_STATUS.PAID ? PAID_STATUS.UNPAID : PAID_STATUS.PAID);
 	}, [bounty]);
-	console.log(`show ${show}`);
 	return show;
 };
 

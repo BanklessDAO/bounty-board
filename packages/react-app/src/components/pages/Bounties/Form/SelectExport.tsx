@@ -58,7 +58,6 @@ export const SelectExport = ({
 			});
 
 			if (user && roles) {
-				console.log('Checking for bounties to mark');
 				let bountiesToMark: string[] = [];
 				// If Admin, allow all to be marked, otherwise only own bounties and if correct permissions
 				if (roles.some((r: string) => ['admin'].includes(r))) {
@@ -79,7 +78,6 @@ export const SelectExport = ({
 					setMarkPaidMessage('Export completed. Mark these exported claimed bounties you created as paid?');
 				}
 				if (bountiesToMark.length > 0) {
-					console.log(`Setting Bounties To Mark ${bountiesToMark.length}`);
 					setBountiesToMark(bountiesToMark);
 					onMarkPaidOpen();
 				}

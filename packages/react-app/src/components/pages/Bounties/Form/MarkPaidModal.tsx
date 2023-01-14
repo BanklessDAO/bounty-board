@@ -44,7 +44,6 @@ const MarkPaidModal = ({
 	const [doneMarking, setDoneMarking] = useState(false);
 	const { setBountiesUpdated } = useContext(BountiesUpdatedContext);
 	const [ bountiesDisplayed, setBountiesDisplayed ] = useState<BountyCollection[]>([]);
-	console.log(`In Modal: bounties: ${bounties?.length} bountiesDisplayed ${bountiesDisplayed.length} isOpen ${isOpen}`);
 
 	// Only set our copy once when modal is open, then leave it
 	useEffect(() => {
@@ -57,7 +56,6 @@ const MarkPaidModal = ({
 		await markBountiesPaid();
 	};
 	const modalClose = () => {
-		console.log('Modal Closed');
 		setDoneMarking(false);
 		setError(false);
 		setErrorMsgs({});
@@ -96,12 +94,10 @@ const MarkPaidModal = ({
 					}
 					bounty.paidStatus = markPaidOrUnpaid;
 				} catch (e: any) {
-					console.log(`Errors before ${JSON.stringify(errorMsgs)}`);
 					setErrorMsgs(eMsgs => {
 						eMsgs[bounty._id] = `${e.response?.data?.message || 'Server error'}`;
 						return eMsgs;
 					});
-					console.log(`Errors after ${JSON.stringify(errorMsgs)}`);
 					setError(true);
 					return false;
 				}
@@ -110,7 +106,6 @@ const MarkPaidModal = ({
 			});
 			Promise.all(successes).then((anySuccess) => {
 				setDoneMarking(true);
-				console.log(`Any success: ${JSON.stringify(anySuccess)}`);
 				if (anySuccess.includes(true)) {
 					setBountiesUpdated(true);
 				}

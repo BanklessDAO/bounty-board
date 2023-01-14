@@ -69,7 +69,6 @@ const usePaginatedBounties = (
 			bounties &&
 			paginatedBounties.length === 0
 		);
-		console.log(`In usePaginated - paginatedBounties: ${JSON.stringify(paginatedBounties.map((b) => b.paidStatus))}`);
 		return { paginatedBounties, noResults };
 	}, [bounties, page, PAGE_SIZE, filters.status, filters.search, filters.tags]);
 };
@@ -132,7 +131,6 @@ const Bounties = (): JSX.Element => {
 
 	// Force a fetch of the bounties if bounties updated
 	useEffect(() => {
-		console.log(`Bounties Updated: ${bountiesUpdated} url: ${urlQuery}`);
 		if (bountiesUpdated) {
 			mutate('/api/bounties' + urlQuery);
 			setBountiesUpdated(false);

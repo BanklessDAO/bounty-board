@@ -26,7 +26,6 @@ export function useBounties(url: string, ready = true): useBountiesResponse {
    * Wraps the SWR hook with additional loading state for spinners
    * Optioanlly pass a `ready` param to delay execution.
    */
-	console.log(`In useBounties url: ${url}`);
 	const { data, error } = useSWR<BountyCollection[], unknown>(
 		ready ? url : null,
 		axiosFetcher
