@@ -56,9 +56,9 @@ export const SelectExport = ({
 			setCsvData(exportBounties, () => {
 				csvLink?.current?.link.click();
 			});
-			// TODO - redo all this as part of the Mark as Paid project. 
 
 			if (user && roles) {
+				console.log('Checking for bounties to mark');
 				let bountiesToMark: string[] = [];
 				// If Admin, allow all to be marked, otherwise only own bounties and if correct permissions
 				if (roles.some((r: string) => ['admin'].includes(r))) {

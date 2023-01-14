@@ -24,10 +24,8 @@ import {
 	ModalCloseButton,
 	useColorModeValue,
 } from '@chakra-ui/react';
-import { useBounty } from '@app/hooks/useBounties';
 import { BountyCollection } from '@app/models/Bounty';
 import { BountyNotFound } from '@app/pages/[id]';
-import { SkeletonCircle, SkeletonText } from '@chakra-ui/skeleton';
 import BountyClaim from './claim';
 import BountySubmit from './submit';
 import { BountyEditButton } from './edit';
@@ -287,7 +285,7 @@ export const BountyActions = ({
 	return (
 		<Flex justifyContent={'flex-end'}>
 			{bounty.status == BOUNTY_STATUS.DRAFT && <BountySubmit bounty={bounty} />}
-			{bounty.status == BOUNTY_STATUS.OPEN && <BountyClaim bounty={bounty} />}
+			{bounty.status == BOUNTY_STATUS.OPEN && <BountyClaim bounty={bounty} onCloseParent={onClose} />}
 			{(bounty.status == BOUNTY_STATUS.DRAFT ||
 				bounty.status == BOUNTY_STATUS.OPEN) && (
 				<BountyEditButton bounty={bounty} />
@@ -576,11 +574,11 @@ export const AccordionBountyItem = ({
 );
 
 export const BountyItem = ({
-	initialBounty,
+	bounty,
 	selectedBounties,
 	setSelectedBounties,
 }: {
-	initialBounty: BountyCollection;
+	bounty: BountyCollection;
 	selectedBounties: string[];
 	setSelectedBounties: SetState<string[]>;
 }): JSX.Element => {
@@ -589,17 +587,10 @@ export const BountyItem = ({
 		onOpen: onBountyModalOpen,
 		onClose: onBountyModalClose,
 	} = useDisclosure();
-	const { bounty, isLoading } = useBounty(initialBounty._id);
 
 	return (
 		<Box w="100%" borderWidth={3} borderRadius={10} mb={1}>
-			{isLoading ? (
-				// if loading, show the loader
-				<Box padding="6" boxShadow="lg">
-					<SkeletonCircle size="10" />
-					<SkeletonText mt="4" noOfLines={3} spacing="4" />
-				</Box>
-			) : bounty ? (
+			{bounty ? (
 				<HStack>
 					<BountySelect
 						bountyId={bounty._id}

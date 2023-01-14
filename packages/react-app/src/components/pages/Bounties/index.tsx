@@ -69,6 +69,7 @@ const usePaginatedBounties = (
 			bounties &&
 			paginatedBounties.length === 0
 		);
+		console.log(`In usePaginated - paginatedBounties: ${JSON.stringify(paginatedBounties.map((b) => b.paidStatus))}`);
 		return { paginatedBounties, noResults };
 	}, [bounties, page, PAGE_SIZE, filters.status, filters.search, filters.tags]);
 };
@@ -100,7 +101,7 @@ const Bounties = (): JSX.Element => {
 	);
 
 	useEffect(() => {
-		if (!router.isReady) return;
+		if (!router.isReady || router.pathname !== '/') return;
 
 		const asPathWithoutLeadingSlash = router.asPath.replace(/\//, '');
 		if (
@@ -135,6 +136,7 @@ const Bounties = (): JSX.Element => {
 		if (bountiesUpdated) {
 			mutate('/api/bounties' + urlQuery);
 			setBountiesUpdated(false);
+			setSelectedBounties([]);
 			setPage(0);
 		}
 	}, [bountiesUpdated, urlQuery]);

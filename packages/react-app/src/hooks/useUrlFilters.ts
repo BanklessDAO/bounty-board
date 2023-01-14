@@ -19,7 +19,7 @@ export const baseFilters: FilterParams = {
 	status: [],
 	paidStatus: [],
 	tags: [],
-	gte: 0,
+	gte: undefined,
 	lte: Infinity,
 	sortBy: 'status',
 	asc: true,
@@ -55,8 +55,8 @@ export const useDynamicUrl = (
 			if (paidStatus) urlQuery += `&paidStatus=${paidStatus || []}`;
 			if (search) urlQuery += `&search=${search}`;
 			if (tags) urlQuery += `&tags=${tags || []}`;
-			if (lte) urlQuery += `&lte=${lte}`;
-			if (gte) urlQuery += `&gte=${gte}`;
+			if (typeof lte === 'number') urlQuery += `&lte=${lte}`;
+			if (typeof gte === 'number') urlQuery += `&gte=${gte}`;
 			if (sortBy) urlQuery += `&sortBy=${sortBy}`;
 			if (sortAscending || typeof sortAscending === 'boolean') {
 				urlQuery += `&asc=${sortAscending}`;
