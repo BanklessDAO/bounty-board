@@ -33,6 +33,8 @@ export default {
 		bounty: BountyCollection,
 		proposedStatus: PAID_STATUS_VALUES,
 	): boolean {
+		console.log(`proposedStatus ${proposedStatus}`);
+		console.log(`status: ${bounty.status}`);
 		if (proposedStatus == PAID_STATUS.PAID) {
 			return [BOUNTY_STATUS.IN_PROGRESS, BOUNTY_STATUS.IN_REVIEW, BOUNTY_STATUS.COMPLETED].includes(
 				bounty.status) && (bounty.paidStatus !== PAID_STATUS.PAID);
