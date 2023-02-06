@@ -1,5 +1,5 @@
 import { ClaimWeb } from '@app/components/pages/Bounties/Bounty/claim';
-import Bounties from '@app/components/pages/Bounties/index';
+// import Bounties from '@app/components/pages/Bounties/index';
 import * as useUser from '@app/hooks/useUser';
 import * as auth from '@app/components/global/Auth/index';
 import * as useExternalRoles from '@app/hooks/useExternalRoles';
@@ -8,6 +8,8 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { testBounty } from '../../../../stubs/bounty.stub';
 import { BountyCollection } from '@app/models/Bounty';
+import Bounties from '@app/components/pages/Bounties';
+import { ChakraProvider } from '@chakra-ui/react';
 
 jest.mock('next/router', () => ({
 	useRouter: () => ({ router: { isReady: true } }),
@@ -169,8 +171,11 @@ describe('Testing the bounty listing page', () => {
 
 	it('Shows the Claimed/Created By Me checkboxes if the user is signed in', () => {
 		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+
 		render(
-			<Bounties />
+			<ChakraProvider>
+				<Bounties />
+			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
 		expect(chk).not.toBeNull();
@@ -179,7 +184,9 @@ describe('Testing the bounty listing page', () => {
 	it('Hides the Claimed/Created By Me checkboxes if the user is not signed in', () => {
 		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false });
 		render(
-			<Bounties />
+			<ChakraProvider>
+				<Bounties />
+			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
 		expect(chk).toBeNull();

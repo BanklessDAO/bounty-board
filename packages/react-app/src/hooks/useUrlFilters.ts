@@ -7,9 +7,8 @@ import { CustomerContext } from '@app/context/CustomerContext';
 import { FilterParams } from '@app/types/Filter';
 import { ParsedUrlQuery } from 'querystring';
 import { useContext, useMemo } from 'react';
-import useDebounce from './useDebounce';
 
-const keysWithArrayVals = ['status', 'paidStatus'];
+const keysWithArrayVals = ['status', 'paidStatus', 'tags'];
 const keysWithNumberVals = ['gte', 'lte'];
 const keysWithBooleanVals = ['asc'];
 const validStatusKeys = Object.values(BOUNTY_STATUS);
@@ -19,10 +18,11 @@ export const baseFilters: FilterParams = {
 	search: '',
 	status: [],
 	paidStatus: [],
+	tags: [],
 	gte: 0,
 	lte: Infinity,
-	sortBy: 'reward',
-	asc: false,
+	sortBy: 'status',
+	asc: true,
 	customerId: BANKLESS.customerId,
 	customerKey: BANKLESS.customerKey,
 	// no created or claimed
@@ -34,13 +34,13 @@ export const useDynamicUrl = (
 	ready: boolean
 ): string => {
 	const { customer } = useContext(CustomerContext);
-	const debounceSearch = useDebounce(filters.search, 500, true);
 
 	return useMemo(() => {
 		let urlQuery = '';
 
 		if (ready) {
 			const {
+				search,
 				status,
 				paidStatus,
 				lte,
@@ -49,11 +49,13 @@ export const useDynamicUrl = (
 				asc: sortAscending,
 				claimedBy,
 				createdBy,
+				tags,
 			} = filters;
 
 			if (status) urlQuery += `&status=${status || []}`;
 			if (paidStatus) urlQuery += `&paidStatus=${paidStatus || []}`;
-			if (debounceSearch) urlQuery += `&search=${debounceSearch}`;
+			if (search) urlQuery += `&search=${search}`;
+			if (tags) urlQuery += `&tags=${tags || []}`;
 			if (lte) urlQuery += `&lte=${lte}`;
 			if (gte) urlQuery += `&gte=${gte}`;
 			if (sortBy) urlQuery += `&sortBy=${sortBy}`;
@@ -75,7 +77,7 @@ export const useDynamicUrl = (
 			if (urlQuery[0] === '&') urlQuery = '?' + urlQuery.substring(1);
 		}
 		return urlQuery;
-	}, [filters, bountiesChanged, customer, debounceSearch, ready]);
+	}, [filters, bountiesChanged, customer, ready]);
 };
 
 const sanitizeFilter = (
@@ -90,7 +92,9 @@ const sanitizeFilter = (
 				: parseInt(val as string, 10);
 	}
 
-	if (keysWithBooleanVals.includes(key)) return val == 'true' ? true : false;
+	if (keysWithBooleanVals.includes(key)) {
+		return (typeof val == 'boolean' && val) || val == 'true' ? true : false;
+	}
 	if (!keysWithArrayVals.includes(key) || typeof val !== 'string') return val;
 
 	const arrayVal: any[] = val.split(',').map((v: string) => v.trim());
@@ -111,6 +115,8 @@ const sanitizeFilter = (
 				)
 			).values()
 		);
+	case 'tags':
+		return arrayVal;
 	default:
 		return [];
 	}

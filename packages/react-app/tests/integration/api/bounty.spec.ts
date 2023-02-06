@@ -300,6 +300,29 @@ describe('Testing the bounty API', () => {
 			expect(data.length).toEqual(1);
 		});
 
+		it('Finds by tag', async () => {
+			const tags = ['tag1', 'tag2'];
+			req.method = 'GET';
+			req.query = {
+				tags: tags.join(','),
+			};
+			await bountiesHandler(req, res);
+			const { data } = res._getJSONData();
+			let anyWithoutCorrectTags = false;
+			for (let count = 0; count < data.length; count++) {
+				const bounty = data[count];
+				// If we find a bounty without any of the tags, stop
+				if ((!bounty.tags.keywords || (bounty.tags.keywords.filter((value: string) => tags.includes(value))).length == 0) &&
+				(!tags.includes(bounty.tags.channelCategory))) {
+					anyWithoutCorrectTags = true;
+					break;
+				}
+			}
+			expect(anyWithoutCorrectTags).toEqual(false);
+			expect(data.length).toEqual(3);
+		});
+
+
 		it('Can perform a wildcard text search on name', async () => {
 			req.method = 'GET';
 			req.query = {

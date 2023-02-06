@@ -214,9 +214,14 @@ const SelectExport = ({
 						onClick={ () => {
 							setCsvFormat(BOUNTY_LIMITED_EXPORT_ITEMS);
 							if (bounties) {
-								const exportBounties = bounties
-									.filter(({ _id }) => selectedBounties.includes(_id))
-									.map(miscUtils.csvEncode);
+								const exportBounties = (bounties
+									.filter(({ _id }) => selectedBounties.includes(_id)) as any[])
+									.map((bounty) => {
+										if (bounty.tags?.keywords) {
+											bounty['tagList'] = bounty.tags.keywords.join(',');
+										}
+										return miscUtils.csvEncode(bounty);
+									});
 								handleCSV(exportBounties);
 							}
 						} }
@@ -273,12 +278,12 @@ const usePaginatedBounties = (
 			: [];
 
 		const noResults = Boolean(
-			(filters.search || filters.status) &&
+			(filters.search || filters.status || filters.tags) &&
         bounties &&
         paginatedBounties.length === 0
 		);
 		return { paginatedBounties, noResults };
-	}, [bounties, page, PAGE_SIZE, filters.status, filters.search]);
+	}, [bounties, page, PAGE_SIZE, filters.status, filters.search, filters.tags]);
 };
 
 
@@ -289,6 +294,7 @@ const Bounties = (): JSX.Element => {
 	const [filters, setFilters] = useState<FilterParams>(baseFilters);
 	const [selectedBounties, setSelectedBounties] = useState<string[]>([]);
 	const [markedSomePaid, setMarkedSomePaid] = useState(false);
+	const cachedBounties = useRef<BountyCollection[] | undefined>([]);
 
 	// Watch this only runs on page load once the params are instantiated
 	// otherwise you will lose filers and/or create inf loop
@@ -332,6 +338,10 @@ const Bounties = (): JSX.Element => {
 		filters
 	);
 
+	if (bounties?.length && !cachedBounties.current?.length) {
+		cachedBounties.current = bounties;
+	}
+
 	useEffect(() => {
 		setPage(0);
 	}, [filters]);
@@ -346,9 +356,14 @@ const Bounties = (): JSX.Element => {
 					fontSize="sm"
 					fontWeight="600"
 					gridGap="4"
+
 					width={'100%'}>
 					<VStack gridGap="1px" width={'100%'}>
-						<Filters filters={filters} setFilters={setFilters} />
+						<Filters
+							bounties={cachedBounties.current}
+							filters={filters}
+							setFilters={setFilters}
+						/>
 						<SelectExport
 							bounties={bounties}
 							selectedBounties={selectedBounties}

@@ -45,6 +45,7 @@
     "@types/mongoose-paginate-v2": "^1.4.1",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "axios": "^0.24.0",
+    "chakra-react-select": "^4.4.2",
     "discord-markdown": "^2.5.1",
     "dompurify": "^2.3.6",
     "env-cmd": "^10.1.0",

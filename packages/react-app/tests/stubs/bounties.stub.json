@@ -28,6 +28,9 @@
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "Open",
     "paidStatus": "Paid",
+    "tags": {
+      "keywords": ["tag1"]
+    },
     "statusHistory": [
       {
         "status": "Open",
@@ -83,6 +86,9 @@
     },
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "Completed",
+    "tags": {
+      "keywords": ["tag2"]
+    },
     "statusHistory": [
       {
         "status": "Open",
@@ -132,6 +138,9 @@
     "createdAt": "2021-07-20T06:40:56.112Z",
     "dueAt": "2021-07-20T06:42:28.853Z",
     "status": "Open",
+    "tags": {
+      "keywords": ["tag3"]
+    },
     "statusHistory": [
       {
         "status": "In-Progress",
@@ -242,6 +251,9 @@
       },
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "In-Progress",
+    "tags": {
+      "channelCategory": "tag1"
+    },
     "statusHistory": [
       {
         "status": "Open",
@@ -297,6 +309,9 @@
     },
     "claimedAt": "2021-07-20T07:00:31.166Z",
     "status": "In-Progress",
+    "tags": {
+      "channelCategory": "tag5"
+    },
     "paidStatus": "Paid",
     "statusHistory": [
       {

@@ -7,6 +7,7 @@ import {
 	Box,
 	Checkbox,
 	Flex,
+	Tooltip,
 	Tag,
 	TagLabel,
 	Text,
@@ -39,7 +40,9 @@ import MiscUtils from '../../../../utils/miscUtils';
 import DOMPurify from 'dompurify';
 import { toHTML } from 'discord-markdown';
 import ReactHtmlParser from 'react-html-parser';
+import { BsThreeDots } from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -123,6 +126,66 @@ const calculateReward = (_reward: BountyCollection['reward']): string => {
 	return `${_reward.amount ?? 0} ${_reward.currency}`;
 };
 
+const Label = ({ keyword, noMargin = false }: { keyword: string; noMargin?: boolean }): JSX.Element => (
+	<Tag
+		size="sm"
+		colorScheme="teal"
+		variant="subtle"
+		borderRadius="full"
+		ml={noMargin ? 0 : 1.5}
+	>
+		<TagLabel>
+			{keyword.replace('-', ' ')}
+		</TagLabel>
+	</Tag>
+);
+
+const BountyTags = ({
+	tags,
+	showAll = false,
+}: {
+	tags: { channelCategory: string, keywords: string[] };
+	showAll: boolean;
+}): JSX.Element => {
+	let labels: string[] = [];
+
+	if (tags.channelCategory) {
+		labels = labels.concat(tags.channelCategory);
+	} if (tags.keywords) {
+		labels = labels.concat(tags.keywords);
+	}
+
+	return (
+		showAll
+			?
+			<>
+				{ labels && labels.map((label, index) => <Label key={index} keyword={label} noMargin={index == 0}/>) }
+			</>
+			:
+			<>
+				{ labels && labels.slice(0, 3).map((label, index) => <Label key={index} keyword={label} noMargin={index == 0}/>) }
+				{
+					labels.length > 3 &&
+					<Tooltip
+						hasArrow
+						label={
+							<Stack textAlign="center">
+								{labels.slice(3).map((label, index) => <Text key={index}>{label}</Text>)}
+							</Stack>
+						}
+						fontSize="md"
+						closeDelay={500}
+					>
+						<Tag size="sm" colorScheme="teal" variant="subtle" borderRadius="full" ml={1.5}>
+							<TagLabel><BsThreeDots /></TagLabel>
+						</Tag>
+					</Tooltip>
+
+				}
+			</>
+	);
+};
+
 export const BountySummary = ({
 	bounty,
 }: {
@@ -135,8 +198,13 @@ export const BountySummary = ({
 					<UserAvatar user={bounty.createdBy} size="sm" />
 				</Box>
 				<Box pl="2" width="100%">
-					<Heading mb={2} size="md" flex={{ base: 1, md: 0 }}>
+					<Heading mb={2} size="md" noOfLines={1} flex={{ base: 1, md: 0 }}>
 						{bounty.title}
+						{ bounty.tags &&
+							<Text as="span" ml={2} mt={2}>
+								<BountyTags tags={bounty.tags} showAll={false} />
+							</Text>
+						}
 					</Heading>
 				</Box>
 			</Flex>
@@ -218,14 +286,17 @@ export const BountyActions = ({
 };
 
 const BountyModal = ({
-	bounty,
+	bountyIn,
 	isOpen,
 	onClose,
 }: {
-  bounty: BountyCollection;
+  bountyIn: BountyCollection;
   isOpen: boolean;
   onClose: () => void;
 }): JSX.Element => {
+
+	// Keep the bounty data from changing what the modal is displaying if a rerender happens 
+	const bounty = useMemo(() => bountyIn, [ isOpen ]);
 	
 	return (
 		<Modal scrollBehavior={'inside'} isOpen={isOpen} onClose={onClose}>
@@ -391,6 +462,24 @@ const BountyDetails = ({
 					</Text>
 				</Box>
 			</Flex>
+			{ bounty.tags &&
+				<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
+					<Box
+						width="120px"
+						display="inline-block"
+						justifyContent="flex-end"
+						alignItems="center"
+						pr="2"
+					>
+						<Heading size="sm" m={0}>
+							tags
+						</Heading>
+					</Box>
+					<Box pr="2">
+						<BountyTags tags={bounty.tags} showAll={true} />
+					</Box>
+				</Flex>
+			}
 			<Heading mt="5" width="100%" size="md" mb="0">
                Description
 			</Heading>
@@ -506,7 +595,7 @@ export const BountyItem = ({
 					<BountyModal
 						isOpen={isBountyModalOpen}
 						onClose={onBountyModalClose}
-						bounty={bounty}
+						bountyIn={bounty}
 					/>
 				</HStack>
 			) : (

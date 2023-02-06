@@ -41,6 +41,7 @@ export const BountyDeleteButton: React.FC<{ bounty: BountyCollection }> = ({
 								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 								size='md'
 								width='200px'
+								disabled={true}
 							>
                              Delete this bounty
 							</Button>
