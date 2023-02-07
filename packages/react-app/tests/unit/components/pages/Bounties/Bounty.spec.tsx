@@ -9,6 +9,7 @@ import { testBounty } from '../../../../stubs/bounty.stub';
 import { BountyCollection } from '@app/models/Bounty';
 import Bounties from '@app/components/pages/Bounties';
 import { BountyCard } from '@app/components/pages/Bounties/Bounty';
+
 import { ChakraProvider } from '@chakra-ui/react';
 
 jest.mock('next/router', () => ({

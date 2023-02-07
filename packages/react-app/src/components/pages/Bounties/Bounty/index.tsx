@@ -202,6 +202,7 @@ export const BountySummary = ({
 					<Heading mb={2} size="md" noOfLines={1} flex={{ base: 1, md: 0 }}>
 						{bounty.title}
 						{bounty.tags &&
+
 							<Text as="span" ml={2} mt={2}>
 								<BountyTags tags={bounty.tags} showAll={false} />
 							</Text>
