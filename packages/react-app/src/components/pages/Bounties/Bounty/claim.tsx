@@ -46,7 +46,6 @@ import { BountiesUpdatedContext } from '..';
 
 const BountyClaim = ({ bounty, onCloseParent }: { bounty: BountyCollection, onCloseParent: () => void}): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const router = useRouter();
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
 	const [claiming, setClaiming] = miscUtils.useStateCallback<boolean>(false);

@@ -12,6 +12,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { BountyMarkPaidButton } from '@app/components/pages/Bounties/Bounty/markPaid';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import PAID_STATUS from '@app/constants/paidStatus';
+import { BountyCard } from '@app/components/pages/Bounties/Bounty';
 
 jest.mock('next/router', () => ({
 	useRouter: () => ({ router: { isReady: true } }),

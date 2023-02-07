@@ -41,6 +41,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import { useRouter } from 'next/router';
 import { BountyMarkPaidButton } from './markPaid';
 import { WarningIcon } from '@chakra-ui/icons';
+import { useUser } from '@app/hooks/useUser';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -301,7 +302,7 @@ export const BountyActions = ({
 };
 
 const BountyModal = ({
-	bountyIn,
+	bounty,
 	isOpen,
 	onClose,
 }: {
@@ -612,7 +613,7 @@ export const BountyItem = ({
 					<BountyModal
 						isOpen={isBountyModalOpen}
 						onClose={onBountyModalClose}
-						bountyIn={bounty}
+						bounty={bounty}
 					/>
 				</HStack>
 			) : (
