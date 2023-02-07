@@ -24,6 +24,12 @@ export const testBounty: Partial<BountyCollection> = {
 	createdAt: '2021-07-20T06:40:56.112Z',
 	dueAt: '2021-07-20T06:42:28.853Z',
 	claimedAt: '2021-07-20T07:00:31.166Z',
+	claimedBy: {
+		discordHandle: 'TESTHANDLE2#5678',
+		discordId: '5678',
+		iconUrl: '',
+	},
+
 	status: 'Open',
 	statusHistory: [
 		{

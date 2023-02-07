@@ -228,7 +228,6 @@ export const BountySchema = object({
 }).noUnknown(true);
 
 export const BountyClaimSchema = object({
-	submissionNotes: string().required(),
 	claimedBy: DiscordUser.required(),
 	status: status.required(),
 	statusHistory: array(StatusHistory).required(),
