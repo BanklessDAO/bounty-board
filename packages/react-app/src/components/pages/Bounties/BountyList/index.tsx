@@ -19,7 +19,7 @@ const BountyList = ({
         bounties.map((bounty, idx) => (
         	<BountyItem
         		key={idx}
-        		initialBounty={bounty}
+        		bounty={bounty}
         		selectedBounties={selectedBounties}
         		setSelectedBounties={setSelectedBounties}
         	/>

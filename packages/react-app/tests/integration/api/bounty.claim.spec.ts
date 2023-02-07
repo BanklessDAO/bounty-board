@@ -68,7 +68,6 @@ describe('Testing the bounty API', () => {
 					discordHandle: 'testhandle',
 					discordId: 'testid',
 				},
-				submissionNotes: 'Test',
 				status: 'In-Progress',
 				statusHistory: newStatusHistory(
                    testOpenBounty.statusHistory as StatusHistoryItem[],
@@ -93,7 +92,6 @@ describe('Testing the bounty API', () => {
 					discordHandle: 'testhandle',
 					discordId: 'testid',
 				},
-				submissionNotes: 'Test',
 				status: 'In-Progress',
 				statusHistory: newStatusHistory(
                    testOpenBounty.statusHistory as StatusHistoryItem[],
@@ -113,7 +111,6 @@ describe('Testing the bounty API', () => {
 
 		it('Requires the status, claimant details and statusHistory passed', async () => {
 			req.body = {
-				submissionNotes: 'Test',
 				status: 'In-Progress',
 				statusHistory: newStatusHistory(
                    testOpenBounty.statusHistory as StatusHistoryItem[],
@@ -133,7 +130,6 @@ describe('Testing the bounty API', () => {
 					discordHandle: 'testhandle',
 					discordId: 'testid',
 				},
-				submissionNotes: 'Test',
 				statusHistory: newStatusHistory(
 				   testOpenBounty.statusHistory as StatusHistoryItem[],
 				   BOUNTY_STATUS.IN_PROGRESS
@@ -152,7 +148,6 @@ describe('Testing the bounty API', () => {
 					discordHandle: 'testhandle',
 					discordId: 'testid',
 				},
-				submissionNotes: 'Test',
 			};
 			
 			await bountyClaimHandler(req, res);

@@ -322,34 +322,35 @@ const MinMaxFilter = ({
 }: {
   name?: string;
 } & UseFilterState): JSX.Element => {
+	const numRegex = /^(\d+)$/;
 	const [lte, setLte] = useState(filters.lte == Infinity ? null : filters.lte);
 	useEffect(() => {
 		setLte(filters.lte == Infinity ? null : filters.lte);
 	}, [filters.lte]);
 	
-	const [gte, setGte] = useState(filters.gte && filters.gte > 0 ? filters.gte : null);
+	const [gte, setGte] = useState(filters.gte !== undefined && filters.gte >= 0 ? filters.gte : null);
 	useEffect(() => {
-		setGte(filters.gte && filters.gte > 0 ? filters.gte : null);
+		setGte(filters.gte !== undefined && filters?.gte >= 0 ? filters.gte : null);
 	}, [filters.gte]);
 
 	const updateMin = (event: Event): void => {
 		setFilters({
 			...filters,
-			gte: Number(event.target.value),
+			gte: (event.target.value.match(numRegex) ? Number(event.target.value) : undefined),
 		});
 	};
 	const updateMax = (event: Event): void => {
 		setFilters({
 			...filters,
-			lte: Number(event.target.value),
+			lte: (event.target.value.match(numRegex) ? Number(event.target.value) : undefined),
 		});
 	};
 
 	return (
 		<>
 			<HStack my="2">
-				<Input value={gte || ''} placeholder="Min Bounty Value" onChange={updateMin} />
-				<Input value={lte || ''} placeholder="Max Bounty Value" onChange={updateMax} />
+				<Input value={typeof gte === 'number' ? gte : ''} placeholder="Min Bounty Value" onChange={updateMin} />
+				<Input value={typeof lte === 'number' ? lte : ''} placeholder="Max Bounty Value" onChange={updateMax} />
 			</HStack>
 		</>
 	);

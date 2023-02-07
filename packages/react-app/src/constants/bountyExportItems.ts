@@ -20,7 +20,8 @@ type BountyExportKeys =
   | TagKeys
   | 'payeeData.walletAddress'
   | 'compositeName'
-  | 'tagList';
+  | 'tagList'
+  | 'tokenContract';
 
 type BountyExportItems = Array<{
   label: string;
@@ -52,5 +53,5 @@ export const BOUNTY_PARCEL_EXPORT_ITEMS: BountyExportItems = [
 	{ label: 'Name', key: 'compositeName' },
 	{ label: 'Address', key: 'payeeData.walletAddress' },
 	{ label: 'Amount', key: 'reward.amount' },
-	{ label: 'Token', key: 'reward.currency' },
+	{ label: 'Token', key: 'tokenContract' },
 ];

@@ -99,7 +99,7 @@ describe('Testing the bounty API', () => {
 			await bountyPaidHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 			expect(res._getJSONData().message).toEqual(
-				'Unable to mark bounty as paid, as is not in an payable status'
+				'Unable to mark bounty as Paid, current status is not correct'
 			);
 		});
 
@@ -124,7 +124,7 @@ describe('Testing the bounty API', () => {
 			await bountyPaidHandler(req, res);
 			expect(res.statusCode).toEqual(400);
 			expect(res._getJSONData().message).toEqual(
-				'Unable to mark bounty as paid, as is not in an payable status'
+				'Unable to mark bounty as Paid, current status is not correct'
 			);
 		});
 

@@ -185,7 +185,7 @@ export const filterLessGreater = ({
 	if (gte) {
 		queryBy.$gte = gte;
 	}
-	if (lte) {
+	if (lte || lte == 0) {
 		queryBy.$lte = lte;
 	}
 	query[by] = queryBy;

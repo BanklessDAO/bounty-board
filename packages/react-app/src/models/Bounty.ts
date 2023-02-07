@@ -235,9 +235,9 @@ export const BountyClaimSchema = object({
 }).noUnknown(true);
 
 export const BountyPaidSchema = object({
-	paidBy: DiscordUser.required(),
+	paidBy: DiscordUser.optional(),
 	paidStatus: paidStatus.required(),
-	paidAt: string().required(),
+	paidAt: string().optional(),
 	activityHistory: array(ActivityHistory).required(),
 }).noUnknown(true);
 
