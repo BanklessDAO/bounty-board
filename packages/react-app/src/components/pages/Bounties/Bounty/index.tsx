@@ -301,7 +301,7 @@ export const BountyActions = ({
 };
 
 const BountyModal = ({
-	bounty,
+	bountyIn,
 	isOpen,
 	onClose,
 }: {
@@ -309,9 +309,6 @@ const BountyModal = ({
 	isOpen: boolean;
 	onClose: () => void;
 }): JSX.Element => {
-
-	// Keep the bounty data from changing what the modal is displaying if a rerender happens 
-	// const bounty = useMemo(() => bountyIn, [isOpen]);
 
 	return (
 		<Modal scrollBehavior={'inside'} isOpen={isOpen} onClose={onClose}>
@@ -344,6 +341,7 @@ const BountyDetails = ({
 }: {
 	bounty: BountyCollection;
 }): JSX.Element => {
+	const { user } = useUser();
 	const dueAt = bounty.dueAt
 		? MiscUtils.shortDate(new Date(bounty.dueAt))
 		: 'unspecified';
@@ -509,6 +507,17 @@ const BountyDetails = ({
 			<Text mt="2" fontSize="sm" ml="2">
 				{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.criteria || 'none')))}
 			</Text>
+			{bounty.submissionNotes && ([bounty.createdBy.discordId, bounty.claimedBy?.discordId].includes(user?.id)) &&
+				<>
+					<Heading mt="5" width="100%" size="md" pt="2" mb="0">
+						Submission Notes
+					</Heading>
+					<Text mt="2" fontSize="sm" ml="2">
+						{ReactHtmlParser(DOMPurify.sanitize(toHTML(bounty.submissionNotes || 'none')))}
+					</Text>
+				</>
+			}
+
 		</Flex>
 	);
 };
@@ -603,7 +612,7 @@ export const BountyItem = ({
 					<BountyModal
 						isOpen={isBountyModalOpen}
 						onClose={onBountyModalClose}
-						bounty={bounty}
+						bountyIn={bounty}
 					/>
 				</HStack>
 			) : (

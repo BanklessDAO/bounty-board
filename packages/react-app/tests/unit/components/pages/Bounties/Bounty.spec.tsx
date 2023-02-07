@@ -1,5 +1,4 @@
 import { ClaimWeb } from '@app/components/pages/Bounties/Bounty/claim';
-// import Bounties from '@app/components/pages/Bounties/index';
 import * as useUser from '@app/hooks/useUser';
 import * as auth from '@app/components/global/Auth/index';
 import * as useExternalRoles from '@app/hooks/useExternalRoles';
@@ -258,6 +257,72 @@ describe('Testing the bounty listing page', () => {
 			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
+		expect(chk).toBeNull();
+	});
+
+});
+
+describe('Submission Notes', () => {
+
+	afterEach(async () => {
+		jest.resetAllMocks();
+	});
+
+	it('Shows no submission notes if user not logged in', () => {
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false });
+		const bounty = testBounty;
+		bounty.submissionNotes = 'Some notes';
+
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
+		expect(chk).toBeNull();
+	});
+
+	it('Shows submission notes if creator is logged in', () => {
+		const bounty = testBounty;
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: bounty.createdBy?.discordId || '12345', username: 'bob', discriminator: '123', avatar: null } });
+		bounty.submissionNotes = 'Some notes';
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
+		expect(chk).not.toBeNull();
+	});
+
+	it('Shows submission notes if claimant is logged in', () => {
+		const bounty = testBounty;
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: bounty.claimedBy?.discordId || '12345', username: 'bob', discriminator: '123', avatar: null } });
+		bounty.submissionNotes = 'Some notes';
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
+		expect(chk).not.toBeNull();
+	});
+
+	it('Shows no submission notes if user is not claimant or creator', () => {
+		const bounty = testBounty;
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+		bounty.submissionNotes = 'Some notes';
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
 		expect(chk).toBeNull();
 	});
 
