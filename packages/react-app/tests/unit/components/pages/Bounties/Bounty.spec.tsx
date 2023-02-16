@@ -1,5 +1,4 @@
 import { ClaimWeb } from '@app/components/pages/Bounties/Bounty/claim';
-import Bounties from '@app/components/pages/Bounties/index';
 import * as useUser from '@app/hooks/useUser';
 import * as auth from '@app/components/global/Auth/index';
 import * as useExternalRoles from '@app/hooks/useExternalRoles';
@@ -8,10 +7,82 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { testBounty } from '../../../../stubs/bounty.stub';
 import { BountyCollection } from '@app/models/Bounty';
+import Bounties from '@app/components/pages/Bounties';
+import { ChakraProvider } from '@chakra-ui/react';
+import { BountyMarkPaidButton } from '@app/components/pages/Bounties/Bounty/markPaid';
+import BOUNTY_STATUS from '@app/constants/bountyStatus';
+import PAID_STATUS from '@app/constants/paidStatus';
+import { BountyCard } from '@app/components/pages/Bounties/Bounty';
 
 jest.mock('next/router', () => ({
 	useRouter: () => ({ router: { isReady: true } }),
 }));
+
+describe('Testing the bounty mark paid/unpaid component', () => {
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+
+	it('No button if the user is not signed in', async () => {
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(false);
+		const claimedBounty = { ...testBounty, status: BOUNTY_STATUS.IN_PROGRESS };
+		render(
+			<BountyMarkPaidButton bounty={claimedBounty as BountyCollection} onCloseParent={() => false} />
+		);
+		const btn = screen.queryByRole('button', { name: 'mark-paid-button' });
+		expect(btn).toBeNull();
+
+	});
+
+	it('shows the button if the user has permissions', async () => {
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(true);
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+		const claimedBounty = { ...testBounty, status: BOUNTY_STATUS.IN_PROGRESS };
+		render(
+			<BountyMarkPaidButton bounty={claimedBounty as BountyCollection} onCloseParent={() => false} />
+		);
+		const btn = screen.queryByRole('button', { name: 'mark-paid-button' });
+		expect(btn).not.toBeNull();
+		expect(btn).not.toBeDisabled();
+	});
+
+	it('doesn\'t show the button if the bounty isn\'t claimed', async () => {
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(true);
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+		const unclaimedBounty = { ...testBounty, status: BOUNTY_STATUS.OPEN };
+		render(
+			<BountyMarkPaidButton bounty={unclaimedBounty as BountyCollection} onCloseParent={() => false} />
+		);
+		const btn = screen.queryByRole('button', { name: 'mark-paid-button' });
+		expect(btn).toBeNull();
+	});
+
+	it('shows Mark Paid if bounty is unpaid', async () => {
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(true);
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+		const claimedBounty = { ...testBounty, status: BOUNTY_STATUS.IN_PROGRESS, paidStatus: PAID_STATUS.UNPAID };
+		render(
+			<BountyMarkPaidButton bounty={claimedBounty as BountyCollection} onCloseParent={() => false} />
+		);
+		const btn = screen.queryByRole('button', { name: 'mark-paid-button' });
+		expect(btn).not.toBeNull();
+		expect(btn?.textContent).toEqual('Mark Paid');
+	});
+
+	it('shows Mark Unpaid if bounty is paid', async () => {
+		jest.spyOn(auth, 'useRequiredRoles').mockReturnValue(true);
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+		const claimedBounty = { ...testBounty, status: BOUNTY_STATUS.IN_PROGRESS, paidStatus: PAID_STATUS.PAID };
+		render(
+			<BountyMarkPaidButton bounty={claimedBounty as BountyCollection} onCloseParent={() => false} />
+		);
+		const btn = screen.queryByRole('button', { name: 'mark-paid-button' });
+		expect(btn).not.toBeNull();
+		expect(btn?.textContent).toEqual('Mark Unpaid');
+	});
+
+
+});
 
 describe('Testing the bounty claim component', () => {
 	afterEach(() => {
@@ -169,8 +240,11 @@ describe('Testing the bounty listing page', () => {
 
 	it('Shows the Claimed/Created By Me checkboxes if the user is signed in', () => {
 		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+
 		render(
-			<Bounties />
+			<ChakraProvider>
+				<Bounties />
+			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
 		expect(chk).not.toBeNull();
@@ -179,9 +253,77 @@ describe('Testing the bounty listing page', () => {
 	it('Hides the Claimed/Created By Me checkboxes if the user is not signed in', () => {
 		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false });
 		render(
-			<Bounties />
+			<ChakraProvider>
+				<Bounties />
+			</ChakraProvider>
 		);
 		const chk = screen.queryByText(/claimed by me/i);
+		expect(chk).toBeNull();
+	});
+
+});
+
+describe('Submission Notes', () => {
+
+	afterEach(async () => {
+		jest.resetAllMocks();
+	});
+
+	it('Shows no submission notes if user not logged in', () => {
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false });
+		const bounty = testBounty;
+		bounty.submissionNotes = 'Some notes';
+
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
+		expect(chk).toBeNull();
+	});
+
+	it('Shows submission notes if creator is logged in', () => {
+		const bounty = testBounty;
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: bounty.createdBy?.discordId || '12345', username: 'bob', discriminator: '123', avatar: null } });
+		bounty.submissionNotes = 'Some notes';
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
+		expect(chk).not.toBeNull();
+	});
+
+	it('Shows submission notes if claimant is logged in', () => {
+		const bounty = testBounty;
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: bounty.claimedBy?.discordId || '12345', username: 'bob', discriminator: '123', avatar: null } });
+		bounty.submissionNotes = 'Some notes';
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
+		expect(chk).not.toBeNull();
+	});
+
+	it('Shows no submission notes if user is not claimant or creator', () => {
+		const bounty = testBounty;
+		jest.spyOn(useUser, 'useUser').mockReturnValue({ loading: false, user: { id: '12345', username: 'bob', discriminator: '123', avatar: null } });
+		bounty.submissionNotes = 'Some notes';
+
+		render(
+			<ChakraProvider>
+				<BountyCard bounty={bounty as BountyCollection} />
+			</ChakraProvider>
+		);
+		const chk = screen.queryByText(/Submission Notes/i);
 		expect(chk).toBeNull();
 	});
 

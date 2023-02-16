@@ -9,6 +9,7 @@ type RewardKeys = NestedDotNotationKeys<BountyCollection, 'reward'>;
 type CreatedByKeys = NestedDotNotationKeys<BountyCollection, 'createdBy'>;
 type ClaimedByKeys = NestedDotNotationKeys<BountyCollection, 'claimedBy'>;
 type PaidByKeys = NestedDotNotationKeys<BountyCollection, 'paidBy'>;
+type TagKeys = NestedDotNotationKeys<BountyCollection, 'tags'>;
 
 type BountyExportKeys =
   | keyof Omit<BountyCollection, 'reward' | 'createdBy' | 'claimedBy'>
@@ -16,8 +17,11 @@ type BountyExportKeys =
   | CreatedByKeys
   | ClaimedByKeys
   | PaidByKeys
+  | TagKeys
   | 'payeeData.walletAddress'
-  | 'compositeName';
+  | 'compositeName'
+  | 'tagList'
+  | 'tokenContract';
 
 type BountyExportItems = Array<{
   label: string;
@@ -29,6 +33,8 @@ export const BOUNTY_LIMITED_EXPORT_ITEMS: BountyExportItems = [
 	{ label: 'Title', key: 'title' },
 	{ label: 'Description', key: 'description' },
 	{ label: 'Criteria', key: 'criteria' },
+	{ label: 'Tags', key: 'tagList' },
+	{ label: 'Channel Category', key: 'tags.channelCategory' },
 	{ label: 'Status', key: 'status' },
 	{ label: 'Due', key: 'dueAt' },
 	{ label: 'Reward Amount', key: 'reward.amount' },
@@ -47,5 +53,5 @@ export const BOUNTY_PARCEL_EXPORT_ITEMS: BountyExportItems = [
 	{ label: 'Name', key: 'compositeName' },
 	{ label: 'Address', key: 'payeeData.walletAddress' },
 	{ label: 'Amount', key: 'reward.amount' },
-	{ label: 'Token', key: 'reward.currency' },
+	{ label: 'Token', key: 'tokenContract' },
 ];

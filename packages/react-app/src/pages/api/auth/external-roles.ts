@@ -25,7 +25,6 @@ const handler = async (
 					session.accessToken,
 					customerId
 				);
-				console.log(`External roles: ${externalRoles}`);
 				res.status(200).json({
 					success: true,
 					data: {

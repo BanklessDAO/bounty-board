@@ -1,6 +1,7 @@
 import { Controller, UseFormReturn } from 'react-hook-form';
 import React from 'react';
 import DatePicker from '@app/components/parts/DatePicker';
+import { CreatableSelect, OptionBase, GroupBase } from 'chakra-react-select';
 import {
 	FormLabel,
 	FormControl,
@@ -11,6 +12,7 @@ import {
 	FormControlProps,
 	Textarea,
 	useColorMode,
+	Box,
 } from '@chakra-ui/react';
 import {
 	dateIsNotInPast,
@@ -18,6 +20,7 @@ import {
 	validNonNegativeDecimal,
 } from '@app/utils/formUtils';
 import ALLOWED_CURRENCIES from '@app/constants/currency';
+import { useTags } from '@app/hooks/useTags';
 
 const useCurrencies = (): string[] => {
 	return ALLOWED_CURRENCIES;
@@ -28,21 +31,39 @@ const PLACEHOLDERS = {
 	DESCRIPTION:
     'Example: We need someone to create some snappy looking logos for our new Web3 project.',
 	CRITERIA: 'Example: SVG and PNG images approved by the team',
+	TAGS: 'Example: L1, Marketing, Dev',
 };
 
-export const bountyFormFieldValues = {
-	title: '',
-	description: '',
-	reward: '1000',
-	currency: ALLOWED_CURRENCIES[0],
-	criteria: '',
-	dueAt: new Date().toISOString(),
-};
+const dueAtDefault = new Date();
+dueAtDefault.setMonth(dueAtDefault.getMonth() + 3);
+
+export const bountyFormFieldValues : {
+	title: string,
+	description: string,
+	reward: string,
+	currency: string,
+	criteria: string,
+	dueAt: string,
+	tags : TagOption[] } = {
+		title: '',
+		description: '',
+		reward: '1000',
+		currency: ALLOWED_CURRENCIES[0],
+		criteria: '',
+		dueAt: dueAtDefault.toISOString(),
+		tags: [],
+	};
+
+export interface TagOption extends OptionBase {
+	label: string;
+	value: string;
+}
 
 function BountyFormFields(props: {
   formProps: UseFormReturn<typeof bountyFormFieldValues>;
 }): JSX.Element {
 	const currencies = useCurrencies();
+	const tags = useTags();
 	const { colorMode } = useColorMode();
 	const {
 		register,
@@ -86,9 +107,37 @@ function BountyFormFields(props: {
 				<FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
 			</FormControl>
 
+			<FormControl {...sharedFormatting}>
+				<FormLabel htmlFor='tags'>Tags</FormLabel>
+				<Controller
+					control={control}
+					name="tags"
+					render={({
+						field: { onChange, onBlur, value, name, ref },
+					}) => (
+						<Box borderColor={inputBorderColor}>
+							<CreatableSelect<TagOption, true, GroupBase<TagOption>>
+								isMulti
+								onChange={onChange}
+								onBlur={onBlur}
+								value={value as unknown as TagOption[]}
+								name={name}
+								ref={ref}
+								placeholder={PLACEHOLDERS.TAGS}
+								id="tags"
+								instanceId="tags"
+								closeMenuOnSelect={true}
+								options={tags.map(function(tag: string) { return { label: tag, value: tag }; })}
+							/>
+						</Box>
+			
+					)}
+				/>
+			</FormControl>
+
 			<FormControl isInvalid={!!errors.dueAt} {...sharedFormatting}>
 				<FormLabel htmlFor="dueAt" mr="0">
-          Due At
+					Due At
 				</FormLabel>
 				<Controller
 					name="dueAt"

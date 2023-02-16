@@ -30,7 +30,7 @@ const SaveSearchModal = ({
 }): JSX.Element => {
 	const [name, setName] = useState('');
 	const { user } = useUser();
-	const savedQuery = useDynamicUrl(filters, false, true);
+	const savedQuery = useDynamicUrl(filters, true);
 	const toast = useToast();
 
 	const onSave = () => {

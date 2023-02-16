@@ -20,7 +20,6 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Text,
-	Textarea,
 	Tooltip,
 	useColorMode,
 	useDisclosure,
@@ -38,26 +37,30 @@ import AccessibleLink from '@app/components/parts/AccessibleLink';
 import { CustomerContext } from '@app/context/CustomerContext';
 import { baseUrl } from '@app/constants/discordInfo';
 import { useRequiredRoles } from '@app/components/global/Auth';
-import { mutate } from 'swr';
 import BOUNTY_STATUS from '@app/constants/bountyStatus';
 import ACTIVITY from '@app/constants/activity';
 import miscUtils from '@app/utils/miscUtils';
 import { APIUser } from 'discord-api-types';
+import { BountiesUpdatedContext } from '..';
 
-const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
+
+const BountyClaim = ({ bounty, onCloseParent }: { bounty: BountyCollection, onCloseParent: () => void}): JSX.Element => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	// const router = useRouter();
 	const { colorMode } = useColorMode();
 	const { user } = useUser();
-	const [message, setMessage] = useState<string>();
 	const [claiming, setClaiming] = miscUtils.useStateCallback<boolean>(false);
 	const [error, setError] = useState(false);
+	const { setBountiesUpdated } = useContext(BountiesUpdatedContext);
+
+	const closeModal = () => {
+		onClose();
+		onCloseParent();
+	};
 
 	const confirmBounty = async () => {
-		if (message && user) {
+		if (user) {
 			const claimData: BountyClaimCollection = {
 				claimedBy: actionBy(user),
-				submissionNotes: message,
 				status: 'In-Progress',
 				activityHistory: newActivityHistory(
 					bounty.activityHistory as ActivityHistoryItem[],
@@ -75,11 +78,8 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 					claimData
 				);
 				if (res.status === 200) {
-					const bountyPageRoute = '/' + bounty._id;
-					const updatedBounty = { ...bounty, ...claimData };
-					mutate(`/api/bounties${bountyPageRoute}`, updatedBounty, false);
-					// if (router.route !== bountyPageRoute) router.push(bountyPageRoute);
-					setClaiming(false, onClose);
+					setBountiesUpdated(true);
+					setClaiming(false, closeModal);
 				}
 			} catch {
 				setError(true);
@@ -121,22 +121,17 @@ const BountyClaim = ({ bounty }: { bounty: BountyCollection }): JSX.Element => {
 					<ModalCloseButton />
 					<ModalBody flexDirection="column" justifyContent="space-evenly">
 						<Flex mb="5">
-							Add a message to the bounty creator, then hit &apos;Confirm&apos; to send
-							and claim the bounty.
+							Press &apos;Confirm&apos; claim the bounty.
 						</Flex>
-						<Textarea
-							placeholder="Send a message"
-							onChange={(e) => setMessage(e.target.value)}
-						/>
 					</ModalBody>
 					<ModalFooter justifyContent="flex-end">
 						<Box p={2}>
 							<Button
 								transition="background 100ms linear"
-								disabled={!message || bounty.status !== 'Open'}
+								disabled={bounty.status !== 'Open'}
 								onClick={confirmBounty}
 								isLoading={claiming}
-								loadingText="Submitting"
+								loadingText="Claiming"
 								bg={colorMode === 'light' ? 'primary.300' : 'primary.700'}
 							>
 								Confirm

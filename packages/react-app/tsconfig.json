@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,9 +21,14 @@
     "noErrorTruncation": true,
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/*"],
-      "@tests/*": ["tests/*"]
-    }
+      "@app/*": [
+        "src/*"
+      ],
+      "@tests/*": [
+        "tests/*"
+      ]
+    },
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
@@ -35,8 +40,8 @@
   ],
   "exclude": [
     "node_modules",
-    ".next", 
+    ".next",
     "out",
-    "dist",
+    "dist"
   ]
 }

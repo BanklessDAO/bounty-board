@@ -22,8 +22,8 @@ export const validNonNegativeDecimal = (v: string): string | boolean => {
    * Passing decimals to form requires a conversion from a text input type to
    * a number
    */
-	if (!Number(v)) return 'Not a valid reward';
-	return Number(v) > 0 ? true : 'Must be > 0';
+	if (isNaN(Number(v))) return 'Not a valid reward';
+	return Number(v) >= 0 ? true : 'Must be 0 or greater';
 };
 
 export const actionBy = (user: APIUser): DiscordBoardUser => ({

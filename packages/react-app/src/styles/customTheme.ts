@@ -50,6 +50,7 @@ export const baseTheme = extendTheme({
 		primary: theme.colors.teal,
 		Paid: theme.colors.green,
 		Unpaid: theme.colors.gray,
+		Error: theme.colors.red,
 	},
 	components: {
 		Heading: {
