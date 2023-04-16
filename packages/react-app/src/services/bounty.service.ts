@@ -212,6 +212,16 @@ export const filterCustomerId = (
 	return query;
 };
 
+export const filterTemplates = (
+	query: FilterQuery<BountyCollection>
+): FilterQuery<BountyCollection> => {
+	/**
+   * Remove bounties not relating to the currently selected DAO
+   */
+	query['isRepeatTemplate'] = { $ne: true };
+	return query;
+};
+
 export const filterByUser = (
 	query: FilterQuery<BountyCollection>,
 	claimedBy: string | undefined,
@@ -295,6 +305,9 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	});
 	filterQuery = filterByUser(filterQuery, claimedBy, createdBy);
 	filterQuery = filterTags(filterQuery, tags);
+	// For now, filter bounty templates
+	filterQuery = filterTemplates(filterQuery);
+
 	filterQuery = handleEmpty(filterQuery);
 
 	return { $match: filterQuery };
