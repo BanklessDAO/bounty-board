@@ -42,6 +42,7 @@ import { useRouter } from 'next/router';
 import { BountyMarkPaidButton } from './markPaid';
 import { WarningIcon } from '@chakra-ui/icons';
 import { useUser } from '@app/hooks/useUser';
+import { useBounty } from '@app/hooks/useBounties';
 
 type SetState<T extends any> = (arg: T) => void;
 
@@ -347,6 +348,9 @@ const BountyDetails = ({
 		? MiscUtils.shortDate(new Date(bounty.dueAt))
 		: 'unspecified';
 
+	const bountyTemplate: BountyCollection | null | undefined = bounty.repeatTemplateId ?
+		useBounty(bounty.repeatTemplateId).bounty : null;
+
 	return (
 		<Flex justifyItems={'center'} alignItems="center" flexWrap="wrap" width="100%" pl="2" pr="2">
 			<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
@@ -476,6 +480,48 @@ const BountyDetails = ({
 					</Text>
 				</Box>
 			</Flex>
+			{bountyTemplate &&
+				<Flex flexWrap="wrap" alignItems="center" width="80%" pb="3">
+					<Box
+						width="120px"
+						display="inline-block"
+						justifyContent="flex-end"
+						alignItems="center"
+						pr="2"
+					>
+						<Heading size="sm" m={0}>
+							repeats every
+						</Heading>
+					</Box>
+					<Box pr="2">
+						<Text isTruncated={true} as="span" fontSize="sm">
+							{bountyTemplate.repeatDays?.toString() +
+							  (bountyTemplate.repeatDays > 1 ? ' days' : ' day')}
+						</Text>
+					</Box>
+					<Spacer />
+					<Box
+						width="120px"
+						display="inline-block"
+						justifyContent="flex-end"
+						alignItems="center"
+						pr="2"
+						ml="2"
+					>
+						<Heading size="sm" m={0}>
+							{bountyTemplate.endRepeatsDate ? 'ending' : 'ending after'}
+						</Heading>
+					</Box>
+					<Box>
+						<Text as="span" fontSize="sm">
+							{bountyTemplate.endRepeatsDate ?
+								MiscUtils.shortDate(new Date(bountyTemplate.endRepeatsDate)) :
+								bountyTemplate.numRepeats.toString() + ' repeats'}
+						</Text>
+					</Box>
+
+				</Flex>
+			}
 			{bounty.tags &&
 				<Flex flexWrap="wrap" alignItems="center" width="100%" pb="3">
 					<Box

@@ -363,6 +363,7 @@ export const getBounty = async (
    * @param id is a 24 character string, try to find it in the db
    * If the character !== 24 chars, or we can't find the bounty, return null
    */
+	console.log(`in API, id: ${id})`);
 	return id.length === 24 ? await Bounty.findById(id).populate('payeeData') : null;
 };
 
