@@ -72,7 +72,7 @@
   },
   "engines": {
     "yarn": "1.x",
-    "node": "^16.x.0"
+    "node": "^18.x.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.15.0",
