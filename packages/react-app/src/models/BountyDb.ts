@@ -152,6 +152,23 @@ export const BountyBoardSchema = new mongoose.Schema({
 		type: Array,
 		default: undefined,
 	},
+	isRepeatTemplate: {
+		type: Boolean,
+	},
+	repeatTemplateId: {
+		type: String,
+	},
+	repeatDays: {
+		type: Number,
+	},
+	numRepeats: {
+		type: Number,
+	},
+	endRepeatsDate: {
+		type: String,
+	},
+
+
 	assign: {
 		type: String,
 	},

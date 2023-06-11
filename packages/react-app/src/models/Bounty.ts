@@ -201,6 +201,12 @@ export const BountySchema = object({
 	isParent: boolean().optional(),
 	parentId: string().optional().nullable(),
 	childrenIds: array(string()).optional(),
+	isRepeatTemplate: boolean().optional(),
+	repeatTemplateId: string().optional().nullable(),
+	repeatDays: number().optional(),
+	numRepeats: number().optional(),
+	endRepeatsDate: string().optional().nullable(),
+
 	assign: string().optional().nullable(),
 	assignedName: string().optional().nullable(),
 	assignTo: DiscordUser.optional().default(undefined),
