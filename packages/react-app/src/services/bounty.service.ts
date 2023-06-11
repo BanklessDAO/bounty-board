@@ -307,7 +307,6 @@ export const getFilterQuery = (query: NextApiQuery): BountyQuery => {
 	filterQuery = filterTags(filterQuery, tags);
 	// For now, filter bounty templates
 	filterQuery = filterTemplates(filterQuery);
-
 	filterQuery = handleEmpty(filterQuery);
 
 	return { $match: filterQuery };
