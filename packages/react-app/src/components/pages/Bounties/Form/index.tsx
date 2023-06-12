@@ -110,12 +110,12 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit as SubmitHandler<JSON>)}>
-			<FormControl isInvalid={errors.title} mb={5}>
+			<FormControl isInvalid={Boolean(errors.title)} mb={5}>
 				<FormLabel htmlFor="title">Title</FormLabel>
 				<Input id="title" placeholder="title" {...register('title')} />
 				<FormErrorMessage>{errors.title?.message}</FormErrorMessage>
 			</FormControl>
-			<FormControl isInvalid={errors.description} mb={5}>
+			<FormControl isInvalid={Boolean(errors.description)} mb={5}>
 				<FormLabel htmlFor="description">Description</FormLabel>
 				<Textarea
 					id="description"
@@ -124,7 +124,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 				/>
 				<FormErrorMessage>{errors.description?.message}</FormErrorMessage>
 			</FormControl>
-			<FormControl isInvalid={errors.criteria} mb={5}>
+			<FormControl isInvalid={Boolean(errors.criteria)} mb={5}>
 				<FormLabel htmlFor="criteria">Criteria</FormLabel>
 				<Textarea
 					id="criteria"
@@ -132,7 +132,7 @@ const Form = ({ bountyForm }: { bountyForm: any }): JSX.Element => {
 					{...register('criteria')} />
 				<FormErrorMessage>{errors.criteria?.message}</FormErrorMessage>
 			</FormControl>
-			<FormControl isInvalid={errors.rewardAmount} mb={5}>
+			<FormControl isInvalid={Boolean(errors.rewardAmount)} mb={5}>
 				<FormLabel htmlFor="rewardAmount">Reward ($BANK)</FormLabel>
 				<Input
 					id="rewardAmount"

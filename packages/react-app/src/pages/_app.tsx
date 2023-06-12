@@ -14,6 +14,7 @@ import { CustomerContext } from '../context/CustomerContext';
 import { useTheme } from '@app/hooks/useTheme';
 import { useCustomer } from '@app/hooks/useCustomer';
 import AuthContextProvider from '@app/context/AuthContext';
+import { Session } from 'next-auth';
 
 Router.events.on('routeChangeStart', function() {
 	return NProgress.start();
@@ -30,16 +31,18 @@ Router.events.on('routeChangeError', function() {
 const MotionBox = motion(Box);
 
 function MyApp({
+	pageProps,
 	Component,
-	pageProps: { session, ...pageProps },
 	router,
-}: AppProps): JSX.Element {
+}: AppProps<{
+	session: Session
+}>): JSX.Element {
 	const { id, customerKey } = router.query;
 	const { customer, setCustomer } = useCustomer(id, customerKey);
 
 	const theme = useTheme(customer);
 	return (
-		<SessionProvider session={session}>
+		<SessionProvider session={pageProps.session}>
 			<CustomerContext.Provider value={{ customer, setCustomer }}>
 				<ChakraProvider resetCSS theme={theme}>
 					<AuthContextProvider>

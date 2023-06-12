@@ -38,5 +38,9 @@
   },
   "devDependencies": {
     "husky": "^7.0.1"
+  },
+  "resolutions": {
+    "**/@types/react": "^17.0.38"
   }
+
 }
