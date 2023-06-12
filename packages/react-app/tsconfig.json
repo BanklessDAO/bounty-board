@@ -26,6 +26,9 @@
       ],
       "@tests/*": [
         "tests/*"
+      ],
+      "react": [ 
+        "./node_modules/@types/react" 
       ]
     },
     "incremental": true

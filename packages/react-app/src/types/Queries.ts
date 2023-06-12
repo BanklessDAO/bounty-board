@@ -1,6 +1,7 @@
 import type { AcceptedSortOutputs } from './Filter';
 
-export type NextApiQuery = Record<string, string | string[]>;
+// export type NextApiQuery = Record<string, string | string[]>;
+export type NextApiQuery = Partial<{ [key: string]: string | string[]; }>;
 
 export type Status =
   | 'Open'

@@ -152,7 +152,6 @@ describe('Testing the Role Caching', () => {
 	});
 
 	it('Throws an error if we are missing a customer id', async () => {
-		// @ts-expect-error
 		req.query.customerId = undefined;
 
 		await roleHandler(req, res);

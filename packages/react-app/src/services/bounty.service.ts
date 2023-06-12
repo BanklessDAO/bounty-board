@@ -346,13 +346,13 @@ export const getBounties = async (
 	// Had to use a for loop so we didn't end up with a bunch of parallel db connections
 	if (aggregation && aggregation.results) {
 		const populatedResults = [];
-		for (const bounty of (aggregation.results as Array<BountyCollection>)) {
+		for (const bounty of (aggregation.results as unknown as Array<BountyCollection>)) {
 			populatedResults.push(await Bounty.populate(bounty, [{ path: 'payeeData' }]));
 		}
 		aggregation.results = populatedResults;
 	}
 
-	return aggregation;
+	return aggregation as unknown as Promise<PaginateResult<BountyCollection> | PaginateResult<[]>>;
 };
 
 export const getBounty = async (
