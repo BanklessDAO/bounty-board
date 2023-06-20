@@ -39,10 +39,13 @@ export function useBounties(url: string, ready = true): useBountiesResponse {
 
 export function useBounty(id?: string | string[]): useBountyResponse {
 	const { customer } = useContext(CustomerContext);
+	console.log(`In useBounty id: ${id} customer: ${customer.customerId}`);
 	const { data, error } = useSWR<BountyCollection, unknown>(
 		id ? `/api/bounties/${id}` : null,
 		axiosFetcher
 	);
+	console.log(`Data: ${JSON.stringify(data)}`);
+	console.log(`Error: ${JSON.stringify(error)}`);
 	const mismatchedBounty = useMemo(() => {
 		return customer && data && customer.customerId !== data.customerId;
 	}, [customer, data]);

@@ -38,7 +38,7 @@ export interface PaginateModel<
 }
 
 // extracting the callback type out for readability
-type PaginateCallback<T, TMethods, TVirtuals, Options> = (
+type PaginateCallback<T, TMethods, TVirtuals, Options extends PaginateOptions> = (
   err: any,
   result: PaginateResult<PaginateDocument<T, TMethods, TVirtuals, Options>>
 ) => void;

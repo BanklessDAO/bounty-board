@@ -153,6 +153,9 @@ describe('Testing the bounty service', () => {
 						$in: ['Open'],
 					},
 					customerId: 'testId',
+					'isRepeatTemplate': {
+					     '$ne': true,
+			    	},
 					$text: {
 						$search: 'Test',
 					},
@@ -187,6 +190,9 @@ describe('Testing the bounty service', () => {
 					$in: ['Open'],
 				},
 				customerId: 'testId',
+				'isRepeatTemplate': {
+					'$ne': true,
+				},
 				$text: {
 					$search: 'Test',
 				},
